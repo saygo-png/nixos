@@ -23,7 +23,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
-    #inputs.nixvim.nixosModules.nixvim
+    inputs.nixvim.nixosModules.nixvim
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -92,10 +92,11 @@
   environment.systemPackages = with pkgs; [
     # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    git
+    most
   ];
 
   programs.zsh.enable = true;
+  programs.nixvim.enable = true;
 
   ################
   # HOME MANAGER #
@@ -109,13 +110,13 @@
         username = "samsepi0l";
         homeDirectory = "/home/samsepi0l";
         stateVersion = "24.05"; # Dont change
-        packages = [
-          pkgs.hello
-          pkgs.htop
-          pkgs.alejandra
-          pkgs.rofi
-          pkgs.librewolf
-          pkgs.nil
+        packages = with pkgs; [
+          hello
+          htop
+          alejandra
+          rofi
+          librewolf
+          nil
         ];
         sessionVariables = {
           # Default programs.
@@ -199,10 +200,10 @@
         };
       };
       programs.zsh.enable = true;
-      programs.neovim = {
+      programs.kakoune = {
         enable = true;
-        # extraconfig = builtins.readFile ./init.vim;
       };
+
       # programs.nixvim = {
       #   enable = true;
       #   colorschemes.gruvbox.enable = true;

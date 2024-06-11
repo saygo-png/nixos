@@ -26,8 +26,7 @@
       modules = [
         ./configuration.nix
         inputs.home-manager.nixosModules.default # useless?
-        #inputs.nixvim.homeManagerModules.nixvim
-        #inputs.nixvim.nixosModules.nixvim
+        # inputs.nixvim.nixosModules.nixvim
       ];
     };
   };
