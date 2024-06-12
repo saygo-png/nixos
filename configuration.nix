@@ -12,11 +12,13 @@
 {
   pkgs,
   lib,
+  config,
   inputs,
   ...
 }: {
   imports = [
     ./hardware-configuration.nix
+    inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -27,18 +29,16 @@
   networking.hostName = "default"; # Define your hostname.
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Europe/Warsaw";
-
-  # Keyboard.
+  # Locale.
   i18n.defaultLocale = "en_US.UTF-8";
-  services.xserver.xkb.layout = "pl";
-  services.xserver.xkbOptions = "caps:swapescape";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
+  time.timeZone = "Europe/Warsaw";
+  services.xserver.xkb = {
+    layout = "pl";
+    options = "caps:escape";
+  };
   console = {
+    useXkbConfig = true;
     font = "Lat2-Terminus16";
-    keyMap = lib.mkForce "pl"; # needs to be forced
-    useXkbConfig = true; # use xkb.options in tty.
   };
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -68,18 +68,18 @@
     pulse.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
+    extraConfig.pipewire."92-low-latency" = {
+      context.properties = {
+        default.clock.rate = 48000;
+        default.clock.quantum = 8;
+        default.clock.min-quantum = 8;
+        default.clock.max-quantum = 8;
+      };
+    };
   };
 
   # Disable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = false;
-
-  system.activationScripts = {
-    remaps = ''
-      #!${pkgs.dash}/bin/dash
-      # Decrease key repeat delay to 200ms and increase key repeat rate to 50 per second.
-      ${pkgs.xorg.xset}/bin/xset r rate 140 50
-    '';
-  };
 
   environment.sessionVariables = {
     FLAKE = "/home/samsepi0l/nixos"; # For nix helper
@@ -101,7 +101,29 @@
     libnotify
   ];
 
-  programs.zsh.enable = true;
+  stylix.enable = true;
+  stylix.polarity = "dark";
+  stylix.image = /home/samsepi0l/nixos/resources/wallpaper.png;
+  stylix.cursor.package = pkgs.capitaine-cursors-themed;
+  stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
+  stylix.base16Scheme = {
+    base00 = "282828";
+    base01 = "3c3836";
+    base02 = "504945";
+    base03 = "665c54";
+    base04 = "bdae93";
+    base05 = "d5c4a1";
+    base06 = "ebdbb2";
+    base07 = "fbf1c7";
+    base08 = "fb4934";
+    base09 = "fe8019";
+    base0A = "fabd2f";
+    base0B = "b8bb26";
+    base0C = "8ec07c";
+    base0D = "83a598";
+    base0E = "d3869b";
+    base0F = "d65d0e";
+  };
 
   ################
   # HOME MANAGER #
@@ -144,9 +166,10 @@
           PAGER = "moar";
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = "moar";
-          VISUAL = "nvim";
           OPENER = "xdg-open";
+          VISUAL = "nvim";
           EDITOR = "nvim";
+          SUDO_EDITOR = "nvim";
           TERMINAL = "alacritty";
           TERMINAL_PROG = "alacritty";
           BROWSER = "librewolf";
@@ -205,6 +228,7 @@
           jdinhlife.gruvbox
           jnoortheen.nix-ide
           vscodevim.vim
+          jeff-hykin.better-nix-syntax
         ];
       };
       programs.alacritty = {
@@ -225,6 +249,14 @@
       programs.nixvim = {
         enable = true;
         colorschemes.gruvbox.enable = true;
+      };
+
+      dconf.settings = {
+        "org/gnome/desktop/input-sources" = {
+          show-all-sources = true;
+          sources = ["xkb"];
+          xkb-options = ["terminate:ctrl_alt_bksp"];
+        };
       };
     };
   };

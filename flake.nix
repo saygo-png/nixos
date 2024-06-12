@@ -14,6 +14,11 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -25,6 +30,7 @@
       specialArgs = {inherit inputs;};
       modules = [
         ./configuration.nix
+        # inputs.stylix.nixosModules.stylix
         # inputs.home-manager.nixosModules.default # useless?
       ];
     };
