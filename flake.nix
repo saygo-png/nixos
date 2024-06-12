@@ -25,8 +25,7 @@
       specialArgs = {inherit inputs;};
       modules = [
         ./configuration.nix
-        inputs.home-manager.nixosModules.default # useless?
-        # inputs.nixvim.nixosModules.nixvim
+        # inputs.home-manager.nixosModules.default # useless?
       ];
     };
   };
