@@ -228,7 +228,6 @@
           jdinhlife.gruvbox
           jnoortheen.nix-ide
           vscodevim.vim
-          jeff-hykin.better-nix-syntax
         ];
       };
       programs.alacritty = {
