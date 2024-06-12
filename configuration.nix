@@ -124,6 +124,34 @@
     base0E = "d3869b";
     base0F = "d65d0e";
   };
+  stylix.fonts = {
+    monospace = {
+      package = pkgs.courier-prime;
+      name = "Courier Prime";
+    };
+    sansSerif = {
+      package = pkgs.courier-prime;
+      name = "Courier Prime";
+    };
+    serif = {
+      package = pkgs.courier-prime;
+      name = "Courier Prime";
+    };
+  };
+
+  stylix.fonts.sizes = {
+    applications = 12;
+    terminal = 15;
+    desktop = 10;
+    popups = 10;
+  };
+
+  stylix.opacity = {
+    applications = 0.8;
+    terminal = 0.8;
+    desktop = 0.8;
+    popups = 0.8;
+  };
 
   ################
   # HOME MANAGER #
@@ -229,21 +257,39 @@
           jnoortheen.nix-ide
           vscodevim.vim
         ];
+        userSettings = {
+          "editor.minimap.enabled" = false;
+          "editor.tabSize" = 2;
+          "nix.enableLanguageServer" = true;
+          "nix.serverPath" = "nil";
+        };
       };
       programs.alacritty = {
         enable = true;
         settings = {
           env.TERM = "xterm-256color";
-          font = {
-            size = 12;
-          };
+          # Spread additional padding evenly around the terminal content.
+          window.dynamic_padding = true;
+          window.decorations = "full";
+          window.dynamic_title = true;
           scrolling.multiplier = 5;
-          selection.save_to_clipboard = true;
+          selection.save_to_clipboard = false;
+          cursor.style.shape = "Underline";
+          cursor.style.blinking = "on";
+          cursor.unfocused_hollow = false;
+          # cursor.style.thickness = 0.10;
+          window.padding = {
+            x = 8;
+            y = 8;
+          };
         };
       };
       programs.zsh.enable = true;
       programs.kakoune = {
         enable = true;
+        config = {
+          colorScheme = "gruvbox-dark";
+        };
       };
       programs.nixvim = {
         enable = true;
