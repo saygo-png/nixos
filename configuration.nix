@@ -1,18 +1,17 @@
 let
   constants = {
+    hostname = "nixos"; # Change manually in flake.nix
     username = "samsepi0l";
     home = "/home/samsepi0l";
-    hostname = "nixos";
-    flake-path = "...";
+    flake-path = "/home/samsepi0l/nixos";
     system = "x86_64-linux";
-    version = "release-24.05";
-    timezone = "Europe/Warsaw";
+    version = "24.05";
   };
 in
   {
     pkgs,
     lib,
-    config,
+    # config,
     inputs,
     ...
   }: {
@@ -21,17 +20,16 @@ in
       inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.default
     ];
-
     # Use the systemd-boot EFI boot loader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    networking.hostName = "default"; # Define your hostname.
+    networking.hostName = "${constants.hostname}"; # Define your hostname.
     networking.networkmanager.enable = true;
 
     # Locale.
     i18n.defaultLocale = "en_US.UTF-8";
-    time.timeZone = "${constants.timezone}";
+    time.timeZone = "Europe/Warsaw";
     services.xserver.xkb = {
       layout = "pl";
       options = "caps:escape";
@@ -41,13 +39,25 @@ in
       font = "Lat2-Terminus16";
     };
 
-    nix.settings.experimental-features = ["nix-command" "flakes"];
-
     # Define a user account. Don't forget to set a password with ‘passwd $USERNAME’.
     users.users.samsepi0l = {
       isNormalUser = true;
       extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
-      # shell = pkgs.zsh;
+      shell = pkgs.fish;
+    };
+
+    #########
+    # NixOs #
+    #########
+
+    nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings.auto-optimise-store = true;
+    boot.loader.grub.configurationLimit = 30;
+    boot.loader.systemd-boot.configurationLimit = 30;
+    nix.gc = {
+      automatic = true;
+      dates = "2day";
+      options = "--delete-older-than 15d";
     };
 
     ############
@@ -60,7 +70,7 @@ in
     # Enable the GNOME Desktop Environment.
     services.xserver.displayManager.gdm.enable = true;
     services.xserver.desktopManager.gnome.enable = true;
-
+    programs.hyprland.enable = true;
     # Enable sound.
     hardware.pulseaudio.enable = false;
     services.pipewire = {
@@ -78,20 +88,36 @@ in
       };
     };
 
-    # Disable touchpad support (enabled default in most desktopManager).
+    # Disable touchpad support (enabled default in most desktops).
     services.libinput.enable = false;
 
+    #########
+    # Shell #
+    #########
+
+    environment.shellAliases = {
+      "ls" = "${pkgs.eza}/bin/eza";
+      "rt" = "${pkgs.trashy}/bin/trash";
+      # "cd" = "${pkgs.zoxide}/bin/z";
+      "cd" = "z";
+    };
+
     environment.sessionVariables = {
-      FLAKE = "/home/samsepi0l/nixos"; # For nix helper
+      FLAKE = "${constants.flake-path}"; # For nix helper.
     };
 
     environment.systemPackages = with pkgs; [
-      # Nix stuff
+      # Nix.
       nh
       nvd
       nix-output-monitor
 
+      # Other.
+      helix
       wget
+      eza
+      trashy
+      tmux
       dash
       git
       xdg-utils
@@ -99,14 +125,54 @@ in
       xdg-desktop-portal-gtk
       xdg-desktop-portal-hyprland
       libnotify
+
+      # GUI.
+      rofi-wayland
+
+      # Shellscripts.
+      (writeShellScriptBin
+        "hard-clean-nix"
+        ''
+          nix-collect-garbage --delete-older-than 5d
+          sudo nix-collect-garbage --delete-older-than 5d
+          nix store optimise
+          sudo nix store optimise
+        '')
     ];
 
+    #########
+    # OTHER #
+    #########
+
+    programs.fish.enable = true;
+
     stylix.enable = true;
+    stylix.autoEnable = true;
     stylix.polarity = "dark";
     stylix.image = ./resources/wallpaper.png;
+    stylix.targets.grub.useImage = true;
+    stylix.targets.nixvim.transparent_bg.main = true;
+    stylix.targets.nixvim.transparent_bg.sign_column = true;
     stylix.cursor.package = pkgs.capitaine-cursors-themed;
     stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
-    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    stylix.base16Scheme = {
+      base00 = "282828"; # dark  ----
+      base01 = "3c3836"; # dark  ---
+      base02 = "504945"; # dark  --
+      base03 = "665c54"; # dark  -
+      base04 = "bdae93"; # light +
+      base05 = "d5c4a1"; # light ++
+      base06 = "ebdbb2"; # light +++
+      base07 = "fbf1c7"; # light ++++
+      base08 = "fb4934"; # red
+      base09 = "fe8019"; # orange
+      base0A = "fabd2f"; # yellow
+      base0B = "b8bb26"; # green
+      base0C = "8ec07c"; # aqua/cyan
+      base0D = "83a598"; # blue
+      base0E = "d3869b"; # purple
+      base0F = "d65d0e"; # brown
+    };
     stylix.fonts = {
       monospace = {
         package = pkgs.courier-prime;
@@ -119,6 +185,10 @@ in
       serif = {
         package = pkgs.courier-prime;
         name = "Courier Prime";
+      };
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
       };
     };
 
@@ -154,36 +224,42 @@ in
           stateVersion = "24.05"; # Dont change
 
           packages = with pkgs; [
-            hello
-            htop
-            moar
-            alejandra
-            rofi
+            # GUI.
             librewolf
-            nil
-            btop
-            iamb
             keepassxc
             rhythmbox
             inkscape
             krita
+
+            # Tooling.
+            nil # Nix lsp
+            alejandra # Nix formatter
+
+            # Command line.
+            gallery-dl
+            zoxide
+            btop
+            iamb
             cbonsai
             neofetch
             termdown
+            tldr
+            htop
+            moar
           ];
 
           sessionVariables = {
             # Default programs.
-            PAGER = "moar";
+            PAGER = "${pkgs.moar}/bin/moar";
             # Systemd is retarded and doesnt use normal pager variable :DDDDD
-            SYSTEMD_PAGER = "moar";
-            OPENER = "xdg-open";
+            SYSTEMD_PAGER = "${pkgs.moar}/bin/moar";
+            OPENER = "${pkgs.xdg-utils}/bin/xdg-open";
             VISUAL = "nvim";
             EDITOR = "nvim";
             SUDO_EDITOR = "nvim";
-            TERMINAL = "alacritty";
-            TERMINAL_PROG = "alacritty";
-            BROWSER = "librewolf";
+            TERMINAL = "${pkgs.alacritty}/bin/alacritty";
+            TERMINAL_PROG = "${pkgs.alacritty}/bin/alacritty";
+            BROWSER = "${pkgs.librewolf}/bin/librewolf";
             # Firefox hardware decode.
             MOZ_X11_EGL = 1;
             NO_AT_BRIDGE = 1;
@@ -192,6 +268,8 @@ in
           };
         };
         # Development, internal.
+        programs.fish.enable = true;
+        programs.zoxide.enable = true;
         programs.home-manager.enable = true;
         programs.git = {
           enable = true;
@@ -239,6 +317,7 @@ in
             jdinhlife.gruvbox
             jnoortheen.nix-ide
             vscodevim.vim
+            tekumara.typos-vscode
           ];
           userSettings = {
             "editor.minimap.enabled" = false;
@@ -267,7 +346,22 @@ in
             };
           };
         };
-        programs.zsh.enable = true;
+        programs.helix = {
+          enable = true;
+          settings = {
+            # theme = "";
+            editor = {
+              # line-number = "relative";
+              lsp.display-messages = true;
+            };
+            # keys.normal = {
+            #   space.space = "file_picker";
+            #   space.w = ":w";
+            #   space.q = ":q";
+            #   esc = ["collapse_selection" "keep_primary_selection"];
+            # };
+          };
+        };
         programs.kakoune = {
           enable = true;
           config = {
@@ -278,11 +372,21 @@ in
           enable = true;
           colorschemes.gruvbox.enable = true;
         };
+        programs.rofi = {
+          package = pkgs.rofi-wayland;
+          enable = true;
+        };
+        wayland.windowManager.hyprland = {
+          enable = true;
+        };
+        services.flameshot = {
+          enable = true;
+        };
 
         dconf.settings = {
           "org/gnome/desktop/input-sources" = {
             show-all-sources = true;
-            sources = ["xkb"];
+            sources = [(lib.gvariant.mkTuple ["xkb" "pl"])];
             xkb-options = ["caps:escape"];
           };
         };
