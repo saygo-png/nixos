@@ -91,3 +91,19 @@ hi noCursor blend=100 cterm=strikethrough
 hi ModeMsg guifg=#7d8618
 hi MsgArea guifg=#7d8618
 
+" Real delete
+nnoremap dd "_dd
+nnoremap d "_d
+vnoremap d "_d
+nnoremap D "_D
+noremap c "_c
+vnoremap c "_c
+nnoremap C "_C
+
+noremap x "+x
+nnoremap Y "+y$
+xnoremap y "+y
+nnoremap yy "+yy
+
+noremap p "+gp
+noremap P "+gP
