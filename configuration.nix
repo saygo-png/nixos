@@ -11,7 +11,7 @@ in
   {
     pkgs,
     lib,
-    # config,
+    config,
     inputs,
     ...
   }: {
@@ -20,20 +20,26 @@ in
       inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.default
     ];
+
+    #######################
+    # Essential or basic. #
+    #######################
+
     # Use the systemd-boot EFI boot loader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    networking.hostName = "${constants.hostname}"; # Define your hostname.
+    networking.hostName = "${constants.hostname}";
     networking.networkmanager.enable = true;
 
-    # Locale.
     i18n.defaultLocale = "en_US.UTF-8";
     time.timeZone = "Europe/Warsaw";
+
     services.xserver.xkb = {
       layout = "pl";
       options = "caps:escape";
     };
+
     console = {
       useXkbConfig = true;
       font = "Lat2-Terminus16";
@@ -46,10 +52,90 @@ in
       shell = pkgs.fish;
     };
 
-    #########
-    # NixOs #
-    #########
+    ###################
+    # NixOS programs. #
+    ###################
 
+    # Allowed unfree packages
+    nixpkgs.config.allowUnfreePredicate = pkg:
+      builtins.elem (lib.getName pkg) [
+        "steam"
+        "steam-original"
+        "steam-run"
+      ];
+
+    environment.systemPackages = with pkgs; [
+      # Nix.
+      nh
+      nvd
+      nix-output-monitor
+
+      # Other.
+      wl-clipboard
+      wget
+      eza
+      trashy
+      tmux
+      dash
+      git
+      fzf
+      gnumake
+      ripgrep
+      zig
+      fd
+      xdg-utils
+      xdg-desktop-portal
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+      libnotify
+
+      # GUI.
+      rofi-wayland
+      mangohud
+
+      # Shellscripts.
+      (writeShellScriptBin
+        "hard-clean-nix"
+        ''
+          nix-collect-garbage --delete-older-than 5d
+          sudo nix-collect-garbage --delete-older-than 5d
+          nix store optimise
+          sudo nix store optimise
+        '')
+
+      (writeShellScriptBin
+        "pizzatimer"
+        ''
+          #!/bin/bash
+          ${pkgs.termdown}/bin/termdown 15m && \
+          for i in {1..10}; do ${pkgs.libnotify}/bin/notify-send "Pizza is done."; done
+        '')
+    ];
+
+    ########################
+    # Hardware or drivers. #
+    ########################
+
+    hardware.opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+    services.xserver.videoDrivers = ["amdgpu"];
+
+    ##########
+    # Games. #
+    ##########
+
+    programs.steam.enable = true;
+    programs.steam.gamescopeSession.enable = true;
+    programs.gamemode.enable = true;
+
+    ##########
+    # NixOs. #
+    ##########
+
+    nixpkgs.config.allowUnfree = false;
     nix.settings.experimental-features = ["nix-command" "flakes"];
     nix.settings.auto-optimise-store = true;
     boot.loader.grub.configurationLimit = 30;
@@ -60,9 +146,9 @@ in
       options = "--delete-older-than 15d";
     };
 
-    ############
-    # Services #
-    ############
+    #############
+    # Services. #
+    #############
 
     # Enable the X11 windowing system.
     services.xserver.enable = true;
@@ -70,7 +156,8 @@ in
     # Enable the GNOME Desktop Environment.
     services.xserver.displayManager.gdm.enable = true;
     services.xserver.desktopManager.gnome.enable = true;
-    # Enable sound.
+
+    # Enable sound with low latency.
     hardware.pulseaudio.enable = false;
     services.pipewire = {
       enable = true;
@@ -96,88 +183,65 @@ in
     # Shell #
     #########
 
+    programs.fish.enable = true;
+
     environment.shellAliases = {
       "ls" = "${pkgs.eza}/bin/eza";
       "rm" = "${pkgs.trashy}/bin/trash";
     };
-
     environment.sessionVariables = {
       FLAKE = "${constants.flake-path}"; # For nix helper.
     };
 
-    environment.systemPackages = with pkgs; [
-      # Nix.
-      nh
-      nvd
-      nix-output-monitor
+    ###########
+    # Visuals #
+    ###########
 
-      # Other.
-      wget
-      eza
-      trashy
-      tmux
-      dash
-      git
-      xdg-utils
-      xdg-desktop-portal
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland
-      libnotify
+    # Fonts.
+    fonts = {
+      fontDir.enable = true;
+      packages = with pkgs; [
+        # Main font.
+        courier-prime
 
-      # GUI.
-      rofi-wayland
+        # Icons, symbols.
+        noto-fonts
+        (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+      ];
 
-      # Shellscripts.
-      (writeShellScriptBin
-        "hard-clean-nix"
-        ''
-          nix-collect-garbage --delete-older-than 5d
-          sudo nix-collect-garbage --delete-older-than 5d
-          nix store optimise
-          sudo nix store optimise
-        '')
-
-      (writeShellScriptBin
-        "pizzatimer"
-        ''
-          #!/bin/bash
-          ${pkgs.termdown}/bin/termdown 15m && \
-          for i in {1..10}; do ${pkgs.libnotify}/bin/notify-send "Pizza is done."; done
-        '')
-    ];
-
-    #########
-    # OTHER #
-    #########
-
-    programs.fish.enable = true;
+      fontconfig = {
+        defaultFonts = {
+          serif = ["Courier Prime" "Symbols Nerd Font"];
+          sansSerif = ["Courier Prime" "Symbols Nerd Font"];
+          monospace = ["Courier Prime" "Symbols Nerd Font"];
+        };
+      };
+    };
 
     stylix.enable = true;
     stylix.autoEnable = true;
     stylix.polarity = "dark";
     stylix.image = ./resources/wallpaper.png;
     stylix.targets.grub.useImage = true;
-    stylix.targets.nixvim.transparent_bg.main = true;
-    stylix.targets.nixvim.transparent_bg.sign_column = true;
     stylix.cursor.package = pkgs.capitaine-cursors-themed;
     stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
     stylix.base16Scheme = {
-      base00 = "282828"; # dark  ----
-      base01 = "3c3836"; # dark  ---
-      base02 = "504945"; # dark  --
-      base03 = "665c54"; # dark  -
-      base04 = "bdae93"; # light +
-      base05 = "d5c4a1"; # light ++
-      base06 = "ebdbb2"; # light +++
-      base07 = "fbf1c7"; # light ++++
-      base08 = "fb4934"; # red
-      base09 = "fe8019"; # orange
-      base0A = "fabd2f"; # yellow
-      base0B = "b8bb26"; # green
-      base0C = "8ec07c"; # aqua/cyan
-      base0D = "83a598"; # blue
-      base0E = "d3869b"; # purple
-      base0F = "d65d0e"; # brown
+      base00 = "282828"; # #282828 dark  ----
+      base01 = "3c3836"; # #3c3836 dark  ---
+      base02 = "504945"; # #504945 dark  --
+      base03 = "665c54"; # #665c54 dark  -
+      base04 = "bdae93"; # #bdae93 light +
+      base05 = "d5c4a1"; # #d5c4a1 light ++
+      base06 = "ebdbb2"; # #ebdbb2 light +++
+      base07 = "fbf1c7"; # #fbf1c7 light ++++
+      base08 = "fb4934"; # #fb4934 red
+      base09 = "fe8019"; # #fe8019 orange
+      base0A = "fabd2f"; # #fabd2f yellow
+      base0B = "b8bb26"; # #b8bb26 green
+      base0C = "8ec07c"; # #8ec07c cyan
+      base0D = "83a598"; # #83a598 blue
+      base0E = "d3869b"; # #d3869b purple
+      base0F = "d65d0e"; # #d65d0e brown
     };
     stylix.fonts = {
       monospace = {
@@ -197,14 +261,12 @@ in
         name = "Noto Color Emoji";
       };
     };
-
     stylix.fonts.sizes = {
       applications = 12;
       terminal = 13;
       desktop = 10;
       popups = 10;
     };
-
     stylix.opacity = {
       applications = 0.8;
       terminal = 0.8;
@@ -222,8 +284,8 @@ in
 
       users.samsepi0l = {
         imports = [
-          inputs.nixvim.homeManagerModules.nixvim
           inputs.nix-index-database.hmModules.nix-index
+          inputs.nixvim.homeManagerModules.nixvim
         ];
         home = {
           username = "samsepi0l";
@@ -237,10 +299,6 @@ in
             rhythmbox
             inkscape
             krita
-
-            # Tooling.
-            nil # Nix lsp
-            alejandra # Nix formatter
 
             # Command line.
             gallery-dl
@@ -340,7 +398,6 @@ in
             kamadorueda.alejandra
             jdinhlife.gruvbox
             jnoortheen.nix-ide
-            vscodevim.vim
             tekumara.typos-vscode
           ];
           userSettings = {
@@ -370,9 +427,304 @@ in
             };
           };
         };
+        stylix.targets.vim.enable = true;
         programs.nixvim = {
           enable = true;
-          colorschemes.gruvbox.enable = true;
+          extraPackages = with pkgs; [
+            codespell # Spelling.
+            stylua # Lua formatter
+            nil # Nix LSP
+            alejandra # Nix formatter
+            rust-analyzer # Rust LSP
+            vim-language-server
+            typos-lsp
+            marksman # Markdown LSP
+            haskell-language-server # Haskell LSP
+            python312Packages.python-lsp-server
+            python312Packages.pyls-isort # Python import sort
+            python312Packages.pycodestyle # Python complainer
+            python312Packages.pylsp-mypy # Static checker plugin
+            python312Packages.jedi # Autocomplete plugin
+            python312Packages.mccabe # Flake8 plugin
+            python312Packages.flake8 # Pylsp plugin
+            python312Packages.pylsp-rope # Refactoring plugin
+            python312Packages.pyflakes # Python linter
+            sumneko-lua-language-server
+            nodePackages.bash-language-server
+            isort
+            mypy # Python type checker
+            black # Python formatter
+            yapf # Python formatter
+            ruff # Python linter
+          ];
+          highlight = {
+            MiniIndentscopeSymbol.fg = "#${config.stylix.base16Scheme.base03}"; # Gray indentline
+          };
+          opts = {
+            # Indents
+            expandtab = true;
+            tabstop = 2;
+            shiftwidth = 2;
+            softtabstop = 2;
+
+            updatetime = 100;
+            number = true;
+            relativenumber = true;
+            ignorecase = true;
+            smartcase = true;
+            list = true;
+            foldmethod = "expr";
+            foldexpr = "nvim_treesitter#foldexpr()";
+            foldenable = false;
+            breakindent = true;
+            cmdheight = 0;
+            signcolumn = "yes";
+            # show spaces
+            listchars = "tab:▸ ,trail:·,nbsp:␣";
+          };
+          globals = {
+            mapleader = " ";
+          };
+          extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
+          package = pkgs.neovim-unwrapped;
+          enableMan = true;
+          clipboard.register = "unnamedplus";
+          colorscheme = "gruvbox";
+          colorschemes.gruvbox = {
+            enable = true;
+            settings = {
+              transparent_mode = true;
+              undercurl = false;
+              underline = false;
+              strikethrough = false;
+            };
+          };
+          plugins = {
+            fidget.enable = true;
+            nix.enable = true;
+            surround.enable = true;
+            comment.enable = true;
+            telescope.enable = true;
+            nvim-ufo.enable = true;
+            nvim-colorizer.enable = true;
+            # lspsaga.enable = true;
+            mini = {
+              enable = true;
+              modules = {
+                indentscope = {
+                  draw = {
+                    delay = 0;
+                    priority = 2;
+                  };
+                  symbol = "│";
+                  options = {
+                    border = "top";
+                    indent_at_cursor = true;
+                    try_as_border = true;
+                  };
+                };
+                align = {};
+                trailspace = {};
+              };
+            };
+
+            better-escape = {
+              enable = true;
+              clearEmptyLines = true;
+              timeout = 200;
+            };
+
+            trouble = {
+              enable = true;
+              settings = {
+                auto_close = true;
+              };
+            };
+
+            treesitter = {
+              enable = true;
+              ensureInstalled = [
+                "all"
+              ];
+              nixvimInjections = true;
+            };
+
+            lsp = {
+              enable = true;
+              servers = {
+                #nix
+                nil-ls.enable = true;
+
+                #python
+                pylsp.enable = true;
+                ruff.enable = true;
+
+                #bash
+                bashls.enable = true;
+
+                # Typos.
+                typos-lsp.enable = true;
+
+                #lua
+                lua-ls.enable = true;
+
+                #filesystem
+                fsautocomplete.enable = true;
+              };
+              keymaps.lspBuf = {
+                "gd" = "definition";
+                "gD" = "references";
+                "gi" = "implementation";
+                "K" = "hover";
+              };
+            };
+
+            gitsigns = {
+              enable = true;
+              settings = {
+                current_line_blame = false;
+              };
+            };
+
+            conform-nvim = {
+              enable = true;
+              extraOptions = {
+                lsp_fallback = true;
+              };
+              formattersByFt = {
+                # Conform will run multiple formatters sequentially
+                python = ["isort" "black" "yapf"];
+                nix = ["alejandra"];
+                # Use the "*" filetype to run formatters on all filetypes.
+                "*" = ["codespell" "trim_whitespace"];
+              };
+            };
+
+            luasnip = {
+              enable = true;
+              extraConfig = {
+                enable_autosnippets = true;
+              };
+              fromVscode = [
+                {
+                  lazyLoad = true;
+                  paths = "${pkgs.vimPlugins.friendly-snippets}";
+                }
+              ];
+            };
+
+            which-key = {
+              enable = true;
+              registrations = {
+                "gd" = "[g]o to [d]efinition";
+                "gD" = "[g]o to uses";
+                "gi" = "[g]o to [i]mplementation";
+                "K" = "[H]over info";
+                "<Leader>l" = "+[l]sp";
+                "<Leader>t" = "+[t]elescope";
+              };
+            };
+            oil = {
+              enable = true;
+              settings.defaultFileExplorer = true;
+            };
+
+            cmp = {
+              enable = true;
+              autoEnableSources = true;
+              settings = {
+                autocomplete = true;
+                experimental = {ghost_text = true;};
+                snippet = {expand = "luasnip";};
+                sources = [
+                  {name = "nvim_lsp";}
+                  {name = "luasnip";}
+                  {name = "path";}
+                ];
+                mapping = {
+                  "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+                  "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+                  "<C-j>" = "cmp.mapping.select_next_item()";
+                  "<C-k>" = "cmp.mapping.select_prev_item()";
+                  "<C-e>" = "cmp.mapping.abort()";
+                  "<C-b>" = "cmp.mapping.scroll_docs(-4)";
+                  "<C-f>" = "cmp.mapping.scroll_docs(4)";
+                  "<C-Space>" = "cmp.mapping.complete()";
+                  "<CR>" = "cmp.mapping.confirm({ select = false })";
+                  "<S-CR>" = "cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })";
+                };
+              };
+            };
+          };
+
+          keymaps = [
+            {
+              action = "<cmd>Oil .<CR>";
+              key = "<Leader>f";
+              options.desc = "Open [f]ile explorer";
+            }
+            {
+              action = "<cmd>Telescope find_files<CR>";
+              key = "<leader>tf";
+              options.desc = "Telescope find [f]iles";
+            }
+            {
+              action = "<cmd>Telescope buffers<CR>";
+              key = "<Leader>to";
+              options.desc = "Pick [o]pen buffers";
+            }
+            {
+              action = "<cmd>Telescope live_grep<CR>";
+              key = "<Leader>tt";
+              options.desc = "Find [t]ext in project";
+            }
+            {
+              action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
+              key = "<Leader>la";
+              options.desc = "Code [a]ctions";
+            }
+            {
+              action = "<cmd>lua vim.lsp.buf.rename()<CR>";
+              key = "<Leader>rn";
+              options.desc = "[r]e[n]ame";
+            }
+            {
+              action = "<cmd>lua vim.diagnostic.open_float()<CR>";
+              key = "<Leader>e";
+              options.desc = "Open diagnostic";
+            }
+            {
+              mode = "n";
+              action = "<cmd>nohlsearch<CR>";
+              key = "<Esc>";
+            }
+            {
+              mode = "n";
+              action = "<cmd>HopWord<CR>";
+              key = "<Leader><Leader>";
+              options.desc = "Hop";
+            }
+            {
+              mode = "n";
+              action = ":";
+              key = ";";
+              options.desc = "Command mode with or without shift";
+            }
+          ];
+
+          autoCmd = [
+            {
+              event = ["BufWritePre"];
+              command = "lua require(\"conform\").format()";
+              desc = "Autoformat";
+            }
+            {
+              event = ["BufReadPost"];
+              pattern = ["*"];
+              command = "normal!'\"";
+              desc = "Open at last location";
+            }
+          ];
         };
         programs.rofi = {
           package = pkgs.rofi-wayland;
@@ -509,22 +861,22 @@ in
               "$mainMod, S, exec, show-keybinds"
 
               # keybindings
-              "$mainMod, Return, exec, alacritty"
-              "$mainMod, Q, killactive,"
+              "$mainMod, Return, Open terminal, exec, $TERMINAL"
+              "$mainMod, Q, Close active, killactive,"
               # "ALT, Return, exec, kitty --title float_kitty"
               # "$mainMod SHIFT, Return, exec, kitty --start-as=fullscreen -o 'font_size=16'"
               # "$mainMod, B, exec, hyprctl dispatch exec '[workspace 1 silent] floorp'"
-              # "$mainMod, F, fullscreen, 0"
+              "$mainMod, F, Fullscreen, fullscreen, 0"
               # "$mainMod SHIFT, F, fullscreen, 1"
-              # "$mainMod, Space, togglefloating,"
-              # "$mainMod, D, exec, pkill rofi || rofi --show drun"
+              "$mainMod, SHIFT, Space, Toggle floating, togglefloating,"
+              "$mainMod, Space, exec, pkill rofi || rofi --show drun"
               # "$mainMod SHIFT, D, exec, hyprctl dispatch exec '[workspace 4 silent] discord'"
               # "$mainMod SHIFT, S, exec, hyprctl dispatch exec '[workspace 5 silent] SoundWireServer'"
               # "$mainMod, Escape, exec, swaylock"
               # "$mainMod SHIFT, Escape, exec, shutdown-script"
               # "$mainMod, P, pseudo,"
-              # "$mainMod, J, togglesplit,"
-              # "$mainMod, E, exec, nemo"
+              "$mainMod, J, togglesplit,"
+              "$mainMod, S, exec, nemo"
               # "$mainMod, C ,exec, hyprpicker -a"
 
               # screenshot
@@ -592,10 +944,10 @@ in
             ];
 
             # mouse binding
-            # bindm = [
-            #   "$mainMod, mouse:272, movewindow"
-            #   "$mainMod, mouse:273, resizewindow"
-            # ];
+            bindm = [
+              "$mainMod, mouse:272, movewindow"
+              "$mainMod, mouse:273, resizewindow"
+            ];
 
             windowrule = [
               "float,imv"
@@ -673,9 +1025,9 @@ in
       };
     };
 
-    programs.gnupg.agent = {
-      enable = true;
-    };
+    # programs.gnupg.agent = {
+    #   enable = true;
+    # };
 
     # Open ports in the firewall.
     # networking.firewall.allowedTCPPorts = [ ... ];
