@@ -105,10 +105,14 @@ in {
     # Nix.
     nh
     nvd
+    nil # Nix LSP
     nix-output-monitor
+    alejandra # Nix formatter
 
     # Other.
     wl-clipboard
+    cliphist
+
     wget
     eza
     trashy
@@ -116,9 +120,8 @@ in {
     dash
     git
     fzf
-    gnumake
     ripgrep
-    zig
+    gnumake
     fd
     xdg-utils
     xdg-desktop-portal
@@ -201,12 +204,13 @@ in {
     pulse.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
+    jack.enable = true;
     extraConfig.pipewire."92-low-latency" = {
       context.properties = {
         default.clock.rate = 48000;
-        default.clock.quantum = 8;
-        default.clock.min-quantum = 8;
-        default.clock.max-quantum = 8;
+        default.clock.quantum = 16;
+        default.clock.min-quantum = 16;
+        default.clock.max-quantum = 16;
       };
     };
   };
@@ -225,7 +229,9 @@ in {
   environment.shellAliases = {
     "ls" = "${pkgs.eza}/bin/eza";
     "rm" = "${pkgs.trashy}/bin/trash";
+    "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
   };
+
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
   };
@@ -277,6 +283,7 @@ in {
     base0E = "d3869b"; # #d3869b purple
     base0F = "d65d0e"; # #d65d0e brown
   };
+
   stylix.fonts = {
     monospace = {
       package = pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];};
@@ -295,12 +302,14 @@ in {
       name = "BlexMono Nerd Font";
     };
   };
+
   stylix.fonts.sizes = {
     applications = 12;
     terminal = 13;
     desktop = 10;
     popups = 10;
   };
+
   stylix.opacity = {
     applications = 0.8;
     terminal = 0.8;
@@ -315,7 +324,6 @@ in {
   home-manager = {
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # h-m breaks without it.
-
     users.samsepi0l = {
       imports = [
         inputs.nix-index-database.hmModules.nix-index
@@ -339,7 +347,7 @@ in {
           zoxide
           mpv
           btop
-          iamb
+          gomuks
           cbonsai
           neofetch
           termdown
@@ -467,8 +475,6 @@ in {
         extraPackages = with pkgs; [
           codespell # Spelling.
           stylua # Lua formatter
-          nil # Nix LSP
-          alejandra # Nix formatter
           rust-analyzer # Rust LSP
           vim-language-server
           typos-lsp
@@ -534,14 +540,35 @@ in {
           };
         };
         plugins = {
-          fidget.enable = true;
           nix.enable = true;
           surround.enable = true;
           comment.enable = true;
           telescope.enable = true;
           nvim-ufo.enable = true;
           nvim-colorizer.enable = true;
-          lspsaga.enable = true;
+          lspsaga = {
+            enable = true;
+            lightbulb = {
+              enable = false;
+            };
+          };
+
+          fidget = {
+            enable = true;
+            progress = {
+              display = {
+                doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
+              };
+            };
+            notification = {
+              window = {
+                normalHl = "Comment";
+                winblend = 100;
+                border = "single"; # none, single, double, rounded, solid, shadow
+              };
+            };
+          };
+
           mini = {
             enable = true;
             modules = {
@@ -789,6 +816,7 @@ in {
             kb_options = "caps:escape";
             repeat_delay = 300;
             repeat_rate = 50;
+            accel_profile = "flat";
             numlock_by_default = false;
             follow_mouse = 1;
             sensitivity = -0.8;
@@ -853,7 +881,7 @@ in {
           #     xray = true;
           #   };
 
-          #   drop_shadow = true;
+          drop_shadow = true;
 
           #   shadow_ignore_window = true;
           #   shadow_offset = "0 2";
@@ -895,23 +923,22 @@ in {
             "$mainMod, S, exec, show-keybinds"
 
             # keybindings
+            # TODO add these binds:
+            # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
+
             "$mainMod, Return, Open terminal, exec, $TERMINAL"
             "$mainMod, Q, Close active, killactive,"
-            # "ALT, Return, exec, kitty --title float_kitty"
-            # "$mainMod SHIFT, Return, exec, kitty --start-as=fullscreen -o 'font_size=16'"
-            # "$mainMod, B, exec, hyprctl dispatch exec '[workspace 1 silent] floorp'"
+            "$mainMod, B, exec, hyprctl dispatch exec '[workspace 1 silent] librewolf'"
             "$mainMod, F, Fullscreen, fullscreen, 0"
             # "$mainMod SHIFT, F, fullscreen, 1"
             "$mainMod, SHIFT, Space, Toggle floating, togglefloating,"
-            "$mainMod, Space, exec, pkill rofi || rofi --show drun"
+            "$mainMod, Space, Application launcher, exec, pkill rofi || rofi --show drun"
             # "$mainMod SHIFT, D, exec, hyprctl dispatch exec '[workspace 4 silent] discord'"
             # "$mainMod SHIFT, S, exec, hyprctl dispatch exec '[workspace 5 silent] SoundWireServer'"
-            # "$mainMod, Escape, exec, swaylock"
-            # "$mainMod SHIFT, Escape, exec, shutdown-script"
+            "$mainMod, Print, Screenshot, exec, ${pkgs.grim}/bin/grim -s \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
             # "$mainMod, P, pseudo,"
-            "$mainMod, J, togglesplit,"
-            "$mainMod, S, exec, nemo"
-            # "$mainMod, C ,exec, hyprpicker -a"
+            # "$mainMod, J, togglesplit,"
+            "$mainMod, C ,exec, hyprpicker -a"
 
             # screenshot
             # "$mainMod, Print, exec, grimblast --notify --cursor save area ~/Pictures/$(date +'%Y-%m-%d-At-%Ih%Mm%Ss').png"
@@ -963,8 +990,8 @@ in {
             "$mainMod ALT, J, moveactive, 0 80"
 
             # media and volume controls
-            # ",XF86AudioRaiseVolume,exec, pamixer -i 2"
-            # ",XF86AudioLowerVolume,exec, pamixer -d 2"
+            ",Equal,exec, pamixer -i 2"
+            ",Minus,exec, pamixer -d 2"
             # ",XF86AudioMute,exec, pamixer -t"
             # ",XF86AudioPlay,exec, playerctl play-pause"
             # ",XF86AudioNext,exec, playerctl next"
@@ -974,7 +1001,7 @@ in {
             # "$mainMod, mouse_up, workspace, e+1"
 
             # clipboard manager
-            # "$mainMod, V, exec, cliphist list | rofi --dmenu | cliphist decode | wl-copy"
+            "$mainMod, V, exec, cliphist list | ${pkgs.rofi-wayland}/bin/rofi --dmenu | cliphist decode | ${pkgs.wl-clipboard}/bin/wl-copy"
           ];
 
           # mouse binding
