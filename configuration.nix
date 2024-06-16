@@ -247,13 +247,22 @@ in {
       # Main font.
       # constants.courier-prime-nerd-font-patched
       (pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];})
+      (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+      # pkgs.noto-fonts-cjk-serif
+      # pkgs.noto-fonts-cjk-sans
+      # pkgs.noto-fonts-emoji
+      # pkgs.noto-fonts
+      # pkgs.overpass
     ];
 
     fontconfig = {
+      enable = true;
+      antialias = true;
+      hinting.enable = true;
       defaultFonts = {
-        serif = ["BlexMono Nerd Font"];
-        sansSerif = ["BlexMono Nerd Font"];
-        monospace = ["BlexMono Nerd Font"];
+        serif = ["BlexMono Nerd Font" "Symbols Nerd Font"];
+        sansSerif = ["BlexMono Nerd Font" "Symbols Nerd Font"];
+        monospace = ["BlexMono Nerd Font" "Symbols Nerd Font"];
       };
     };
   };
@@ -336,24 +345,25 @@ in {
 
         packages = with pkgs; [
           # GUI.
-          librewolf
-          keepassxc
-          rhythmbox
-          inkscape
-          krita
+          librewolf # Browser
+          keepassxc # Password manager
+          rhythmbox # Music player
+          inkscape # Vector
+          krita # Painting
+          foliate # Ebook reader
 
           # Command line.
-          gallery-dl
-          zoxide
-          mpv
-          btop
-          gomuks
-          cbonsai
-          neofetch
-          termdown
-          tldr
-          htop
-          moar
+          gallery-dl # Image/video downloader
+          zoxide # Cd alternative
+          mpv # Video player
+          btop # TUI task manager
+          gomuks # TUI matrix client
+          cbonsai # Ascii tree animation
+          fastfetch # System info
+          termdown # Timer
+          tldr # Man alternative
+          htop # TUI task manager
+          moar # Pager
         ];
 
         sessionVariables = {
@@ -454,7 +464,7 @@ in {
       programs.alacritty = {
         enable = true;
         settings = {
-          # env.TERM = "xterm-256color";
+          #   # env.TERM = "xterm-256color";
           window.dynamic_padding = true;
           window.decorations = "full";
           window.dynamic_title = true;
@@ -470,7 +480,7 @@ in {
           };
         };
       };
-      stylix.targets.vim.enable = true;
+      stylix.targets.alacritty.enable = true;
       programs.nixvim = {
         enable = true;
         extraPackages = with pkgs; [
@@ -560,7 +570,7 @@ in {
             enable = true;
             progress = {
               display = {
-                doneIcon = "k"; # Icon shown when all LSP progress tasks are complete
+                doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
               };
             };
             notification = {
@@ -801,17 +811,17 @@ in {
         settings = {
           # autostart
           exec-once = [
-            # "systemctl --user import-environment &"
-            # "hash dbus-update-activation-environment 2>/dev/null &"
-            # "dbus-update-activation-environment --systemd &"
-            # "wl-clip-persist --clipboard both"
+            "systemctl --user import-environment &"
+            "hash dbus-update-activation-environment 2>/dev/null &"
+            "dbus-update-activation-environment --systemd &"
+            "wl-clip-persist --clipboard both"
             # "swaybg -m fill -i $(find ~/Pictures/wallpapers/ -maxdepth 1 -type f) &"
             # "sleep 1 && swaylock"
             # "hyprctl setcursor Nordzy-cursors 22 &"
             # "poweralertd &"
             # "waybar &"
             # "mako &"
-            # "wl-paste --watch cliphist store &"
+            "wl-paste --watch cliphist store &"
           ];
 
           input = {
@@ -1068,12 +1078,12 @@ in {
           ];
         };
 
-        #       extraConfig = "
-        #   monitor=,preferred,auto,auto
-        #   xwayland {
-        #     force_zero_scaling = true
-        #   }
-        # ";
+        extraConfig = "
+           monitor=,preferred,auto,auto
+           xwayland {
+             force_zero_scaling = true
+           }
+        ";
       };
       services.flameshot = {
         enable = true;
