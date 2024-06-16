@@ -841,12 +841,14 @@ in {
 
           general = {
             "$mainMod" = "SUPER";
-            layout = "master";
+            layout = "dwindle";
             gaps_in = 10;
             gaps_out = 40;
             border_size = 2;
             border_part_of_window = false;
             no_border_on_floating = false;
+            col.active_border = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+            col.inactive_border = "rgba(595959aa)";
           };
 
           misc = {
@@ -1056,7 +1058,11 @@ in {
           ];
 
           windowrulev2 = [
+            # Hide border on unfocused windows
+            "noborder, focus:0"
+
             "suppressevent maximize, class:.*"
+
             "float, title:^(Picture-in-Picture)$"
             "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
             "pin, title:^(Picture-in-Picture)$"
