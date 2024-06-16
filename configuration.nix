@@ -395,6 +395,7 @@ in {
       programs.bash.enable = true;
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
+      programs.git-credential-oauth.enable = true;
       programs.git = {
         enable = true;
         package = pkgs.gitAndTools.gitFull;
@@ -550,6 +551,8 @@ in {
             enable = true;
             lightbulb = {
               enable = false;
+              sign = false;
+              virtualText = false;
             };
           };
 
@@ -557,13 +560,13 @@ in {
             enable = true;
             progress = {
               display = {
-                doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
+                doneIcon = "k"; # Icon shown when all LSP progress tasks are complete
               };
             };
             notification = {
               window = {
                 normalHl = "Comment";
-                winblend = 100;
+                winblend = 0;
                 border = "single"; # none, single, double, rounded, solid, shadow
               };
             };
