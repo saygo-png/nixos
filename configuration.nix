@@ -12,28 +12,6 @@
     flake-path = "/home/samsepi0l/nixos";
     system = "x86_64-linux";
     version = "24.05";
-    # courier-prime-nerd-font-patched = pkgs.stdenvNoCC.mkDerivation {
-    #   pname = "courier-prime-nerd-font-patched";
-    #   version = "0.0.1";
-    #   src = pkgs.fetchFromGitHub {
-    #     owner = "quoteunquoteapps";
-    #     repo = "CourierPrime";
-    #     rev = "7fd585a2dd4c1612c79b3308e300923d1c13df93";
-    #     hash = "sha256-kTGA0x5Ki44+X8oqO0mIGOU3puqQSwTAZy7PTLRcZf8=";
-    #   };
-    #
-    #   nativeBuildInputs = [pkgs.nerd-font-patcher];
-    #
-    #   installPhase = ''
-    #     runHook preInstall
-    #     mkdir -p $out/share/fonts/truetype/NerdFonts
-    #     ls
-    #     for f in $(find $src -name '*.ttf'); do
-    #       nerd-font-patcher "$f" -out $out/share/fonts/truetype/NerdFonts
-    #     done
-    #     runHook postInstall
-    #   '';
-    # };
   };
 in {
   imports = [
@@ -85,23 +63,9 @@ in {
       "steam-run"
     ];
 
-  environment.systemPackages = with pkgs; [
-    # Example on custom package. Fonts should not be here.
-    # (pkgs.stdenvNoCC.mkDerivation {
-    #   name = "gillsans-font";
-    #   dontConfigure = true;
-    #   src = pkgs.fetchzip {
-    #     url = "https://freefontsvault.s3.amazonaws.com/2020/02/Gill-Sans-Font-Family.zip";
-    #     sha256 = "sha256-YcZUKzRskiqmEqVcbK/XL6ypsNMbY49qJYFG3yZVF78=";
-    #     stripRoot = false;
-    #   };
-    #   installPhase = ''
-    #     mkdir -p $out/share/fonts
-    #     cp -R $src $out/share/fonts/opentype/
-    #   '';
-    #   meta = {description = "A Gill Sans Font Family derivation.";};
-    # })
+  programs.hyprland.enable = true;
 
+  environment.systemPackages = with pkgs; [
     # Nix.
     nh
     nvd
@@ -124,7 +88,6 @@ in {
     gnumake
     fd
     xdg-utils
-    xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     libnotify
@@ -185,7 +148,6 @@ in {
     dates = "2day";
     options = "--delete-older-than 15d";
   };
-
   #############
   # Services. #
   #############
@@ -246,7 +208,8 @@ in {
     packages = [
       # Main font.
       # constants.courier-prime-nerd-font-patched
-      (pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];})
+      pkgs.courier-prime
+      # (pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];})
       (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
       # pkgs.noto-fonts-cjk-serif
       # pkgs.noto-fonts-cjk-sans
@@ -260,9 +223,9 @@ in {
       antialias = true;
       hinting.enable = true;
       defaultFonts = {
-        serif = ["BlexMono Nerd Font" "Symbols Nerd Font"];
-        sansSerif = ["BlexMono Nerd Font" "Symbols Nerd Font"];
-        monospace = ["BlexMono Nerd Font" "Symbols Nerd Font"];
+        serif = ["Courier Prime" "Symbols Nerd Font"];
+        sansSerif = ["Courier Prime" "Symbols Nerd Font"];
+        monospace = ["Courier Prime" "Symbols Nerd Font"];
       };
     };
   };
@@ -295,20 +258,20 @@ in {
 
   stylix.fonts = {
     monospace = {
-      package = pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];};
-      name = "BlexMono Nerd Font";
+      package = pkgs.courier-prime;
+      name = "Courier Prime";
     };
     sansSerif = {
-      package = pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];};
-      name = "BlexMono Nerd Font";
+      package = pkgs.courier-prime;
+      name = "Courier Prime";
     };
     serif = {
-      package = pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];};
-      name = "BlexMono Nerd Font";
+      package = pkgs.courier-prime;
+      name = "Courier Prime";
     };
     emoji = {
-      package = pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];};
-      name = "BlexMono Nerd Font";
+      package = pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];};
+      name = "Symbols Nerd Font";
     };
   };
 
@@ -320,10 +283,10 @@ in {
   };
 
   stylix.opacity = {
-    applications = 0.8;
-    terminal = 0.8;
-    desktop = 0.8;
-    popups = 0.8;
+    applications = 0.65;
+    terminal = 0.65;
+    desktop = 0.65;
+    popups = 0.65;
   };
 
   ################
@@ -353,13 +316,16 @@ in {
           foliate # Ebook reader
 
           # Command line.
+          swaybg # Wallpaper setter
           gallery-dl # Image/video downloader
           zoxide # Cd alternative
           mpv # Video player
           btop # TUI task manager
           gomuks # TUI matrix client
           cbonsai # Ascii tree animation
-          fastfetch # System info
+          hyperpicker # Color picker
+          slurp # Screenshot assistant
+          swappy # Drawing
           termdown # Timer
           tldr # Man alternative
           htop # TUI task manager
@@ -406,6 +372,41 @@ in {
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+      programs.fasfetch = {
+        enable = true;
+        settings = {
+          modules = [
+            "title"
+            "separator"
+            "os"
+            "host"
+            "kernel"
+            "uptime"
+            "packages"
+            "shell"
+            "display"
+            "de"
+            "wm"
+            "wmtheme"
+            "theme"
+            "icons"
+            "font"
+            "cursor"
+            "terminal"
+            "terminalfont"
+            "cpu"
+            "gpu"
+            "memory"
+            "swap"
+            "disk"
+            "battery"
+            "poweradapter"
+            "locale"
+            "break"
+            "colors"
+          ];
+        };
+      };
       programs.git = {
         enable = true;
         package = pkgs.gitAndTools.gitFull;
@@ -466,14 +467,13 @@ in {
         settings = {
           #   # env.TERM = "xterm-256color";
           window.dynamic_padding = true;
-          window.decorations = "full";
+          window.decorations = "none";
           window.dynamic_title = true;
-          scrolling.multiplier = 5;
+          # scrolling.multiplier = 5;
           selection.save_to_clipboard = false;
           cursor.style.shape = "Underline";
           cursor.style.blinking = "on";
           cursor.unfocused_hollow = false;
-          cursor.thickness = 0.10;
           window.padding = {
             x = 8;
             y = 8;
@@ -557,14 +557,14 @@ in {
           telescope.enable = true;
           nvim-ufo.enable = true;
           nvim-colorizer.enable = true;
-          lspsaga = {
-            enable = true;
-            lightbulb = {
-              enable = false;
-              sign = false;
-              virtualText = false;
-            };
-          };
+          # lspsaga = {
+          #   enable = true;
+          #   lightbulb = {
+          #     enable = false;
+          #     sign = false;
+          #     virtualText = false;
+          #   };
+          # };
 
           fidget = {
             enable = true;
@@ -800,24 +800,28 @@ in {
           }
         ];
       };
+
       programs.rofi = {
         package = pkgs.rofi-wayland;
         enable = true;
       };
+
       wayland.windowManager.hyprland = {
         systemd.enable = true;
         xwayland.enable = true;
         enable = true;
         settings = {
-          # autostart
+          # Autostart.
+          debug = {
+            disable_logs = true;
+          };
           exec-once = [
             "systemctl --user import-environment &"
             "hash dbus-update-activation-environment 2>/dev/null &"
             "dbus-update-activation-environment --systemd &"
             "wl-clip-persist --clipboard both"
-            # "swaybg -m fill -i $(find ~/Pictures/wallpapers/ -maxdepth 1 -type f) &"
+            "${pkgs.swaybg}/bin/swaybg -m fill -i ${./resources/wallpaper.png} &"
             # "sleep 1 && swaylock"
-            # "hyprctl setcursor Nordzy-cursors 22 &"
             # "poweralertd &"
             # "waybar &"
             # "mako &"
@@ -828,21 +832,18 @@ in {
             kb_layout = "pl";
             kb_options = "caps:escape";
             repeat_delay = 300;
-            repeat_rate = 50;
+            repeat_rate = 30;
             accel_profile = "flat";
             numlock_by_default = false;
             follow_mouse = 1;
-            sensitivity = -0.8;
-            touchpad = {
-              natural_scroll = true;
-            };
+            sensitivity = -0.9;
           };
 
           general = {
             "$mainMod" = "SUPER";
             layout = "master";
-            gaps_in = 20;
-            gaps_out = 30;
+            gaps_in = 10;
+            gaps_out = 40;
             border_size = 2;
             border_part_of_window = false;
             no_border_on_floating = false;
@@ -853,7 +854,7 @@ in {
             #   disable_hyprland_logo = true;
             #   always_follow_on_dnd = true;
             #   layers_hog_keyboard_focus = true;
-            #   animate_manual_resizes = true;
+            animate_manual_resizes = true;
             enable_swallow = true;
             #   focus_on_activate = true;
           };
@@ -871,84 +872,88 @@ in {
           master = {
             # new_is_master = true;
             # special_scale_factor = 1;
-            no_gaps_when_only = true;
+            no_gaps_when_only = false;
           };
 
-          # decoration = {
-          #   rounding = 0;
-          #   active_opacity = 0.90;
-          #   inactive_opacity = 0.90;
-          #   fullscreen_opacity = 1.0;
+          decoration = {
+            #   rounding = 0;
+            #   active_opacity = 0.90;
+            #   inactive_opacity = 0.90;
+            #   fullscreen_opacity = 1.0;
 
-          #   blur = {
-          #     enabled = true;
-          #     size = 1;
-          #     passes = 1;
-          #     # size = 4;
-          #     # passes = 2;
-          #     brightness = 1;
-          #     contrast = 1.400;
-          #     ignore_opacity = true;
-          #     noise = 0;
-          #     new_optimizations = true;
-          #     xray = true;
-          #   };
+            blur = {
+              enabled = false;
+              size = 1;
+              passes = 1;
+              # size = 4;
+              # passes = 2;
+              brightness = 1;
+              contrast = 1.400;
+              ignore_opacity = true;
+              noise = 0;
+              new_optimizations = true;
+              xray = true;
+            };
 
-          drop_shadow = true;
+            drop_shadow = true;
 
-          #   shadow_ignore_window = true;
-          #   shadow_offset = "0 2";
-          #   shadow_range = 20;
-          #   shadow_render_power = 3;
-          #   # "col.shadow" = "rgba(00000055)";
-          # };
+            shadow_ignore_window = true;
+            shadow_offset = "0 2";
+            shadow_range = 20;
+            shadow_render_power = 3;
+            "col.shadow" = "rgba(00000055)";
+          };
 
           animations = {
             enabled = true;
 
-            # bezier = [
-            #   "fluent_decel, 0, 0.2, 0.4, 1"
-            #   "easeOutCirc, 0, 0.55, 0.45, 1"
-            #   "easeOutCubic, 0.33, 1, 0.68, 1"
-            #   "easeinoutsine, 0.37, 0, 0.63, 1"
-            # ];
+            bezier = [
+              "fluent_decel, 0, 0.2, 0.4, 1"
+              "easeOutCirc, 0, 0.55, 0.45, 1"
+              "easeOutCubic, 0.33, 1, 0.68, 1"
+              "easeinoutsine, 0.37, 0, 0.63, 1"
+            ];
 
-            # animation = [
-            #   # Windows
-            #   "windowsIn, 1, 3, easeOutCubic, popin 30%" # window open
-            #   "windowsOut, 1, 3, fluent_decel, popin 70%" # window close.
-            #   "windowsMove, 1, 2, easeinoutsine, slide" # everything in between, moving, dragging, resizing.
+            animation = [
+              # Windows
+              "windowsIn, 1, 3, easeOutCubic, popin 30%" # window open
+              "windowsOut, 1, 3, fluent_decel, popin 70%" # window close.
+              "windowsMove, 1, 2, easeinoutsine, slide" # everything in between, moving, dragging, resizing.
 
-            #   # Fade
-            #   "fadeIn, 1, 3, easeOutCubic" # fade in (open) -> layers and windows
-            #   "fadeOut, 1, 2, easeOutCubic" # fade out (close) -> layers and windows
-            #   "fadeSwitch, 0, 1, easeOutCirc" # fade on changing activewindow and its opacity
-            #   "fadeShadow, 1, 10, easeOutCirc" # fade on changing activewindow for shadows
-            #   "fadeDim, 1, 4, fluent_decel" # the easing of the dimming of inactive windows
-            #   "border, 1, 2.7, easeOutCirc" # for animating the border's color switch speed
-            #   "borderangle, 1, 30, fluent_decel, once" # for animating the border's gradient angle - styles: once (default), loop
-            #   "workspaces, 1, 4, easeOutCubic, fade" # styles: slide, slidevert, fade, slidefade, slidefadevert
-            # ];
+              # Fade
+              "fadeIn, 1, 3, easeOutCubic" # fade in (open) -> layers and windows
+              "fadeOut, 1, 2, easeOutCubic" # fade out (close) -> layers and windows
+              "fadeSwitch, 0, 1, easeOutCirc" # fade on changing activewindow and its opacity
+              "fadeShadow, 1, 10, easeOutCirc" # fade on changing activewindow for shadows
+              "fadeDim, 1, 4, fluent_decel" # the easing of the dimming of inactive windows
+              "border, 1, 2.7, easeOutCirc" # for animating the border's color switch speed
+              "borderangle, 1, 30, fluent_decel, once" # for animating the border's gradient angle - styles: once (default), loop
+              "workspaces, 1, 4, easeOutCubic, fade" # styles: slide, slidevert, fade, slidefade, slidefadevert
+            ];
           };
-
+          # bindd = [
+          #   "$mainMod, Q, Close active, killactive,"
+          #   "$mainMod, SHIFT + Space, Toggle floating, togglefloating,"
+          # ];
           bind = [
             # show keybinds list
             "$mainMod, S, exec, show-keybinds"
 
+            "$mainMod, Q, killactive,"
+            "$mainMod, SHIFT + Space, togglefloating,"
             # keybindings
             # TODO add these binds:
             # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
 
-            "$mainMod, Return, Open terminal, exec, $TERMINAL"
-            "$mainMod, Q, Close active, killactive,"
-            "$mainMod, B, exec, hyprctl dispatch exec '[workspace 1 silent] librewolf'"
+            "$mainMod, Return, exec, $TERMINAL"
+            "$mainMod, B, exec, hyprctl dispatch exec '[workspace 2 silent] librewolf'"
             "$mainMod, F, Fullscreen, fullscreen, 0"
             # "$mainMod SHIFT, F, fullscreen, 1"
-            "$mainMod, SHIFT, Space, Toggle floating, togglefloating,"
-            "$mainMod, Space, Application launcher, exec, pkill rofi || rofi --show drun"
+            "$mainMod, Space, exec, pkill rofi || rofi --show drun"
             # "$mainMod SHIFT, D, exec, hyprctl dispatch exec '[workspace 4 silent] discord'"
             # "$mainMod SHIFT, S, exec, hyprctl dispatch exec '[workspace 5 silent] SoundWireServer'"
-            "$mainMod, Print, Screenshot, exec, ${pkgs.grim}/bin/grim -s \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            # "$mainMod, Print, exec, ${pkgs.grim}/bin/grim -s \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            "$mainMod, Print, exec, ${pkgs.grim}/bin/grim -s \"$(slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
             # "$mainMod, P, pseudo,"
             # "$mainMod, J, togglesplit,"
             "$mainMod, C ,exec, hyprpicker -a"
@@ -976,17 +981,17 @@ in {
             "$mainMod, 0, workspace, 10"
 
             # same as above, but switch to the workspace
-            # "$mainMod SHIFT, 1, movetoworkspacesilent, 1" # movetoworkspacesilent
-            # "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-            # "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-            # "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-            # "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-            # "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-            # "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-            # "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-            # "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-            # "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
-            # "$mainMod CTRL, c, movetoworkspace, empty"
+            "$mainMod SHIFT, 1, movetoworkspacesilent, 1" # movetoworkspacesilent
+            "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
+            "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
+            "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
+            "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
+            "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
+            "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
+            "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
+            "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
+            "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
+            "$mainMod CTRL, c, movetoworkspace, empty"
 
             # window control
             "$mainMod SHIFT, H, movewindow, l"
@@ -1003,8 +1008,8 @@ in {
             "$mainMod ALT, J, moveactive, 0 80"
 
             # media and volume controls
-            ",Equal,exec, pamixer -i 2"
-            ",Minus,exec, pamixer -d 2"
+            # ",Equal,exec, pamixer -i 2"
+            # ",Minus,exec, pamixer -d 2"
             # ",XF86AudioMute,exec, pamixer -t"
             # ",XF86AudioPlay,exec, playerctl play-pause"
             # ",XF86AudioNext,exec, playerctl next"
@@ -1079,7 +1084,7 @@ in {
         };
 
         extraConfig = "
-           monitor=,preferred,auto,auto
+           monitor=, highres@highrr, auto, 1
            xwayland {
              force_zero_scaling = true
            }
