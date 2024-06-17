@@ -295,7 +295,7 @@ in {
   home-manager = {
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # h-m breaks without it.
-    users.samsepi0l = {
+    users.samsepi0l = {lib, ...}: {
       imports = [
         inputs.nix-index-database.hmModules.nix-index
         inputs.nixvim.homeManagerModules.nixvim
@@ -305,6 +305,16 @@ in {
         homeDirectory = "/home/samsepi0l";
         stateVersion = "24.05"; # Dont change
 
+        sessionVariables = {
+          # For protonup.
+          STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${constants.home}/.steam/root/compatibilitytools.d";
+        };
+
+        # activation.runProtonup = lib.hm.dag.entryAfter ["installPackages"] ''
+        #   mkdir -p "${constants.home}/.steam/root/compatibilitytools.d"
+        #   run ${pkgs.protonup}/bin/protonup -y -d "${constants.home}/.steam/root/compatibilitytools.d";
+        # '';
+
         packages = with pkgs; [
           # GUI.
           librewolf # Browser
@@ -313,8 +323,10 @@ in {
           inkscape # Vector
           krita # Painting
           foliate # Ebook reader
+          anki # Flashcards
 
           # Command line.
+          protonup # Steam proton downloader
           pulsemixer # Volume control
           swaybg # Wallpaper setter
           gallery-dl # Image/video downloader
@@ -325,7 +337,7 @@ in {
           cbonsai # Ascii tree animation
           hyprpicker # Color picker
           slurp # Screenshot assistant
-          swappy # Drawing
+          swappy # Quick drawing on images
           termdown # Timer
           tldr # Man alternative
           htop # TUI task manager
@@ -464,11 +476,9 @@ in {
       programs.alacritty = {
         enable = true;
         settings = {
-          #   # env.TERM = "xterm-256color";
           window.dynamic_padding = true;
-          window.decorations = "none";
           window.dynamic_title = true;
-          # scrolling.multiplier = 5;
+          scrolling.multiplier = 5;
           selection.save_to_clipboard = false;
           cursor.style.shape = "Underline";
           cursor.style.blinking = "on";
@@ -488,6 +498,7 @@ in {
           rust-analyzer # Rust LSP
           vim-language-server
           typos-lsp
+          ormolu # Haskell formatter
           marksman # Markdown LSP
           haskell-language-server # Haskell LSP
           python312Packages.python-lsp-server
@@ -692,23 +703,29 @@ in {
           lsp = {
             enable = true;
             servers = {
-              #nix
+              # Nix.
               nil-ls.enable = true;
 
-              #python
+              # Python.
               pylsp.enable = true;
               ruff.enable = true;
 
-              #bash
+              # Bash.
               bashls.enable = true;
 
               # Typos.
               typos-lsp.enable = true;
 
-              #lua
+              # Lua.
               lua-ls.enable = true;
 
-              #filesystem
+              # Haskell.
+              hls.enable = true;
+
+              # Rust.
+              rust-analyzer.enable = true;
+
+              # Filesystem.
               fsautocomplete.enable = true;
             };
             keymaps.lspBuf = {
@@ -732,8 +749,9 @@ in {
               lsp_fallback = true;
             };
             formattersByFt = {
-              # Conform will run multiple formatters sequentially
+              # Conform will run multiple formatters sequentially.
               python = ["isort" "black" "yapf"];
+              haskell = ["ormolu"];
               nix = ["alejandra"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["codespell" "trim_whitespace"];
