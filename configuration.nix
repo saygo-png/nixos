@@ -193,9 +193,10 @@ in {
     "shutdown" = "poweroff";
     "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
   };
-
+  # Envvar, envars.
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
+    BROWSER = "${pkgs.librewolf}/bin/librewolf";
   };
 
   ###########
@@ -364,6 +365,10 @@ in {
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+      programs.direnv = {
+        enable = true;
+        nix-direnv.enable = true;
+      };
       programs.fastfetch = {
         enable = true;
         settings = {
@@ -551,8 +556,8 @@ in {
           # More space.
           cmdheight = 0;
 
-          # Prevents screen jumping.
-          signcolumn = "no";
+          # Prevents screen jumping and needed for gitsigns
+          signcolumn = "yes";
 
           # Show some whitespace.
           list = true;
@@ -613,14 +618,14 @@ in {
             };
           };
           nvim-colorizer.enable = true;
-          # lspsaga = {
-          #   enable = true;
-          #   lightbulb = {
-          #     enable = false;
-          #     sign = false;
-          #     virtualText = false;
-          #   };
-          # };
+          lspsaga = {
+            enable = true;
+            lightbulb = {
+              enable = false;
+              sign = false;
+              virtualText = false;
+            };
+          };
 
           fidget = {
             enable = true;
@@ -867,14 +872,14 @@ in {
           }
           {
             mode = "n";
-            action = "<<";
-            key = "<";
+            action = "<lt><lt><esc>";
+            key = "<lt>";
             options.desc = "Indent less";
             options.silent = true;
           }
           {
             mode = "n";
-            action = ">>";
+            action = ">><esc>";
             key = ">";
             options.desc = "Indent more";
             options.silent = true;
@@ -1114,7 +1119,7 @@ in {
             # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
 
             "$mainMod, Return, exec, $TERMINAL"
-            "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] librewolf'"
+            "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
             "$mainMod, f, Fullscreen, fullscreen, 0"
             # "$mainMod SHIFT, F, fullscreen, 1"
             "$mainMod, Space, exec, pkill rofi || rofi -show drun"
@@ -1221,8 +1226,8 @@ in {
             "float,udiskie"
             "float,title:^(Transmission)$"
             "float,title:^(Volume Control)$"
-            "float,title:^(Firefox — Sharing Indicator)$"
-            "move 0 0,title:^(Firefox — Sharing Indicator)$"
+            "float,title:^(Librewolf — Sharing Indicator)$"
+            "move 0 0,title:^(Librewolf — Sharing Indicator)$"
             "size 700 450,title:^(Volume Control)$"
             "move 40 55%,title:^(Volume Control)$"
           ];
@@ -1241,7 +1246,7 @@ in {
             "opacity 1.0 override 1.0 override, class:(Aseprite)"
             "opacity 1.0 override 1.0 override, class:(Unity)"
             "idleinhibit focus, class:^(mpv)$"
-            "idleinhibit fullscreen, class:^(firefox)$"
+            "idleinhibit fullscreen, class:^(Librewolf)$"
             "float,class:^(pavucontrol)$"
             "float,class:^(SoundWireServer)$"
             "float,class:^(.sameboy-wrapped)$"

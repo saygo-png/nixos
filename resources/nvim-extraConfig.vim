@@ -122,7 +122,3 @@ vnoremap <expr> p 'pgvy'
 
 " Perform dot commands over visual blocks
 vnoremap . :normal .<CR>
-
-" No need to press indent twice
-nnoremap <silent> > >><esc>
-nnoremap <silent> <lt> <lt><lt><esc>
