@@ -207,16 +207,13 @@ in {
 
   # Fonts.
   fonts = {
-    # fontDir.enable = true;
     packages = [
       # Main font.
-      # constants.courier-prime-nerd-font-patched
       pkgs.courier-prime
-      # (pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];})
       (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-      pkgs.noto-fonts-cjk-serif
-      pkgs.noto-fonts-cjk-sans
-      pkgs.noto-fonts-emoji
+      # pkgs.noto-fonts-cjk-serif
+      # pkgs.noto-fonts-cjk-sans
+      # pkgs.noto-fonts-emoji
       pkgs.noto-fonts
     ];
 
@@ -318,6 +315,7 @@ in {
           foliate # Ebook reader
 
           # Command line.
+          pulsemixer # Volume control
           swaybg # Wallpaper setter
           gallery-dl # Image/video downloader
           zoxide # Cd alternative
