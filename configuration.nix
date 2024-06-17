@@ -78,6 +78,7 @@ in {
     wl-clipboard
     cliphist
 
+    libqalculate
     wget
     eza
     trashy
@@ -188,6 +189,7 @@ in {
   programs.fish.enable = true;
 
   environment.shellAliases = {
+    "qcalc" = "${pkgs.libqalculate}/bin/qalc";
     "ls" = "${pkgs.eza}/bin/eza";
     "rm" = "${pkgs.trashy}/bin/trash";
     "shutdown" = "poweroff";
@@ -212,11 +214,10 @@ in {
       pkgs.courier-prime
       # (pkgs.nerdfonts.override {fonts = ["IBMPlexMono"];})
       (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-      # pkgs.noto-fonts-cjk-serif
-      # pkgs.noto-fonts-cjk-sans
-      # pkgs.noto-fonts-emoji
-      # pkgs.noto-fonts
-      # pkgs.overpass
+      pkgs.noto-fonts-cjk-serif
+      pkgs.noto-fonts-cjk-sans
+      pkgs.noto-fonts-emoji
+      pkgs.noto-fonts
     ];
 
     fontconfig = {
@@ -414,6 +415,9 @@ in {
           amend = "commit -a --amend";
         };
         extraConfig = {
+          credential = {
+            helper = lib.mkDefault "cache --timeout 21600"; # six hours
+          };
           color = {
             ui = "auto";
           };
