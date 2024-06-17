@@ -12,6 +12,7 @@
     flake-path = "/home/samsepi0l/nixos";
     system = "x86_64-linux";
     version = "24.05";
+    accentColor = "7d8618"; #7d8618 TODO hacky, add extra color to stylix
   };
 in {
   imports = [
@@ -154,10 +155,8 @@ in {
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  # NixOS is retarded and turns on lightdm by default.
+  services.xserver.displayManager.lightdm.enable = false;
 
   # Enable sound with low latency.
   hardware.pulseaudio.enable = false;
@@ -191,6 +190,7 @@ in {
   environment.shellAliases = {
     "ls" = "${pkgs.eza}/bin/eza";
     "rm" = "${pkgs.trashy}/bin/trash";
+    "shutdown" = "poweroff";
     "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
   };
 
@@ -283,10 +283,10 @@ in {
   };
 
   stylix.opacity = {
-    applications = 0.65;
-    terminal = 0.65;
-    desktop = 0.65;
-    popups = 0.65;
+    applications = 0.6;
+    terminal = 0.6;
+    desktop = 0.6;
+    popups = 0.6;
   };
 
   ################
@@ -323,7 +323,7 @@ in {
           btop # TUI task manager
           gomuks # TUI matrix client
           cbonsai # Ascii tree animation
-          hyperpicker # Color picker
+          hyprpicker # Color picker
           slurp # Screenshot assistant
           swappy # Drawing
           termdown # Timer
@@ -351,14 +351,6 @@ in {
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
         };
       };
-      # Style.
-      # # Covered by stylix
-      # gtk = {
-      #   enable = true; theme = {
-      #     package = lib.mkForce pkgs.gruvbox-gtk-theme;
-      #     name = lib.mkForce "Gruvbox-Dark-B-MB";
-      #   };
-      # };
       # Development, internal.
       programs.command-not-found.enable = false;
       programs.nix-index.enable = true;
@@ -372,7 +364,7 @@ in {
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
-      programs.fasfetch = {
+      programs.fastfetch = {
         enable = true;
         settings = {
           modules = [
@@ -508,8 +500,17 @@ in {
           yapf # Python formatter
           ruff # Python linter
         ];
-        highlight = {
-          MiniIndentscopeSymbol.fg = "#${config.stylix.base16Scheme.base03}"; # Gray indentline
+        highlightOverride = {
+          # hi noCursor blend=100 cterm=strikethrough
+          # hi ModeMsg guifg=#7d8618
+          # hi MsgArea guifg=#7d8618
+          noCursor.blend = 100;
+          statusline.bg = "NONE";
+          statusline.fg = "#${constants.accentColor}";
+          CursorLineNr.fg = "#${constants.accentColor}";
+          CursorLineNr.bg = "#${config.stylix.base16Scheme.base01}"; # Gray indentline
+          MsgArea.fg = "#${constants.accentColor}";
+          MiniIndentscopeSymbol.fg = "#${config.stylix.base16Scheme.base01}"; # Gray indentline
         };
         opts = {
           # Indents
@@ -517,28 +518,68 @@ in {
           tabstop = 2;
           shiftwidth = 2;
           softtabstop = 2;
+          autoindent = true;
+          breakindent = true; # Indent when wrapping
 
+          # Delay on switching to normal mode.
+          ttimeoutlen = 0;
+
+          # Incremental search.
+          hlsearch = true;
+          incsearch = true;
           updatetime = 100;
+
+          # Relative numberline on the left.
           number = true;
           relativenumber = true;
+
+          # Color current line number
+          cursorline = true;
+          cursorlineopt = "number";
+
+          # Smartcase search and ripgrep.
           ignorecase = true;
           smartcase = true;
-          list = true;
+          grepprg = "rg --vimgrep";
+          grepformat = "%f:%l:%c:%m";
+
+          # More accurate folds.
           foldmethod = "expr";
           foldexpr = "nvim_treesitter#foldexpr()";
           foldenable = false;
-          breakindent = true;
+
+          # More space.
           cmdheight = 0;
-          signcolumn = "yes";
-          # show spaces
+
+          # Prevents screen jumping.
+          signcolumn = "no";
+
+          # Show some whitespace.
+          list = true;
           listchars = "tab:▸ ,trail:·,nbsp:␣";
+
+          # Better completion.
+          completeopt = ["menuone" "noselect" "noinsert"];
+
+          # Always keep 8 lines above/below cursor unless at start/end of file
+          scrolloff = 8;
+
+          # Use conform-nvim for gq formatting. ('formatexpr' is set to vim.lsp.formatexpr(), so you can format lines via gq if the language server supports it)
+          formatexpr = "v:lua.require'conform'.formatexpr()";
+
+          # (https://neovim.io/doc/user/options.html#'laststatus')
+          laststatus = 3;
         };
         globals = {
           mapleader = " ";
         };
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
+        # extraConfigLuaPost = ''
+        #   vim.cmd [[
+        #     ]]
+        # '';
         package = pkgs.neovim-unwrapped;
-        enableMan = true;
+        # enableMan = true;
         clipboard.register = "unnamedplus";
         colorscheme = "gruvbox";
         colorschemes.gruvbox = {
@@ -553,9 +594,24 @@ in {
         plugins = {
           nix.enable = true;
           surround.enable = true;
-          comment.enable = true;
           telescope.enable = true;
-          nvim-ufo.enable = true;
+          flash = {
+            enable = true;
+            labels = "asdfghjklqwertyuiopzxcvbnm";
+            search = {
+              mode = "fuzzy";
+            };
+            jump = {
+              autojump = true;
+            };
+            label = {
+              uppercase = false;
+              rainbow = {
+                enabled = true;
+                shade = 5;
+              };
+            };
+          };
           nvim-colorizer.enable = true;
           # lspsaga = {
           #   enable = true;
@@ -597,15 +653,17 @@ in {
                   try_as_border = true;
                 };
               };
+              comment = {
+                options = {
+                  customCommentString = ''
+                    <cmd>lua require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring<cr>
+                  '';
+                };
+              };
               align = {};
               trailspace = {};
+              cursorword = {};
             };
-          };
-
-          better-escape = {
-            enable = true;
-            clearEmptyLines = true;
-            timeout = 200;
           };
 
           trouble = {
@@ -615,6 +673,7 @@ in {
             };
           };
 
+          treesitter-textobjects.enable = true;
           treesitter = {
             enable = true;
             ensureInstalled = [
@@ -689,6 +748,7 @@ in {
 
           which-key = {
             enable = true;
+            ignoreMissing = false;
             registrations = {
               "gd" = "[g]o to [d]efinition";
               "gD" = "[g]o to uses";
@@ -732,6 +792,117 @@ in {
         };
 
         keymaps = [
+          # Basic.
+          {
+            mode = ["n"];
+            action = "Gzz";
+            key = "G";
+            options.desc = "Center bottom";
+          }
+          {
+            mode = ["n"];
+            action = "ggzz";
+            key = "gg";
+            options.desc = "Center top";
+          }
+
+          {
+            mode = ["n"];
+            action = "gj";
+            key = "j";
+            options.desc = "Move down through wrapped line";
+          }
+          {
+            mode = ["n"];
+            action = "gk";
+            key = "k";
+            options.desc = "Move up through wrapped line";
+          }
+
+          {
+            mode = ["n"];
+            action = "gP";
+            key = "P";
+          }
+          {
+            mode = ["n"];
+            action = "gp";
+            key = "p";
+          }
+          {
+            mode = ["n"];
+            action = "\"_C";
+            key = "C";
+            options.desc = "Change till end of line to void";
+          }
+          {
+            mode = ["n" "v"];
+            action = "\"_c";
+            key = "c";
+            options.desc = "Change to void";
+          }
+          {
+            mode = ["n" "v"];
+            action = "\"_d$";
+            key = "D";
+            options.desc = "Delete until end of line to void";
+          }
+          {
+            mode = ["n"];
+            action = "\"_dd";
+            key = "dd";
+            options.desc = "Delete line to void";
+          }
+          {
+            mode = "n";
+            action = ":";
+            key = ";";
+            options.desc = "Command mode with or without shift";
+          }
+          {
+            mode = "n";
+            action = ":";
+            key = ";";
+            options.desc = "Command mode with or without shift";
+          }
+          {
+            mode = "n";
+            action = "<<";
+            key = "<";
+            options.desc = "Indent less";
+            options.silent = true;
+          }
+          {
+            mode = "n";
+            action = ">>";
+            key = ">";
+            options.desc = "Indent more";
+            options.silent = true;
+          }
+          {
+            mode = ["n" "x" "o"];
+            key = "s";
+            action = "<cmd>lua require('flash').jump()<cr>";
+            options = {
+              desc = "Flash";
+            };
+          }
+          {
+            mode = ["n" "x" "o"];
+            key = "S";
+            action = "<cmd>lua require('flash').treesitter()<cr>";
+            options = {
+              desc = "Flash Treesitter";
+            };
+          }
+          {
+            mode = ["x" "o"];
+            key = "R";
+            action = "<cmd>lua require('flash').treesitter_search()<cr>";
+            options = {
+              desc = "Treesitter Search";
+            };
+          }
           {
             action = "<cmd>Oil .<CR>";
             key = "<Leader>f";
@@ -778,12 +949,6 @@ in {
             key = "<Leader><Leader>";
             options.desc = "Hop";
           }
-          {
-            mode = "n";
-            action = ":";
-            key = ";";
-            options.desc = "Command mode with or without shift";
-          }
         ];
 
         autoCmd = [
@@ -821,6 +986,8 @@ in {
             "dbus-update-activation-environment --systemd &"
             "wl-clip-persist --clipboard both"
             "${pkgs.swaybg}/bin/swaybg -m fill -i ${./resources/wallpaper.png} &"
+            "${pkgs.dunst}/bin/dunst &"
+            "hyprctl dispatch exec '[workspace 2 silent] librewolf' &"
             # "sleep 1 && swaylock"
             # "poweralertd &"
             # "waybar &"
@@ -842,34 +1009,34 @@ in {
           general = {
             "$mainMod" = "SUPER";
             layout = "dwindle";
-            gaps_in = 10;
-            gaps_out = 40;
-            border_size = 2;
+            gaps_in = 15;
+            gaps_out = 35;
+            border_size = 1;
             border_part_of_window = false;
             no_border_on_floating = false;
-            col.active_border = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-            col.inactive_border = "rgba(595959aa)";
+            "col.active_border" = lib.mkForce "rgba(${constants.accentColor}FF)";
+            "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
           };
 
           misc = {
             disable_autoreload = true;
+            animate_manual_resizes = true;
             #   disable_hyprland_logo = true;
             #   always_follow_on_dnd = true;
             #   layers_hog_keyboard_focus = true;
-            animate_manual_resizes = true;
             enable_swallow = true;
             #   focus_on_activate = true;
           };
 
-          # dwindle = {
-          #   no_gaps_when_only = true;
-          #   force_split = 0;
-          #   special_scale_factor = 1.0;
-          #   split_width_multiplier = 1.0;
-          #   use_active_for_splits = true;
-          #   pseudotile = "yes";
-          #   preserve_split = "yes";
-          # };
+          dwindle = {
+            # no_gaps_when_only = false;
+            force_split = 0;
+            special_scale_factor = 1.0;
+            split_width_multiplier = 1.0;
+            use_active_for_splits = true;
+            pseudotile = "yes";
+            preserve_split = "yes";
+          };
 
           master = {
             # new_is_master = true;
@@ -889,10 +1056,10 @@ in {
               passes = 1;
               # size = 4;
               # passes = 2;
-              brightness = 1;
+              brightness = 0.5;
               contrast = 1.400;
               ignore_opacity = true;
-              noise = 0;
+              noise = 2;
               new_optimizations = true;
               xray = true;
             };
@@ -900,10 +1067,10 @@ in {
             drop_shadow = true;
 
             shadow_ignore_window = true;
-            shadow_offset = "0 2";
-            shadow_range = 20;
-            shadow_render_power = 3;
-            "col.shadow" = "rgba(00000055)";
+            shadow_offset = "5 5";
+            shadow_range = 15;
+            shadow_render_power = 2; # 3
+            "col.shadow" = lib.mkForce "rgba(0000007F)";
           };
 
           animations = {
@@ -937,10 +1104,9 @@ in {
           #   "$mainMod, Q, Close active, killactive,"
           #   "$mainMod, SHIFT + Space, Toggle floating, togglefloating,"
           # ];
-          bind = [
+          binde = [
             # show keybinds list
             "$mainMod, S, exec, show-keybinds"
-
             "$mainMod, Q, killactive,"
             "$mainMod, SHIFT + Space, togglefloating,"
             # keybindings
@@ -948,27 +1114,27 @@ in {
             # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
 
             "$mainMod, Return, exec, $TERMINAL"
-            "$mainMod, B, exec, hyprctl dispatch exec '[workspace 2 silent] librewolf'"
-            "$mainMod, F, Fullscreen, fullscreen, 0"
+            "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] librewolf'"
+            "$mainMod, f, Fullscreen, fullscreen, 0"
             # "$mainMod SHIFT, F, fullscreen, 1"
-            "$mainMod, Space, exec, pkill rofi || rofi --show drun"
+            "$mainMod, Space, exec, pkill rofi || rofi -show drun"
             # "$mainMod SHIFT, D, exec, hyprctl dispatch exec '[workspace 4 silent] discord'"
-            # "$mainMod SHIFT, S, exec, hyprctl dispatch exec '[workspace 5 silent] SoundWireServer'"
             # "$mainMod, Print, exec, ${pkgs.grim}/bin/grim -s \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
-            "$mainMod, Print, exec, ${pkgs.grim}/bin/grim -s \"$(slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            ", Print, exec, ${pkgs.grim}/bin/grim -c -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -"
+            "$mainMod, c ,exec, hyprpicker -a"
             # "$mainMod, P, pseudo,"
             # "$mainMod, J, togglesplit,"
-            "$mainMod, C ,exec, hyprpicker -a"
 
             # screenshot
             # "$mainMod, Print, exec, grimblast --notify --cursor save area ~/Pictures/$(date +'%Y-%m-%d-At-%Ih%Mm%Ss').png"
             # ",Print, exec, grimblast --notify --cursor  copy area"
 
             # switch focus
-            "$mainMod, H, movefocus, l"
-            "$mainMod, L, movefocus, r"
-            "$mainMod, K, movefocus, u"
-            "$mainMod, J, movefocus, d"
+            "$mainMod, h, movefocus, l"
+            "$mainMod, l, movefocus, r"
+            "$mainMod, k, movefocus, u"
+            "$mainMod, j, movefocus, d"
 
             # switch workspace
             "$mainMod, 1, workspace, 1"
@@ -995,19 +1161,23 @@ in {
             "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
             "$mainMod CTRL, c, movetoworkspace, empty"
 
-            # window control
-            "$mainMod SHIFT, H, movewindow, l"
-            "$mainMod SHIFT, L, movewindow, r"
-            "$mainMod SHIFT, K, movewindow, u"
-            "$mainMod SHIFT, J, movewindow, d"
-            "$mainMod CTRL, H, resizeactive, -80 0"
-            "$mainMod CTRL, L, resizeactive, 80 0"
-            "$mainMod CTRL, K, resizeactive, 0 -80"
-            "$mainMod CTRL, J, resizeactive, 0 80"
-            "$mainMod ALT, H, moveactive,  -80 0"
-            "$mainMod ALT, L, moveactive, 80 0"
-            "$mainMod ALT, K, moveactive, 0 -80"
-            "$mainMod ALT, J, moveactive, 0 80"
+            # Move to workspace.
+            "$mainMod SHIFT, h, movewindow, l"
+            "$mainMod SHIFT, l, movewindow, r"
+            "$mainMod SHIFT, k, movewindow, u"
+            "$mainMod SHIFT, j, movewindow, d"
+
+            # Resizing.
+            "$mainMod CTRL + s, h, resizeactive, -100 0"
+            "$mainMod CTRL + s, l, resizeactive, 100 0"
+            "$mainMod CTRL + s, k, resizeactive, 0 -100"
+            "$mainMod CTRL + s, j, resizeactive, 0 100"
+
+            # Floating move.
+            "$mainMod ALT, H, moveactive,  -100 0"
+            "$mainMod ALT, L, moveactive, 100 0"
+            "$mainMod ALT, K, moveactive, 0 -100"
+            "$mainMod ALT, J, moveactive, 0 100"
 
             # media and volume controls
             # ",Equal,exec, pamixer -i 2"
@@ -1021,7 +1191,7 @@ in {
             # "$mainMod, mouse_up, workspace, e+1"
 
             # clipboard manager
-            "$mainMod, V, exec, cliphist list | ${pkgs.rofi-wayland}/bin/rofi --dmenu | cliphist decode | ${pkgs.wl-clipboard}/bin/wl-copy"
+            "$mainMod, V, exec, cliphist list | ${pkgs.rofi-wayland}/bin/rofi -dmenu | cliphist decode | ${pkgs.wl-clipboard}/bin/wl-copy"
           ];
 
           # mouse binding
@@ -1059,7 +1229,7 @@ in {
 
           windowrulev2 = [
             # Hide border on unfocused windows
-            "noborder, focus:0"
+            # "noborder, focus:0"
 
             "suppressevent maximize, class:.*"
 
@@ -1098,14 +1268,6 @@ in {
       };
       services.flameshot = {
         enable = true;
-      };
-
-      dconf.settings = {
-        "org/gnome/desktop/input-sources" = {
-          show-all-sources = true;
-          sources = [(lib.gvariant.mkTuple ["xkb" "pl"])];
-          xkb-options = ["caps:escape"];
-        };
       };
     };
   };

@@ -1,3 +1,4 @@
+" TODO put this shit in configuration.nix
 lua << EOF
 local border = {
   { '┌', 'FloatBorder' },
@@ -77,6 +78,28 @@ local statusline = {
 }
 
 vim.o.statusline = table.concat(statusline, '')
+
+vim.api.nvim_create_autocmd({'FileType'}, {
+  desc = 'keymap \'q\' to close help/quickfix/netrw/etc windows',
+  pattern = 'help,qf,netrw',
+  callback = function()
+   vim.keymap.set('n', 'Q', '<C-w>c', {buffer = true, desc = 'Quit (or Close) help, quickfix, netrw, etc windows', })
+  end
+})
+
+-- Keep selection when indenting.
+vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
+vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
+
+-- Window switching.
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
+-- Close buffer
+vim.keymap.set("n", "Q", ":close<CR>", { desc = "Close the current buffer" })
+
+vim.api.nvim_set_hl(0, "FloatBorder"               , { fg = "#7d8618", bg = "none"})
 EOF
 
 augroup remember_folds
@@ -85,25 +108,21 @@ augroup remember_folds
   au BufWinEnter ?* silent! loadview 1
 augroup END
 
-hi statusline ctermbg=NONE guibg=NONE gui=none guifg=#7d8618
-hi LineNr guifg=#7d8618
-hi noCursor blend=100 cterm=strikethrough
-hi ModeMsg guifg=#7d8618
-hi MsgArea guifg=#7d8618
+" Hide cursorline when unfocused.
+let my_cursor_style = &guicursor
+augroup cursorline
+  autocmd!
+  autocmd FocusGained,WinEnter * let &guicursor = my_cursor_style
+  autocmd FocusGained,WinEnter * setlocal cursorline
+  autocmd FocusLost,WinLeave * setlocal nocursorline guicursor=a:noCursor/lCursor
+augroup END
 
-" Real delete
-nnoremap dd "_dd
-nnoremap d "_d
-vnoremap d "_d
-nnoremap D "_D
-noremap c "_c
-vnoremap c "_c
-nnoremap C "_C
+" Infinite paste
+vnoremap <expr> p 'pgvy'
 
-noremap x "+x
-nnoremap Y "+y$
-xnoremap y "+y
-nnoremap yy "+yy
+" Perform dot commands over visual blocks
+vnoremap . :normal .<CR>
 
-noremap p "+gp
-noremap P "+gP
+" No need to press indent twice
+nnoremap <silent> > >><esc>
+nnoremap <silent> <lt> <lt><lt><esc>
