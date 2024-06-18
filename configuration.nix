@@ -8,11 +8,9 @@
   constants = {
     hostname = "nixos"; # Change manually in flake.nix
     username = "samsepi0l";
-    home = "/home/samsepi0l";
-    flake-path = "/home/samsepi0l/nixos";
-    system = "x86_64-linux";
-    version = "24.05";
-    accentColor = "7d8618"; #7d8618 TODO hacky, add extra color to stylix
+    accentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
+    home = "/home/${constants.username}";
+    flake-path = "${constants.home}/nixos";
   };
 in {
   imports = [
@@ -46,7 +44,7 @@ in {
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd $USERNAME’.
-  users.users.samsepi0l = {
+  users.users.${constants.username} = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
     shell = pkgs.fish;
@@ -64,6 +62,7 @@ in {
       "steam-run"
     ];
 
+  # Needed here and in home manager.
   programs.hyprland.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -132,6 +131,11 @@ in {
   # Games. #
   ##########
 
+  # This is the command for running all 3 programs at once that u put into steam
+  # gamemoderun gamescope -w 1920 -h 1080 -f -- mangohud %command%
+  programs.steam.extraCompatPackages = [
+    pkgs.proton-ge-bin
+  ];
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
@@ -191,7 +195,7 @@ in {
   environment.shellAliases = {
     "qcalc" = "${pkgs.libqalculate}/bin/qalc";
     "ls" = "${pkgs.eza}/bin/eza";
-    "rm" = "${pkgs.trashy}/bin/trash";
+    "rt" = "${pkgs.trashy}/bin/trash";
     "shutdown" = "poweroff";
     "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
   };
@@ -295,25 +299,15 @@ in {
   home-manager = {
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # h-m breaks without it.
-    users.samsepi0l = {lib, ...}: {
+    users.${constants.username} = {lib, ...}: {
       imports = [
         inputs.nix-index-database.hmModules.nix-index
         inputs.nixvim.homeManagerModules.nixvim
       ];
       home = {
-        username = "samsepi0l";
-        homeDirectory = "/home/samsepi0l";
+        username = "${constants.username}";
+        homeDirectory = "${constants.home}";
         stateVersion = "24.05"; # Dont change
-
-        sessionVariables = {
-          # For protonup.
-          STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${constants.home}/.steam/root/compatibilitytools.d";
-        };
-
-        # activation.runProtonup = lib.hm.dag.entryAfter ["installPackages"] ''
-        #   mkdir -p "${constants.home}/.steam/root/compatibilitytools.d"
-        #   run ${pkgs.protonup}/bin/protonup -y -d "${constants.home}/.steam/root/compatibilitytools.d";
-        # '';
 
         packages = with pkgs; [
           # GUI.
@@ -326,13 +320,11 @@ in {
           anki # Flashcards
 
           # Command line.
-          protonup # Steam proton downloader
           pulsemixer # Volume control
           swaybg # Wallpaper setter
           gallery-dl # Image/video downloader
           zoxide # Cd alternative
           mpv # Video player
-          btop # TUI task manager
           gomuks # TUI matrix client
           cbonsai # Ascii tree animation
           hyprpicker # Color picker
@@ -370,15 +362,24 @@ in {
         enable = true;
         interactiveShellInit = ''
           set fish_greeting # Disable greeting
+          set fish_vi_key_bindings
         '';
       };
       programs.bash.enable = true;
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+      programs.btop = {
+        enable = true;
+        settings = {
+          theme_background = false;
+          vim_keys = true;
+          rounded_corners = false;
+        };
+      };
       programs.direnv = {
         enable = true;
-        nix-direnv.enable = true;
+        # nix-direnv.enable = true;
       };
       programs.fastfetch = {
         enable = true;
@@ -426,7 +427,7 @@ in {
         };
         extraConfig = {
           credential = {
-            helper = lib.mkDefault "cache --timeout 21600"; # six hours
+            helper = lib.mkForce "cache --timeout 21600"; # six hours
           };
           color = {
             ui = "auto";
@@ -1143,6 +1144,7 @@ in {
             "$mainMod, f, Fullscreen, fullscreen, 0"
             # "$mainMod SHIFT, F, fullscreen, 1"
             "$mainMod, Space, exec, pkill rofi || rofi -show drun"
+            ", Alt + Tab, exec, pkill rofi || rofi -show window"
             # "$mainMod SHIFT, D, exec, hyprctl dispatch exec '[workspace 4 silent] discord'"
             # "$mainMod, Print, exec, ${pkgs.grim}/bin/grim -s \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
             ", Print, exec, ${pkgs.grim}/bin/grim -c -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
