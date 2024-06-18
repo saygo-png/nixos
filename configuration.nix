@@ -203,6 +203,7 @@ in {
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
     BROWSER = "${pkgs.librewolf}/bin/librewolf";
+    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
   };
 
   ###########
@@ -215,9 +216,9 @@ in {
       # Main font.
       pkgs.courier-prime
       (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-      # pkgs.noto-fonts-cjk-serif
-      # pkgs.noto-fonts-cjk-sans
-      # pkgs.noto-fonts-emoji
+      pkgs.noto-fonts-cjk-serif
+      pkgs.noto-fonts-cjk-sans
+      pkgs.noto-fonts-emoji
       pkgs.noto-fonts
     ];
 
@@ -426,9 +427,9 @@ in {
           amend = "commit -a --amend";
         };
         extraConfig = {
-          credential = {
-            helper = lib.mkForce "cache --timeout 21600"; # six hours
-          };
+          # credential = {
+          #   helper = lib.mkForce "cache --timeout 21600"; # six hours
+          # };
           color = {
             ui = "auto";
           };
@@ -1013,7 +1014,8 @@ in {
             "wl-clip-persist --clipboard both"
             "${pkgs.swaybg}/bin/swaybg -m fill -i ${./resources/wallpaper.png} &"
             "${pkgs.dunst}/bin/dunst &"
-            "hyprctl dispatch exec '[workspace 2 silent] librewolf' &"
+            "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
+            "hyprctl dispatch exec '[workspace 2 silent] $TERMINAL' &"
             # "sleep 1 && swaylock"
             # "poweralertd &"
             # "waybar &"
@@ -1047,7 +1049,6 @@ in {
           misc = {
             disable_autoreload = true;
             animate_manual_resizes = true;
-            #   disable_hyprland_logo = true;
             #   always_follow_on_dnd = true;
             #   layers_hog_keyboard_focus = true;
             enable_swallow = true;
@@ -1072,9 +1073,6 @@ in {
 
           decoration = {
             #   rounding = 0;
-            #   active_opacity = 0.90;
-            #   inactive_opacity = 0.90;
-            #   fullscreen_opacity = 1.0;
 
             blur = {
               enabled = false;
@@ -1130,40 +1128,57 @@ in {
           #   "$mainMod, Q, Close active, killactive,"
           #   "$mainMod, SHIFT + Space, Toggle floating, togglefloating,"
           # ];
+
+          # Bind accepts "flags" after "bind".
+          # "e" in "binde" means that a key can be held down to repeat an action.
+          # You can add multiple flags, without order like so "bindde".
           binde = [
-            # show keybinds list
-            "$mainMod, S, exec, show-keybinds"
-            "$mainMod, Q, killactive,"
-            "$mainMod, SHIFT + Space, togglefloating,"
-            # keybindings
             # TODO add these binds:
             # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
 
-            "$mainMod, Return, exec, $TERMINAL"
-            "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
+            # Show keybinds list.
+            "$mainMod, S, exec, show-keybinds"
+
+            # Close program.
+            "$mainMod, Q, killactive,"
+
+            # Toggle floating.
+            "$mainMod, SHIFT + Space, togglefloating,"
+
             "$mainMod, f, Fullscreen, fullscreen, 0"
-            # "$mainMod SHIFT, F, fullscreen, 1"
+
+            # Open terminal.
+            "$mainMod, Return, exec, $TERMINAL"
+
+            # Run common programs.
+            "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
+
+            # Program launcher.
             "$mainMod, Space, exec, pkill rofi || rofi -show drun"
-            ", Alt + Tab, exec, pkill rofi || rofi -show window"
-            # "$mainMod SHIFT, D, exec, hyprctl dispatch exec '[workspace 4 silent] discord'"
-            # "$mainMod, Print, exec, ${pkgs.grim}/bin/grim -s \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+
+            # Color picker
+            "$mainMod, c ,exec, hyprpicker -a"
+
+            # Dunno
+            "$mainMod, P, pseudo,"
+            "$mainMod, J, togglesplit,"
+
+            # Screenshot.
             ", Print, exec, ${pkgs.grim}/bin/grim -c -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
             "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -"
-            "$mainMod, c ,exec, hyprpicker -a"
-            # "$mainMod, P, pseudo,"
-            # "$mainMod, J, togglesplit,"
 
-            # screenshot
-            # "$mainMod, Print, exec, grimblast --notify --cursor save area ~/Pictures/$(date +'%Y-%m-%d-At-%Ih%Mm%Ss').png"
-            # ",Print, exec, grimblast --notify --cursor  copy area"
+            # Cycle programs.
+            "ALT, Tab, cyclenext,"
+            "ALT, Tab, bringactivetotop,"
+            "#mainMod, Tab, exec, pkill rofi || rofi -show window"
 
-            # switch focus
+            # Switch focus.
             "$mainMod, h, movefocus, l"
             "$mainMod, l, movefocus, r"
             "$mainMod, k, movefocus, u"
             "$mainMod, j, movefocus, d"
 
-            # switch workspace
+            # Switch workspace.
             "$mainMod, 1, workspace, 1"
             "$mainMod, 2, workspace, 2"
             "$mainMod, 3, workspace, 3"
@@ -1175,8 +1190,8 @@ in {
             "$mainMod, 9, workspace, 9"
             "$mainMod, 0, workspace, 10"
 
-            # same as above, but switch to the workspace
-            "$mainMod SHIFT, 1, movetoworkspacesilent, 1" # movetoworkspacesilent
+            # Same as above, but switch to the workspace.
+            "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
             "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
             "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
             "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
@@ -1207,8 +1222,8 @@ in {
             "$mainMod ALT, J, moveactive, 0 100"
 
             # media and volume controls
-            # ",Equal,exec, pamixer -i 2"
-            # ",Minus,exec, pamixer -d 2"
+            # "$mainMod,Equal,exec, pamixer -i 2"
+            # "$mainMod,Minus,exec, pamixer -d 2"
             # ",XF86AudioMute,exec, pamixer -t"
             # ",XF86AudioPlay,exec, playerctl play-pause"
             # ",XF86AudioNext,exec, playerctl next"
