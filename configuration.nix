@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  config,
   inputs,
   ...
 }: let
@@ -300,7 +299,13 @@ in {
   home-manager = {
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # h-m breaks without it.
-    users.${constants.username} = {lib, ...}: {
+    users.${constants.username} = {
+      lib,
+      config,
+      formats,
+      rasi,
+      ...
+    }: {
       imports = [
         inputs.nix-index-database.hmModules.nix-index
         inputs.nixvim.homeManagerModules.nixvim
@@ -996,6 +1001,33 @@ in {
       programs.rofi = {
         package = pkgs.rofi-wayland;
         enable = true;
+        extraConfig = {
+          modi = "window,run,drun";
+          font = "Courier Prime 14";
+          padding = 10;
+          fixed-num-lines = true;
+          show-icons = false;
+          terminal = "alacritty";
+          run-command = "{cmd}";
+          drun-show-actions = false;
+          disable-history = false;
+          matching = "fuzzy";
+          sort = true;
+          scrollbar = false;
+          sorting-method = "fzf";
+          auto-select = false;
+          separator-style = "dash";
+          window-format = "{w} {c}  {t}";
+          show-match = true;
+        };
+        theme = {
+          "*" = {
+            normal-background = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (0, 0, 0, 0%)");
+            alternate-normal-background = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (0, 0, 0, 0%)");
+            gruvbox-dark-bg0 = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (21, 22, 3, 60%)");
+            gruvbox-dark-bg0-soft = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (21, 22, 3, 60%)");
+          };
+        };
       };
 
       wayland.windowManager.hyprland = {
@@ -1133,17 +1165,20 @@ in {
           # "e" in "binde" means that a key can be held down to repeat an action.
           # You can add multiple flags, without order like so "bindde".
           binde = [
-            # TODO add these binds:
+            # TODO: add these binds:
             # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
 
+            #  add proper alt tab support using "hycov" plugin
+            #  add descriptions to each key
+
             # Show keybinds list.
-            "$mainMod, S, exec, show-keybinds"
+            "$mainMod, shiftH, exec, show-keybinds"
 
             # Close program.
             "$mainMod, Q, killactive,"
 
             # Toggle floating.
-            "$mainMod, SHIFT + Space, togglefloating,"
+            "$mainMod, shiftSpace, togglefloating,"
 
             "$mainMod, f, Fullscreen, fullscreen, 0"
 
@@ -1161,16 +1196,16 @@ in {
 
             # Dunno
             "$mainMod, P, pseudo,"
-            "$mainMod, J, togglesplit,"
+            "$mainMod, S, togglesplit,"
 
             # Screenshot.
             ", Print, exec, ${pkgs.grim}/bin/grim -c -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
             "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -"
 
             # Cycle programs.
-            "ALT, Tab, cyclenext,"
-            "ALT, Tab, bringactivetotop,"
-            "#mainMod, Tab, exec, pkill rofi || rofi -show window"
+            "ALT, Tab, workspace, m+1"
+            # "ALT, Tab, bringactivetotop,"
+            "$mainMod, Tab, exec, pkill rofi || rofi -show window"
 
             # Switch focus.
             "$mainMod, h, movefocus, l"
