@@ -96,7 +96,7 @@ in {
     # GUI.
     rofi-wayland
     mangohud
-    thunar
+    xfce.thunar
 
     # Shellscripts.
     (writeShellScriptBin
@@ -580,7 +580,7 @@ in {
       programs.alacritty = {
         enable = true;
         settings = {
-          history = 0; # Disables scrolling, use tmux.
+          scrolling.history = 0; # Disables scrolling, use tmux.
           window.dynamic_padding = true;
           window.dynamic_title = true;
           scrolling.multiplier = 5;
