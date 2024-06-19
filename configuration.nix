@@ -46,7 +46,7 @@ in {
   users.users.${constants.username} = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
 
   ###################
@@ -189,20 +189,11 @@ in {
   # Shell #
   #########
 
-  programs.fish.enable = true;
+  programs.zsh.enable = true;
 
-  environment.shellAliases = {
-    "qcalc" = "${pkgs.libqalculate}/bin/qalc";
-    "ls" = "${pkgs.eza}/bin/eza";
-    "rt" = "${pkgs.trashy}/bin/trash";
-    "shutdown" = "poweroff";
-    "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
-  };
   # Envvar, envars.
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
-    BROWSER = "${pkgs.librewolf}/bin/librewolf";
-    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
   };
 
   ###########
@@ -315,6 +306,33 @@ in {
         homeDirectory = "${constants.home}";
         stateVersion = "24.05"; # Dont change
 
+        shellAliases = {
+          "qcalc" = "${pkgs.libqalculate}/bin/qalc";
+          "ls" = "${pkgs.eza}/bin/eza";
+          "rt" = "${pkgs.trashy}/bin/trash";
+          "shutdown" = "poweroff";
+          "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
+        };
+
+        sessionVariables = {
+          # Default programs.
+          PAGER = lib.getExe pkgs.moar;
+          # Systemd is retarded and doesnt use normal pager variable :DDDDD
+          SYSTEMD_PAGER = lib.getExe pkgs.moar;
+          OPENER = "${pkgs.xdg-utils}/bin/xdg-open";
+          VISUAL = "nvim";
+          EDITOR = "nvim";
+          SUDO_EDITOR = "nvim";
+          TERMINAL = lib.getExe pkgs.alacritty;
+          TERMINAL_PROG = lib.getExe pkgs.alacritty;
+          BROWSER = lib.getExe pkgs.librewolf;
+          # Firefox hardware decode.
+          MOZ_X11_EGL = 1;
+          NO_AT_BRIDGE = 1;
+          # Unreal engine .net cli tool turn off telemetry.
+          DOTNET_CLI_TELEMETRY_OPTOUT = "true";
+        };
+
         packages = with pkgs; [
           # GUI.
           librewolf # Browser
@@ -341,40 +359,34 @@ in {
           htop # TUI task manager
           moar # Pager
         ];
-
-        sessionVariables = {
-          # Default programs.
-          PAGER = "${pkgs.moar}/bin/moar";
-          # Systemd is retarded and doesnt use normal pager variable :DDDDD
-          SYSTEMD_PAGER = "${pkgs.moar}/bin/moar";
-          OPENER = "${pkgs.xdg-utils}/bin/xdg-open";
-          VISUAL = "nvim";
-          EDITOR = "nvim";
-          SUDO_EDITOR = "nvim";
-          TERMINAL = "${pkgs.alacritty}/bin/alacritty";
-          TERMINAL_PROG = "${pkgs.alacritty}/bin/alacritty";
-          BROWSER = "${pkgs.librewolf}/bin/librewolf";
-          # Firefox hardware decode.
-          MOZ_X11_EGL = 1;
-          NO_AT_BRIDGE = 1;
-          # Unreal engine .net cli tool turn off telemetry.
-          DOTNET_CLI_TELEMETRY_OPTOUT = "true";
-        };
       };
       # Development, internal.
       programs.command-not-found.enable = false;
       programs.nix-index.enable = true;
-      programs.fish = {
-        enable = true;
-        interactiveShellInit = ''
-          set fish_greeting # Disable greeting
-          set fish_vi_key_bindings
-        '';
-      };
       programs.bash.enable = true;
+      services.dunst.enable = true;
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+
+      programs.zsh = {
+        enable = true;
+        autosuggestion.enable = true;
+        syntaxHighlighting.enable = true;
+        syntaxHighlighting.highlighters = [
+          "brackets"
+        ];
+        oh-my-zsh = {
+          enable = true;
+          theme = "steeef";
+          plugins = [
+            "git"
+            "history"
+            "rust"
+          ];
+        };
+      };
+
       programs.btop = {
         enable = true;
         settings = {
@@ -385,7 +397,7 @@ in {
       };
       programs.direnv = {
         enable = true;
-        # nix-direnv.enable = true;
+        nix-direnv.enable = true;
       };
       programs.fastfetch = {
         enable = true;
@@ -1045,7 +1057,6 @@ in {
             "dbus-update-activation-environment --systemd &"
             "wl-clip-persist --clipboard both"
             "${pkgs.swaybg}/bin/swaybg -m fill -i ${./resources/wallpaper.png} &"
-            "${pkgs.dunst}/bin/dunst &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 2 silent] $TERMINAL' &"
             # "sleep 1 && swaylock"
