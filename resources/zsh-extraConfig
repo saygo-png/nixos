@@ -1,0 +1,177 @@
+# Tmux autoattach.
+if [ -x "$(command -v tmux)" ] && [ -z "${TMUX}" ]; then
+ tmux new-session
+fi
+
+#Enable colors and change prompt:
+autoload -U colors && colors
+PROMPT="%B%F{green}%T%f%b %F{cyan}%n%f%B%F{white}@%f%b%F{white}%m%f %F{yellow}%~%f"
+PROMPT+=$'\n'
+PROMPT+='%F{green}>%f'
+
+# No ugly mark
+PROMPT_EOL_MARK=
+
+# Autocomplete.
+setopt extendedglob
+setopt no_list_ambiguous
+setopt GLOB_COMPLETE        # Show autocompletion menu with globs
+setopt MENU_COMPLETE        # Automatically highlight first element of completion menu
+setopt AUTO_LIST            # Automatically list choices on ambiguous completion.
+setopt COMPLETE_IN_WORD     # Complete from both ends of a word.
+setopt GLOB_DOTS
+unsetopt CASE_GLOB
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+# Load more completions.
+_comp_options+=(globdots)  # Include hidden files.
+
+# Use hjlk in menu selection (during completion)
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect '^xg' clear-screen
+bindkey -M menuselect '^xi' vi-insert                      # Insert
+bindkey -M menuselect '^xh' accept-and-hold                # Hold
+bindkey -M menuselect '^xn' accept-and-infer-next-history  # Next
+bindkey -M menuselect '^xu' undo                           # Undo
+
+# Don't glob urls.
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
+
+# Only work with the Zsh function vman
+compdef vman="man"
+# Define completers
+zstyle ':completion:*' completer _extensions _complete _approximate
+# Use cache for commands using cache
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+# Complete the alias when _expand_alias is used as a function
+zstyle ':completion:*' complete true
+zle -C alias-expension complete-word _generic
+bindkey '^Xa' alias-expension
+zstyle ':completion:alias-expension:*' completer _expand_alias
+# Autocomplete options for cd instead of directory stack
+zstyle ':completion:*' complete-options true
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:*:*:*:descriptions' format '%F{blue}-- %D %d --%f'
+zstyle ':completion:*:*:*:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:*:*:*:warnings' format ' %F{red}-- no matches found --%f'
+# zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+# Colors for files and directory
+zstyle ':completion:*:*:*:*:default' list-colors ${(s.:.)LS_COLORS}
+
+# Only display some tags for the command cd
+zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ':completion:*:complete:git:argument-1:' tag-order !aliases
+
+# Required for completion to be in good groups (named after the tags)
+zstyle ':completion:*' group-name ''
+
+zstyle ':completion:*:*:-command-:*:*' group-order aliases builtins functions commands
+
+# See ZSHCOMPWID "completion matching control"
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' keep-prefix true
+zstyle -e ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
+if [[ -t 0 && $- = *i* ]]
+then
+
+# Non retarded copy paste.
+stty start ''
+stty stop ''
+stty quit ''
+stty erase ''
+stty kill ''
+# stty eof '' # Ctrl + D
+stty rprnt ''
+stty werase ''
+stty lnext ''
+stty discard ''
+
+fi
+
+# change Ctrl+C to Ctrl+Q
+stty intr '^q'
+
+_copy-using-wlclipboard() {
+  if ((REGION_ACTIVE)) then
+  zle copy-region-as-kill
+  printf "$CUTBUFFER" | wl-copy
+  ((REGION_ACTIVE = 0))
+  fi
+}
+
+zle -N _copy-using-wlclipboard
+bindkey '^C' _copy-using-wlclipboard # Copy text
+
+_cut-using-wlclipboard() {
+  if ((REGION_ACTIVE)) then
+       zle copy-region-as-kill
+       printf "$CUTBUFFER" | wl-copy
+       zle kill-region
+  fi
+}
+
+zle -N _cut-using-wlclipboard
+bindkey '^X' _cut-using-wlclipboard # Cut text
+
+_paste-copy-using-wlclipboard() {
+  LBUFFER+="$(wl-paste)"
+}
+
+zle -N _paste-copy-using-wlclipboard
+bindkey '^V' _paste-copy-using-wlclipboard # Paste
+
+# Vi mode.
+export KEYTIMEOUT=1
+
+# Backspace delete.
+bindkey -v '^?' backward-delete-char
+
+#Change cursor shape for different vi modes.
+  function zle-keymap-select {
+   if [[ ${KEYMAP} == vicmd ]] ||
+    [[ $1 = 'block' ]]; then
+    echo -ne '\e[1 q'
+   elif [[ ${KEYMAP} == main ]] ||
+    [[ ${KEYMAP} == viins ]] ||
+    [[ ${KEYMAP} = '' ]] ||
+    [[ $1 = 'beam' ]]; then
+    echo -ne '\e[4 q'
+   fi
+  }
+  zle -N zle-keymap-select
+  zle-line-init() {
+   zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+   echo -ne "\e[4 q"
+  }
+  zle -N zle-line-init
+  echo -ne '\e[4 q' # Use beam shape cursor on startup.
+  preexec() { echo -ne '\e[4 q' ;} # Use beam shape cursor for each new prompt.
+
+#Use lf to switch directories and bind it to ctrl-o
+fzf_jump () {
+ lf -command fzf_jump
+}
+
+lfcd () {
+ tmp="$(mktemp)"
+ lf -last-dir-path="$tmp" -command fzf_jump "$@"
+ if [ -f "$tmp" ]; then
+  dir="$(cat "$tmp")"
+  rm "$tmp" > /dev/null
+  [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+ fi
+}
+
+bindkey -s '^f' 'lfcd\n'
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line

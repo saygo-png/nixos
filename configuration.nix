@@ -64,6 +64,7 @@ in {
   # Needed here and in home manager.
   programs.hyprland.enable = true;
 
+  # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
     nh
@@ -95,6 +96,7 @@ in {
     # GUI.
     rofi-wayland
     mangohud
+    thunar
 
     # Shellscripts.
     (writeShellScriptBin
@@ -191,7 +193,13 @@ in {
 
   programs.zsh.enable = true;
 
-  # Envvar, envars.
+  # Declare zsh as an available shell.
+  environment.shells = [pkgs.zsh];
+
+  # Provides autocompletion for system programs for zsh.
+  environment.pathsToLink = ["/share/zsh"];
+
+  # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
   };
@@ -307,11 +315,14 @@ in {
         stateVersion = "24.05"; # Dont change
 
         shellAliases = {
-          "qcalc" = "${pkgs.libqalculate}/bin/qalc";
-          "ls" = "${pkgs.eza}/bin/eza";
-          "rt" = "${pkgs.trashy}/bin/trash";
+          "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
+          "ls" = "${lib.getExe pkgs.eza}";
+          "la" = "${lib.getExe pkgs.eza} -a";
+          "ll" = "${lib.getExe pkgs.eza} -l";
+          "rt" = "${lib.getExe pkgs.trashy}";
           "shutdown" = "poweroff";
-          "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${pkgs.fzf}/bin/fzf -i -q $1";
+          "qcalc" = "${lib.getExe pkgs.libqalculate}";
+          "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
 
         sessionVariables = {
@@ -368,23 +379,95 @@ in {
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+      programs.tmux = {
+        enable = true;
+        keyMode = "vi";
+        prefix = "C-a";
+        mouse = true; # Allows you to scroll a terminal
+        escapeTime = 0; # Delay after pressing escape
+        baseIndex = 1;
+        historyLimit = 1; # Alacritty + shell already hold history
+        extraConfig = ''
+          #No hanging sessions.
+          set-option -sg destroy-unattached
+
+          # For vim autoread.
+          set-option -g focus-events on
+
+          # For truecolor inside tmux
+          set-option -sa terminal-features ',alacritty:RGB'
+          set-option -g default-terminal "tmux-256color"
+
+          # Easy-to-remember split pane commands.
+          bind | split-window -h
+          bind - split-window -v
+          unbind '"'
+          unbind %
+
+          # I don't know, read the docs.
+          setw -g monitor-activity on
+          set -g visual-activity on
+
+          # Moving between panes with vim movement keys.
+          bind h select-pane -L
+          bind j select-pane -D
+          bind k select-pane -U
+          bind l select-pane -R
+          # moving between windows with vim movement keys.
+          bind -r C-h select-window -t :-
+          bind -r C-l select-window -t :+
+          # Resize panes with vim movement keys.
+          bind -r H resize-pane -L 5
+          bind -r J resize-pane -D 5
+          bind -r K resize-pane -U 5
+          bind -r L resize-pane -R 5
+
+          # Status line.
+          set-option -sg status on
+          set-option -sg status-interval 30
+          set-option -sg status-justify left
+          set-option -sg status-keys vi
+          set-option -sg status-left ""
+          set-option -sg status-left-length 10
+          set-option -sg status-left-style default
+          set-option -sg status-position bottom
+          set-option -sg status-right "#(${lib.getExe pkgs.tmux-mem-cpu-load}) %Y-%m-%d (%Ob %a) %H:%M"
+          set-option -sg status-right-length 45
+          set-option -sg status-right-style default
+          set-option -sg status-style fg=green,bg=default
+
+          # y and p as in vim.
+          set-option -sg set-clipboard on
+          bind Escape copy-mode
+          # Bind p paste-buffer.
+          bind-key -T copy-mode-vi 'p' send -X paste-buffer
+          bind-key -T copy-mode-vi 'v' send -X begin-selection
+          bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
+          bind-key -T copy-mode-vi 'Space' send -X halfpage-down
+          bind-key -T copy-mode-vi 'Bspace' send -X halfpage-up
+        '';
+      };
+      programs.fzf = {
+        enable = true;
+        tmux.enableShellIntegration = true;
+      };
 
       programs.zsh = {
         enable = true;
+        enableCompletion = true;
+        defaultKeymap = "viins";
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
+        historySubstringSearch.enable = true;
         syntaxHighlighting.highlighters = [
           "brackets"
         ];
-        oh-my-zsh = {
-          enable = true;
-          theme = "steeef";
-          plugins = [
-            "git"
-            "history"
-            "rust"
-          ];
-        };
+        initExtra = builtins.readFile ./resources/zsh-extraConfig;
+
+        # Disable history
+        history.size = 0;
+        history.save = 0;
+        history.path = "/dev/null";
       };
 
       programs.btop = {
@@ -395,10 +478,12 @@ in {
           rounded_corners = false;
         };
       };
+
       programs.direnv = {
         enable = true;
         nix-direnv.enable = true;
       };
+
       programs.fastfetch = {
         enable = true;
         settings = {
@@ -495,6 +580,7 @@ in {
       programs.alacritty = {
         enable = true;
         settings = {
+          history = 0; # Disables scrolling, use tmux.
           window.dynamic_padding = true;
           window.dynamic_title = true;
           scrolling.multiplier = 5;
@@ -580,10 +666,9 @@ in {
           grepprg = "rg --vimgrep";
           grepformat = "%f:%l:%c:%m";
 
-          # More accurate folds.
-          foldmethod = "expr";
-          foldexpr = "nvim_treesitter#foldexpr()";
-          foldenable = false;
+          # Folds.
+          foldmethod = "indent";
+          foldenable = true;
 
           # More space.
           cmdheight = 0;
@@ -628,6 +713,10 @@ in {
             strikethrough = false;
           };
         };
+        extraPlugins = [
+          pkgs.vimPlugins.vim-startuptime
+          pkgs.vimPlugins.vim-unimpaired
+        ];
         plugins = {
           nix.enable = true;
           surround.enable = true;
@@ -909,20 +998,20 @@ in {
             key = ";";
             options.desc = "Command mode with or without shift";
           }
-          {
-            mode = "n";
-            action = "<lt><lt><esc>";
-            key = "<lt>";
-            options.desc = "Indent less";
-            options.silent = true;
-          }
-          {
-            mode = "n";
-            action = ">><esc>";
-            key = ">";
-            options.desc = "Indent more";
-            options.silent = true;
-          }
+          # {
+          #   mode = "n";
+          #   action = "<lt><lt><esc>";
+          #   key = "<lt>";
+          #   options.desc = "Indent less";
+          #   options.silent = true;
+          # }
+          # {
+          #   mode = "n";
+          #   action = ">><esc>";
+          #   key = ">";
+          #   options.desc = "Indent more";
+          #   options.silent = true;
+          # }
           {
             mode = ["n" "x" "o"];
             key = "s";
@@ -1058,7 +1147,7 @@ in {
             "wl-clip-persist --clipboard both"
             "${pkgs.swaybg}/bin/swaybg -m fill -i ${./resources/wallpaper.png} &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
-            "hyprctl dispatch exec '[workspace 2 silent] $TERMINAL' &"
+            "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
             # "sleep 1 && swaylock"
             # "poweralertd &"
             # "waybar &"
@@ -1090,7 +1179,8 @@ in {
           };
 
           misc = {
-            disable_autoreload = true;
+            disable_autoreload = false;
+            disable_splash_rendering = true;
             animate_manual_resizes = true;
             #   always_follow_on_dnd = true;
             #   layers_hog_keyboard_focus = true;
