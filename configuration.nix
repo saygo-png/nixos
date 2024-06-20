@@ -67,7 +67,7 @@ in {
   # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
-    nh
+    nh # Nix helper
     nvd
     nil # Nix LSP
     nix-output-monitor
@@ -76,6 +76,9 @@ in {
     # Other.
     wl-clipboard
     cliphist
+
+    # Haskell
+    ghc
 
     libqalculate
     wget
@@ -96,7 +99,7 @@ in {
     # GUI.
     rofi-wayland
     mangohud
-    xfce.thunar
+    pcmanfm-qt
 
     # Shellscripts.
     (writeShellScriptBin
@@ -106,6 +109,22 @@ in {
         sudo nix-collect-garbage --delete-older-than 5d
         nix store optimise
         sudo nix store optimise
+      '')
+
+    (writeShellScriptBin
+      "connection-tester"
+      ''
+        set -o pipefail -e -u
+        shopt -s failglob
+        TARGET="duck.com"
+        # Infinite loop for continuous pinging
+        while true; do
+          if ! fping -c1 -t500 -o "$TARGET" | tee -a /dev/tty | grep -E -q 'timed out|Name or service not known'; then
+           sleep 0.1
+        else
+           notify-send "Ping Failed" "Could not ping $TARGET"
+          fi
+        done
       '')
 
     (writeShellScriptBin
@@ -163,6 +182,9 @@ in {
   services.xserver.enable = true;
   # NixOS is retarded and turns on lightdm by default.
   services.xserver.displayManager.lightdm.enable = false;
+
+  # Polkit (needed for window managers)
+  security.polkit.enable = true;
 
   # Enable sound with low latency.
   hardware.pulseaudio.enable = false;
@@ -353,11 +375,10 @@ in {
           krita # Painting
           foliate # Ebook reader
           anki # Flashcards
+          # hydrus # File manager
 
           # Command line.
           pulsemixer # Volume control
-          swaybg # Wallpaper setter
-          gallery-dl # Image/video downloader
           zoxide # Cd alternative
           mpv # Video player
           gomuks # TUI matrix client
@@ -370,15 +391,31 @@ in {
           htop # TUI task manager
           moar # Pager
         ];
+
+        # Binary blobs.
+        sessionPath = [
+          "${constants.home}/bin"
+        ];
+        file."bin/tmux-mem-cpp".source = ./resources/tmux-mem-cpp;
       };
       # Development, internal.
       programs.command-not-found.enable = false;
       programs.nix-index.enable = true;
       programs.bash.enable = true;
-      services.dunst.enable = true;
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+      services.dunst = {
+        enable = true;
+        settings = {
+          global = {
+            width = 300;
+            height = 300;
+            offset = "30x50";
+            origin = "top-center";
+          };
+        };
+      };
       programs.tmux = {
         enable = true;
         keyMode = "vi";
@@ -386,7 +423,7 @@ in {
         mouse = true; # Allows you to scroll a terminal
         escapeTime = 0; # Delay after pressing escape
         baseIndex = 1;
-        historyLimit = 1; # Alacritty + shell already hold history
+        historyLimit = 1000; # Alacritty already holds history
         extraConfig = ''
           #No hanging sessions.
           set-option -sg destroy-unattached
@@ -431,7 +468,7 @@ in {
           set-option -sg status-left-length 10
           set-option -sg status-left-style default
           set-option -sg status-position bottom
-          set-option -sg status-right "#(${lib.getExe pkgs.tmux-mem-cpu-load}) %Y-%m-%d (%Ob %a) %H:%M"
+          set-option -sg status-right "#(tmux-mem-cpp) %Y-%m-%d (%Ob %a) %H:%M"
           set-option -sg status-right-length 45
           set-option -sg status-right-style default
           set-option -sg status-style fg=green,bg=default
@@ -464,10 +501,8 @@ in {
         ];
         initExtra = builtins.readFile ./resources/zsh-extraConfig;
 
-        # Disable history
-        history.size = 0;
-        history.save = 0;
-        history.path = "/dev/null";
+        history.size = 50;
+        history.save = 50;
       };
 
       programs.btop = {
@@ -603,7 +638,8 @@ in {
           rust-analyzer # Rust LSP
           vim-language-server
           typos-lsp
-          ormolu # Haskell formatter
+          vale # Linter
+          haskellPackages.fourmolu # Haskell formatter
           marksman # Markdown LSP
           haskell-language-server # Haskell LSP
           python312Packages.python-lsp-server
@@ -618,6 +654,9 @@ in {
           sumneko-lua-language-server
           nodePackages.bash-language-server
           isort
+          shellcheck # Bash linter
+          hadolint # Docker linter
+          nodePackages.jsonlint
           mypy # Python type checker
           black # Python formatter
           yapf # Python formatter
@@ -668,7 +707,7 @@ in {
 
           # Folds.
           foldmethod = "indent";
-          foldenable = true;
+          foldenable = false;
 
           # More space.
           cmdheight = 0;
@@ -718,7 +757,7 @@ in {
           pkgs.vimPlugins.vim-unimpaired
         ];
         plugins = {
-          nix.enable = true;
+          # nix.enable = true;
           surround.enable = true;
           telescope.enable = true;
           flash = {
@@ -788,7 +827,6 @@ in {
               };
               align = {};
               trailspace = {};
-              cursorword = {};
             };
           };
 
@@ -859,13 +897,30 @@ in {
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "black" "yapf"];
-              haskell = ["ormolu"];
+              haskell = ["fourmolu"];
+              lua = ["stylua"];
               nix = ["alejandra"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["codespell" "trim_whitespace"];
             };
           };
-
+          lint = {
+            enable = true;
+            lintersByFt = {
+              text = ["vale"];
+              json = ["jsonlint"];
+              bash = ["shellcheck"];
+              shell = ["shellcheck"];
+              haskell = ["hlint"];
+              markdown = ["vale"];
+              python = ["ruff"];
+              rst = ["vale"];
+              clojure = ["clj-kondo"];
+              dockerfile = ["hadolint"];
+            };
+          };
+          cmp-buffer.enable = true;
+          cmp-snippy.enable = true;
           luasnip = {
             enable = true;
             extraConfig = {
@@ -873,7 +928,7 @@ in {
             };
             fromVscode = [
               {
-                lazyLoad = true;
+                lazyLoad = false;
                 paths = "${pkgs.vimPlugins.friendly-snippets}";
               }
             ];
@@ -898,15 +953,16 @@ in {
 
           cmp = {
             enable = true;
-            autoEnableSources = true;
+            autoEnableSources = false;
             settings = {
               autocomplete = true;
               experimental = {ghost_text = true;};
-              snippet = {expand = "luasnip";};
+              snippet = {expand = "snippy";};
               sources = [
-                {name = "nvim_lsp";}
                 {name = "luasnip";}
+                {name = "snippy";}
                 {name = "path";}
+                {name = "buffer";}
               ];
               mapping = {
                 "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
@@ -1141,11 +1197,14 @@ in {
             disable_logs = true;
           };
           exec-once = [
+            "systemctl --user import-environment QT_QPA_PLATFORMTHEME WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "systemctl --user import-environment &"
             "hash dbus-update-activation-environment 2>/dev/null &"
             "dbus-update-activation-environment --systemd &"
+            "${lib.getExe pkgs.lxqt.lxqt-policykit} &"
+
             "wl-clip-persist --clipboard both"
-            "${pkgs.swaybg}/bin/swaybg -m fill -i ${./resources/wallpaper.png} &"
+            "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/wallpaper.png} &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
             # "sleep 1 && swaylock"
@@ -1300,8 +1359,8 @@ in {
             "$mainMod, S, togglesplit,"
 
             # Screenshot.
-            ", Print, exec, ${pkgs.grim}/bin/grim -c -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
-            "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -"
+            ", Print, exec, ${lib.getExe pkgs.grim} -c -g \"$(${lib.getExe pkgs.slurp} -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.swappy} -f -"
 
             # Cycle programs.
             "ALT, Tab, workspace, m+1"
