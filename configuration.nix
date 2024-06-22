@@ -2,10 +2,10 @@
   pkgs,
   lib,
   inputs,
+  host,
   ...
 }: let
   constants = {
-    hostname = "nixos"; # Change manually in flake.nix
     username = "samsepi0l";
     accentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
     home = "/home/${constants.username}";
@@ -13,7 +13,6 @@
   };
 in {
   imports = [
-    ./hardware-configuration.nix
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
   ];
@@ -26,7 +25,7 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "${constants.hostname}";
+  networking.hostName = "${host}";
   networking.networkmanager.enable = true;
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -77,10 +76,11 @@ in {
     wl-clipboard
     cliphist
 
-    # Haskell
-    ghc
+    # Treesitter needs it.
+    gcc
 
     libqalculate
+    vim
     wget
     eza
     trashy
@@ -91,15 +91,24 @@ in {
     ripgrep
     gnumake
     fd
+    libnotify
+
+    # For Hyprland
+    qt5.qtwayland
+    qt6.qtwayland
+    qt6.qmake
+    libsForQt5.qtstyleplugin-kvantum
+    libsForQt5.qt5ct
+    libsForQt5.qt5ct
+
     xdg-utils
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
-    libnotify
+    hyprland-protocols
 
     # GUI.
     rofi-wayland
     mangohud
-    pcmanfm-qt
 
     # Shellscripts.
     (writeShellScriptBin
@@ -144,6 +153,11 @@ in {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [libva];
   };
   services.xserver.videoDrivers = ["amdgpu"];
 
@@ -224,6 +238,13 @@ in {
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
+    XDG_SESSION_DESKTOP = "Hyprland";
+    GDK_BACKEND = "wayland";
+    GTK_USE_PORTAL = "1";
+    # QT_QPA_PLATFORM = "wayland";
+    # QT_QPA_PLATFORMTHEME = "qt5ct";
+    # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
   };
 
   ###########
@@ -342,8 +363,8 @@ in {
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "rt" = "${lib.getExe pkgs.trashy}";
-          "shutdown" = "poweroff";
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
+          "shutdown" = "poweroff";
           "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
 
@@ -352,7 +373,7 @@ in {
           PAGER = lib.getExe pkgs.moar;
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = lib.getExe pkgs.moar;
-          OPENER = "${pkgs.xdg-utils}/bin/xdg-open";
+          OPENER = lib.getExe pkgs.xdg-utils;
           VISUAL = "nvim";
           EDITOR = "nvim";
           SUDO_EDITOR = "nvim";
@@ -375,6 +396,7 @@ in {
           krita # Painting
           foliate # Ebook reader
           anki # Flashcards
+          pcmanfm # File manager.
           # hydrus # File manager
 
           # Command line.
@@ -393,11 +415,34 @@ in {
         ];
 
         # Binary blobs.
-        sessionPath = [
-          "${constants.home}/bin"
-        ];
+        sessionPath = ["${constants.home}/bin"]; # Add ~/bin to path.
         file."bin/tmux-mem-cpp".source = ./resources/tmux-mem-cpp;
       };
+
+      # More visuals.
+      gtk = {
+        enable = true;
+        iconTheme = {
+          name = "Gruvbox-Plus-Dark";
+          package = pkgs.gruvbox-plus-icons;
+        };
+      };
+
+      qt = {
+        enable = true;
+        platformTheme = "qtct";
+        style = {
+          package = pkgs.catppuccin-kvantum;
+          name = "kvantum";
+        };
+      };
+      xdg.configFile = {
+        "Kvantum/kvantum.kvconfig".text = ''
+          [General]
+          theme=Catppuccin-Mocha-Mauve
+        '';
+      };
+
       # Development, internal.
       programs.command-not-found.enable = false;
       programs.nix-index.enable = true;
@@ -636,6 +681,7 @@ in {
           codespell # Spelling.
           stylua # Lua formatter
           rust-analyzer # Rust LSP
+          luajitPackages.jsregexp # Needed for luasnip
           vim-language-server
           typos-lsp
           vale # Linter
@@ -752,10 +798,12 @@ in {
             strikethrough = false;
           };
         };
+
         extraPlugins = [
           pkgs.vimPlugins.vim-startuptime
           pkgs.vimPlugins.vim-unimpaired
         ];
+
         plugins = {
           # nix.enable = true;
           surround.enable = true;
@@ -803,6 +851,10 @@ in {
             };
           };
 
+          ts-context-commentstring = {
+            enable = true;
+          };
+
           mini = {
             enable = true;
             modules = {
@@ -818,13 +870,7 @@ in {
                   try_as_border = true;
                 };
               };
-              comment = {
-                options = {
-                  customCommentString = ''
-                    <cmd>lua require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring<cr>
-                  '';
-                };
-              };
+              comment = {};
               align = {};
               trailspace = {};
             };
@@ -837,6 +883,9 @@ in {
             };
           };
 
+          rainbow-delimiters.enable = true;
+
+          cmp-treesitter.enable = true;
           treesitter-textobjects.enable = true;
           treesitter = {
             enable = true;
@@ -904,6 +953,7 @@ in {
               "*" = ["codespell" "trim_whitespace"];
             };
           };
+
           lint = {
             enable = true;
             lintersByFt = {
@@ -919,8 +969,10 @@ in {
               dockerfile = ["hadolint"];
             };
           };
+
           cmp-buffer.enable = true;
           cmp-snippy.enable = true;
+
           luasnip = {
             enable = true;
             extraConfig = {
@@ -946,6 +998,7 @@ in {
               "<Leader>t" = "+[t]elescope";
             };
           };
+
           oil = {
             enable = true;
             settings.defaultFileExplorer = true;
@@ -957,7 +1010,7 @@ in {
             settings = {
               autocomplete = true;
               experimental = {ghost_text = true;};
-              snippet = {expand = "snippy";};
+              snippet = {expand = "luasnip";};
               sources = [
                 {name = "luasnip";}
                 {name = "snippy";}
@@ -1187,6 +1240,7 @@ in {
         };
       };
 
+      services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
       wayland.windowManager.hyprland = {
         systemd.enable = true;
         xwayland.enable = true;
@@ -1238,8 +1292,11 @@ in {
           };
 
           misc = {
-            disable_autoreload = false;
+            # Hides text on bottom of the screen.
             disable_splash_rendering = true;
+            disable_hyprland_logo = true;
+
+            disable_autoreload = true;
             animate_manual_resizes = true;
             #   always_follow_on_dnd = true;
             #   layers_hog_keyboard_focus = true;
@@ -1264,8 +1321,6 @@ in {
           };
 
           decoration = {
-            #   rounding = 0;
-
             blur = {
               enabled = false;
               size = 1;

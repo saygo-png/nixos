@@ -32,11 +32,24 @@
   } @ inputs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = {inherit inputs;};
+      specialArgs = {
+        inherit inputs;
+        host = "nixos";
+      };
       modules = [
         ./configuration.nix
-        # inputs.stylix.nixosModules.stylix
-        # inputs.home-manager.nixosModules.default # useless?
+        ./resources/hardware/hardware-configuration.nix
+      ];
+    };
+    nixosConfigurations.nixosExternalDrive = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {
+        inherit inputs;
+        host = "nixosExternalDrive";
+      };
+      modules = [
+        ./configuration.nix
+        ./resources/hardware/hardware-configuration-ExternalDrive.nix
       ];
     };
   };
