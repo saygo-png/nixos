@@ -20,6 +20,8 @@ in {
   #######################
   # Essential or basic. #
   #######################
+  # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
+  services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -78,7 +80,7 @@ in {
 
     # Treesitter needs it.
     gcc
-
+    atool # Extract
     libqalculate
     vim
     wget
@@ -108,7 +110,6 @@ in {
 
     # GUI.
     rofi-wayland
-    mangohud
 
     # Shellscripts.
     (writeShellScriptBin
@@ -447,9 +448,15 @@ in {
       programs.command-not-found.enable = false;
       programs.nix-index.enable = true;
       programs.bash.enable = true;
+      programs.mangohud.enable = true;
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+
+      programs.firefox = {
+        enable = true;
+        package = pkgs.librewolf;
+      };
       services.dunst = {
         enable = true;
         settings = {
@@ -639,24 +646,7 @@ in {
           };
         };
       };
-      programs.vscode = {
-        enable = true;
-        package = pkgs.vscodium;
-        extensions = with pkgs.vscode-extensions; [
-          bbenoist.nix
-          kamadorueda.alejandra
-          jdinhlife.gruvbox
-          jnoortheen.nix-ide
-          tekumara.typos-vscode
-        ];
-        userSettings = {
-          "editor.minimap.enabled" = false;
-          "editor.tabSize" = 2;
-          "nix.enableLanguageServer" = true;
-          "editor.fontSize" = 16;
-          "nix.serverPath" = "nil";
-        };
-      };
+
       programs.alacritty = {
         enable = true;
         settings = {
@@ -799,15 +789,17 @@ in {
           };
         };
 
-        extraPlugins = [
-          pkgs.vimPlugins.vim-startuptime
-          pkgs.vimPlugins.vim-unimpaired
-        ];
+        # extraPlugins = [
+        # ];
 
         plugins = {
           # nix.enable = true;
           surround.enable = true;
+          rainbow-delimiters.enable = true;
+          nvim-colorizer.enable = true;
           telescope.enable = true;
+          ts-context-commentstring.enable = true;
+
           flash = {
             enable = true;
             labels = "asdfghjklqwertyuiopzxcvbnm";
@@ -825,7 +817,7 @@ in {
               };
             };
           };
-          nvim-colorizer.enable = true;
+
           lspsaga = {
             enable = true;
             lightbulb = {
@@ -849,10 +841,6 @@ in {
                 border = "single"; # none, single, double, rounded, solid, shadow
               };
             };
-          };
-
-          ts-context-commentstring = {
-            enable = true;
           };
 
           mini = {
@@ -883,9 +871,6 @@ in {
             };
           };
 
-          rainbow-delimiters.enable = true;
-
-          cmp-treesitter.enable = true;
           treesitter-textobjects.enable = true;
           treesitter = {
             enable = true;
@@ -970,22 +955,6 @@ in {
             };
           };
 
-          cmp-buffer.enable = true;
-          cmp-snippy.enable = true;
-
-          luasnip = {
-            enable = true;
-            extraConfig = {
-              enable_autosnippets = true;
-            };
-            fromVscode = [
-              {
-                lazyLoad = false;
-                paths = "${pkgs.vimPlugins.friendly-snippets}";
-              }
-            ];
-          };
-
           which-key = {
             enable = true;
             ignoreMissing = false;
@@ -1004,18 +973,19 @@ in {
             settings.defaultFileExplorer = true;
           };
 
+          luasnip = {
+            enable = true;
+          };
+
           cmp = {
             enable = true;
-            autoEnableSources = false;
+            autoEnableSources = true;
             settings = {
               autocomplete = true;
-              experimental = {ghost_text = true;};
               snippet = {expand = "luasnip";};
               sources = [
                 {name = "luasnip";}
-                {name = "snippy";}
                 {name = "path";}
-                {name = "buffer";}
               ];
               mapping = {
                 "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
