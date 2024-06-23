@@ -973,10 +973,7 @@ in {
             settings.defaultFileExplorer = true;
           };
 
-          luasnip = {
-            enable = true;
-          };
-
+          luasnip.enable = true;
           cmp = {
             enable = true;
             autoEnableSources = true;
@@ -984,8 +981,11 @@ in {
               autocomplete = true;
               snippet = {expand = "luasnip";};
               sources = [
+                {name = "nvim_lsp";}
                 {name = "luasnip";}
-                {name = "path";}
+                {name = "nvim_lua";}
+                {name = "nvim_lsp_signature_help";}
+                # {name = "buffer";}
               ];
               mapping = {
                 "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
