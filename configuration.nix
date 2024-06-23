@@ -1266,7 +1266,7 @@ in {
             repeat_rate = 30;
             accel_profile = "flat";
             numlock_by_default = false;
-            follow_mouse = 1;
+            follow_mouse = 0;
             sensitivity = -0.9;
           };
 
@@ -1384,9 +1384,15 @@ in {
             "$mainMod, Q, killactive,"
 
             # Toggle floating.
-            "$mainMod, shiftSpace, togglefloating,"
+            "$mainMod, o, togglefloating,"
 
+            # Fullscreen
             "$mainMod, f, Fullscreen, fullscreen, 0"
+
+            # Cycle next in current workspace.
+            "$mainMod, z, cyclenext,"
+            # Center active.
+            "$mainMod, x, centerwindow,"
 
             # Open terminal.
             "$mainMod, Return, exec, $TERMINAL"
@@ -1400,8 +1406,7 @@ in {
             # Color picker
             "$mainMod, c ,exec, hyprpicker -a"
 
-            # Dunno
-            "$mainMod, P, pseudo,"
+            # Change split direction.
             "$mainMod, S, togglesplit,"
 
             # Screenshot.
@@ -1463,8 +1468,8 @@ in {
             "$mainMod ALT, J, moveactive, 0 100"
 
             # media and volume controls
-            # "$mainMod,Equal,exec, pamixer -i 2"
-            # "$mainMod,Minus,exec, pamixer -d 2"
+            "$mainMod,Equal,exec, pamixer -i 2"
+            "$mainMod,Minus,exec, pamixer -d 2"
             # ",XF86AudioMute,exec, pamixer -t"
             # ",XF86AudioPlay,exec, playerctl play-pause"
             # ",XF86AudioNext,exec, playerctl next"
