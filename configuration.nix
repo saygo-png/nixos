@@ -242,6 +242,9 @@ in {
     XDG_SESSION_DESKTOP = "Hyprland";
     GDK_BACKEND = "wayland";
     GTK_USE_PORTAL = "1";
+
+    # Transparent fzf.
+    FZF_DEFAULT_OPTS = "--color=bg+:-1,gutter:-1,bg:-1";
     # QT_QPA_PLATFORM = "wayland";
     # QT_QPA_PLATFORMTHEME = "qt5ct";
     # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
@@ -1199,6 +1202,24 @@ in {
           separator-style = "dash";
           window-format = "{w} {c}  {t}";
           show-match = true;
+
+          # Bindings, I use empty strings to remove bind conflicts.
+          kb-remove-to-eol = "";
+          kb-row-up = "Control+k";
+
+          kb-accept-entry = "Return";
+          kb-row-down = "Control+j";
+
+          kb-mode-complete = "";
+          kb-mode-next = "Control+l";
+
+          kb-remove-char-forward = "";
+          kb-clear-line = "Control+d";
+
+          kb-remove-char-back = "";
+          kb-mode-previous = "Control+h";
+
+          kb-cancel = "Escape,Control+q";
         };
         theme = {
           "*" = {
@@ -1214,17 +1235,17 @@ in {
       wayland.windowManager.hyprland = {
         systemd.enable = true;
         xwayland.enable = true;
+        systemd.variables = ["--all"];
         enable = true;
         settings = {
+          debug.disable_logs = true;
+
           # Autostart.
-          debug = {
-            disable_logs = true;
-          };
           exec-once = [
-            "systemctl --user import-environment QT_QPA_PLATFORMTHEME WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-            "systemctl --user import-environment &"
-            "hash dbus-update-activation-environment 2>/dev/null &"
-            "dbus-update-activation-environment --systemd &"
+            # "systemctl --user import-environment QT_QPA_PLATFORMTHEME WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+            # "systemctl --user import-environment &"
+            # "hash dbus-update-activation-environment 2>/dev/null &"
+            # "dbus-update-activation-environment --systemd &"
             "${lib.getExe pkgs.lxqt.lxqt-policykit} &"
 
             "wl-clip-persist --clipboard both"

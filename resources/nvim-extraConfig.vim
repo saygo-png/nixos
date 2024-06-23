@@ -79,13 +79,15 @@ local statusline = {
 
 vim.o.statusline = table.concat(statusline, '')
 
-vim.api.nvim_create_autocmd({'FileType'}, {
-  desc = 'keymap \'q\' to close help/quickfix/netrw/etc windows',
-  pattern = 'help,qf,netrw',
-  callback = function()
-   vim.keymap.set('n', 'Q', '<C-w>c', {buffer = true, desc = 'Quit (or Close) help, quickfix, netrw, etc windows', })
-  end
-})
+-- vim.api.nvim_create_autocmd({'FileType'}, {
+--   desc = 'keymap \'q\' to close help/quickfix/netrw/etc windows',
+--   pattern = 'help,qf,netrw',
+--   callback = function()
+--    vim.keymap.set('n', 'Q', '<C-w>c', {buffer = true, desc = 'Quit (or Close) help, quickfix, netrw, etc windows', })
+--   end
+-- })
+-- Close buffer
+-- vim.keymap.set("n", "Q", ":close<CR>", { desc = "Close the current buffer" })
 
 -- Keep selection when indenting.
 vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
@@ -96,8 +98,6 @@ vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the
 vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
 vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
--- Close buffer
-vim.keymap.set("n", "Q", ":close<CR>", { desc = "Close the current buffer" })
 
 vim.api.nvim_set_hl(0, "FloatBorder"               , { fg = "#7d8618", bg = "none"})
 EOF
