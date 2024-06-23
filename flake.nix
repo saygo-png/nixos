@@ -26,16 +26,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
   outputs = {
     self,
     nixpkgs,
     ...
-  } @ inputs: {
+  } @ inputs: let
+    pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
+  in {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit inputs;
+        inherit inputs pkgs-unstable;
         host = "nixos";
       };
       modules = [
@@ -46,7 +47,7 @@
     nixosConfigurations.nixosExternalDrive = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit inputs;
+        inherit inputs pkgs-unstable;
         host = "nixosExternalDrive";
       };
       modules = [

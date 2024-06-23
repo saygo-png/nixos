@@ -3,6 +3,7 @@
   lib,
   inputs,
   host,
+  pkgs-unstable,
   ...
 }: let
   constants = {
@@ -129,7 +130,7 @@ in {
         TARGET="duck.com"
         # Infinite loop for continuous pinging
         while true; do
-          if ! fping -c1 -t500 -o "$TARGET" | tee -a /dev/tty | grep -E -q 'timed out|Name or service not known'; then
+          if ! ${lib.getExe pkgs.fping} -c1 -t500 -o "$TARGET" | tee -a /dev/tty | grep -E -q 'timed out|Name or service not known'; then
            sleep 0.1
         else
            notify-send "Ping Failed" "Could not ping $TARGET"
@@ -141,8 +142,8 @@ in {
       "pizzatimer"
       ''
         #!/bin/bash
-        ${pkgs.termdown}/bin/termdown 15m && \
-        for i in {1..10}; do ${pkgs.libnotify}/bin/notify-send "Pizza is done."; done
+        ${lib.getExe pkgs.termdown} 15m && \
+        for i in {1..10}; do ${lib.getExe pkgs.libnotify} "Pizza is done."; done
       '')
   ];
 
@@ -343,7 +344,7 @@ in {
   ################
 
   home-manager = {
-    extraSpecialArgs = {inherit inputs;};
+    extraSpecialArgs = {inherit inputs pkgs-unstable;};
     backupFileExtension = "backup"; # h-m breaks without it.
     users.${constants.username} = {
       lib,
@@ -393,21 +394,18 @@ in {
 
         packages = with pkgs; [
           # GUI.
-          librewolf # Browser
           keepassxc # Password manager
           rhythmbox # Music player
-          inkscape # Vector
-          krita # Painting
           foliate # Ebook reader
           anki # Flashcards
-          pcmanfm # File manager.
+          pcmanfm # File manager
+          libreoffice # Office
           # hydrus # File manager
 
           # Command line.
           pulsemixer # Volume control
           zoxide # Cd alternative
           mpv # Video player
-          gomuks # TUI matrix client
           cbonsai # Ascii tree animation
           hyprpicker # Color picker
           slurp # Screenshot assistant
@@ -416,6 +414,14 @@ in {
           tldr # Man alternative
           htop # TUI task manager
           moar # Pager
+          neovide # Gui neovim
+
+          # Unstable
+          pkgs-unstable.krita # Painting
+          pkgs-unstable.inkscape # Painting
+          # pkgs-unstable.librewolf # Browser
+          pkgs-unstable.blender # 3D graphics
+          pkgs-unstable.gomuks # TUI matrix client
         ];
 
         # Binary blobs.
@@ -458,7 +464,7 @@ in {
 
       programs.firefox = {
         enable = true;
-        package = pkgs.librewolf;
+        package = pkgs-unstable.librewolf;
       };
       services.dunst = {
         enable = true;
@@ -772,6 +778,10 @@ in {
         };
         globals = {
           mapleader = " ";
+          neovide_transparency = 1.0;
+          neovide_transparency_point = 1.0;
+          neovide_background_color = "#282828";
+          # neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
         };
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         # extraConfigLuaPost = ''
