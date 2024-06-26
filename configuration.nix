@@ -70,31 +70,33 @@ in {
   environment.systemPackages = with pkgs; [
     # Nix.
     nh # Nix helper
-    nvd
     nil # Nix LSP
-    nix-output-monitor
+    devenv # Nix coding like pipenv
+    nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
 
     # Other.
-    wl-clipboard
-    cliphist
+    wl-clipboard # Wayland xclip
+    cliphist # Wayland clipboard manager
 
     # Treesitter needs it.
-    gcc
-    atool # Extract
+    patool # Universal archiver
+    mtr # Network diagnostics
+    ncdu # Storage explorer
     libqalculate
-    vim
-    wget
-    eza
-    trashy
-    tmux
-    dash
-    git
-    fzf
-    ripgrep
-    gnumake
-    fd
-    libnotify
+    vim # Text editor
+    wget # Downloader
+    eza # ls rewrite
+    trashy # Cli trashcan
+    tmux # Terminal multiplexer
+    dash # Lightweight shell
+    git # Source control
+    fzf # Fuzzy finder
+    ripgrep # Multithreaded grep
+    gnumake # C compiling
+    gcc # C compiling
+    fd # Find alternative
+    libnotify # Notifications (notify-send)
 
     # For Hyprland
     qt5.qtwayland
@@ -104,13 +106,12 @@ in {
     libsForQt5.qt5ct
     libsForQt5.qt5ct
 
-    xdg-utils
+    xdg-utils # Includes xdg-open
+
+    # These are filepickers and whatnot
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     hyprland-protocols
-
-    # GUI.
-    rofi-wayland
 
     # Shellscripts.
     (writeShellScriptBin
@@ -190,6 +191,7 @@ in {
     dates = "2day";
     options = "--delete-older-than 15d";
   };
+
   #############
   # Services. #
   #############
@@ -213,9 +215,9 @@ in {
     extraConfig.pipewire."92-low-latency" = {
       context.properties = {
         default.clock.rate = 48000;
-        default.clock.quantum = 16;
-        default.clock.min-quantum = 16;
-        default.clock.max-quantum = 16;
+        default.clock.quantum = 19;
+        default.clock.min-quantum = 19;
+        default.clock.max-quantum = 19;
       };
     };
   };
@@ -240,16 +242,10 @@ in {
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
     FLAKE = "${constants.flake-path}"; # For nix helper.
-    XDG_SESSION_DESKTOP = "Hyprland";
-    GDK_BACKEND = "wayland";
     GTK_USE_PORTAL = "1";
 
     # Transparent fzf.
     FZF_DEFAULT_OPTS = "--color=bg+:-1,gutter:-1,bg:-1";
-    # QT_QPA_PLATFORM = "wayland";
-    # QT_QPA_PLATFORMTHEME = "qt5ct";
-    # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
   };
 
   ###########
@@ -384,7 +380,7 @@ in {
           SUDO_EDITOR = "nvim";
           TERMINAL = lib.getExe pkgs.alacritty;
           TERMINAL_PROG = lib.getExe pkgs.alacritty;
-          BROWSER = lib.getExe pkgs.librewolf;
+          BROWSER = lib.getExe pkgs-unstable.librewolf;
           # Firefox hardware decode.
           MOZ_X11_EGL = 1;
           NO_AT_BRIDGE = 1;
@@ -400,6 +396,8 @@ in {
           anki # Flashcards
           pcmanfm # File manager
           libreoffice # Office
+          neovide # Neovim gui
+          rofi-wayland # App launcher
           # hydrus # File manager
 
           # Command line.
@@ -414,12 +412,11 @@ in {
           tldr # Man alternative
           htop # TUI task manager
           moar # Pager
-          neovide # Gui neovim
 
           # Unstable
           pkgs-unstable.krita # Painting
           pkgs-unstable.inkscape # Painting
-          # pkgs-unstable.librewolf # Browser
+          pkgs-unstable.librewolf # Browser
           pkgs-unstable.blender # 3D graphics
           pkgs-unstable.gomuks # TUI matrix client
         ];
@@ -427,6 +424,15 @@ in {
         # Binary blobs.
         sessionPath = ["${constants.home}/bin"]; # Add ~/bin to path.
         file."bin/tmux-mem-cpp".source = ./resources/tmux-mem-cpp;
+
+        # This allows for semi-declarative configuration.
+        activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          if ! [ -f "${config.xdg.configHome}/kritarc" ]; then
+              run cp $VERBOSE_ARG "${builtins.toPath ./resources/krita-extraConfig}" "${config.xdg.configHome}/kritarc"
+              else
+              :
+          fi
+        '';
       };
 
       # More visuals.
@@ -462,10 +468,10 @@ in {
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
 
-      programs.firefox = {
+      services.syncthing = {
         enable = true;
-        package = pkgs-unstable.librewolf;
       };
+
       services.dunst = {
         enable = true;
         settings = {
@@ -477,6 +483,7 @@ in {
           };
         };
       };
+
       programs.tmux = {
         enable = true;
         keyMode = "vi";
@@ -673,7 +680,7 @@ in {
           };
         };
       };
-      stylix.targets.alacritty.enable = true;
+
       programs.nixvim = {
         enable = true;
         extraPackages = with pkgs; [
@@ -706,6 +713,9 @@ in {
           black # Python formatter
           yapf # Python formatter
           ruff # Python linter
+
+          # Nix
+          deadnix # Linter
         ];
         highlightOverride = {
           # hi noCursor blend=100 cterm=strikethrough
@@ -751,8 +761,9 @@ in {
           grepformat = "%f:%l:%c:%m";
 
           # Folds.
-          foldmethod = "indent";
-          foldenable = false;
+          foldmethod = "expr";
+          foldexpr = "nvim_treesitter#foldexpr()";
+          foldenable = false; # Disable folding at startup.
 
           # More space.
           cmdheight = 0;
@@ -775,21 +786,39 @@ in {
 
           # (https://neovim.io/doc/user/options.html#'laststatus')
           laststatus = 3;
+
+          guifont = "Courier Prime:h13:#e-antialias:#h-slight";
         };
         globals = {
           mapleader = " ";
           neovide_transparency = 1.0;
           neovide_transparency_point = 1.0;
-          neovide_background_color = "#282828";
-          # neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
+          neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
+          neovide_padding_top = 8;
+          neovide_padding_bottom = 0;
+          neovide_padding_right = 4;
+          neovide_padding_left = 4;
+          neovide_floating_blur_amount_x = 20.0;
+          neovide_floating_blur_amount_y = 20.0;
+          neovide_hide_mouse_when_typing = true;
+          neovide_refresh_rate = 144;
+          neovide_cursor_vfx_mode = "ripple";
+          neovide_cursor_animation_length = 0.08;
+          neovide_cursor_smooth_blink = true;
+          neovide_floating_shadow = false;
+          neovide_cursor_animate_command_line = true;
+          neovide_cursor_animate_in_insert_mode = true;
         };
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
-        # extraConfigLuaPost = ''
-        #   vim.cmd [[
-        #     ]]
-        # '';
+        extraConfigLua = ''
+          if vim.g.neovide then
+            vim.cmd[[colorscheme gruvbox]]
+            vim.o.background = "dark"
+            vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
+            vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
+          end
+        '';
         package = pkgs.neovim-unwrapped;
-        # enableMan = true;
         clipboard.register = "unnamedplus";
         colorscheme = "gruvbox";
         colorschemes.gruvbox = {
@@ -887,6 +916,8 @@ in {
           treesitter-textobjects.enable = true;
           treesitter = {
             enable = true;
+            folding = true;
+            indent = true;
             ensureInstalled = [
               "all"
             ];
@@ -965,6 +996,7 @@ in {
               rst = ["vale"];
               clojure = ["clj-kondo"];
               dockerfile = ["hadolint"];
+              nix = ["nix" "deadnix"];
             };
           };
 
@@ -1168,12 +1200,6 @@ in {
             action = "<cmd>nohlsearch<CR>";
             key = "<Esc>";
           }
-          {
-            mode = "n";
-            action = "<cmd>HopWord<CR>";
-            key = "<Leader><Leader>";
-            options.desc = "Hop";
-          }
         ];
 
         autoCmd = [
@@ -1226,17 +1252,21 @@ in {
           kb-remove-char-forward = "";
           kb-clear-line = "Control+d";
 
-          kb-remove-char-back = "";
+          kb-remove-char-back = "BackSpace";
           kb-mode-previous = "Control+h";
 
           kb-cancel = "Escape,Control+q";
         };
-        theme = {
+        theme = let
+          inherit (config.lib.formats.rasi) mkLiteral;
+        in {
           "*" = {
-            normal-background = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (0, 0, 0, 0%)");
-            alternate-normal-background = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (0, 0, 0, 0%)");
-            gruvbox-dark-bg0 = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (21, 22, 3, 60%)");
-            gruvbox-dark-bg0-soft = lib.mkForce (config.lib.formats.rasi.mkLiteral "rgba (21, 22, 3, 60%)");
+            normal-background = lib.mkForce (mkLiteral "rgba (0, 0, 0, 0%)");
+            alternate-normal-background = lib.mkForce (mkLiteral "rgba (0, 0, 0, 0%)");
+            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (21, 22, 3, 60%)");
+            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (21, 22, 3, 60%)");
+            # TODO add more colors like this.
+            # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
           };
         };
       };
@@ -1247,17 +1277,35 @@ in {
         xwayland.enable = true;
         systemd.variables = ["--all"];
         enable = true;
+        extraConfig =
+          /*
+          hyprlang
+          */
+          ''
+            env = NIXOS_OZONE_WL, 1
+            env = XDG_CURRENT_DESKTOP, Hyprland
+            env = XDG_SESSION_TYPE, wayland
+            env = XDG_SESSION_DESKTOP, Hyprland
+            env = GDK_BACKEND, wayland, x11
+            env = CLUTTER_BACKEND, wayland
+            env = QT_QPA_PLATFORM, wayland
+            env = QT_QPA_PLATFORMTHEME, qt5ct
+            env = QT_WAYLAND_DISABLE_WINDOWDECORATION, 1
+            env = QT_AUTO_SCREEN_SCALE_FACTOR, 1
+            env = SDL_VIDEODRIVER, x11
+            env = MOZ_ENABLE_WAYLAND, 1
+            env = GTK_USE_PORTAL, 1
+            monitor =, highres@highrr, auto, 1
+            xwayland {
+              force_zero_scaling = true
+            }
+          '';
         settings = {
           debug.disable_logs = true;
 
           # Autostart.
           exec-once = [
-            # "systemctl --user import-environment QT_QPA_PLATFORMTHEME WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-            # "systemctl --user import-environment &"
-            # "hash dbus-update-activation-environment 2>/dev/null &"
-            # "dbus-update-activation-environment --systemd &"
             "${lib.getExe pkgs.lxqt.lxqt-policykit} &"
-
             "wl-clip-persist --clipboard both"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/wallpaper.png} &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
@@ -1299,14 +1347,10 @@ in {
 
             disable_autoreload = true;
             animate_manual_resizes = true;
-            #   always_follow_on_dnd = true;
-            #   layers_hog_keyboard_focus = true;
             enable_swallow = true;
-            #   focus_on_activate = true;
           };
 
           dwindle = {
-            # no_gaps_when_only = false;
             force_split = 0;
             special_scale_factor = 1.0;
             split_width_multiplier = 1.0;
@@ -1316,8 +1360,6 @@ in {
           };
 
           master = {
-            # new_is_master = true;
-            # special_scale_factor = 1;
             no_gaps_when_only = false;
           };
 
@@ -1343,34 +1385,6 @@ in {
             shadow_range = 15;
             shadow_render_power = 2; # 3
             "col.shadow" = lib.mkForce "rgba(0000007F)";
-          };
-
-          animations = {
-            enabled = true;
-
-            bezier = [
-              "fluent_decel, 0, 0.2, 0.4, 1"
-              "easeOutCirc, 0, 0.55, 0.45, 1"
-              "easeOutCubic, 0.33, 1, 0.68, 1"
-              "easeinoutsine, 0.37, 0, 0.63, 1"
-            ];
-
-            animation = [
-              # Windows
-              "windowsIn, 1, 3, easeOutCubic, popin 30%" # window open
-              "windowsOut, 1, 3, fluent_decel, popin 70%" # window close.
-              "windowsMove, 1, 2, easeinoutsine, slide" # everything in between, moving, dragging, resizing.
-
-              # Fade
-              "fadeIn, 1, 3, easeOutCubic" # fade in (open) -> layers and windows
-              "fadeOut, 1, 2, easeOutCubic" # fade out (close) -> layers and windows
-              "fadeSwitch, 0, 1, easeOutCirc" # fade on changing activewindow and its opacity
-              "fadeShadow, 1, 10, easeOutCirc" # fade on changing activewindow for shadows
-              "fadeDim, 1, 4, fluent_decel" # the easing of the dimming of inactive windows
-              "border, 1, 2.7, easeOutCirc" # for animating the border's color switch speed
-              "borderangle, 1, 30, fluent_decel, once" # for animating the border's gradient angle - styles: once (default), loop
-              "workspaces, 1, 4, easeOutCubic, fade" # styles: slide, slidevert, fade, slidefade, slidefadevert
-            ];
           };
           # bindd = [
           #   "$mainMod, Q, Close active, killactive,"
@@ -1420,7 +1434,9 @@ in {
             "$mainMod, S, togglesplit,"
 
             # Screenshot.
-            ", Print, exec, ${lib.getExe pkgs.grim} -c -g \"$(${lib.getExe pkgs.slurp} -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            ", Print, exec, ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
+            # ", Print, exec, ${lib.getExe pkgs.grim} -c -g \"$(${lib.getExe pkgs.slurp} --freeze -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
+            # ", Print, exec, ${lib.getExe pkgs.grimblast} copy area"
             "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.swappy} -f -"
 
             # Cycle programs.
@@ -1478,8 +1494,8 @@ in {
             "$mainMod ALT, J, moveactive, 0 100"
 
             # media and volume controls
-            "$mainMod,Equal,exec, pamixer -i 2"
-            "$mainMod,Minus,exec, pamixer -d 2"
+            "$mainMod,Equal,exec, ${lib.getExe pkgs.pamixer} -i 2"
+            "$mainMod,Minus,exec, ${lib.getExe pkgs.pamixer} -d 2"
             # ",XF86AudioMute,exec, pamixer -t"
             # ",XF86AudioPlay,exec, playerctl play-pause"
             # ",XF86AudioNext,exec, playerctl next"
@@ -1519,8 +1535,8 @@ in {
             "float,udiskie"
             "float,title:^(Transmission)$"
             "float,title:^(Volume Control)$"
-            "float,title:^(Librewolf — Sharing Indicator)$"
-            "move 0 0,title:^(Librewolf — Sharing Indicator)$"
+            "float,title:^(librewolf — Sharing Indicator)$"
+            "move 0 0,title:^(librewolf — Sharing Indicator)$"
             "size 700 450,title:^(Volume Control)$"
             "move 40 55%,title:^(Volume Control)$"
           ];
@@ -1539,7 +1555,7 @@ in {
             "opacity 1.0 override 1.0 override, class:(Aseprite)"
             "opacity 1.0 override 1.0 override, class:(Unity)"
             "idleinhibit focus, class:^(mpv)$"
-            "idleinhibit fullscreen, class:^(Librewolf)$"
+            "idleinhibit fullscreen, class:^(librewolf)$"
             "float,class:^(pavucontrol)$"
             "float,class:^(SoundWireServer)$"
             "float,class:^(.sameboy-wrapped)$"
@@ -1556,16 +1572,18 @@ in {
             "float,title:^(File Operation Progress)$"
           ];
         };
-
-        extraConfig = "
-           monitor=, highres@highrr, auto, 1
-           xwayland {
-             force_zero_scaling = true
-           }
-        ";
       };
-      services.flameshot = {
-        enable = true;
+      # Extra Configs
+      xdg.enable = true;
+      # xdg.configFile."kritarc".source = ./resources/krita-extraConfig;
+      xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {
+        font = {
+          normal = ["Courier Prime"];
+          size = 13;
+          features = {
+            CourierPrime = ["-liga"];
+          };
+        };
       };
     };
   };
