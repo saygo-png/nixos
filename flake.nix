@@ -41,7 +41,7 @@
       };
       modules = [
         ./configuration.nix
-        ./resources/hardware/hardware-configuration.nix
+        ./resources/static/hardware-configuration.nix
       ];
     };
     nixosConfigurations.nixosExternalDrive = nixpkgs.lib.nixosSystem {
@@ -52,7 +52,7 @@
       };
       modules = [
         ./configuration.nix
-        ./resources/hardware/hardware-configuration-ExternalDrive.nix
+        ./resources/static/hardware-configuration-ExternalDrive.nix
       ];
     };
   };

@@ -175,3 +175,27 @@ bindkey -s '^f' 'lfcd\n'
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
+
+# Parametrized alias.
+# $@ is an array of all arguments quoted, (w) operates on words,
+# ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
+nr() { # [N]ix [R]un
+  nix run "nixpkgs#${(w)@:1:1}" -- ${(w)@:2}
+}
+
+# Parametrized alias.
+# $@ is an array of all arguments quoted, (w) operates on words,
+# ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
+snr() { # With sudo
+  sudo nix run "nixpkgs#${(w)@:1:1}" -- ${(w)@:2}
+}
+
+# Use fzf to switch dirs and bind it to ctrl-f
+fzfcd () {
+ dir=$(find ~/.local/bin ~/Sync ~/art/generative-art -mindepth 1 -maxdepth 3 | fzf)
+ if [ -z $dir ]; then
+  exit 1
+ fi
+ [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+}
+bindkey -s '^f' 'fzfcd\n'

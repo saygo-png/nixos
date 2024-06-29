@@ -21,6 +21,7 @@ in {
   #######################
   # Essential or basic. #
   #######################
+
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
@@ -34,6 +35,8 @@ in {
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Warsaw";
 
+  services.xserver.libinput.mouse.accelProfile = "flat";
+  services.xserver.libinput.mouse.accelSpeed = "-0.9";
   services.xserver.xkb = {
     layout = "pl";
     options = "caps:escape";
@@ -78,19 +81,20 @@ in {
     # Other.
     wl-clipboard # Wayland xclip
     cliphist # Wayland clipboard manager
-
+    jq # Json parser, needed for "hyprland-next-visible-client.sh"
     # Treesitter needs it.
     patool # Universal archiver
-    mtr # Network diagnostics
-    ncdu # Storage explorer
-    libqalculate
+    libqalculate # Calculator
+    conky # Hardware monitor
     vim # Text editor
+    zed-editor # Another text editor
     wget # Downloader
     eza # ls rewrite
     trashy # Cli trashcan
     tmux # Terminal multiplexer
     dash # Lightweight shell
     git # Source control
+    lazygit # Lazy source control
     fzf # Fuzzy finder
     ripgrep # Multithreaded grep
     gnumake # C compiling
@@ -114,6 +118,8 @@ in {
     hyprland-protocols
 
     # Shellscripts.
+    (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
+
     (writeShellScriptBin
       "hard-clean-nix"
       ''
@@ -142,7 +148,6 @@ in {
     (writeShellScriptBin
       "pizzatimer"
       ''
-        #!/bin/bash
         ${lib.getExe pkgs.termdown} 15m && \
         for i in {1..10}; do ${lib.getExe pkgs.libnotify} "Pizza is done."; done
       '')
@@ -254,14 +259,15 @@ in {
 
   # Fonts.
   fonts = {
-    packages = [
+    packages = with pkgs; [
       # Main font.
-      pkgs.courier-prime
-      (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-      pkgs.noto-fonts-cjk-serif
-      pkgs.noto-fonts-cjk-sans
-      pkgs.noto-fonts-emoji
-      pkgs.noto-fonts
+      courier-prime
+      jetbrains-mono
+      (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+      noto-fonts-cjk-serif
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      noto-fonts
     ];
 
     fontconfig = {
@@ -279,7 +285,7 @@ in {
   stylix.enable = true;
   stylix.autoEnable = true;
   stylix.polarity = "dark";
-  stylix.image = ./resources/wallpaper.png;
+  stylix.image = ./resources/static/wallpaper.png;
   stylix.targets.grub.useImage = true;
   stylix.cursor.package = pkgs.capitaine-cursors-themed;
   stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
@@ -423,7 +429,7 @@ in {
 
         # Binary blobs.
         sessionPath = ["${constants.home}/bin"]; # Add ~/bin to path.
-        file."bin/tmux-mem-cpp".source = ./resources/tmux-mem-cpp;
+        file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
 
         # This allows for semi-declarative configuration.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
@@ -434,6 +440,9 @@ in {
           fi
         '';
       };
+
+      # Needed for transparency.
+      stylix.targets.fzf.enable = false;
 
       # More visuals.
       gtk = {
@@ -460,7 +469,7 @@ in {
       };
 
       # Development, internal.
-      programs.command-not-found.enable = false;
+      programs.lazygit.enable = true;
       programs.nix-index.enable = true;
       programs.bash.enable = true;
       programs.mangohud.enable = true;
@@ -468,6 +477,7 @@ in {
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
 
+      # TODO configure syncthing
       services.syncthing = {
         enable = true;
       };
@@ -481,6 +491,47 @@ in {
             offset = "30x50";
             origin = "top-center";
           };
+        };
+      };
+
+      programs.lf = {
+        enable = true;
+        commands = {
+          dragon-out = ''%${pkgs.xdragon}/bin/xdragon -a -x "$fx"'';
+          editor-open = ''$$EDITOR $f'';
+          mkdir = ''
+            ''${{
+              printf "Directory Name: "
+              read DIR
+              mkdir $DIR
+            }}
+          '';
+        };
+
+        keybindings = {
+          "\\\"" = "";
+          o = "";
+          c = "mkdir";
+          "." = "set hidden!";
+          "`" = "mark-load";
+          "\\'" = "mark-load";
+          "<enter>" = "open";
+
+          do = "dragon-out";
+
+          "g~" = "cd";
+          gh = "cd";
+          "g/" = "/";
+
+          e = "editor-open";
+          V = ''$${lib.getExe pkgs.bat} --paging=always --theme=gruvbox "$f"'';
+        };
+
+        settings = {
+          preview = true;
+          hidden = true;
+          drawbox = true;
+          ignorecase = true;
         };
       };
 
@@ -552,6 +603,7 @@ in {
           bind-key -T copy-mode-vi 'Bspace' send -X halfpage-up
         '';
       };
+
       programs.fzf = {
         enable = true;
         tmux.enableShellIntegration = true;
@@ -622,6 +674,7 @@ in {
           ];
         };
       };
+
       programs.git = {
         enable = true;
         package = pkgs.gitAndTools.gitFull;
@@ -630,6 +683,7 @@ in {
         aliases = {
           undo = "reset HEAD~1 --mixed";
           amend = "commit -a --amend";
+          aa = "add -A"; # [A]dd [A]ll
         };
         extraConfig = {
           # credential = {
@@ -691,7 +745,7 @@ in {
           vim-language-server
           typos-lsp
           vale # Linter
-          haskellPackages.fourmolu # Haskell formatter
+          haskellPackages.ormolu # Haskell formatter
           marksman # Markdown LSP
           haskell-language-server # Haskell LSP
           python312Packages.python-lsp-server
@@ -713,6 +767,7 @@ in {
           black # Python formatter
           yapf # Python formatter
           ruff # Python linter
+          hlint # Haskell linter
 
           # Nix
           deadnix # Linter
@@ -763,6 +818,9 @@ in {
           # Folds.
           foldmethod = "expr";
           foldexpr = "nvim_treesitter#foldexpr()";
+          # foldmethod = "indent";
+          foldlevel = 1;
+          foldclose = "all";
           foldenable = false; # Disable folding at startup.
 
           # More space.
@@ -835,13 +893,29 @@ in {
         # ];
 
         plugins = {
-          # nix.enable = true;
+          nix.enable = true;
           surround.enable = true;
           rainbow-delimiters.enable = true;
           nvim-colorizer.enable = true;
-          telescope.enable = true;
-          ts-context-commentstring.enable = true;
+          # ts-context-commentstring.enable = true;
+          direnv.enable = true;
 
+          telescope = {
+            enable = true;
+            extensions.fzf-native.enable = true;
+            keymaps = {
+              "<leader>tb" = {
+                action = "current_buffer_fuzzy_find ";
+                options = {
+                  desc = "[T]elescope [B]uffr search";
+                };
+              };
+              "<leader>tg" = {
+                action = "live_grep";
+                options.desc = "[T]elescope [G]rep";
+              };
+            };
+          };
           flash = {
             enable = true;
             labels = "asdfghjklqwertyuiopzxcvbnm";
@@ -869,21 +943,21 @@ in {
             };
           };
 
-          fidget = {
-            enable = true;
-            progress = {
-              display = {
-                doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
-              };
-            };
-            notification = {
-              window = {
-                normalHl = "Comment";
-                winblend = 0;
-                border = "single"; # none, single, double, rounded, solid, shadow
-              };
-            };
-          };
+          # fidget = {
+          #   enable = false;
+          #   progress = {
+          #     display = {
+          #       doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
+          #     };
+          #   };
+          #   notification = {
+          #     window = {
+          #       normalHl = "Comment";
+          #       winblend = 0;
+          #       border = "single"; # none, single, double, rounded, solid, shadow
+          #     };
+          #   };
+          # };
 
           mini = {
             enable = true;
@@ -975,7 +1049,7 @@ in {
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "black" "yapf"];
-              haskell = ["fourmolu"];
+              haskell = ["ormolu"];
               lua = ["stylua"];
               nix = ["alejandra"];
               # Use the "*" filetype to run formatters on all filetypes.
@@ -1024,13 +1098,16 @@ in {
             autoEnableSources = true;
             settings = {
               autocomplete = true;
-              snippet = {expand = "luasnip";};
+              snippet.expand = ''
+                function(args)
+                  require('luasnip').lsp_expand(args.body)
+                end
+              '';
               sources = [
                 {name = "nvim_lsp";}
                 {name = "luasnip";}
                 {name = "nvim_lua";}
                 {name = "nvim_lsp_signature_help";}
-                # {name = "buffer";}
               ];
               mapping = {
                 "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
@@ -1302,18 +1379,17 @@ in {
           '';
         settings = {
           debug.disable_logs = true;
-
           # Autostart.
           exec-once = [
-            "${lib.getExe pkgs.lxqt.lxqt-policykit} &"
+            "systemctl --user import-environment &"
+            "hash dbus-update-activation-environment 2>/dev/null &"
+            "dbus-update-activation-environment --systemd &"
+
+            "${lib.getExe pkgs.kdePackages.polkit-kde-agent-1} &"
+            "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
             "wl-clip-persist --clipboard both"
-            "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/wallpaper.png} &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
-            # "sleep 1 && swaylock"
-            # "poweralertd &"
-            # "waybar &"
-            # "mako &"
             "wl-paste --watch cliphist store &"
           ];
 
@@ -1326,6 +1402,7 @@ in {
             numlock_by_default = false;
             follow_mouse = 0;
             sensitivity = -0.9;
+            # float_switch_override_focus = 2;
           };
 
           general = {
@@ -1351,7 +1428,7 @@ in {
           };
 
           dwindle = {
-            force_split = 0;
+            force_split = 2;
             special_scale_factor = 1.0;
             split_width_multiplier = 1.0;
             use_active_for_splits = true;
@@ -1361,6 +1438,11 @@ in {
 
           master = {
             no_gaps_when_only = false;
+            # new_is_master = false;
+            # These options will be needed after hyprland update:
+            new_status = "slave";
+            new_on_active = "after";
+            new_on_top = false;
           };
 
           decoration = {
@@ -1402,7 +1484,7 @@ in {
             #  add descriptions to each key
 
             # Show keybinds list.
-            "$mainMod, shiftH, exec, show-keybinds"
+            "$mainMod, p, exec, show-keybinds"
 
             # Close program.
             "$mainMod, Q, killactive,"
@@ -1411,7 +1493,10 @@ in {
             "$mainMod, o, togglefloating,"
 
             # Fullscreen
-            "$mainMod, f, Fullscreen, fullscreen, 0"
+            "$mainMod, f, fullscreen"
+
+            # Fake fullscreen
+            "$mainMod SHIFT, f, fakefullscreen"
 
             # Cycle next in current workspace.
             "$mainMod, z, cyclenext,"
@@ -1425,24 +1510,22 @@ in {
             "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 
             # Program launcher.
-            "$mainMod, Space, exec, pkill rofi || rofi -show drun"
+            "$mainMod, Space, exec, pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
 
             # Color picker
-            "$mainMod, c ,exec, hyprpicker -a"
+            "$mainMod, c ,exec, ${lib.getExe pkgs.hyprpicker} -a"
 
-            # Change split direction.
-            "$mainMod, S, togglesplit,"
+            # Change layout.
+            "$mainMod, s, exec, hyprctl keyword general:layout \"dwindle\""
+            "$mainMod, a, exec, hyprctl keyword general:layout \"master\""
 
             # Screenshot.
-            ", Print, exec, ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
-            # ", Print, exec, ${lib.getExe pkgs.grim} -c -g \"$(${lib.getExe pkgs.slurp} --freeze -w 0)\" -t png - | ${pkgs.wl-clipboard}/bin/wl-copy"
-            # ", Print, exec, ${lib.getExe pkgs.grimblast} copy area"
+            ", Print, exec, ${lib.getExe pkgs.grimblast} --cursor --freeze copy area "
             "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.swappy} -f -"
 
             # Cycle programs.
-            "ALT, Tab, workspace, m+1"
-            # "ALT, Tab, bringactivetotop,"
-            "$mainMod, Tab, exec, pkill rofi || rofi -show window"
+            "ALT, Tab, exec, hyprland-next-visible-client.sh next"
+            "$mainMod, Tab, exec, hyprland-next-visible-client.sh menu"
 
             # Switch focus.
             "$mainMod, h, movefocus, l"
@@ -1505,7 +1588,7 @@ in {
             # "$mainMod, mouse_up, workspace, e+1"
 
             # clipboard manager
-            "$mainMod, V, exec, cliphist list | ${pkgs.rofi-wayland}/bin/rofi -dmenu | cliphist decode | ${pkgs.wl-clipboard}/bin/wl-copy"
+            "$mainMod, V, exec, ${lib.getExe pkgs.cliphist} list | ${lib.getExe pkgs.rofi-wayland} -dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe pkgs.wl-clipboard}"
           ];
 
           # mouse binding
@@ -1515,67 +1598,85 @@ in {
           ];
 
           windowrule = [
-            "float,imv"
-            "center,imv"
-            "size 1200 725,imv"
-            "float,mpv"
-            "center,mpv"
-            "tile,Aseprite"
-            "size 1200 725,mpv"
-            "float,title:^(float_kitty)$"
-            "center,title:^(float_kitty)$"
-            "size 950 600,title:^(float_kitty)$"
-            "float,audacious"
-            "workspace 8 silent, audacious"
-            "pin,rofi"
-            "float,rofi"
-            "noborder,rofi"
+            "workspace 1, title:Terminal"
+            "workspace 2, title:Web"
+            "workspace 3, title:Development"
+            "workspace 4, title:Chat"
+            "workspace 8, title:Steam"
+            "workspace 10, title:passwordManager"
+
+            "float, imv"
+            "center, imv"
+            "size 1200 725, imv"
+
+            "float, mpv"
+            "center, mpv"
+            "size 1200 725, mpv"
+
+            "tile, Aseprite"
+
+            "pin, rofi"
+            "float, rofi"
+            "noborder, rofi"
+
             "tile, neovide"
-            "idleinhibit focus,mpv"
+
+            "idleinhibit focus, mpv"
+
             "float,udiskie"
-            "float,title:^(Transmission)$"
-            "float,title:^(Volume Control)$"
-            "float,title:^(librewolf — Sharing Indicator)$"
-            "move 0 0,title:^(librewolf — Sharing Indicator)$"
-            "size 700 450,title:^(Volume Control)$"
-            "move 40 55%,title:^(Volume Control)$"
           ];
 
           windowrulev2 = [
-            # Hide border on unfocused windows
-            # "noborder, focus:0"
+            # Needed for gloss window to tile and not focus.
+            "tile, class:^()$"
+            "noinitialfocus, class:^()$"
 
             "suppressevent maximize, class:.*"
+
+            "workspace 2 silent, class:^(firefox)$"
+            "workspace 2 silent, class:^(librewolf)$"
+            "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
+            "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
+            "fullscreen, class:^(Steam|steam|steam_app_.*)$"
+            "fakefullscreen, class:^(Steam|steam|steam_app_.*)$"
+            "noinitialfocus, class:^(steam)$, title:^(notificationtoasts.*)$, floating:1"
 
             "float, title:^(Picture-in-Picture)$"
             "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
             "pin, title:^(Picture-in-Picture)$"
+            "float, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
+            "size 0 0, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
+
             "opacity 1.0 override 1.0 override, title:^(.*imv.*)$"
             "opacity 1.0 override 1.0 override, title:^(.*mpv.*)$"
-            "opacity 1.0 override 1.0 override, class:(Aseprite)"
-            "opacity 1.0 override 1.0 override, class:(Unity)"
+
             "idleinhibit focus, class:^(mpv)$"
             "idleinhibit fullscreen, class:^(librewolf)$"
-            "float,class:^(pavucontrol)$"
-            "float,class:^(SoundWireServer)$"
-            "float,class:^(.sameboy-wrapped)$"
-            "float,class:^(file_progress)$"
-            "float,class:^(confirm)$"
-            "float,class:^(dialog)$"
-            "float,class:^(download)$"
-            "float,class:^(notification)$"
-            "float,class:^(error)$"
-            "float,class:^(confirmreset)$"
-            "float,title:^(Open File)$"
-            "float,title:^(branchdialog)$"
-            "float,title:^(Confirm to replace files)$"
-            "float,title:^(File Operation Progress)$"
+
+            "opacity 1.0 override 1.0 override, class:(Aseprite)"
+            "opacity 1.0 override 1.0 override, class:(Unity)"
+
+            "float, class:^(pavucontrol)$"
+            "float, class:^(SoundWireServer)$"
+            "float, class:^(.sameboy-wrapped)$"
+
+            "float, class:^(file_progress)$"
+            "float, class:^(confirm)$"
+            "float, class:^(dialog)$"
+            "float, class:^(download)$"
+            "float, class:^(notification)$"
+            "float, class:^(error)$"
+            "float, class:^(confirmreset)$"
+            "float, title:^(Open File)$"
+            "float, title:^(branchdialog)$"
+            "float, title:^(Confirm to replace files)$"
+            "float, title:^(File Operation Progress)$"
           ];
         };
       };
+
       # Extra Configs
       xdg.enable = true;
-      # xdg.configFile."kritarc".source = ./resources/krita-extraConfig;
       xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {
         font = {
           normal = ["Courier Prime"];
@@ -1583,6 +1684,49 @@ in {
           features = {
             CourierPrime = ["-liga"];
           };
+        };
+      };
+
+      xdg.configFile."zed/settings.json".text = builtins.toJSON {
+        auto_update = false;
+        base_keymap = "VSCode";
+        theme = "Gruvbox Dark";
+        vim_mode = true;
+        ui_font_size = 16;
+        buffer_font_size = 16;
+        tab_size = 2;
+        buffer_font_family = "JetBrains Mono";
+        vim = {
+          use_system_clipboard = "always";
+        };
+
+        BINDZ = [
+          {
+            context = "Editor && !VimWaiting && !menu";
+            bindings = {
+              ctrl-c = "editor::Copy"; # vim default: return to normal mode
+              ctrl-v = "editor::Paste"; # vim default: visual block mode
+              ctrl-y = "editor::Undo"; # vim default: line up
+              ctrl-o = "workspace::Open"; # vim default: go back
+              ctrl-a = "editor::SelectAll"; # vim default: increment
+            };
+          }
+        ];
+
+        inlay_hints = {
+          enabled = true;
+          show_type_hints = true;
+          show_parameter_hints = true;
+          show_other_hints = true;
+          edit_debounce_ms = 700;
+          scroll_debounce_ms = 50;
+        };
+        journal = {
+          hour_format = "hour24";
+        };
+        telemetry = {
+          diagnostics = false;
+          metrics = false;
         };
       };
     };

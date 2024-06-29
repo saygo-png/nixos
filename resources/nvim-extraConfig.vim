@@ -1,5 +1,10 @@
 " TODO put this shit in configuration.nix
+"
+" highlight FloatBorder  ctermfg=NONE ctermbg=NONE cterm=NONE
+
 lua << EOF
+
+-- Make lsp popups pretty
 local border = {
   { '┌', 'FloatBorder' },
   { '─', 'FloatBorder' },
@@ -11,7 +16,11 @@ local border = {
   { '│', 'FloatBorder' },
 }
 
--- Make lsp popups pretty
+local _border = "single"
+require('lspconfig.ui.windows').default_options = { border = _border }
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, { border = _border })
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with( vim.lsp.handlers.signature_help, { border = _border })
+
 vim.diagnostic.config({
 underline = false,
 update_in_insert = false,
@@ -66,12 +75,40 @@ function cmp.diagnostic_status()
   return ok
 end
 
+function cmp.git_status()
+  local git_info = vim.b.gitsigns_status_dict
+  if not git_info or git_info.head == "" then
+    return ""
+  end
+  local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
+  local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
+  local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
+  if git_info.added == 0 then
+    added = ""
+  end
+  if git_info.changed == 0 then
+    changed = ""
+  end
+  if git_info.removed == 0 then
+    removed = ""
+  end
+  return table.concat {
+     " ",
+     added,
+     changed,
+     removed,
+     "%#GitSignsAdd#branch ",
+     git_info.head,
+     " %#Normal#",
+  }
+end
 
 local statusline = {
   '%{%v:lua._statusline_component("diagnostic_status")%}',
   '%t',
   '%r',
   '%m',
+  '%{%v:lua._statusline_component("git_status")%}',
   '%=',
   '%{&filetype} ',
   '%2p%%',
@@ -99,7 +136,7 @@ vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the
 vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
 
-vim.api.nvim_set_hl(0, "FloatBorder"               , { fg = "#7d8618", bg = "none"})
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#7d8618", bg = "none"})
 EOF
 
 augroup remember_folds
