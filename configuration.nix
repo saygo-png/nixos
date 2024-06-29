@@ -844,7 +844,7 @@ in {
           cmdheight = 0;
 
           # Prevents screen jumping and needed for gitsigns
-          signcolumn = "true";
+          # signcolumn = "yes";
 
           # Show some whitespace.
           list = true;
