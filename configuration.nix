@@ -919,7 +919,6 @@ in {
           enable = true;
           settings = {
             transparent_mode = true;
-            dim_inactive = true;
             undercurl = false;
             underline = false;
             strikethrough = false;
@@ -1754,7 +1753,6 @@ in {
       xdg.configFile."sx/sxrc" = {
         executable = true;
         text = ''
-          ${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &
           $TERMINAL &
           exec awesome
         '';
