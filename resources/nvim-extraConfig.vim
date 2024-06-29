@@ -103,12 +103,21 @@ function cmp.git_status()
   }
 end
 
+function cmp.lint_progress()
+  local linters = require("lint").get_running()
+  if #linters == 0 then
+      return "lint: ok"
+  end
+  return "lint: search" .. table.concat(linters, ", ")
+end
+
 local statusline = {
   '%{%v:lua._statusline_component("diagnostic_status")%}',
   '%t',
   '%r',
   '%m',
   '%{%v:lua._statusline_component("git_status")%}',
+  '%{%v:lua._statusline_component("lint_progress")%}',
   '%=',
   '%{&filetype} ',
   '%2p%%',

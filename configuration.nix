@@ -151,6 +151,23 @@ in {
         ${lib.getExe pkgs.termdown} 15m && \
         for i in {1..10}; do ${lib.getExe pkgs.libnotify} "Pizza is done."; done
       '')
+
+    (writeShellScriptBin "hyprcorder.sh" ''
+      set -e
+      recproc=$(ps -A | grep wl-screenrec | awk '{print $1}')
+      if [ $recproc ]; then
+        kill -2 $recproc
+        notify-send "Recording stopped."
+        pushd ${constants.home}/screencaptures/
+        ${lib.getExe pkgs.ripdrag} $(ls -t | head -n1)
+        popd
+        exit
+      else
+        monitor=$(hyprctl activeworkspace -j | jq -r '.monitor')
+        notify-send "Recording starting on $monitor."
+        ${lib.getExe pkgs.wl-screenrec} -b "3 MB" -o $monitor -f ${constants.home}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
+        fi
+    '')
   ];
 
   ########################
@@ -330,15 +347,15 @@ in {
   stylix.fonts.sizes = {
     applications = 12;
     terminal = 13;
-    desktop = 10;
-    popups = 10;
+    desktop = 13;
+    popups = 13;
   };
 
   stylix.opacity = {
-    applications = 0.6;
-    terminal = 0.6;
-    desktop = 0.6;
-    popups = 0.6;
+    applications = 0.7;
+    terminal = 0.7;
+    desktop = 0.7;
+    popups = 0.7;
   };
 
   ################
@@ -410,6 +427,7 @@ in {
           pulsemixer # Volume control
           zoxide # Cd alternative
           mpv # Video player
+          ffmpeg # Video and magic editor
           cbonsai # Ascii tree animation
           hyprpicker # Color picker
           slurp # Screenshot assistant
@@ -432,13 +450,12 @@ in {
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
 
         # This allows for semi-declarative configuration.
-        activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          if ! [ -f "${config.xdg.configHome}/kritarc" ]; then
-              run cp $VERBOSE_ARG "${builtins.toPath ./resources/krita-extraConfig}" "${config.xdg.configHome}/kritarc"
-              else
-              :
-          fi
-        '';
+        #activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        #  if ! [ -f "${config.xdg.configHome}/kritarc" ]; then
+        #      mkdir -p ${config.xdg.configHome}
+        #      run cp $VERBOSE_ARG "${builtins.toPath ./resources/krita-extraConfig}" "${config.xdg.configHome}/kritarc"
+        #  fi
+        #'';
       };
 
       # Needed for transparency.
@@ -827,7 +844,7 @@ in {
           cmdheight = 0;
 
           # Prevents screen jumping and needed for gitsigns
-          signcolumn = "yes";
+          signcolumn = "true";
 
           # Show some whitespace.
           list = true;
@@ -867,7 +884,7 @@ in {
           neovide_cursor_animate_command_line = true;
           neovide_cursor_animate_in_insert_mode = true;
         };
-        extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
+        # extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         extraConfigLua = ''
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox]]
@@ -883,9 +900,16 @@ in {
           enable = true;
           settings = {
             transparent_mode = true;
+            dim_inactive = true;
             undercurl = false;
             underline = false;
             strikethrough = false;
+            bold = false;
+            overrides = {
+              # "@punctuation.bracket" = {fg = "#d5c4a1";};
+              # "@punctuation.delimiter" = {fg = "#d5c4a1";};
+              "@punctuation.special" = {fg = "#d5c4a1";};
+            };
           };
         };
 
@@ -896,9 +920,30 @@ in {
           nix.enable = true;
           surround.enable = true;
           rainbow-delimiters.enable = true;
-          nvim-colorizer.enable = true;
-          # ts-context-commentstring.enable = true;
           direnv.enable = true;
+          spider.enable = true;
+
+          nvim-colorizer = {
+            enable = true;
+            fileTypes = let
+              css = {css = true;};
+            in [
+              "*"
+              ({language = "css";} // css)
+              ({language = "scss";} // css)
+              ({language = "sass";} // css)
+              ({language = "less";} // css)
+              ({language = "stylus";} // css)
+            ];
+            bufTypes = [
+              "*"
+              "!prompt"
+              "!popup"
+            ];
+            userDefaultOptions = {
+              names = false;
+            };
+          };
 
           telescope = {
             enable = true;
@@ -916,6 +961,7 @@ in {
               };
             };
           };
+
           flash = {
             enable = true;
             labels = "asdfghjklqwertyuiopzxcvbnm";
@@ -1522,6 +1568,9 @@ in {
             # Screenshot.
             ", Print, exec, ${lib.getExe pkgs.grimblast} --cursor --freeze copy area "
             "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.swappy} -f -"
+
+            # Record
+            "$mainMod, r, exec, hyprcorder.sh"
 
             # Cycle programs.
             "ALT, Tab, exec, hyprland-next-visible-client.sh next"
