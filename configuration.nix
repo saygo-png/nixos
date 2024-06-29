@@ -68,7 +68,7 @@ in {
 
   # Needed here and in home manager.
   programs.hyprland.enable = true;
-
+  programs.thunar.enable = true;
   # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
@@ -94,7 +94,6 @@ in {
     tmux # Terminal multiplexer
     dash # Lightweight shell
     git # Source control
-    lazygit # Lazy source control
     fzf # Fuzzy finder
     ripgrep # Multithreaded grep
     gnumake # C compiling
@@ -119,6 +118,13 @@ in {
 
     # Shellscripts.
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
+
+    (writeShellScriptBin
+      "gamescope-steam-DIY"
+      ''
+        sudo setcap 'CAP_SYS_NICE=eip' "$(which gamescope)"
+        gamescope -W 1920 -H 1080 -r 144 steam
+      '')
 
     (writeShellScriptBin
       "hard-clean-nix"
@@ -220,8 +226,18 @@ in {
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+
+  # X11 window manager for games
+  services.xserver.windowManager.awesome = {
+    enable = true;
+  };
+
   # NixOS is retarded and turns on lightdm by default.
-  services.xserver.displayManager.lightdm.enable = false;
+  services.xserver.displayManager = {
+    lightdm.enable = false;
+    sx.enable = true;
+    defaultSession = "none+awesome";
+  };
 
   # Polkit (needed for window managers)
   security.polkit.enable = true;
@@ -233,13 +249,13 @@ in {
     pulse.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
-    jack.enable = true;
+    # jack.enable = true;
     extraConfig.pipewire."92-low-latency" = {
       context.properties = {
         default.clock.rate = 48000;
-        default.clock.quantum = 19;
-        default.clock.min-quantum = 19;
-        default.clock.max-quantum = 19;
+        default.clock.quantum = 24;
+        default.clock.min-quantum = 24;
+        default.clock.max-quantum = 24;
       };
     };
   };
@@ -417,7 +433,6 @@ in {
           rhythmbox # Music player
           foliate # Ebook reader
           anki # Flashcards
-          pcmanfm # File manager
           libreoffice # Office
           neovide # Neovim gui
           rofi-wayland # App launcher
@@ -428,7 +443,6 @@ in {
           zoxide # Cd alternative
           mpv # Video player
           ffmpeg # Video and magic editor
-          cbonsai # Ascii tree animation
           hyprpicker # Color picker
           slurp # Screenshot assistant
           swappy # Quick drawing on images
@@ -486,7 +500,12 @@ in {
       };
 
       # Development, internal.
-      programs.lazygit.enable = true;
+      programs.lazygit = {
+        enable = true;
+        settings = {
+          gui.border = "single";
+        };
+      };
       programs.nix-index.enable = true;
       programs.bash.enable = true;
       programs.mangohud.enable = true;
@@ -884,7 +903,7 @@ in {
           neovide_cursor_animate_command_line = true;
           neovide_cursor_animate_in_insert_mode = true;
         };
-        # extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
+        extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         extraConfigLua = ''
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox]]
@@ -1726,6 +1745,21 @@ in {
 
       # Extra Configs
       xdg.enable = true;
+
+      xdg.configFile."awesome/" = {
+        source = ./resources/awesome;
+        recursive = true;
+      };
+
+      xdg.configFile."sx/sxrc" = {
+        executable = true;
+        text = ''
+          ${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &
+          $TERMINAL &
+          exec awesome
+        '';
+      };
+
       xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {
         font = {
           normal = ["Courier Prime"];
@@ -1748,7 +1782,6 @@ in {
         vim = {
           use_system_clipboard = "always";
         };
-
         BINDZ = [
           {
             context = "Editor && !VimWaiting && !menu";
@@ -1761,7 +1794,6 @@ in {
             };
           }
         ];
-
         inlay_hints = {
           enabled = true;
           show_type_hints = true;
