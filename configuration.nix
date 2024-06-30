@@ -35,8 +35,14 @@ in {
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Warsaw";
 
+  services.libinput.enable = true;
+  services.libinput.mouse.accelProfile = "flat";
+  services.libinput.mouse.accelSpeed = "-0.9";
+
+  services.xserver.libinput.enable = true;
   services.xserver.libinput.mouse.accelProfile = "flat";
   services.xserver.libinput.mouse.accelSpeed = "-0.9";
+
   services.xserver.xkb = {
     layout = "pl";
     options = "caps:escape";
@@ -67,7 +73,11 @@ in {
     ];
 
   # Needed here and in home manager.
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    package = pkgs-unstable.hyprland;
+  };
+
   programs.thunar.enable = true;
   # System packages.
   environment.systemPackages = with pkgs; [
@@ -113,8 +123,8 @@ in {
 
     # These are filepickers and whatnot
     xdg-desktop-portal-gtk
-    xdg-desktop-portal-hyprland
-    hyprland-protocols
+    pkgs-unstable.xdg-desktop-portal-hyprland
+    pkgs-unstable.hyprland-protocols
 
     # Shellscripts.
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
@@ -232,15 +242,18 @@ in {
     enable = true;
   };
 
+  # Might fix authorization agent issues
+  services.gnome.gnome-keyring.enable = true;
+
+  # Polkit (needed for window managers)
+  security.polkit.enable = true;
+
   # NixOS is retarded and turns on lightdm by default.
   services.xserver.displayManager = {
     lightdm.enable = false;
     sx.enable = true;
     defaultSession = "none+awesome";
   };
-
-  # Polkit (needed for window managers)
-  security.polkit.enable = true;
 
   # Enable sound with low latency.
   hardware.pulseaudio.enable = false;
@@ -259,11 +272,6 @@ in {
       };
     };
   };
-
-  # Disable touchpad support (enabled default in most desktops).
-  services.libinput.enable = false;
-  # Disable mouse acceleration.
-  services.libinput.mouse.accelProfile = "flat";
 
   #########
   # Shell #
@@ -863,7 +871,7 @@ in {
           cmdheight = 0;
 
           # Prevents screen jumping and needed for gitsigns
-          # signcolumn = "yes";
+          signcolumn = "no";
 
           # Show some whitespace.
           list = true;
@@ -1040,7 +1048,6 @@ in {
               };
               comment = {};
               align = {};
-              trailspace = {};
             };
           };
 
@@ -1414,6 +1421,7 @@ in {
 
       services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
       wayland.windowManager.hyprland = {
+        package = pkgs-unstable.hyprland;
         systemd.enable = true;
         xwayland.enable = true;
         systemd.variables = ["--all"];
@@ -1436,11 +1444,20 @@ in {
             env = SDL_VIDEODRIVER, x11
             env = MOZ_ENABLE_WAYLAND, 1
             env = GTK_USE_PORTAL, 1
+
+            # For tearing.
+            env = WLR_DRM_NO_ATOMIC,1
+
             monitor =, highres@highrr, auto, 1
             xwayland {
               force_zero_scaling = true
             }
           '';
+
+        plugins = [
+          pkgs.hyprlandPlugins.hyprexpo
+        ];
+
         settings = {
           debug.disable_logs = true;
           # Autostart.
@@ -1466,12 +1483,12 @@ in {
             numlock_by_default = false;
             follow_mouse = 0;
             sensitivity = -0.9;
-            # float_switch_override_focus = 2;
           };
 
           general = {
             "$mainMod" = "SUPER";
             layout = "dwindle";
+            allow_tearing = true;
             gaps_in = 15;
             gaps_out = 35;
             border_size = 1;
@@ -1502,7 +1519,6 @@ in {
 
           master = {
             no_gaps_when_only = false;
-            # new_is_master = false;
             # These options will be needed after hyprland update:
             new_status = "slave";
             new_on_active = "after";
@@ -1512,26 +1528,23 @@ in {
           decoration = {
             blur = {
               enabled = false;
-              size = 1;
-              passes = 1;
-              # size = 4;
-              # passes = 2;
-              brightness = 0.5;
-              contrast = 1.400;
-              ignore_opacity = true;
-              noise = 2;
-              new_optimizations = true;
-              xray = true;
             };
-
             drop_shadow = true;
-
             shadow_ignore_window = true;
-            shadow_offset = "5 5";
-            shadow_range = 15;
+            shadow_range = 10;
             shadow_render_power = 2; # 3
             "col.shadow" = lib.mkForce "rgba(0000007F)";
           };
+
+          animations = {
+            animation = [
+              "border,1,1,default"
+              "fade,1,2,default"
+              "windows,1,1.5,default,popin 80%"
+              "workspaces,1,1,default,slide"
+            ];
+          };
+
           # bindd = [
           #   "$mainMod, Q, Close active, killactive,"
           #   "$mainMod, SHIFT + Space, Toggle floating, togglefloating,"
@@ -1547,8 +1560,8 @@ in {
             #  add proper alt tab support using "hycov" plugin
             #  add descriptions to each key
 
-            # Show keybinds list.
-            "$mainMod, p, exec, show-keybinds"
+            # Workspace overview.
+            "$mainMod, w, hyprexpo:expo, toggle"
 
             # Close program.
             "$mainMod, Q, killactive,"
@@ -1579,13 +1592,16 @@ in {
             # Color picker
             "$mainMod, c ,exec, ${lib.getExe pkgs.hyprpicker} -a"
 
+            # Toggle split
+            "$mainMod, s, togglesplit,"
+
             # Change layout.
-            "$mainMod, s, exec, hyprctl keyword general:layout \"dwindle\""
-            "$mainMod, a, exec, hyprctl keyword general:layout \"master\""
+            "$mainMod, d, exec, hyprctl keyword general:layout \"dwindle\""
+            "$mainMod, m, exec, hyprctl keyword general:layout \"master\""
 
             # Screenshot.
             ", Print, exec, ${lib.getExe pkgs.grimblast} --cursor --freeze copy area "
-            "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.swappy} -f -"
+            "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
             # Record
             "$mainMod, r, exec, hyprcorder.sh"
@@ -1700,6 +1716,9 @@ in {
 
             "suppressevent maximize, class:.*"
 
+            # Tear all windows.
+            # "immediate, class:(.)"
+
             "workspace 2 silent, class:^(firefox)$"
             "workspace 2 silent, class:^(librewolf)$"
             "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
@@ -1748,6 +1767,10 @@ in {
       xdg.configFile."awesome/" = {
         source = ./resources/awesome;
         recursive = true;
+      };
+
+      xdg.configFile."wallpaper.png" = {
+        source = ./resources/static/wallpaper.png;
       };
 
       xdg.configFile."sx/sxrc" = {
