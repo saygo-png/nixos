@@ -75,7 +75,6 @@ in {
   # Needed here and in home manager.
   programs.hyprland = {
     enable = true;
-    package = pkgs-unstable.hyprland;
   };
 
   programs.thunar.enable = true;
@@ -84,7 +83,6 @@ in {
     # Nix.
     nh # Nix helper
     nil # Nix LSP
-    devenv # Nix coding like pipenv
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
 
@@ -123,8 +121,8 @@ in {
 
     # These are filepickers and whatnot
     xdg-desktop-portal-gtk
-    pkgs-unstable.xdg-desktop-portal-hyprland
-    pkgs-unstable.hyprland-protocols
+    xdg-desktop-portal-hyprland
+    hyprland-protocols
 
     # Shellscripts.
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
@@ -472,12 +470,12 @@ in {
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
 
         # This allows for semi-declarative configuration.
-        #activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        #  if ! [ -f "${config.xdg.configHome}/kritarc" ]; then
-        #      mkdir -p ${config.xdg.configHome}
-        #      run cp $VERBOSE_ARG "${builtins.toPath ./resources/krita-extraConfig}" "${config.xdg.configHome}/kritarc"
-        #  fi
-        #'';
+        activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          if ! [ -f "${config.xdg.configHome}/kritarc" ]; then
+              mkdir -p ${config.xdg.configHome}
+              run cp $VERBOSE_ARG "${builtins.toPath ./resources/krita-extraConfig}" "${config.xdg.configHome}/kritarc"
+          fi
+        '';
       };
 
       # Needed for transparency.
@@ -538,44 +536,14 @@ in {
         };
       };
 
-      programs.lf = {
+      programs.yazi = {
         enable = true;
-        commands = {
-          dragon-out = ''%${pkgs.xdragon}/bin/xdragon -a -x "$fx"'';
-          editor-open = ''$$EDITOR $f'';
-          mkdir = ''
-            ''${{
-              printf "Directory Name: "
-              read DIR
-              mkdir $DIR
-            }}
-          '';
-        };
-
-        keybindings = {
-          "\\\"" = "";
-          o = "";
-          c = "mkdir";
-          "." = "set hidden!";
-          "`" = "mark-load";
-          "\\'" = "mark-load";
-          "<enter>" = "open";
-
-          do = "dragon-out";
-
-          "g~" = "cd";
-          gh = "cd";
-          "g/" = "/";
-
-          e = "editor-open";
-          V = ''$${lib.getExe pkgs.bat} --paging=always --theme=gruvbox "$f"'';
-        };
-
+        enableZshIntegration = true;
         settings = {
-          preview = true;
-          hidden = true;
-          drawbox = true;
-          ignorecase = true;
+          manager = {
+            show_hidden = true;
+            sort_dir_first = true;
+          };
         };
       };
 
@@ -939,8 +907,12 @@ in {
           };
         };
 
-        # extraPlugins = [
-        # ];
+        extraPlugins = [
+          (pkgs.vimUtils.buildVimPlugin {
+            name = "cutlass.nvim";
+            src = inputs.nvim-plugin-cutlass;
+          })
+        ];
 
         plugins = {
           nix.enable = true;
@@ -1156,6 +1128,23 @@ in {
               "<Leader>l" = "+[l]sp";
               "<Leader>t" = "+[t]elescope";
             };
+            triggersBlackList = {
+              n = [
+                "<"
+                ">"
+              ];
+            };
+            plugins = {
+              presets = {
+                operators = false; #adds help for operators like d, y, ...";
+                motions = true; #adds help for motions";
+                textObjects = true; #help for text objects triggered after entering an operator";
+                windows = true; #default bindings on <c-w>";
+                nav = true; #misc bindings to work with windows";
+                z = true; #bindings for folds, spelling and others prefixed with z";
+                g = true; #bindings for prefixed with g";
+              };
+            };
           };
 
           oil = {
@@ -1210,7 +1199,6 @@ in {
             key = "gg";
             options.desc = "Center top";
           }
-
           {
             mode = ["n"];
             action = "gj";
@@ -1223,67 +1211,40 @@ in {
             key = "k";
             options.desc = "Move up through wrapped line";
           }
+          {
+            mode = "n";
+            action = ":";
+            key = ";";
+            options.desc = "Command mode with or without shift";
+          }
+          {
+            mode = "n";
+            action = ":";
+            key = ";";
+            options.desc = "Command mode with or without shift";
+          }
+          {
+            mode = "n";
+            action = "<lt><lt>";
+            key = "<lt>";
+            options.desc = "Indent less";
+            options.silent = true;
+          }
+          {
+            mode = "n";
+            action = ">>";
+            key = ">";
+            options.desc = "Indent more";
+            options.silent = true;
+          }
+          {
+            mode = "v";
+            action = ":normal .<CR>";
+            key = ".";
+            options.desc = "Dot commands over visual blocks";
+          }
 
-          {
-            mode = ["n"];
-            action = "gP";
-            key = "P";
-          }
-          {
-            mode = ["n"];
-            action = "gp";
-            key = "p";
-          }
-          {
-            mode = ["n"];
-            action = "\"_C";
-            key = "C";
-            options.desc = "Change till end of line to void";
-          }
-          {
-            mode = ["n" "v"];
-            action = "\"_c";
-            key = "c";
-            options.desc = "Change to void";
-          }
-          {
-            mode = ["n" "v"];
-            action = "\"_d$";
-            key = "D";
-            options.desc = "Delete until end of line to void";
-          }
-          {
-            mode = ["n"];
-            action = "\"_dd";
-            key = "dd";
-            options.desc = "Delete line to void";
-          }
-          {
-            mode = "n";
-            action = ":";
-            key = ";";
-            options.desc = "Command mode with or without shift";
-          }
-          {
-            mode = "n";
-            action = ":";
-            key = ";";
-            options.desc = "Command mode with or without shift";
-          }
-          # {
-          #   mode = "n";
-          #   action = "<lt><lt><esc>";
-          #   key = "<lt>";
-          #   options.desc = "Indent less";
-          #   options.silent = true;
-          # }
-          # {
-          #   mode = "n";
-          #   action = ">><esc>";
-          #   key = ">";
-          #   options.desc = "Indent more";
-          #   options.silent = true;
-          # }
+          # Plugin garbage.
           {
             mode = ["n" "x" "o"];
             key = "s";
@@ -1421,7 +1382,6 @@ in {
 
       services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
       wayland.windowManager.hyprland = {
-        package = pkgs-unstable.hyprland;
         systemd.enable = true;
         xwayland.enable = true;
         systemd.variables = ["--all"];
@@ -1459,16 +1419,16 @@ in {
         ];
 
         settings = {
-          debug.disable_logs = true;
+          debug.disable_logs = false;
           # Autostart.
           exec-once = [
-            "systemctl --user import-environment &"
+            "systemctl --user import-environment WAYLAND_DISPLAY &"
             "hash dbus-update-activation-environment 2>/dev/null &"
             "dbus-update-activation-environment --systemd &"
 
-            "${lib.getExe pkgs.kdePackages.polkit-kde-agent-1} &"
+            "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
-            "wl-clip-persist --clipboard both"
+            "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
             "wl-paste --watch cliphist store &"
@@ -1491,7 +1451,7 @@ in {
             allow_tearing = true;
             gaps_in = 15;
             gaps_out = 35;
-            border_size = 1;
+            border_size = 2;
             border_part_of_window = false;
             no_border_on_floating = false;
             "col.active_border" = lib.mkForce "rgba(${constants.accentColor}FF)";
@@ -1526,6 +1486,7 @@ in {
           };
 
           decoration = {
+            rounding = 10;
             blur = {
               enabled = false;
             };
@@ -1560,7 +1521,8 @@ in {
             #  add proper alt tab support using "hycov" plugin
             #  add descriptions to each key
 
-            # Workspace overview.
+            # Workspace overview. This throws an invalid dispatcher error
+            # but it seems good to me and it works.
             "$mainMod, w, hyprexpo:expo, toggle"
 
             # Close program.
@@ -1716,8 +1678,10 @@ in {
 
             "suppressevent maximize, class:.*"
 
-            # Tear all windows.
-            # "immediate, class:(.)"
+            # # Tear games.
+            "immediate, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
+            "immediate, class:^(Steam|steam|steam_app_.*)$"
+            "immediate, title:^(.*Steam[A-Za-z0-9\s]*)$"
 
             "workspace 2 silent, class:^(firefox)$"
             "workspace 2 silent, class:^(librewolf)$"

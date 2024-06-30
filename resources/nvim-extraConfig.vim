@@ -1,10 +1,22 @@
 " TODO put this shit in configuration.nix
-"
-" highlight FloatBorder  ctermfg=NONE ctermbg=NONE cterm=NONE
-
 lua << EOF
 
 -- Make lsp popups pretty
+
+require("cutlass").setup({
+  cut_key = nil,
+  override_del = true,
+  exclude = {
+    "nx",
+    "vx",
+    },
+  registers = {
+    select = "_",
+    delete = "_",
+    change = "_",
+  },
+})
+
 local border = {
   { '┌', 'FloatBorder' },
   { '─', 'FloatBorder' },
@@ -199,5 +211,45 @@ vnoremap gx :<BS><BS><BS><BS><BS>execute '!openlisturl' shellescape(GetVisualSel
 " Infinite paste
 vnoremap <expr> p 'pgvy'
 
-" Perform dot commands over visual blocks
-vnoremap . :normal .<CR>
+" Blank or empty line jump
+noremap { <Cmd>call search('^\s*\S', 'Wbc') \| call search('^\s*$\\|\%^', 'Wb')<CR>
+noremap } <Cmd>call search('^\s*\S', 'Wc') \| call search('^\s*$\\|\%$', 'W')<CR>
+
+" Tabs.
+nnoremap tk :tabnext<CR>
+nnoremap tj :tabprev<CR>
+nnoremap td :tabclose<CR>
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>6 6gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
+nnoremap <leader>9 9gt
+
+" Makes ctrl+s increment to not conflict with tmux.
+nnoremap <C-s> <C-a>
+
+" Center search and substitution.
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap * *zz
+nnoremap # #zz
+nnoremap g* g*zz
+nnoremap g# g#zzo
+
+" Open/close quickfix on toggle
+function! ToggleQuickFix()
+    if empty(filter(getwininfo(), 'v:val.quickfix'))
+        copen
+    else
+        cclose
+    endif
+endfunction
+
+nnoremap <silent> F :call ToggleQuickFix()<cr>
+
+" Faster syntax highlight.
+syntax sync minlines=256

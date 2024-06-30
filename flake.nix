@@ -25,6 +25,11 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nvim-plugin-cutlass = {
+      url = "github:gbprod/cutlass.nvim";
+      flake = false;
+    };
   };
   outputs = {
     self,
