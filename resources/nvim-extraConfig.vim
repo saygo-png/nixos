@@ -4,17 +4,9 @@ lua << EOF
 -- Make lsp popups pretty
 
 require("cutlass").setup({
-  cut_key = nil,
+  cut_key = x,
   override_del = true,
-  exclude = {
-    "nx",
-    "vx",
-    },
-  registers = {
-    select = "_",
-    delete = "_",
-    change = "_",
-  },
+  exclude = { "ns", "nS" },
 })
 
 local border = {

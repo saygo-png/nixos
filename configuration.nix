@@ -29,8 +29,19 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Faster boot
+  boot.initrd.systemd.network.wait-online.enable = false;
+  networking.dhcpcd.wait = "background";
+
   networking.hostName = "${host}";
   networking.networkmanager.enable = true;
+
+  # DNS
+  networking.nameservers = ["9.9.9.9" "149.112.112.112"];
+  networking.resolvconf.enable = false;
+  networking.dhcpcd.extraConfig = "nohook resolv.conf";
+  networking.networkmanager.dns = "none";
+  services.resolved.enable = false;
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Warsaw";
@@ -374,10 +385,10 @@ in {
   };
 
   stylix.opacity = {
-    applications = 0.7;
-    terminal = 0.7;
-    desktop = 0.7;
-    popups = 0.7;
+    applications = 0.5;
+    terminal = 0.5;
+    desktop = 0.5;
+    popups = 0.5;
   };
 
   ################
@@ -436,7 +447,7 @@ in {
         packages = with pkgs; [
           # GUI.
           keepassxc # Password manager
-          rhythmbox # Music player
+          sayonara # Music player
           foliate # Ebook reader
           anki # Flashcards
           libreoffice # Office
@@ -447,7 +458,6 @@ in {
           # Command line.
           pulsemixer # Volume control
           zoxide # Cd alternative
-          mpv # Video player
           ffmpeg # Video and magic editor
           hyprpicker # Color picker
           slurp # Screenshot assistant
@@ -534,6 +544,51 @@ in {
             origin = "top-center";
           };
         };
+      };
+
+      programs.mpv = {
+        enable = true;
+        bindings = {
+          l = "seek 20";
+          h = "seek -20";
+          "]" = "add speed 0.1";
+          "[" = "add speed -0.1";
+          j = "seek -4";
+          k = "seek 4";
+          K = "cycle sub";
+          J = "cycle sub down";
+          w = "add sub-pos -10"; # move subtitles up
+          W = "add sub-pos -1"; # move subtitles up
+          e = "add sub-pos +10"; # move subtitles down
+          E = "add sub-pos +1"; # move subtitles down
+          "ALT+=" = "add sub-scale +0.1";
+          "ALT+-" = "add sub-scale -0.1";
+        };
+
+        config = {
+          save-position-on-quit = true;
+          hwdec = true;
+          ytdl-format = "bestvideo+bestaudio/best";
+          slang = "fin,fi,fi-fi,eng,en,en-en,en-orig";
+          sub-auto = "all";
+          sub-visibility = "yes";
+          sub-auto-exts = "srt,ass,txt";
+          speed = 1;
+          keep-open = true;
+          loop-file = "inf";
+          sub-font = "${config.stylix.fonts.serif.name}";
+          sub-ass-override = "force";
+          sub-ass-force-style = "${config.stylix.fonts.serif.name}";
+          sub-ass-line-spacing = 1;
+          sub-ass-hinting = "normal";
+          sub-border-size = 2;
+          sub-pos = 90;
+          sub-font-size = 40;
+          sub-color = "${config.lib.stylix.colors.withHashtag.base07}";
+          sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
+          sub-shadow-offset = 2;
+        };
+        scripts = [pkgs.mpvScripts.mpv-cheatsheet];
       };
 
       programs.yazi = {
@@ -792,9 +847,9 @@ in {
           statusline.bg = "NONE";
           statusline.fg = "#${constants.accentColor}";
           CursorLineNr.fg = "#${constants.accentColor}";
-          CursorLineNr.bg = "#${config.stylix.base16Scheme.base01}"; # Gray indentline
+          CursorLineNr.bg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray indentline
           MsgArea.fg = "#${constants.accentColor}";
-          MiniIndentscopeSymbol.fg = "#${config.stylix.base16Scheme.base01}"; # Gray indentline
+          MiniIndentscopeSymbol.fg = "${config.lib.stylix.colors.withHashtag.base00}"; # Gray indentline
         };
         opts = {
           # Indents
@@ -838,8 +893,8 @@ in {
           # More space.
           cmdheight = 0;
 
-          # Prevents screen jumping and needed for gitsigns
-          signcolumn = "no";
+          # Puts error messages on the number line
+          signcolumn = "number";
 
           # Show some whitespace.
           list = true;
@@ -987,21 +1042,24 @@ in {
             };
           };
 
-          # fidget = {
-          #   enable = false;
-          #   progress = {
-          #     display = {
-          #       doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
-          #     };
-          #   };
-          #   notification = {
-          #     window = {
-          #       normalHl = "Comment";
-          #       winblend = 0;
-          #       border = "single"; # none, single, double, rounded, solid, shadow
-          #     };
-          #   };
-          # };
+          fidget = {
+            enable = true;
+            progress = {
+              ignoreDoneAlready = true;
+              suppressOnInsert = true;
+              pollRate = 1;
+              display = {
+                doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
+              };
+            };
+            notification = {
+              window = {
+                normalHl = "Comment";
+                winblend = 0;
+                border = "single"; # none, single, double, rounded, solid, shadow
+              };
+            };
+          };
 
           mini = {
             enable = true;
@@ -1093,7 +1151,6 @@ in {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "black" "yapf"];
               haskell = ["ormolu"];
-              lua = ["stylua"];
               nix = ["alejandra"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["codespell" "trim_whitespace"];
@@ -1128,21 +1185,10 @@ in {
               "<Leader>l" = "+[l]sp";
               "<Leader>t" = "+[t]elescope";
             };
-            triggersBlackList = {
-              n = [
-                "<"
-                ">"
-              ];
-            };
             plugins = {
               presets = {
+                # Needs to be false for indent keybindings
                 operators = false; #adds help for operators like d, y, ...";
-                motions = true; #adds help for motions";
-                textObjects = true; #help for text objects triggered after entering an operator";
-                windows = true; #default bindings on <c-w>";
-                nav = true; #misc bindings to work with windows";
-                z = true; #bindings for folds, spelling and others prefixed with z";
-                g = true; #bindings for prefixed with g";
               };
             };
           };
@@ -1445,13 +1491,18 @@ in {
             sensitivity = -0.9;
           };
 
+          cursor = {
+            no_warps = true;
+            hide_on_key_press = true;
+          };
+
           general = {
             "$mainMod" = "SUPER";
             layout = "dwindle";
             allow_tearing = true;
             gaps_in = 15;
             gaps_out = 35;
-            border_size = 2;
+            border_size = 1;
             border_part_of_window = false;
             no_border_on_floating = false;
             "col.active_border" = lib.mkForce "rgba(${constants.accentColor}FF)";
@@ -1486,7 +1537,7 @@ in {
           };
 
           decoration = {
-            rounding = 10;
+            rounding = 0;
             blur = {
               enabled = false;
             };
@@ -1536,6 +1587,12 @@ in {
 
             # Fake fullscreen
             "$mainMod SHIFT, f, fakefullscreen"
+
+            # Turn off/on gaps
+            "$mainMod, g, exec, hyprctl keyword general:gaps_in 15"
+            "$mainMod, g, exec, hyprctl keyword general:gaps_out 35"
+            "$mainMod SHIFT, G, exec, hyprctl keyword general:gaps_in 0"
+            "$mainMod SHIFT, G, exec, hyprctl keyword general:gaps_out 0"
 
             # Cycle next in current workspace.
             "$mainMod, z, cyclenext,"
@@ -1675,6 +1732,8 @@ in {
             # Needed for gloss window to tile and not focus.
             "tile, class:^()$"
             "noinitialfocus, class:^()$"
+
+            "noborder, onworkspace:w[t1]"
 
             "suppressevent maximize, class:.*"
 
