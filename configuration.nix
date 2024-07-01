@@ -450,6 +450,7 @@ in {
           sayonara # Music player
           foliate # Ebook reader
           anki # Flashcards
+          qbittorrent # Torrent client
           libreoffice # Office
           neovide # Neovim gui
           rofi-wayland # App launcher
@@ -806,7 +807,6 @@ in {
         enable = true;
         extraPackages = with pkgs; [
           codespell # Spelling.
-          stylua # Lua formatter
           rust-analyzer # Rust LSP
           luajitPackages.jsregexp # Needed for luasnip
           vim-language-server
@@ -1145,7 +1145,7 @@ in {
           conform-nvim = {
             enable = true;
             extraOptions = {
-              lsp_fallback = true;
+              lsp_fallback = false;
             };
             formattersByFt = {
               # Conform will run multiple formatters sequentially.

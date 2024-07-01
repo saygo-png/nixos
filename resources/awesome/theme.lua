@@ -54,8 +54,4 @@ naughty.config = {
 
 theme.wallpaper = "~/.config/wallpaper.png"
 
--- Define the icon theme for application icons. If not set then the icons
--- from /usr/share/icons and /usr/share/icons/hicolor will be used.
-theme.icon_theme = "~/.local/share/icons/Gruvbox-Plus-Dark"
-
 return theme
