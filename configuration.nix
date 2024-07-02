@@ -582,7 +582,7 @@ in {
           sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
           sub-shadow-offset = 2;
         };
-        scripts = [pkgs.mpvScripts.mpv-cheatsheet];
+        # scripts = [pkgs.mpvScripts.mpv-cheatsheet];
       };
 
       programs.yazi = {
@@ -672,7 +672,7 @@ in {
 
       programs.zsh = {
         enable = true;
-        enableCompletion = true;
+        enableCompletion = false;
         defaultKeymap = "viins";
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
@@ -1610,7 +1610,7 @@ in {
             "$mainMod, m, exec, hyprctl keyword general:layout \"master\""
 
             # Screenshot.
-            ", Print, exec, ${lib.getExe pkgs.grimblast} --cursor --freeze copy area "
+            ", Print, exec, ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
             "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
             # Record
