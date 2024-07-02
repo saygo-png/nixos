@@ -11,6 +11,10 @@
     accentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
     home = "/home/${constants.username}";
     flake-path = "${constants.home}/nixos";
+
+    refresh-rate = 144;
+    screen-width = 1920;
+    screen-height = 1080;
   };
 in {
   imports = [
@@ -38,10 +42,6 @@ in {
 
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
-  networking.resolvconf.enable = false;
-  networking.dhcpcd.extraConfig = "nohook resolv.conf";
-  networking.networkmanager.dns = "none";
-  services.resolved.enable = false;
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Warsaw";
@@ -123,10 +123,9 @@ in {
     # For Hyprland
     qt5.qtwayland
     qt6.qtwayland
-    qt6.qmake
-    libsForQt5.qtstyleplugin-kvantum
     libsForQt5.qt5ct
-    libsForQt5.qt5ct
+    libsForQt5.qt5.qtwayland
+    kdePackages.qtwayland
 
     xdg-utils # Includes xdg-open
 
@@ -142,7 +141,7 @@ in {
       "gamescope-steam-DIY"
       ''
         sudo setcap 'CAP_SYS_NICE=eip' "$(which gamescope)"
-        gamescope -W 1920 -H 1080 -r 144 steam
+        gamescope -W ${builtins.toString constants.screen-width} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} steam
       '')
 
     (writeShellScriptBin
@@ -190,7 +189,7 @@ in {
       else
         monitor=$(hyprctl activeworkspace -j | jq -r '.monitor')
         notify-send "Recording starting on $monitor."
-        ${lib.getExe pkgs.wl-screenrec} -b "3 MB" -o $monitor -f ${constants.home}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
+        ${lib.getExe pkgs.wl-screenrec} -b "1 MB" -o $monitor -f ${constants.home}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
         fi
     '')
   ];
@@ -447,7 +446,7 @@ in {
         packages = with pkgs; [
           # GUI.
           keepassxc # Password manager
-          sayonara # Music player
+          tauon # Music player
           foliate # Ebook reader
           anki # Flashcards
           qbittorrent # Torrent client
@@ -504,16 +503,10 @@ in {
       qt = {
         enable = true;
         platformTheme = "qtct";
-        style = {
-          package = pkgs.catppuccin-kvantum;
-          name = "kvantum";
-        };
-      };
-      xdg.configFile = {
-        "Kvantum/kvantum.kvconfig".text = ''
-          [General]
-          theme=Catppuccin-Mocha-Mauve
-        '';
+        style.package = with pkgs; [
+          adwaita-qt
+          adwaita-qt6
+        ];
       };
 
       # Development, internal.
@@ -841,8 +834,7 @@ in {
         ];
         highlightOverride = {
           # hi noCursor blend=100 cterm=strikethrough
-          # hi ModeMsg guifg=#7d8618
-          # hi MsgArea guifg=#7d8618
+          ModeMsg.fg = "#${constants.accentColor}";
           noCursor.blend = 100;
           statusline.bg = "NONE";
           statusline.fg = "#${constants.accentColor}";
@@ -926,7 +918,7 @@ in {
           neovide_floating_blur_amount_x = 20.0;
           neovide_floating_blur_amount_y = 20.0;
           neovide_hide_mouse_when_typing = true;
-          neovide_refresh_rate = 144;
+          neovide_refresh_rate = constants.refresh-rate;
           neovide_cursor_vfx_mode = "ripple";
           neovide_cursor_animation_length = 0.08;
           neovide_cursor_smooth_blink = true;
@@ -976,6 +968,9 @@ in {
           direnv.enable = true;
           spider.enable = true;
 
+          nvim-ufo = {
+            enable = true;
+          };
           nvim-colorizer = {
             enable = true;
             fileTypes = let
@@ -1451,9 +1446,6 @@ in {
             env = MOZ_ENABLE_WAYLAND, 1
             env = GTK_USE_PORTAL, 1
 
-            # For tearing.
-            env = WLR_DRM_NO_ATOMIC,1
-
             monitor =, highres@highrr, auto, 1
             xwayland {
               force_zero_scaling = true
@@ -1474,10 +1466,10 @@ in {
 
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
-            "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
+            # "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
-            "wl-paste --watch cliphist store &"
+            # "wl-paste --watch cliphist store &"
           ];
 
           input = {
@@ -1499,7 +1491,6 @@ in {
           general = {
             "$mainMod" = "SUPER";
             layout = "dwindle";
-            allow_tearing = true;
             gaps_in = 15;
             gaps_out = 35;
             border_size = 1;
@@ -1690,7 +1681,7 @@ in {
             # "$mainMod, mouse_up, workspace, e+1"
 
             # clipboard manager
-            "$mainMod, V, exec, ${lib.getExe pkgs.cliphist} list | ${lib.getExe pkgs.rofi-wayland} -dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe pkgs.wl-clipboard}"
+            # "$mainMod, V, exec, ${lib.getExe pkgs.cliphist} list | ${lib.getExe pkgs.rofi-wayland} -dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe pkgs.wl-clipboard}"
           ];
 
           # mouse binding
@@ -1737,13 +1728,9 @@ in {
 
             "suppressevent maximize, class:.*"
 
-            # # Tear games.
-            "immediate, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
-            "immediate, class:^(Steam|steam|steam_app_.*)$"
-            "immediate, title:^(.*Steam[A-Za-z0-9\s]*)$"
-
             "workspace 2 silent, class:^(firefox)$"
             "workspace 2 silent, class:^(librewolf)$"
+
             "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
             "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
             "fullscreen, class:^(Steam|steam|steam_app_.*)$"
@@ -1800,6 +1787,7 @@ in {
         executable = true;
         text = ''
           $TERMINAL &
+          xrandr -r ${builtins.toString constants.refresh-rate}
           exec awesome
         '';
       };

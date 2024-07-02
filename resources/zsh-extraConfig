@@ -182,11 +182,7 @@ bindkey '^e' edit-command-line
 nr() { # [N]ix [R]un
   nix run "nixpkgs#${(w)@:1:1}" -- ${(w)@:2}
 }
-
-# Parametrized alias.
-# $@ is an array of all arguments quoted, (w) operates on words,
-# ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
-snr() { # With sudo
+snr() { # [S]udo [N]ix [R]un.
   sudo nix run "nixpkgs#${(w)@:1:1}" -- ${(w)@:2}
 }
 
