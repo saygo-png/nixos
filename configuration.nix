@@ -265,20 +265,23 @@ in {
 
   # Enable sound with low latency.
   hardware.pulseaudio.enable = false;
+  # RealtimeKit service, which hands out realtime scheduling priority to user processes on demand. For example, the PulseAudio server uses this to acquire realtime priority.
+  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    # jack.enable = true;
-    extraConfig.pipewire."92-low-latency" = {
-      context.properties = {
-        default.clock.rate = 48000;
-        default.clock.quantum = 24;
-        default.clock.min-quantum = 24;
-        default.clock.max-quantum = 24;
-      };
-    };
+    wireplumber.enable = true;
+    # pulse.enable = true;
+    # alsa.enable = true;
+    # alsa.support32Bit = true;
+
+    # extraConfig.pipewire."92-low-latency" = {
+    #   context.properties = {
+    #     default.clock.rate = 48000;
+    #     default.clock.quantum = 24;
+    #     default.clock.min-quantum = 24;
+    #     default.clock.max-quantum = 24;
+    #   };
+    # };
   };
 
   #########
@@ -385,9 +388,9 @@ in {
 
   stylix.opacity = {
     applications = 0.5;
-    terminal = 0.5;
-    desktop = 0.5;
-    popups = 0.5;
+    terminal = 0.8;
+    desktop = 0.8;
+    popups = 0.8;
   };
 
   ################
@@ -819,6 +822,7 @@ in {
           python312Packages.pyflakes # Python linter
           sumneko-lua-language-server
           nodePackages.bash-language-server
+          stylua # Lua formatter
           isort
           shellcheck # Bash linter
           hadolint # Docker linter
@@ -937,7 +941,8 @@ in {
         '';
         package = pkgs.neovim-unwrapped;
         clipboard.register = "unnamedplus";
-        colorscheme = "gruvbox";
+
+        colorschemes.base16.enable = lib.mkForce false;
         colorschemes.gruvbox = {
           enable = true;
           settings = {
@@ -947,9 +952,23 @@ in {
             strikethrough = false;
             bold = false;
             overrides = {
-              # "@punctuation.bracket" = {fg = "#d5c4a1";};
-              # "@punctuation.delimiter" = {fg = "#d5c4a1";};
-              "@punctuation.special" = {fg = "#d5c4a1";};
+              "@punctuation.bracket" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
+              "@punctuation.delimiter" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
+              "@punctuation.special" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
+
+              "@constructor" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
+              "@operator" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
+              "@attribute" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
+
+              "@type" = {fg = "${config.lib.stylix.colors.withHashtag.base0A}";};
+              "@type.builtin" = {fg = "${config.lib.stylix.colors.withHashtag.base0A}";};
+              "@type.definition" = {fg = "${config.lib.stylix.colors.withHashtag.base0A}";};
+
+              "@function" = {
+                fg = "${config.lib.stylix.colors.withHashtag.base0B}";
+                bold = true;
+              };
+              "@keyword.conditional" = {fg = "${config.lib.stylix.colors.withHashtag.base08}";};
             };
           };
         };
@@ -1134,19 +1153,21 @@ in {
             enable = true;
             settings = {
               current_line_blame = false;
+              signcolumn = false;
             };
           };
 
           conform-nvim = {
             enable = true;
             extraOptions = {
-              lsp_fallback = false;
+              lsp_fallback = true;
             };
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "black" "yapf"];
               haskell = ["ormolu"];
               nix = ["alejandra"];
+              lua = ["stylua"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["codespell" "trim_whitespace"];
             };
@@ -1287,6 +1308,15 @@ in {
 
           # Plugin garbage.
           {
+            mode = ["n"];
+            key = "<Leader>c";
+            action = "<cmd>lua require('conform').format({ timeout_ms = 500 })<CR>";
+            options = {
+              desc = "[C]onform";
+            };
+          }
+
+          {
             mode = ["n" "x" "o"];
             key = "s";
             action = "<cmd>lua require('flash').jump()<cr>";
@@ -1353,11 +1383,6 @@ in {
         ];
 
         autoCmd = [
-          {
-            event = ["BufWritePre"];
-            command = "lua require(\"conform\").format()";
-            desc = "Autoformat";
-          }
           {
             event = ["BufReadPost"];
             pattern = ["*"];
