@@ -270,10 +270,15 @@ in {
   services.pipewire = {
     enable = true;
     wireplumber.enable = true;
-    # pulse.enable = true;
-    # alsa.enable = true;
+    pulse.enable = true;
+    alsa.enable = true;
+    config = {
+      pipewire-pulse."stream.properties"."resample.quality" = 15;
+      client."stream.properties"."resample.quality" = 15;
+      client-rt."stream.properties"."resample.quality" = 15;
+    };
+    # Quirky low latency ig for gaming (id rather not)
     # alsa.support32Bit = true;
-
     # extraConfig.pipewire."92-low-latency" = {
     #   context.properties = {
     #     default.clock.rate = 48000;
@@ -796,6 +801,7 @@ in {
             x = 8;
             y = 8;
           };
+          font.offset.y = 1; # Line spacing
         };
       };
 
