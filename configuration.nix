@@ -88,6 +88,9 @@ in {
     enable = true;
   };
 
+  # For distrobox
+  virtualisation.podman.enable = true;
+
   programs.thunar.enable = true;
   # System packages.
   environment.systemPackages = with pkgs; [
@@ -96,6 +99,13 @@ in {
     nil # Nix LSP
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
+    devenv # "Easy" dev envs
+
+    distrobox # Allows to use better distros on NixOS
+    podman # Dependency for distrobox
+
+    # For minecraft
+    jdk8
 
     # Other.
     wl-clipboard # Wayland xclip
@@ -217,7 +227,7 @@ in {
   # This is the command for running all 3 programs at once that u put into steam
   # gamemoderun gamescope -w 1920 -h 1080 -f -- mangohud %command%
   programs.steam.extraCompatPackages = [
-    pkgs.proton-ge-bin
+    pkgs-unstable.proton-ge-bin
   ];
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
@@ -238,6 +248,9 @@ in {
     options = "--delete-older-than 15d";
   };
 
+  # Links libraries to make nixos not as shitty for dev.
+  programs.nix-ld.enable = true;
+  # programs.nix-ld.libraries = options.programs.nix-ld.libraries.default ++ (with pkgs; [ gcc ]);
   #############
   # Services. #
   #############
@@ -248,6 +261,26 @@ in {
   # X11 window manager for games
   services.xserver.windowManager.awesome = {
     enable = true;
+  };
+
+  # File synchronization.
+  services.syncthing = {
+    enable = true;
+    settings.options.relaysEnabled = false;
+    openDefaultPorts = true;
+    overrideFolders = false;
+    overrideDevices = false;
+    user = constants.username;
+    dataDir = constants.home;
+    devices = {
+      phone = {
+        addresses = [
+          "tcp://192.168.1.10:22000"
+        ];
+        id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
+        autoAcceptFolders = true;
+      };
+    };
   };
 
   # Might fix authorization agent issues
@@ -272,11 +305,6 @@ in {
     wireplumber.enable = true;
     pulse.enable = true;
     alsa.enable = true;
-    config = {
-      pipewire-pulse."stream.properties"."resample.quality" = 15;
-      client."stream.properties"."resample.quality" = 15;
-      client-rt."stream.properties"."resample.quality" = 15;
-    };
     # Quirky low latency ig for gaming (id rather not)
     # alsa.support32Bit = true;
     # extraConfig.pipewire."92-low-latency" = {
@@ -429,6 +457,7 @@ in {
           "rt" = "${lib.getExe pkgs.trashy}";
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
           "shutdown" = "poweroff";
+          "nhoffline" = "nh os switch ${constants.flake-path} -- --option substitute false";
           "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
 
@@ -449,10 +478,13 @@ in {
           NO_AT_BRIDGE = 1;
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
+          QT_QPA_PLATFORMTHEME = "qt5ct";
         };
 
+        # Home packages, home manager packages, user packages
         packages = with pkgs; [
           # GUI.
+          prismlauncher # Minecraft launcher
           keepassxc # Password manager
           tauon # Music player
           foliate # Ebook reader
@@ -462,6 +494,9 @@ in {
           neovide # Neovim gui
           rofi-wayland # App launcher
           # hydrus # File manager
+
+          # For minecraft
+          jdk11
 
           # Command line.
           pulsemixer # Volume control
@@ -530,11 +565,6 @@ in {
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
-
-      # TODO configure syncthing
-      services.syncthing = {
-        enable = true;
-      };
 
       services.dunst = {
         enable = true;
@@ -620,8 +650,8 @@ in {
           set-option -g focus-events on
 
           # For truecolor inside tmux
-          set-option -sa terminal-features ',alacritty:RGB'
-          set-option -g default-terminal "tmux-256color"
+          set -g default-terminal 'tmux-256color'
+          set -as terminal-overrides ",alacritty*:Tc"
 
           # Easy-to-remember split pane commands.
           bind | split-window -h
@@ -801,14 +831,13 @@ in {
             x = 8;
             y = 8;
           };
-          font.offset.y = 1; # Line spacing
+          font.offset.y = 3; # Line spacing
         };
       };
 
       programs.nixvim = {
         enable = true;
         extraPackages = with pkgs; [
-          codespell # Spelling.
           rust-analyzer # Rust LSP
           luajitPackages.jsregexp # Needed for luasnip
           vim-language-server
@@ -842,17 +871,20 @@ in {
           # Nix
           deadnix # Linter
         ];
+
         highlightOverride = {
           # hi noCursor blend=100 cterm=strikethrough
           ModeMsg.fg = "#${constants.accentColor}";
+          FloatBorder.fg = "#${constants.accentColor}";
           noCursor.blend = 100;
           statusline.bg = "NONE";
           statusline.fg = "#${constants.accentColor}";
           CursorLineNr.fg = "#${constants.accentColor}";
-          CursorLineNr.bg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray indentline
+          CursorLineNr.bg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray numberline
           MsgArea.fg = "#${constants.accentColor}";
-          MiniIndentscopeSymbol.fg = "${config.lib.stylix.colors.withHashtag.base00}"; # Gray indentline
+          MiniIndentscopeSymbol.fg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray indentline
         };
+
         opts = {
           # Indents
           expandtab = true;
@@ -913,13 +945,16 @@ in {
 
           # (https://neovim.io/doc/user/options.html#'laststatus')
           laststatus = 3;
-
-          guifont = "Courier Prime:h13:#e-antialias:#h-slight";
         };
         globals = {
           mapleader = " ";
-          neovide_transparency = 1.0;
-          neovide_transparency_point = 1.0;
+
+          gruvbox_material_foreground = "original";
+          gruvbox_material_enable_bold = 0;
+          gruvbox_material_transparent_background = 2;
+
+          neovide_transparency = 0.8;
+          neovide_transparency_point = 0.8;
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
           neovide_padding_top = 8;
           neovide_padding_bottom = 0;
@@ -939,51 +974,78 @@ in {
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         extraConfigLua = ''
           if vim.g.neovide then
-            vim.cmd[[colorscheme gruvbox]]
+            vim.cmd[[colorscheme gruvbox-material]]
             vim.o.background = "dark"
+            vim.o.guifont = "JetBrains Mono:h13:#e-antialias:#h-slight"
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
           end
+
+          -- Transparent hover
+          vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
+
+          -- Leap bidirectional search
+          vim.keymap.set('n',        's', '<Plug>(leap)')
+          vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
+          vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
+          vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
+
+          require("cutlass").setup({
+            cut_key = "m",
+            override_del = true,
+            exclude = { "ns", "nS" }, -- Motion plugins rebind this
+          })
+
+          -- Make lsp popups pretty.
+          local border = {
+            { '┌', 'FloatBorder' },
+            { '─', 'FloatBorder' },
+            { '┐', 'FloatBorder' },
+            { '│', 'FloatBorder' },
+            { '┘', 'FloatBorder' },
+            { '─', 'FloatBorder' },
+            { '└', 'FloatBorder' },
+            { '│', 'FloatBorder' },
+          }
+
+          local _border = "single"
+          require('lspconfig.ui.windows').default_options = { border = _border }
+          vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, { border = _border })
+          vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with( vim.lsp.handlers.signature_help, { border = _border })
+
+          vim.diagnostic.config({
+          underline = false,
+          update_in_insert = false,
+          virtual_text = false,
+          signs = true,
+            float = {
+              win_options = {
+                winblend = 100
+              },
+              border = border,
+              format = function(diagnostic)
+                return string.format(
+                  "%s (%s) [%s]",
+                  diagnostic.message,
+                  diagnostic.source,
+                  diagnostic.code or diagnostic.user_data.lsp.code
+                )
+              end,
+            },
+          })
         '';
         package = pkgs.neovim-unwrapped;
         clipboard.register = "unnamedplus";
 
         colorschemes.base16.enable = lib.mkForce false;
-        colorschemes.gruvbox = {
-          enable = true;
-          settings = {
-            transparent_mode = true;
-            undercurl = false;
-            underline = false;
-            strikethrough = false;
-            bold = false;
-            overrides = {
-              "@punctuation.bracket" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
-              "@punctuation.delimiter" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
-              "@punctuation.special" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
-
-              "@constructor" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
-              "@operator" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
-              "@attribute" = {fg = "${config.lib.stylix.colors.withHashtag.base0C}";};
-
-              "@type" = {fg = "${config.lib.stylix.colors.withHashtag.base0A}";};
-              "@type.builtin" = {fg = "${config.lib.stylix.colors.withHashtag.base0A}";};
-              "@type.definition" = {fg = "${config.lib.stylix.colors.withHashtag.base0A}";};
-
-              "@function" = {
-                fg = "${config.lib.stylix.colors.withHashtag.base0B}";
-                bold = true;
-              };
-              "@keyword.conditional" = {fg = "${config.lib.stylix.colors.withHashtag.base08}";};
-            };
-          };
-        };
+        colorscheme = "gruvbox-material";
 
         extraPlugins = [
           (pkgs.vimUtils.buildVimPlugin {
             name = "cutlass.nvim";
             src = inputs.nvim-plugin-cutlass;
           })
+          pkgs.vimPlugins.gruvbox-material
         ];
 
         plugins = {
@@ -996,6 +1058,13 @@ in {
           nvim-ufo = {
             enable = true;
           };
+
+          harpoon = {
+            enable = true;
+            enableTelescope = true;
+            tmuxAutocloseWindows = true;
+          };
+
           nvim-colorizer = {
             enable = true;
             fileTypes = let
@@ -1035,22 +1104,9 @@ in {
             };
           };
 
-          flash = {
+          leap = {
             enable = true;
-            labels = "asdfghjklqwertyuiopzxcvbnm";
-            search = {
-              mode = "fuzzy";
-            };
-            jump = {
-              autojump = true;
-            };
-            label = {
-              uppercase = false;
-              rainbow = {
-                enabled = true;
-                shade = 5;
-              };
-            };
+            addDefaultMappings = false;
           };
 
           lspsaga = {
@@ -1065,6 +1121,7 @@ in {
           fidget = {
             enable = true;
             progress = {
+              ignore = [ "hls" ]; # Hls keeps a popup on and its annoying
               ignoreDoneAlready = true;
               suppressOnInsert = true;
               pollRate = 1;
@@ -1175,7 +1232,7 @@ in {
               nix = ["alejandra"];
               lua = ["stylua"];
               # Use the "*" filetype to run formatters on all filetypes.
-              "*" = ["codespell" "trim_whitespace"];
+              "*" = ["trim_whitespace"];
             };
           };
 
@@ -1248,6 +1305,11 @@ in {
                 "<C-Space>" = "cmp.mapping.complete()";
                 "<CR>" = "cmp.mapping.confirm({ select = false })";
                 "<S-CR>" = "cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })";
+              };
+
+              window = {
+                completion.scrollbar = true;
+                documentation.border = "single";
               };
             };
           };
@@ -1322,20 +1384,29 @@ in {
             };
           }
 
+          # {
+          #   mode = ["n" "x" "o"];
+          #   key = "s";
+          #   action = "<cmd>lua require('flash').jump()<cr>";
+          #   options = {
+          #     desc = "Flash";
+          #   };
+          # }
+          # {
+          #   mode = ["n" "x" "o"];
+          #   key = "S";
+          #   action = "<cmd>lua require('flash').treesitter()<cr>";
+          #   options = {
+          #     desc = "Flash Treesitter";
+          #   };
+          # }
+
           {
-            mode = ["n" "x" "o"];
-            key = "s";
-            action = "<cmd>lua require('flash').jump()<cr>";
+            mode = ["n"];
+            key = "gm";
+            action = "m";
             options = {
-              desc = "Flash";
-            };
-          }
-          {
-            mode = ["n" "x" "o"];
-            key = "S";
-            action = "<cmd>lua require('flash').treesitter()<cr>";
-            options = {
-              desc = "Flash Treesitter";
+              desc = "Set mark";
             };
           }
           {
@@ -1395,6 +1466,12 @@ in {
             command = "normal!'\"";
             desc = "Open at last location";
           }
+          {
+            event = ["BufEnter"];
+            pattern = ["*"];
+            command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o";
+            desc = "Dont insert comments on newline";
+          }
         ];
       };
 
@@ -1403,7 +1480,7 @@ in {
         enable = true;
         extraConfig = {
           modi = "window,run,drun";
-          font = "Courier Prime 14";
+          font = "${config.stylix.fonts.monospace.name} 14";
           padding = 10;
           fixed-num-lines = true;
           show-icons = false;
@@ -1470,7 +1547,6 @@ in {
             env = GDK_BACKEND, wayland, x11
             env = CLUTTER_BACKEND, wayland
             env = QT_QPA_PLATFORM, wayland
-            env = QT_QPA_PLATFORMTHEME, qt5ct
             env = QT_WAYLAND_DISABLE_WINDOWDECORATION, 1
             env = QT_AUTO_SCREEN_SCALE_FACTOR, 1
             env = SDL_VIDEODRIVER, x11
@@ -1560,17 +1636,16 @@ in {
 
           decoration = {
             rounding = 0;
-            blur = {
-              enabled = false;
-            };
+            blur.enabled = false;
             drop_shadow = true;
             shadow_ignore_window = true;
             shadow_range = 10;
-            shadow_render_power = 2; # 3
+            shadow_render_power = 2;
             "col.shadow" = lib.mkForce "rgba(0000007F)";
           };
 
           animations = {
+            # Fast animations.
             animation = [
               "border,1,1,default"
               "fade,1,2,default"
@@ -1579,140 +1654,101 @@ in {
             ];
           };
 
-          # bindd = [
-          #   "$mainMod, Q, Close active, killactive,"
-          #   "$mainMod, SHIFT + Space, Toggle floating, togglefloating,"
-          # ];
-
           # Bind accepts "flags" after "bind".
           # "e" in "binde" means that a key can be held down to repeat an action.
           # You can add multiple flags, without order like so "bindde".
-          binde = [
-            # TODO: add these binds:
-            # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
-
-            #  add proper alt tab support using "hycov" plugin
-            #  add descriptions to each key
-
-            # Workspace overview. This throws an invalid dispatcher error
+          # TODO: add these binds:
+          # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
+          #  add proper alt tab support using "hycov" plugin
+          #  add descriptions to each key
+          bindde = [
+            # This throws an invalid dispatcher error
             # but it seems good to me and it works.
-            "$mainMod, w, hyprexpo:expo, toggle"
+            "$mainMod         , w           , Show [w]orkspaces              , hyprexpo:expo        , toggle"
+            "$mainMod         , q           , [q]uit active                  , killactive           ,"
 
-            # Close program.
-            "$mainMod, Q, killactive,"
+            "$mainMod         , CTRL + Space, Toggle floating                , togglefloating       ,"
 
-            # Toggle floating.
-            "$mainMod, o, togglefloating,"
+            "$mainMod         , f           , [f]ullscreen                   , fullscreen"
+            "$mainMod SHIFT   , f           , [f]akke fullscreen              , fakefullscreen"
 
-            # Fullscreen
-            "$mainMod, f, fullscreen"
+            "$mainMod         , g           , [g]aps on                      , exec                 , hyprctl keyword general:gaps_in 15"
+            "$mainMod         , g           , [g]aps on                      , exec                 , hyprctl keyword general:gaps_out 35"
+            "$mainMod SHIFT   , G           , [G]aps off                     , exec                 , hyprctl keyword general:gaps_in 0"
+            "$mainMod SHIFT   , G           , [G]aps off                     , exec                 , hyprctl keyword general:gaps_out 0"
 
-            # Fake fullscreen
-            "$mainMod SHIFT, f, fakefullscreen"
+            "$mainMod         , z           , Cycle next in active workspace , cyclenext            ,"
+            "$mainMod         , x           , Center active                  , centerwindow         ,"
 
-            # Turn off/on gaps
-            "$mainMod, g, exec, hyprctl keyword general:gaps_in 15"
-            "$mainMod, g, exec, hyprctl keyword general:gaps_out 35"
-            "$mainMod SHIFT, G, exec, hyprctl keyword general:gaps_in 0"
-            "$mainMod SHIFT, G, exec, hyprctl keyword general:gaps_out 0"
+            "$mainMod         , Return      , Open terminal                  , exec                 , $TERMINAL"
 
-            # Cycle next in current workspace.
-            "$mainMod, z, cyclenext,"
-            # Center active.
-            "$mainMod, x, centerwindow,"
+            "$mainMod         , b           , Open [b]rowser                 , exec                 , hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 
-            # Open terminal.
-            "$mainMod, Return, exec, $TERMINAL"
+            "$mainMod         , Space       , Program launcher               , exec                 , pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
 
-            # Run common programs.
-            "$mainMod, b, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
+            "$mainMod         , c           , [c]olor picker                 , exec                 , ${lib.getExe pkgs.hyprpicker} -a"
 
-            # Program launcher.
-            "$mainMod, Space, exec, pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
+            "$mainMod         , s           , Toggle [s]plit                 , togglesplit          ,"
 
-            # Color picker
-            "$mainMod, c ,exec, ${lib.getExe pkgs.hyprpicker} -a"
+            "$mainMod         , d           , Set [d]windle layout           , exec                 , hyprctl keyword general:layout \"dwindle\""
+            "$mainMod         , m           , Set [m]aster layout            , exec                 , hyprctl keyword general:layout \"master\""
 
-            # Toggle split
-            "$mainMod, s, togglesplit,"
+            "                 , Print       , Screenshot                     , exec                 , ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
+            "$mainMod         , e           , [e]dit image                   , exec                 , ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
-            # Change layout.
-            "$mainMod, d, exec, hyprctl keyword general:layout \"dwindle\""
-            "$mainMod, m, exec, hyprctl keyword general:layout \"master\""
+            "$mainMod         , r           , [r]ecord                       , exec                 , hyprcorder.sh"
 
-            # Screenshot.
-            ", Print, exec, ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
-            "$mainMod, e, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
+            "ALT              , Tab         , Cycle programs                 , exec                 , hyprland-next-visible-client.sh next"
+            "$mainMod         , Tab         , Open program menu              , exec                 , hyprland-next-visible-client.sh menu"
 
-            # Record
-            "$mainMod, r, exec, hyprcorder.sh"
+            "$mainMod         , h           , Move focus right               , movefocus            , l"
+            "$mainMod         , l           , Move focus left                , movefocus            , r"
+            "$mainMod         , k           , Move focus up                  , movefocus            , u"
+            "$mainMod         , j           , Move focus down                , movefocus            , d"
 
-            # Cycle programs.
-            "ALT, Tab, exec, hyprland-next-visible-client.sh next"
-            "$mainMod, Tab, exec, hyprland-next-visible-client.sh menu"
+            "$mainMod         , 1           , Switch workspace               , workspace            , 1"
+            "$mainMod         , 2           , Switch workspace               , workspace            , 2"
+            "$mainMod         , 3           , Switch workspace               , workspace            , 3"
+            "$mainMod         , 4           , Switch workspace               , workspace            , 4"
+            "$mainMod         , 5           , Switch workspace               , workspace            , 5"
+            "$mainMod         , 6           , Switch workspace               , workspace            , 6"
+            "$mainMod         , 7           , Switch workspace               , workspace            , 7"
+            "$mainMod         , 8           , Switch workspace               , workspace            , 8"
+            "$mainMod         , 9           , Switch workspace               , workspace            , 9"
+            "$mainMod         , 0           , Switch workspace               , workspace            , 10"
 
-            # Switch focus.
-            "$mainMod, h, movefocus, l"
-            "$mainMod, l, movefocus, r"
-            "$mainMod, k, movefocus, u"
-            "$mainMod, j, movefocus, d"
+            "$mainMod SHIFT   , 1           , Move to workspace              , movetoworkspacesilent, 1"
+            "$mainMod SHIFT   , 2           , Move to workspace              , movetoworkspacesilent, 2"
+            "$mainMod SHIFT   , 3           , Move to workspace              , movetoworkspacesilent, 3"
+            "$mainMod SHIFT   , 4           , Move to workspace              , movetoworkspacesilent, 4"
+            "$mainMod SHIFT   , 5           , Move to workspace              , movetoworkspacesilent, 5"
+            "$mainMod SHIFT   , 6           , Move to workspace              , movetoworkspacesilent, 6"
+            "$mainMod SHIFT   , 7           , Move to workspace              , movetoworkspacesilent, 7"
+            "$mainMod SHIFT   , 8           , Move to workspace              , movetoworkspacesilent, 8"
+            "$mainMod SHIFT   , 9           , Move to workspace              , movetoworkspacesilent, 9"
+            "$mainMod SHIFT   , 0           , Move to workspace              , movetoworkspacesilent, 10"
+            "$mainMod CTRL    , c           , Move to empty workspace        , movetoworkspace      , empty"
 
-            # Switch workspace.
-            "$mainMod, 1, workspace, 1"
-            "$mainMod, 2, workspace, 2"
-            "$mainMod, 3, workspace, 3"
-            "$mainMod, 4, workspace, 4"
-            "$mainMod, 5, workspace, 5"
-            "$mainMod, 6, workspace, 6"
-            "$mainMod, 7, workspace, 7"
-            "$mainMod, 8, workspace, 8"
-            "$mainMod, 9, workspace, 9"
-            "$mainMod, 0, workspace, 10"
+            "$mainMod SHIFT   , h           , Move left to workspace         , movewindow           , l"
+            "$mainMod SHIFT   , l           , Move right to workspace        , movewindow           , r"
+            "$mainMod SHIFT   , k           , Move up to workspace           , movewindow           , u"
+            "$mainMod SHIFT   , j           , Move down to workspace         , movewindow           , d"
 
-            # Same as above, but switch to the workspace.
-            "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
-            "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-            "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-            "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-            "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-            "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-            "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-            "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-            "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-            "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
-            "$mainMod CTRL, c, movetoworkspace, empty"
+            "$mainMod CTRL + s, h           , Resize window left             , resizeactive         , -100 0"
+            "$mainMod CTRL + s, l           , Resize window right            , resizeactive         , 100 0"
+            "$mainMod CTRL + s, k           , Resize window up               , resizeactive         , 0 -100"
+            "$mainMod CTRL + s, j           , Resize window down             , resizeactive         , 0 100"
 
-            # Move to workspace.
-            "$mainMod SHIFT, h, movewindow, l"
-            "$mainMod SHIFT, l, movewindow, r"
-            "$mainMod SHIFT, k, movewindow, u"
-            "$mainMod SHIFT, j, movewindow, d"
+            "$mainMod ALT     , H           , Move floating left             , moveactive           ,  -100 0"
+            "$mainMod ALT     , L           , Move floating right            , moveactive           , 100 0"
+            "$mainMod ALT     , K           , Move floating up               , moveactive           , 0 -100"
+            "$mainMod ALT     , J           , Move floating down             , moveactive           , 0 100"
 
-            # Resizing.
-            "$mainMod CTRL + s, h, resizeactive, -100 0"
-            "$mainMod CTRL + s, l, resizeactive, 100 0"
-            "$mainMod CTRL + s, k, resizeactive, 0 -100"
-            "$mainMod CTRL + s, j, resizeactive, 0 100"
+            "$mainMod         , Equal       , Volume down                    , exec                 , ${lib.getExe pkgs.pamixer} -i 2"
+            "$mainMod         , Minus       , Volume up                      , exec                 , ${lib.getExe pkgs.pamixer} -d 2"
 
-            # Floating move.
-            "$mainMod ALT, H, moveactive,  -100 0"
-            "$mainMod ALT, L, moveactive, 100 0"
-            "$mainMod ALT, K, moveactive, 0 -100"
-            "$mainMod ALT, J, moveactive, 0 100"
-
-            # media and volume controls
-            "$mainMod,Equal,exec, ${lib.getExe pkgs.pamixer} -i 2"
-            "$mainMod,Minus,exec, ${lib.getExe pkgs.pamixer} -d 2"
-            # ",XF86AudioMute,exec, pamixer -t"
-            # ",XF86AudioPlay,exec, playerctl play-pause"
-            # ",XF86AudioNext,exec, playerctl next"
-            # ",XF86AudioPrev,exec, playerctl previous"
-            # ",XF86AudioStop, exec, playerctl stop"
-            # "$mainMod, mouse_down, workspace, e-1"
-            # "$mainMod, mouse_up, workspace, e+1"
-
-            # clipboard manager
-            # "$mainMod, V, exec, ${lib.getExe pkgs.cliphist} list | ${lib.getExe pkgs.rofi-wayland} -dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe pkgs.wl-clipboard}"
+            "$mainMod         , mouse_down  , Scroll workspace               , workspace            , e-1"
+            "$mainMod         , mouse_up    , Scroll workspace               , workspace            , e+1"
           ];
 
           # mouse binding
@@ -1722,32 +1758,32 @@ in {
           ];
 
           windowrule = [
-            "workspace 1, title:Terminal"
-            "workspace 2, title:Web"
-            "workspace 3, title:Development"
-            "workspace 4, title:Chat"
-            "workspace 8, title:Steam"
-            "workspace 10, title:passwordManager"
+            "workspace 1      , title:Terminal"
+            "workspace 2      , title:Web"
+            "workspace 3      , title:Development"
+            "workspace 4      , title:Chat"
+            "workspace 8      , title:Steam"
+            "workspace 10     , title:passwordManager"
 
-            "float, imv"
-            "center, imv"
-            "size 1200 725, imv"
+            "float            , imv"
+            "center           , imv"
+            "size 1200 725    , imv"
 
-            "float, mpv"
-            "center, mpv"
-            "size 1200 725, mpv"
+            "float            , mpv"
+            "center           , mpv"
+            "size 1200 725    , mpv"
 
-            "tile, Aseprite"
+            "tile             , Aseprite"
 
-            "pin, rofi"
-            "float, rofi"
-            "noborder, rofi"
+            "pin              , rofi"
+            "float            , rofi"
+            "noborder         , rofi"
 
-            "tile, neovide"
+            "tile             , neovide"
 
             "idleinhibit focus, mpv"
 
-            "float,udiskie"
+            "float            ,udiskie"
           ];
 
           windowrulev2 = [
@@ -1825,11 +1861,11 @@ in {
 
       xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {
         font = {
-          normal = ["Courier Prime"];
+          normal = ["JetBrains Mono"];
           size = 13;
-          features = {
-            CourierPrime = ["-liga"];
-          };
+          # features = {
+          #   "JetBrains Mono" = ["-liga"];
+          # };
         };
       };
 

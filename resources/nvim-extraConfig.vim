@@ -1,51 +1,25 @@
 " TODO put this shit in configuration.nix
+" Set contrast.
+" This configuration option should be placed before `colorscheme gruvbox-material`.
+" Available values: 'hard', 'medium'(default), 'soft'
+
+" Colorscheme.
+if has('termguicolors')
+  set termguicolors
+endif
+
 lua << EOF
 
--- Make lsp popups pretty
+-- Gray out leap
+vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
 
-require("cutlass").setup({
-  cut_key = x,
-  override_del = true,
-  exclude = { "ns", "nS" },
-})
+-- Leap bidirectional search
+vim.keymap.set('n',        's', '<Plug>(leap)')
+vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
+vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
+vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
 
-local border = {
-  { '┌', 'FloatBorder' },
-  { '─', 'FloatBorder' },
-  { '┐', 'FloatBorder' },
-  { '│', 'FloatBorder' },
-  { '┘', 'FloatBorder' },
-  { '─', 'FloatBorder' },
-  { '└', 'FloatBorder' },
-  { '│', 'FloatBorder' },
-}
-
-local _border = "single"
-require('lspconfig.ui.windows').default_options = { border = _border }
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, { border = _border })
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with( vim.lsp.handlers.signature_help, { border = _border })
-
-vim.diagnostic.config({
-underline = false,
-update_in_insert = false,
-virtual_text = false,
-signs = true,
-  float = {
-    win_options = {
-      winblend = 100
-    },
-    border = border,
-    format = function(diagnostic)
-      return string.format(
-        "%s (%s) [%s]",
-        diagnostic.message,
-        diagnostic.source,
-        diagnostic.code or diagnostic.user_data.lsp.code
-      )
-    end,
-  },
-})
-
+-- Statusline
 local cmp = {} -- statusline components
 function _G._statusline_component(name)
   return cmp[name]()
@@ -148,8 +122,6 @@ vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the
 vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
 vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
 vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
-
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#7d8618", bg = "none"})
 EOF
 
 augroup remember_folds
