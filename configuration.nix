@@ -88,10 +88,11 @@ in {
     enable = true;
   };
 
-  # For distrobox
+  # For distrobox.
   virtualisation.podman.enable = true;
-
+  # File manager.
   programs.thunar.enable = true;
+
   # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
@@ -105,7 +106,12 @@ in {
     podman # Dependency for distrobox
 
     # For minecraft
-    jdk8
+    jdk8 # Java 8
+    # Game launcher
+    lutris
+    wineWowPackages.waylandFull
+    wineWowPackages.stable
+    winetricks
 
     # Other.
     wl-clipboard # Wayland xclip
@@ -146,6 +152,8 @@ in {
 
     # Shellscripts.
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
+
+    (writeShellScriptBin "vrmss" (builtins.readFile ./resources/scripts/vrmss.sh))
 
     (writeShellScriptBin
       "gamescope-steam-DIY"
@@ -208,6 +216,11 @@ in {
   # Hardware or drivers. #
   ########################
 
+  # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using: 
+  systemd.tmpfiles.rules = [
+    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+  ];
+
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -215,9 +228,12 @@ in {
     extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
+      rocm-opencl-icd
+      rocm-opencl-runtime
     ];
     extraPackages32 = with pkgs.pkgsi686Linux; [libva];
   };
+
   services.xserver.videoDrivers = ["amdgpu"];
 
   ##########
@@ -226,12 +242,38 @@ in {
 
   # This is the command for running all 3 programs at once that u put into steam
   # gamemoderun gamescope -w 1920 -h 1080 -f -- mangohud %command%
-  programs.steam.extraCompatPackages = [
-    pkgs-unstable.proton-ge-bin
-  ];
-  programs.steam.enable = true;
-  programs.steam.gamescopeSession.enable = true;
+  programs.steam = {
+    enable = true;
+    gamescopeSession.enable = true;
+    # Load the extest library into Steam, to translate X11 input events to uinput events (for using Steam Input on Wayland).
+    # extest.enable = true;
+    extraCompatPackages = [
+      pkgs-unstable.proton-ge-bin
+    ];
+    extraPackages = [
+      pkgs.gamescope
+      pkgs.gamemode
+      pkgs.libkrb5
+      pkgs.keyutils
+      pkgs.xorg.libXcursor
+      pkgs.xorg.libXi
+      pkgs.xorg.libXinerama
+      pkgs.xorg.libXScrnSaver
+      pkgs.libpng
+      pkgs.libpulseaudio
+      pkgs.libvorbis
+      pkgs.stdenv.cc.cc.lib
+      pkgs.libkrb5
+      pkgs.keyutils
+    ];
+  };
+
   programs.gamemode.enable = true;
+
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true;
+  };
 
   ##########
   # NixOs. #
@@ -240,17 +282,12 @@ in {
   nixpkgs.config.allowUnfree = false;
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.auto-optimise-store = true;
-  boot.loader.grub.configurationLimit = 30;
-  boot.loader.systemd-boot.configurationLimit = 30;
   nix.gc = {
     automatic = true;
     dates = "2day";
     options = "--delete-older-than 15d";
   };
 
-  # Links libraries to make nixos not as shitty for dev.
-  programs.nix-ld.enable = true;
-  # programs.nix-ld.libraries = options.programs.nix-ld.libraries.default ++ (with pkgs; [ gcc ]);
   #############
   # Services. #
   #############
@@ -561,10 +598,14 @@ in {
       };
       programs.nix-index.enable = true;
       programs.bash.enable = true;
-      programs.mangohud.enable = true;
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+
+      programs.mangohud = {
+        enable = true;
+        enableSessionWide = false;
+      };
 
       services.dunst = {
         enable = true;
@@ -953,8 +994,8 @@ in {
           gruvbox_material_enable_bold = 0;
           gruvbox_material_transparent_background = 2;
 
-          neovide_transparency = 0.8;
-          neovide_transparency_point = 0.8;
+          neovide_transparency = config.stylix.opacity.terminal;
+          neovide_transparency_point = config.stylix.opacity.terminal;
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
           neovide_padding_top = 8;
           neovide_padding_bottom = 0;
@@ -975,7 +1016,7 @@ in {
         extraConfigLua = ''
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox-material]]
-            vim.o.background = "dark"
+            vim.o.background = config.stylix.polarity
             vim.o.guifont = "JetBrains Mono:h13:#e-antialias:#h-slight"
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
@@ -1038,6 +1079,7 @@ in {
         clipboard.register = "unnamedplus";
 
         colorschemes.base16.enable = lib.mkForce false;
+        # colorschemes.gruvbox.enable = true;
         colorscheme = "gruvbox-material";
 
         extraPlugins = [
@@ -1054,6 +1096,7 @@ in {
           rainbow-delimiters.enable = true;
           direnv.enable = true;
           spider.enable = true;
+          comment.enable = true;
 
           nvim-ufo = {
             enable = true;
@@ -1121,7 +1164,7 @@ in {
           fidget = {
             enable = true;
             progress = {
-              ignore = [ "hls" ]; # Hls keeps a popup on and its annoying
+              ignore = ["hls"]; # Hls keeps a popup on and its annoying
               ignoreDoneAlready = true;
               suppressOnInsert = true;
               pollRate = 1;
@@ -1153,7 +1196,6 @@ in {
                   try_as_border = true;
                 };
               };
-              comment = {};
               align = {};
             };
           };
@@ -1165,15 +1207,21 @@ in {
             };
           };
 
-          treesitter-textobjects.enable = true;
           treesitter = {
             enable = true;
-            folding = true;
             indent = true;
-            ensureInstalled = [
-              "all"
-            ];
             nixvimInjections = true;
+            nixGrammars = true; # Install grammars with Nix
+            ensureInstalled = ["all"];
+            incrementalSelection = {
+              enable = true;
+              keymaps = {
+                initSelection = "gnn";
+                nodeIncremental = "grn";
+                scopeIncremental = "grc";
+                nodeDecremental = "grm";
+              };
+            };
           };
 
           lsp = {
@@ -1278,6 +1326,8 @@ in {
           };
 
           luasnip.enable = true;
+          cmp-nvim-lsp.enable = true;
+          cmp-nvim-lsp-signature-help.enable = true;
           cmp = {
             enable = true;
             autoEnableSources = true;
@@ -1291,7 +1341,6 @@ in {
               sources = [
                 {name = "nvim_lsp";}
                 {name = "luasnip";}
-                {name = "nvim_lua";}
                 {name = "nvim_lsp_signature_help";}
               ];
               mapping = {
@@ -1384,37 +1433,12 @@ in {
             };
           }
 
-          # {
-          #   mode = ["n" "x" "o"];
-          #   key = "s";
-          #   action = "<cmd>lua require('flash').jump()<cr>";
-          #   options = {
-          #     desc = "Flash";
-          #   };
-          # }
-          # {
-          #   mode = ["n" "x" "o"];
-          #   key = "S";
-          #   action = "<cmd>lua require('flash').treesitter()<cr>";
-          #   options = {
-          #     desc = "Flash Treesitter";
-          #   };
-          # }
-
           {
             mode = ["n"];
             key = "gm";
             action = "m";
             options = {
               desc = "Set mark";
-            };
-          }
-          {
-            mode = ["x" "o"];
-            key = "R";
-            action = "<cmd>lua require('flash').treesitter_search()<cr>";
-            options = {
-              desc = "Treesitter Search";
             };
           }
           {
@@ -1544,12 +1568,11 @@ in {
             env = XDG_CURRENT_DESKTOP, Hyprland
             env = XDG_SESSION_TYPE, wayland
             env = XDG_SESSION_DESKTOP, Hyprland
-            env = GDK_BACKEND, wayland, x11
+            env = GDK_BACKEND, wayland, x11, *
             env = CLUTTER_BACKEND, wayland
-            env = QT_QPA_PLATFORM, wayland
+            env = QT_QPA_PLATFORM, wayland;xcb
             env = QT_WAYLAND_DISABLE_WINDOWDECORATION, 1
             env = QT_AUTO_SCREEN_SCALE_FACTOR, 1
-            env = SDL_VIDEODRIVER, x11
             env = MOZ_ENABLE_WAYLAND, 1
             env = GTK_USE_PORTAL, 1
 
@@ -1580,8 +1603,8 @@ in {
           ];
 
           input = {
-            kb_layout = "pl";
-            kb_options = "caps:escape";
+            kb_layout = "pl,fi";
+            kb_options = "caps:escape,grp:sclk_toggle";
             repeat_delay = 300;
             repeat_rate = 30;
             accel_profile = "flat";
@@ -1615,6 +1638,7 @@ in {
             disable_autoreload = true;
             animate_manual_resizes = true;
             enable_swallow = true;
+            swallow_regex = "^(a|A)lacritty$";
           };
 
           dwindle = {
@@ -1699,7 +1723,7 @@ in {
             "$mainMod         , r           , [r]ecord                       , exec                 , hyprcorder.sh"
 
             "ALT              , Tab         , Cycle programs                 , exec                 , hyprland-next-visible-client.sh next"
-            "$mainMod         , Tab         , Open program menu              , exec                 , hyprland-next-visible-client.sh menu"
+            "$mainMod         , Tab         , Open program menu              , exec                 , ${lib.getExe pkgs.rofi-wayland} -show window"
 
             "$mainMod         , h           , Move focus right               , movefocus            , l"
             "$mainMod         , l           , Move focus left                , movefocus            , r"
@@ -1727,7 +1751,7 @@ in {
             "$mainMod SHIFT   , 8           , Move to workspace              , movetoworkspacesilent, 8"
             "$mainMod SHIFT   , 9           , Move to workspace              , movetoworkspacesilent, 9"
             "$mainMod SHIFT   , 0           , Move to workspace              , movetoworkspacesilent, 10"
-            "$mainMod CTRL    , c           , Move to empty workspace        , movetoworkspace      , empty"
+            "$mainMod SHIFT    , c           , Move to empty workspace        , movetoworkspace      , empty"
 
             "$mainMod SHIFT   , h           , Move left to workspace         , movewindow           , l"
             "$mainMod SHIFT   , l           , Move right to workspace        , movewindow           , r"
@@ -1800,9 +1824,9 @@ in {
 
             "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
             "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
-            "fullscreen, class:^(Steam|steam|steam_app_.*)$"
-            "fakefullscreen, class:^(Steam|steam|steam_app_.*)$"
-            "noinitialfocus, class:^(steam)$, title:^(notificationtoasts.*)$, floating:1"
+            # "fullscreen, class:^(Steam|steam|steam_app_.*)$"
+            # "fakefullscreen, class:^(Steam|steam|steam_app_.*)$"
+            # "noinitialfocus, class:^(steam)$, title:^(notificationtoasts.*)$, floating:1"
 
             "float, title:^(Picture-in-Picture)$"
             "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"

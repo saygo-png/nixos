@@ -18,6 +18,20 @@ vim.keymap.set('n',        's', '<Plug>(leap)')
 vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
 vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
 vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
+-- Rainbow delimiters.
+
+ local rainbow_delimiters = require 'rainbow-delimiters'
+ vim.g.rainbow_delimiters = {
+  highlight = {
+   'RainbowDelimiterRed',
+   'RainbowDelimiterYellow',
+   'RainbowDelimiterBlue',
+   'RainbowDelimiterOrange',
+   'RainbowDelimiterGreen',
+   'RainbowDelimiterViolet',
+   'RainbowDelimiterCyan'
+  }
+ }
 
 -- Statusline
 local cmp = {} -- statusline components
