@@ -26,6 +26,18 @@ in {
   # Essential or basic. #
   #######################
 
+  specialisation = {
+    kde.configuration = {
+      services.xserver.desktopManager.plasma6.enable = true;
+      services.xserver.displayManager.sddm.wayland.enable = true;
+      environment.plasma6.excludePackages = with pkgs.kdePackages; [
+        plasma-browser-integration
+        konsole
+        oxygen
+      ];
+    };
+  };
+
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
@@ -153,13 +165,12 @@ in {
     # Shellscripts.
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
 
-    (writeShellScriptBin "vrmss" (builtins.readFile ./resources/scripts/vrmss.sh))
+    (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
     (writeShellScriptBin
       "gamescope-steam-DIY"
       ''
-        sudo setcap 'CAP_SYS_NICE=eip' "$(which gamescope)"
-        gamescope -W ${builtins.toString constants.screen-width} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} steam
+        gamescope -w ${builtins.toString constants.screen-width} -W ${builtins.toString constants.screen-width} -h ${builtins.toString constants.screen-height} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} -f steam
       '')
 
     (writeShellScriptBin
@@ -216,7 +227,7 @@ in {
   # Hardware or drivers. #
   ########################
 
-  # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using: 
+  # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
@@ -395,7 +406,19 @@ in {
     fontconfig = {
       enable = true;
       antialias = true;
-      hinting.enable = true;
+
+      hinting = {
+        enable = true;
+        style = "full";
+        autohint = true;
+      };
+
+      subpixel = {
+        # Makes it bolder
+        rgba = "rgb";
+        lcdfilter = "default"; # no difference
+      };
+
       defaultFonts = {
         serif = ["Courier Prime" "Symbols Nerd Font"];
         sansSerif = ["Courier Prime" "Symbols Nerd Font"];
@@ -463,6 +486,9 @@ in {
     popups = 0.8;
   };
 
+  # Supposedly fixes some themeing/cursor issues might be useless.
+  programs.dconf.enable = true;
+
   ################
   # HOME MANAGER #
   ################
@@ -489,6 +515,7 @@ in {
         shellAliases = {
           "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
           "ls" = "${lib.getExe pkgs.eza}";
+          "pmem" = "vmrss"; # [p]rocess [mem]ory
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "rt" = "${lib.getExe pkgs.trashy}";
@@ -536,6 +563,7 @@ in {
           jdk11
 
           # Command line.
+          bc # Gnu calculator, needed for vmrss
           pulsemixer # Volume control
           zoxide # Cd alternative
           ffmpeg # Video and magic editor
@@ -661,7 +689,10 @@ in {
           sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
           sub-shadow-offset = 2;
         };
-        # scripts = [pkgs.mpvScripts.mpv-cheatsheet];
+        scripts = [
+          pkgs.mpvScripts.uosc
+          pkgs.mpvScripts.acompressor
+        ];
       };
 
       programs.yazi = {
@@ -991,11 +1022,11 @@ in {
           mapleader = " ";
 
           gruvbox_material_foreground = "original";
-          gruvbox_material_enable_bold = 0;
+          gruvbox_material_enable_bold = 1;
           gruvbox_material_transparent_background = 2;
 
           neovide_transparency = config.stylix.opacity.terminal;
-          neovide_transparency_point = config.stylix.opacity.terminal;
+          neovide_transparency_point = 0; # config.stylix.opacity.terminal;
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
           neovide_padding_top = 8;
           neovide_padding_bottom = 0;
@@ -1016,9 +1047,8 @@ in {
         extraConfigLua = ''
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox-material]]
-            vim.o.background = config.stylix.polarity
+            vim.o.background = "dark"
             vim.o.guifont = "JetBrains Mono:h13:#e-antialias:#h-slight"
-            vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
           end
 
@@ -1596,6 +1626,7 @@ in {
 
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
+            "${lib.getExe pkgs.udiskie} &"
             # "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
