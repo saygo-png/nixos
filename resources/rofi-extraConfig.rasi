@@ -1,98 +1,6 @@
 configuration {
-  modi: "window,run,drun";
-  font: "Courier Prime 14";
-  padding: 10;
-  fixed-num-lines: true;
-  show-icons: false;
-  terminal: "alacritty";
-  run-command: "{cmd}";
-  drun-show-actions: false;
-  disable-history: false;
-  matching: "fuzzy";
-  sort: true;
-  scrollbar: false;
-  sorting-method: "fzf";
-  auto-select: false;
-  separator-style: "dash";
-  window-format: "{w} {c}  {t}";
-  show-match: true;
-  kb-primary-paste: "Control+V,Shift+Insert";
-  kb-secondary-paste: "Control+v,Insert";
-  kb-clear-line: "Control+d";
-  kb-move-front: "Control+a";
-  kb-move-end: "";
-  kb-move-word-back: "Alt+b,Control+Left";
-  kb-move-word-forward: "Alt+f,Control+Right";
-  kb-move-char-back: "Left,Alt+h";
-  kb-move-char-forward: "Right,Alt+l";
-  kb-remove-word-back: "Control+BackSpace";
-  kb-remove-word-forward: "";
-  kb-remove-char-forward: "";
-  kb-remove-char-back: "BackSpace";
-  kb-remove-to-eol: "";
-  kb-remove-to-sol: "";
-  kb-accept-entry: "Return";
-  kb-accept-custom: "Control+Return";
-  kb-accept-alt: "Shift+Return";
-  kb-delete-entry: "";
-  kb-mode-next: "Control+l";
-  kb-mode-previous: "Control+h";
-  kb-row-left: "";
-  kb-row-right: "";
-  kb-row-up: "Control+k";
-  kb-row-down: "Control+j";
-  kb-row-tab: "";
-  kb-page-prev: "Page_Up";
-  kb-page-next: "Page_Down";
-  kb-row-first: "Home,KP_Home";
-  kb-row-last: "";
-  kb-mode-complete: "";
-  kb-row-select: "Tab";
-  kb-screenshot: "";
-  kb-ellipsize: "";
-  kb-toggle-case-sensitivity: "";
-  kb-toggle-sort: "";
-  kb-cancel: "Escape,Control+g,Control+bracketleft";
-  kb-custom-1: "";
-  kb-custom-2: "";
-  kb-custom-3: "";
-  kb-custom-4: "";
-  kb-custom-5: "";
-  kb-custom-6: "";
-  kb-custom-7: "";
-  kb-custom-8: "";
-  kb-custom-9: "";
-  kb-custom-10: "";
-  kb-custom-11: "";
-  kb-custom-12: "";
-  kb-custom-13: "";
-  kb-custom-14: "";
-  kb-custom-15: "";
-  kb-custom-16: "";
-  kb-custom-17: "";
-  kb-custom-18: "";
-  kb-custom-19: "";
-  kb-select-1: "";
-  kb-select-2: "";
-  kb-select-3: "";
-  kb-select-4: "";
-  kb-select-5: "";
-  kb-select-6: "";
-  kb-select-7: "";
-  kb-select-8: "";
-  kb-select-9: "";
-  kb-select-10: "";
-  ml-row-left: "ScrollLeft";
-  ml-row-right: "ScrollRight";
-  ml-row-up: "ScrollUp";
-  ml-row-down: "ScrollDown";
-  me-select-entry: "MousePrimary";
-  me-accept-entry: "";
-  me-accept-custom: "";
-
 /* Theme settings */
 highlight: bold;
-scrollbar: false;
 
 /* Gruvbox dark colors */
 gruvbox-dark-bg0:          rgba (21, 22, 3, 10%);
@@ -135,40 +43,6 @@ alternate-urgent-background: @urgent-background;
 alternate-urgent-foreground: @gruvbox-dark-fg1;
 selected-urgent-background:  @gruvbox-dark-red-light;
 selected-urgent-foreground:  @urgent-foreground;
-}
-window {
-    background-color: @background;
-    border:           2;
-    padding:          5;
-}
-
-mainbox {
-    border:  0;
-    padding: 0;
-}
-
-message {
-    border:       2px 0 0;
-    border-color: rgba (21, 22, 3, 10%);
-    padding:      1px;
-}
-
-textbox {
-    highlight:  @highlight;
-    text-color: @foreground;
-}
-
-listview {
-    border:       0px solid 0 0;
-    padding:      0px 0 0;
-    border-color: rgba (21, 22, 3, 10%);
-    spacing:      0px;
-    scrollbar:    @scrollbar;
-}
-
-element {
-    border:  0;
-    padding: 2px;
 }
 
 element.normal.normal {
@@ -230,9 +104,6 @@ mode-switcher {
 }
 
 inputbar {
-    spacing:    0;
-    text-color: @normal-foreground;
-    padding:    2px;
     children:   [ prompt, textbox-prompt-sep, entry, case-indicator ];
 }
 

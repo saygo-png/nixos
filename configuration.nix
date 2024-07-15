@@ -26,17 +26,19 @@ in {
   # Essential or basic. #
   #######################
 
-  specialisation = {
-    kde.configuration = {
-      services.xserver.desktopManager.plasma6.enable = true;
-      services.xserver.displayManager.sddm.wayland.enable = true;
-      environment.plasma6.excludePackages = with pkgs.kdePackages; [
-        plasma-browser-integration
-        konsole
-        oxygen
-      ];
-    };
-  };
+  # specialisation = {
+  #   KDE.configuration = {
+  #     services.xserver.desktopManager.plasma5.enable = true;
+  #     services.xserver.displayManager = {
+  #       sddm.enable = true;
+  #     };
+  #     services.displayManager.defaultSession = "plasma";
+  #     environment.plasma6.excludePackages = with pkgs.kdePackages; [
+  #       plasma-browser-integration
+  #       konsole
+  #     ];
+  #   };
+  # };
 
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
@@ -62,13 +64,16 @@ in {
   services.libinput.mouse.accelProfile = "flat";
   services.libinput.mouse.accelSpeed = "-0.9";
 
-  services.xserver.libinput.enable = true;
-  services.xserver.libinput.mouse.accelProfile = "flat";
-  services.xserver.libinput.mouse.accelSpeed = "-0.9";
-
   services.xserver.xkb = {
-    layout = "pl";
-    options = "caps:escape";
+    extraLayouts = {
+      plfi = {
+        description = "plfi";
+        languages = ["pol"];
+        symbolsFile = ./resources/static/plfi;
+      };
+    };
+    layout = "pl,plfi";
+    options = "caps:escape,grp:sclk_toggle";
   };
 
   console = {
@@ -168,7 +173,8 @@ in {
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
     (writeShellScriptBin
-      "gamescope-steam-DIY"
+      "sgamescope" # [s]team [gamescope]
+
       ''
         gamescope -w ${builtins.toString constants.screen-width} -W ${builtins.toString constants.screen-width} -h ${builtins.toString constants.screen-height} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} -f steam
       '')
@@ -185,17 +191,44 @@ in {
     (writeShellScriptBin
       "connection-tester"
       ''
-        set -o pipefail -e -u
-        shopt -s failglob
-        TARGET="duck.com"
-        # Infinite loop for continuous pinging
-        while true; do
-          if ! ${lib.getExe pkgs.fping} -c1 -t500 -o "$TARGET" | tee -a /dev/tty | grep -E -q 'timed out|Name or service not known'; then
-           sleep 0.1
-        else
-           notify-send "Ping Failed" "Could not ping $TARGET"
-          fi
-        done
+        connected_to_internet() {
+          test_urls="\
+          https://www.google.com/ \
+          https://www.duck.com/ \
+          https://www.cloudflare.com/ \
+          "
+          processes="0"
+          pids=""
+          for test_url in $test_urls; do
+            curl --silent --head "$test_url" > /dev/null &
+            pids="$pids $!"
+            processes=$(($processes + 1))
+          done
+          while [ $processes -gt 0 ]; do
+            for pid in $pids; do
+              if ! ps | grep "^[[:blank:]]*$pid[[:blank:]]" > /dev/null; then
+                # Process no longer running
+                processes=$(($processes - 1))
+                pids=$(echo "$pids" | sed --regexp-extended "s/(^| )$pid($| )/ /g")
+
+                if wait $pid; then
+                  # Success! We have a connection to at least one public site, so the
+                  # internet is up. Ignore other exit statuses.
+                  kill -TERM $pids > /dev/null 2>&1 || true
+                  wait $pids
+                  return 0
+                fi
+              fi
+            done
+            wait -n $pids # Better than sleep, but not supported on all systems
+          done
+          return 1
+        }
+        if connected_to_internet; then
+            echo "Connected to internet" && ${lib.getExe pkgs.libnotify} "Connected to internet"
+          else
+            echo "No internet connection"
+        fi
       '')
 
     (writeShellScriptBin
@@ -320,7 +353,7 @@ in {
     overrideDevices = false;
     user = constants.username;
     dataDir = constants.home;
-    devices = {
+    settings.devices = {
       phone = {
         addresses = [
           "tcp://192.168.1.10:22000"
@@ -338,11 +371,11 @@ in {
   security.polkit.enable = true;
 
   # NixOS is retarded and turns on lightdm by default.
-  services.xserver.displayManager = {
+  services.xserver.displayManager = lib.mkDefault {
     lightdm.enable = false;
     sx.enable = true;
-    defaultSession = "none+awesome";
   };
+  services.displayManager.defaultSession = lib.mkDefault "none+awesome";
 
   # Enable sound with low latency.
   hardware.pulseaudio.enable = false;
@@ -410,13 +443,12 @@ in {
       hinting = {
         enable = true;
         style = "full";
-        autohint = true;
+        autohint = false;
       };
 
       subpixel = {
-        # Makes it bolder
-        rgba = "rgb";
-        lcdfilter = "default"; # no difference
+        rgba = "none";
+        lcdfilter = "default";
       };
 
       defaultFonts = {
@@ -530,7 +562,7 @@ in {
           PAGER = lib.getExe pkgs.moar;
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = lib.getExe pkgs.moar;
-          OPENER = lib.getExe pkgs.xdg-utils;
+          OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
           VISUAL = "nvim";
           EDITOR = "nvim";
           SUDO_EDITOR = "nvim";
@@ -599,6 +631,9 @@ in {
       # Needed for transparency.
       stylix.targets.fzf.enable = false;
 
+      # Unable to set wallpaper bug fix
+      stylix.targets.kde.enable = false;
+
       # More visuals.
       gtk = {
         enable = true;
@@ -610,7 +645,7 @@ in {
 
       qt = {
         enable = true;
-        platformTheme = "qtct";
+        platformTheme.name = "qtct";
         style.package = with pkgs; [
           adwaita-qt
           adwaita-qt6
@@ -888,6 +923,25 @@ in {
         };
       };
 
+      programs.foot = {
+        enable = true;
+        settings = {
+          main = {
+            term = "foot";
+            pad = "6x6center";
+          };
+          mouse = {
+            hide-when-typing = "yes";
+          };
+          cursor = {
+            blink = "yes";
+          };
+          scrollback = {
+            lines = 0; # Use tmux for scrolling.
+          };
+        };
+      };
+
       programs.alacritty = {
         enable = true;
         settings = {
@@ -958,13 +1012,16 @@ in {
         };
 
         opts = {
-          # Indents
+          # Indents.
           expandtab = true;
           tabstop = 2;
           shiftwidth = 2;
           softtabstop = 2;
           autoindent = true;
           breakindent = true; # Indent when wrapping
+
+          # Wrapping.
+          wrap = false;
 
           # Delay on switching to normal mode.
           ttimeoutlen = 0;
@@ -978,7 +1035,7 @@ in {
           number = true;
           relativenumber = true;
 
-          # Color current line number
+          # Color current line number.
           cursorline = true;
           cursorlineopt = "number";
 
@@ -999,7 +1056,7 @@ in {
           # More space.
           cmdheight = 0;
 
-          # Puts error messages on the number line
+          # Puts error messages on the number line.
           signcolumn = "number";
 
           # Show some whitespace.
@@ -1009,10 +1066,11 @@ in {
           # Better completion.
           completeopt = ["menuone" "noselect" "noinsert"];
 
-          # Always keep 8 lines above/below cursor unless at start/end of file
+          # Always keep 8 lines above/below cursor unless at start/end of file.
           scrolloff = 8;
 
-          # Use conform-nvim for gq formatting. ('formatexpr' is set to vim.lsp.formatexpr(), so you can format lines via gq if the language server supports it)
+          # Use conform-nvim for gq formatting. ('formatexpr' is set to vim.lsp.formatexpr(),
+          # so you can format lines via gq if the language server supports it).
           formatexpr = "v:lua.require'conform'.formatexpr()";
 
           # (https://neovim.io/doc/user/options.html#'laststatus')
@@ -1022,9 +1080,10 @@ in {
           mapleader = " ";
 
           gruvbox_material_foreground = "original";
-          gruvbox_material_enable_bold = 1;
+          gruvbox_material_enable_bold = 0;
           gruvbox_material_transparent_background = 2;
 
+          # Neovide neovim gui client.
           neovide_transparency = config.stylix.opacity.terminal;
           neovide_transparency_point = 0; # config.stylix.opacity.terminal;
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
@@ -1252,10 +1311,20 @@ in {
                 nodeDecremental = "grm";
               };
             };
+            moduleConfig = {
+              highlight = {
+                enable = true;
+                use_languagetree = true;
+                additional_vim_regex_highlighting = ["haskell"];
+              };
+            };
           };
 
           lsp = {
             enable = true;
+            onAttach = ''
+              client.server_capabilities.semanticTokensProvider = nil
+            '';
             servers = {
               # Nix.
               nil-ls.enable = true;
@@ -1277,7 +1346,11 @@ in {
               hls.enable = true;
 
               # Rust.
-              rust-analyzer.enable = true;
+              rust-analyzer = {
+                enable = true;
+                installCargo = false;
+                installRustc = false;
+              };
 
               # Filesystem.
               fsautocomplete.enable = true;
@@ -1371,6 +1444,8 @@ in {
               sources = [
                 {name = "nvim_lsp";}
                 {name = "luasnip";}
+                {name = "vsnip";}
+                {name = "treesitter";}
                 {name = "nvim_lsp_signature_help";}
               ];
               mapping = {
@@ -1573,13 +1648,48 @@ in {
           inherit (config.lib.formats.rasi) mkLiteral;
         in {
           "*" = {
+            highlight = "bold";
             normal-background = lib.mkForce (mkLiteral "rgba (0, 0, 0, 0%)");
             alternate-normal-background = lib.mkForce (mkLiteral "rgba (0, 0, 0, 0%)");
             gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (21, 22, 3, 60%)");
             gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (21, 22, 3, 60%)");
-            # TODO add more colors like this.
-            # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
           };
+          "window" = {
+            background-color = lib.mkForce "@background";
+            border = 2;
+            padding = 5;
+          };
+          "mainbox" = {
+            border = 0;
+            padding = 0;
+          };
+          "message" = {
+            border = mkLiteral "2px 0 0";
+            border-color = lib.mkForce (mkLiteral "rgba (21, 22, 3, 10%)");
+            padding = mkLiteral "1px";
+          };
+          "textbox" = {
+            highlight = "@highlight";
+            text-color = lib.mkForce "@foreground";
+          };
+          "listview" = {
+            border = mkLiteral "0px solid 0 0";
+            padding = mkLiteral "0px 0 0";
+            border-color = lib.mkForce (mkLiteral "rgba (21, 22, 3, 10%)");
+            spacing = mkLiteral "0px";
+          };
+          "element" = {
+            border = 0;
+            padding = mkLiteral "2px";
+          };
+          "inputbar" = {
+            spacing = 0;
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            padding = mkLiteral "2px";
+          };
+
+          # TODO add more colors like this.
+          # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
         };
       };
 
@@ -1626,7 +1736,7 @@ in {
 
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
-            "${lib.getExe pkgs.udiskie} &"
+            "${lib.getExe' pkgs.udiskie "udiskie"} &"
             # "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
@@ -1634,7 +1744,7 @@ in {
           ];
 
           input = {
-            kb_layout = "pl,fi";
+            kb_layout = "pl";
             kb_options = "caps:escape,grp:sclk_toggle";
             repeat_delay = 300;
             repeat_rate = 30;
@@ -1740,6 +1850,8 @@ in {
             "$mainMod         , b           , Open [b]rowser                 , exec                 , hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 
             "$mainMod         , Space       , Program launcher               , exec                 , pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
+
+            "$mainMod         , ALT + Space       , Program launcher               , exec                 , pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show run"
 
             "$mainMod         , c           , [c]olor picker                 , exec                 , ${lib.getExe pkgs.hyprpicker} -a"
 
