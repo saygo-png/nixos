@@ -584,6 +584,7 @@ in {
           keepassxc # Password manager
           tauon # Music player
           foliate # Ebook reader
+          path-of-building # Path of Exile build tool
           anki # Flashcards
           qbittorrent # Torrent client
           libreoffice # Office
@@ -1023,6 +1024,10 @@ in {
           # Wrapping.
           wrap = false;
 
+          # Center it all.
+          scrolloff = 999;
+          sidescrolloff = 999;
+
           # Delay on switching to normal mode.
           ttimeoutlen = 0;
 
@@ -1065,9 +1070,6 @@ in {
 
           # Better completion.
           completeopt = ["menuone" "noselect" "noinsert"];
-
-          # Always keep 8 lines above/below cursor unless at start/end of file.
-          scrolloff = 8;
 
           # Use conform-nvim for gq formatting. ('formatexpr' is set to vim.lsp.formatexpr(),
           # so you can format lines via gq if the language server supports it).
@@ -1163,6 +1165,16 @@ in {
               end,
             },
           })
+
+          -- Turn off cmp in comments.
+          enabled = function()
+             local in_prompt = vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt'
+             if in_prompt then  -- this will disable cmp in the Telescope window (taken from the default config)
+               return false
+             end
+             local context = require("cmp.config.context")
+             return not(context.in_treesitter_capture("comment") == true or context.in_syntax_group("Comment"))
+          end
         '';
         package = pkgs.neovim-unwrapped;
         clipboard.register = "unnamedplus";
@@ -1829,93 +1841,92 @@ in {
           bindde = [
             # This throws an invalid dispatcher error
             # but it seems good to me and it works.
-            "$mainMod         , w           , Show [w]orkspaces              , hyprexpo:expo        , toggle"
-            "$mainMod         , q           , [q]uit active                  , killactive           ,"
+            "$mainMod, w, Show [w]orkspaces, hyprexpo:expo, toggle"
+            "$mainMod, q, [q]uit active, killactive,"
 
-            "$mainMod         , CTRL + Space, Toggle floating                , togglefloating       ,"
+            "$mainMod CTRL, Space, Toggle floating, togglefloating,"
 
-            "$mainMod         , f           , [f]ullscreen                   , fullscreen"
-            "$mainMod SHIFT   , f           , [f]akke fullscreen              , fakefullscreen"
+            "$mainMod, f, [f]ullscreen, fullscreen"
+            "$mainMod SHIFT, f, [f]akke fullscreen, fakefullscreen"
 
-            "$mainMod         , g           , [g]aps on                      , exec                 , hyprctl keyword general:gaps_in 15"
-            "$mainMod         , g           , [g]aps on                      , exec                 , hyprctl keyword general:gaps_out 35"
-            "$mainMod SHIFT   , G           , [G]aps off                     , exec                 , hyprctl keyword general:gaps_in 0"
-            "$mainMod SHIFT   , G           , [G]aps off                     , exec                 , hyprctl keyword general:gaps_out 0"
+            "$mainMod, g, [g]aps on, exec, hyprctl keyword general:gaps_in 15"
+            "$mainMod, g, [g]aps on, exec, hyprctl keyword general:gaps_out 35"
+            "$mainMod SHIFT, G, [G]aps off, exec, hyprctl keyword general:gaps_in 0"
+            "$mainMod SHIFT, G, [G]aps off, exec, hyprctl keyword general:gaps_out 0"
 
-            "$mainMod         , z           , Cycle next in active workspace , cyclenext            ,"
-            "$mainMod         , x           , Center active                  , centerwindow         ,"
+            "$mainMod, z, Cycle next in active workspace, cyclenext,"
+            "$mainMod, x, Center active, centerwindow,"
 
-            "$mainMod         , Return      , Open terminal                  , exec                 , $TERMINAL"
+            "$mainMod, Return, Open terminal, exec, $TERMINAL"
 
-            "$mainMod         , b           , Open [b]rowser                 , exec                 , hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
+            "$mainMod, b, Open [b]rowser, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 
-            "$mainMod         , Space       , Program launcher               , exec                 , pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
+            "$mainMod, Space, Program launcher, exec, pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
+            "$mainMod SHIFT, Space, Program launcher, exec, pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show run"
 
-            "$mainMod         , ALT + Space       , Program launcher               , exec                 , pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show run"
+            "$mainMod, c, [c]olor picker, exec, ${lib.getExe pkgs.hyprpicker} -a"
 
-            "$mainMod         , c           , [c]olor picker                 , exec                 , ${lib.getExe pkgs.hyprpicker} -a"
+            "$mainMod, s, Toggle [s]plit, togglesplit,"
 
-            "$mainMod         , s           , Toggle [s]plit                 , togglesplit          ,"
+            "$mainMod, d, Set [d]windle layout, exec, hyprctl keyword general:layout \"dwindle\""
+            "$mainMod, m, Set [m]aster layout, exec, hyprctl keyword general:layout \"master\""
 
-            "$mainMod         , d           , Set [d]windle layout           , exec                 , hyprctl keyword general:layout \"dwindle\""
-            "$mainMod         , m           , Set [m]aster layout            , exec                 , hyprctl keyword general:layout \"master\""
+            ", Print, Screenshot, exec, ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
+            "$mainMod, e, [e]dit image, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
-            "                 , Print       , Screenshot                     , exec                 , ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
-            "$mainMod         , e           , [e]dit image                   , exec                 , ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
+            "$mainMod, r, [r]ecord, exec, hyprcorder.sh"
 
-            "$mainMod         , r           , [r]ecord                       , exec                 , hyprcorder.sh"
+            "ALT, Tab, Cycle programs, exec, hyprland-next-visible-client.sh next"
+            "$mainMod, Tab, Open program menu, exec, ${lib.getExe pkgs.rofi-wayland} -show window"
 
-            "ALT              , Tab         , Cycle programs                 , exec                 , hyprland-next-visible-client.sh next"
-            "$mainMod         , Tab         , Open program menu              , exec                 , ${lib.getExe pkgs.rofi-wayland} -show window"
+            "$mainMod, h, Move focus right, movefocus, l"
+            "$mainMod, l, Move focus left, movefocus, r"
+            "$mainMod, k, Move focus up, movefocus, u"
+            "$mainMod, j, Move focus down, movefocus, d"
 
-            "$mainMod         , h           , Move focus right               , movefocus            , l"
-            "$mainMod         , l           , Move focus left                , movefocus            , r"
-            "$mainMod         , k           , Move focus up                  , movefocus            , u"
-            "$mainMod         , j           , Move focus down                , movefocus            , d"
+            "$mainMod, 1, Switch workspace, workspace, 1"
+            "$mainMod, 2, Switch workspace, workspace, 2"
+            "$mainMod, 3, Switch workspace, workspace, 3"
+            "$mainMod, 4, Switch workspace, workspace, 4"
+            "$mainMod, 5, Switch workspace, workspace, 5"
+            "$mainMod, 6, Switch workspace, workspace, 6"
+            "$mainMod, 7, Switch workspace, workspace, 7"
+            "$mainMod, 8, Switch workspace, workspace, 8"
+            "$mainMod, 9, Switch workspace, workspace, 9"
+            "$mainMod, 0, Switch workspace, workspace, 10"
 
-            "$mainMod         , 1           , Switch workspace               , workspace            , 1"
-            "$mainMod         , 2           , Switch workspace               , workspace            , 2"
-            "$mainMod         , 3           , Switch workspace               , workspace            , 3"
-            "$mainMod         , 4           , Switch workspace               , workspace            , 4"
-            "$mainMod         , 5           , Switch workspace               , workspace            , 5"
-            "$mainMod         , 6           , Switch workspace               , workspace            , 6"
-            "$mainMod         , 7           , Switch workspace               , workspace            , 7"
-            "$mainMod         , 8           , Switch workspace               , workspace            , 8"
-            "$mainMod         , 9           , Switch workspace               , workspace            , 9"
-            "$mainMod         , 0           , Switch workspace               , workspace            , 10"
+            "$mainMod SHIFT, 1, Move to workspace, movetoworkspacesilent, 1"
+            "$mainMod SHIFT, 2, Move to workspace, movetoworkspacesilent, 2"
+            "$mainMod SHIFT, 3, Move to workspace, movetoworkspacesilent, 3"
+            "$mainMod SHIFT, 4, Move to workspace, movetoworkspacesilent, 4"
+            "$mainMod SHIFT, 5, Move to workspace, movetoworkspacesilent, 5"
+            "$mainMod SHIFT, 6, Move to workspace, movetoworkspacesilent, 6"
+            "$mainMod SHIFT, 7, Move to workspace, movetoworkspacesilent, 7"
+            "$mainMod SHIFT, 8, Move to workspace, movetoworkspacesilent, 8"
+            "$mainMod SHIFT, 9, Move to workspace, movetoworkspacesilent, 9"
+            "$mainMod SHIFT, 0, Move to workspace, movetoworkspacesilent, 10"
+            "$mainMod SHIFT, c, Move to empty workspace, movetoworkspace, empty"
 
-            "$mainMod SHIFT   , 1           , Move to workspace              , movetoworkspacesilent, 1"
-            "$mainMod SHIFT   , 2           , Move to workspace              , movetoworkspacesilent, 2"
-            "$mainMod SHIFT   , 3           , Move to workspace              , movetoworkspacesilent, 3"
-            "$mainMod SHIFT   , 4           , Move to workspace              , movetoworkspacesilent, 4"
-            "$mainMod SHIFT   , 5           , Move to workspace              , movetoworkspacesilent, 5"
-            "$mainMod SHIFT   , 6           , Move to workspace              , movetoworkspacesilent, 6"
-            "$mainMod SHIFT   , 7           , Move to workspace              , movetoworkspacesilent, 7"
-            "$mainMod SHIFT   , 8           , Move to workspace              , movetoworkspacesilent, 8"
-            "$mainMod SHIFT   , 9           , Move to workspace              , movetoworkspacesilent, 9"
-            "$mainMod SHIFT   , 0           , Move to workspace              , movetoworkspacesilent, 10"
-            "$mainMod SHIFT    , c           , Move to empty workspace        , movetoworkspace      , empty"
+            "$mainMod SHIFT, h, Move left to workspace, movewindow, l"
+            "$mainMod SHIFT, l, Move right to workspace, movewindow, r"
+            "$mainMod SHIFT, k, Move up to workspace, movewindow, u"
+            "$mainMod SHIFT, j, Move down to workspace, movewindow, d"
 
-            "$mainMod SHIFT   , h           , Move left to workspace         , movewindow           , l"
-            "$mainMod SHIFT   , l           , Move right to workspace        , movewindow           , r"
-            "$mainMod SHIFT   , k           , Move up to workspace           , movewindow           , u"
-            "$mainMod SHIFT   , j           , Move down to workspace         , movewindow           , d"
+            "$mainMod CTRL + s, h, Resize window left, resizeactive, -100 0"
+            "$mainMod CTRL + s, l, Resize window right, resizeactive, 100 0"
+            "$mainMod CTRL + s, k, Resize window up, resizeactive, 0 -100"
+            "$mainMod CTRL + s, j, Resize window down, resizeactive, 0 100"
 
-            "$mainMod CTRL + s, h           , Resize window left             , resizeactive         , -100 0"
-            "$mainMod CTRL + s, l           , Resize window right            , resizeactive         , 100 0"
-            "$mainMod CTRL + s, k           , Resize window up               , resizeactive         , 0 -100"
-            "$mainMod CTRL + s, j           , Resize window down             , resizeactive         , 0 100"
+            "$mainMod ALT, H, Move floating left, moveactive, -100 0"
+            "$mainMod ALT, L, Move floating right, moveactive, 100 0"
+            "$mainMod ALT, K, Move floating up, moveactive, 0 -100"
+            "$mainMod ALT, J, Move floating down, moveactive, 0 100"
 
-            "$mainMod ALT     , H           , Move floating left             , moveactive           ,  -100 0"
-            "$mainMod ALT     , L           , Move floating right            , moveactive           , 100 0"
-            "$mainMod ALT     , K           , Move floating up               , moveactive           , 0 -100"
-            "$mainMod ALT     , J           , Move floating down             , moveactive           , 0 100"
+            "$mainMod, Equal, Volume down, exec, ${lib.getExe pkgs.pamixer} -i 2"
+            "$mainMod, Minus, Volume up, exec, ${lib.getExe pkgs.pamixer} -d 2"
 
-            "$mainMod         , Equal       , Volume down                    , exec                 , ${lib.getExe pkgs.pamixer} -i 2"
-            "$mainMod         , Minus       , Volume up                      , exec                 , ${lib.getExe pkgs.pamixer} -d 2"
-
-            "$mainMod         , mouse_down  , Scroll workspace               , workspace            , e-1"
-            "$mainMod         , mouse_up    , Scroll workspace               , workspace            , e+1"
+            "$mainMod, mouse_down, Scroll workspace, workspace, e-1"
+            "$mainMod, mouse_up, Scroll workspace, workspace, e+1"
           ];
 
           # mouse binding
