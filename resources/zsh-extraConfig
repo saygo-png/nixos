@@ -182,16 +182,18 @@ bindkey '^e' edit-command-line
 nr() { # [N]ix [R]un
   nix run "nixpkgs#${(w)@:1:1}" -- ${(w)@:2}
 }
-snr() { # [S]udo [N]ix [R]un.
+snr() { # [S]u-do [N]ix [R]un.
   sudo nix run "nixpkgs#${(w)@:1:1}" -- ${(w)@:2}
 }
 
 # Use fzf to switch dirs and bind it to ctrl-f
 fzfcd () {
- dir=$(find ~/.local/bin ~/Sync ~/art/generative-art -mindepth 1 -maxdepth 3 | fzf)
+ dir=$(find ~/Sync ~/art/generative-art -mindepth 1 -maxdepth 3 | fzf)
  if [ -z $dir ]; then
   exit 1
  fi
  [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
 }
 bindkey -s '^f' 'fzfcd\n'
+
+cd ~/Desktop/

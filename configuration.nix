@@ -121,9 +121,12 @@ in {
 
     distrobox # Allows to use better distros on NixOS
     podman # Dependency for distrobox
+    nsxiv # Image viewer
 
-    # For minecraft
-    jdk8 # Java 8
+    kdePackages.plasma-systemmonitor # GUI system monitor
+
+    jdk8 # Java 8 for minecraft
+
     # Game launcher
     lutris
     wineWowPackages.waylandFull
@@ -134,7 +137,6 @@ in {
     wl-clipboard # Wayland xclip
     cliphist # Wayland clipboard manager
     jq # Json parser, needed for "hyprland-next-visible-client.sh"
-    # Treesitter needs it.
     patool # Universal archiver
     libqalculate # Calculator
     conky # Hardware monitor
@@ -180,12 +182,25 @@ in {
       '')
 
     (writeShellScriptBin
-      "hard-clean-nix"
+      "clean-nix"
       ''
-        nix-collect-garbage --delete-older-than 5d
-        sudo nix-collect-garbage --delete-older-than 5d
+        nix-env --delete-generations 3d
+        sudo nix-env --delete-generations 3d
+
+        nix-collect-garbage --delete-older-than 3d
+        sudo nix-collect-garbage --delete-older-than 3d
+
+        nix-collect-garbage -d
+        sudo nix-collect-garbage -d
+
+        nix-store --gc
+        sudo nix-store --gc
+
         nix store optimise
         sudo nix store optimise
+
+        rm -rf ${constants.home}/.local/state/home-manager
+        rm -f ${constants.home}/.local/state/nix/profiles/home-manager*
       '')
 
     (writeShellScriptBin
@@ -343,6 +358,9 @@ in {
   services.xserver.windowManager.awesome = {
     enable = true;
   };
+
+  # Thumbnails for thunar
+  services.tumbler.enable = true;
 
   # File synchronization.
   services.syncthing = {
@@ -584,13 +602,12 @@ in {
           keepassxc # Password manager
           tauon # Music player
           foliate # Ebook reader
-          path-of-building # Path of Exile build tool
           anki # Flashcards
           qbittorrent # Torrent client
           libreoffice # Office
           neovide # Neovim gui
           rofi-wayland # App launcher
-          # hydrus # File manager
+          hydrus # File manager
 
           # For minecraft
           jdk11
@@ -1051,12 +1068,10 @@ in {
           grepformat = "%f:%l:%c:%m";
 
           # Folds.
-          foldmethod = "expr";
-          foldexpr = "nvim_treesitter#foldexpr()";
-          # foldmethod = "indent";
-          foldlevel = 1;
-          foldclose = "all";
-          foldenable = false; # Disable folding at startup.
+          foldmethod = "marker";
+          foldlevel = 99; # Ufo provider needs a large value, feel free to decrease the value
+          foldlevelstart = 99;
+          foldenable = true;
 
           # More space.
           cmdheight = 0;
@@ -1251,6 +1266,7 @@ in {
           leap = {
             enable = true;
             addDefaultMappings = false;
+            # safeLabels = [];
           };
 
           lspsaga = {
@@ -1695,7 +1711,7 @@ in {
             padding = mkLiteral "2px";
           };
           "inputbar" = {
-            spacing = 0;
+            spacing = 5;
             text-color = lib.mkForce (mkLiteral "@normal-foreground");
             padding = mkLiteral "2px";
           };
@@ -1805,7 +1821,6 @@ in {
 
           master = {
             no_gaps_when_only = false;
-            # These options will be needed after hyprland update:
             new_status = "slave";
             new_on_active = "after";
             new_on_top = false;
