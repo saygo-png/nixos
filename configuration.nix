@@ -591,6 +591,7 @@ in {
         stateVersion = "24.05"; # Dont change
 
         shellAliases = {
+          "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
           "ls" = "${lib.getExe pkgs.eza}";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
