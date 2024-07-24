@@ -154,6 +154,8 @@ in {
     dash # Lightweight shell
     git # Source control
     fzf # Fuzzy finder
+    file # File identifier
+    imagemagick_light # Image identifier
     ripgrep # Multithreaded grep
     gnumake # C compiling
     gcc # C compiling
@@ -1926,7 +1928,7 @@ in {
           bindde = [
             # This throws an invalid dispatcher error
             # but it seems good to me and it works.
-            # "$mainMod, w, Show [w]orkspaces, overview:toggle"
+            "$mainMod, w, Show [w]orkspaces, overview:toggle"
 
             "$mainMod, q, [q]uit active, killactive,"
 
