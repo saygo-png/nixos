@@ -376,6 +376,9 @@ in {
   # Services. #
   #############
 
+  # SSH agent for git.
+  programs.ssh.startAgent = true;
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -429,7 +432,7 @@ in {
     wireplumber.enable = true;
     pulse.enable = true;
     alsa.enable = true;
-    # Quirky low latency ig for gaming (id rather not)
+    # Quirky low latency ig for gaming (it crunches)
     # alsa.support32Bit = true;
     # extraConfig.pipewire."92-low-latency" = {
     #   context.properties = {
@@ -1250,9 +1253,10 @@ in {
           harpoon = {
             enable = true;
             enableTelescope = true;
+            markBranch = true;
             tmuxAutocloseWindows = true;
             keymaps = {
-              addFile = "<leader>hh";
+              addFile = "<leader>ha";
               navFile = {
                 "1" = "<C-j>";
                 "2" = "<C-k>";
@@ -1261,13 +1265,8 @@ in {
               };
               navNext = "<leader>hn";
               navPrev = "<leader>hp";
-              cmdToggleQuickMenu = "<leader>hm";
-              gotoTerminal = {
-                "1" = "<C-j>";
-                "2" = "<C-k>";
-                "3" = "<C-l>";
-                "4" = "<C-m>";
-              };
+              toggleQuickMenu = "<leader>hm";
+              cmdToggleQuickMenu = "<leader>hcm";
             };
           };
 
@@ -1489,6 +1488,16 @@ in {
               "K" = "[H]over info";
               "<Leader>l" = "+[l]sp";
               "<Leader>t" = "+[t]elescope";
+              "<Leader>h" = "+[h]arpoon";
+              "<leader>hh" = "[h]arpoon [a]dd file";
+              "<leader>hm" = "[h]arpoon [m]enu";
+              "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
+              "<leader>hn" = "[h]arpoon [n]ext";
+              "<leader>hp" = "[h]arpoon [p]revious";
+              "<C-j>" = "harpoon file 1";
+              "<C-k>" = "harpoon file 2";
+              "<C-l>" = "harpoon file 3";
+              "<C-m>" = "harpoon file 4";
             };
             plugins = {
               presets = {
@@ -1612,7 +1621,7 @@ in {
             key = "<Leader>c";
             action = "<cmd>lua require('conform').format({ timeout_ms = 500 })<CR>";
             options = {
-              desc = "[C]onform";
+              desc = "[c]onform";
             };
           }
 
