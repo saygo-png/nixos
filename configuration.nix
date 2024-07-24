@@ -1931,10 +1931,6 @@ in {
           #  add proper alt tab support using "hycov" plugin
           #  add descriptions to each key
           bindde = [
-            # This throws an invalid dispatcher error
-            # but it seems good to me and it works.
-            "$mainMod, w, Show [w]orkspaces, overview:toggle"
-
             "$mainMod, q, [q]uit active, killactive,"
 
             "$mainMod CTRL, Space, Toggle floating, togglefloating,"
