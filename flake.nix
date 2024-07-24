@@ -29,11 +29,6 @@
       url = "github:gbprod/cutlass.nvim";
       flake = false;
     };
-
-    # BROKEN
-    hyprland-plugin-hyprspace = {
-      url = "github:KZDKM/Hyprspace";
-    };
   };
   outputs = {
     self,

@@ -1811,11 +1811,6 @@ in {
           '';
 
         plugins = [
-          # Overrides the hyprland dependency of hyprspace to use the one from pkgs.
-          (inputs.hyprland-plugin-hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs {
-            inherit (pkgs.hyprland) nativeBuildInputs;
-            buildInputs = [pkgs.hyprland] ++ pkgs.hyprland.buildInputs;
-          })
         ];
 
         settings = {
