@@ -88,6 +88,11 @@ in {
     shell = pkgs.zsh;
   };
 
+  security.sudo.extraConfig = ''
+    Defaults pwfeedback
+    Defaults timestamp_timeout=-1
+  '';
+
   ###################
   # NixOS programs. #
   ###################
@@ -175,8 +180,24 @@ in {
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
     (writeShellScriptBin
-      "sgamescope" # [s]team [gamescope]
+      "update_krita.sh" # updates the flake krita nixos configuration files from current mutable krita config.
+      ''
+        set -o pipefail
+        set -u
+        shopt -s failglob
+        KRITAHOME="${constants.home}/.local/share/krita"
+        KRITANIXHOME="${constants.flake-path}/resources/krita"
 
+        cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
+        cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
+        cp -vf "$HOME/.config/kritadisplayrc" "$KRITANIXHOME/kritadisplayrc"
+
+        # Dont include the cache
+        rm -vf "$KRITANIXHOME/krita-toplevel/resourcecache.sqlite"
+      '')
+
+    (writeShellScriptBin
+      "sgamescope" # [s]team [gamescope]
       ''
         gamescope -w ${builtins.toString constants.screen-width} -W ${builtins.toString constants.screen-width} -h ${builtins.toString constants.screen-height} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} -f steam
       '')
@@ -638,11 +659,15 @@ in {
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
 
         # This allows for semi-declarative configuration.
+        # However it makes your lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          if ! [ -f "${config.xdg.configHome}/kritarc" ]; then
-              mkdir -p ${config.xdg.configHome}
-              run cp $VERBOSE_ARG "${builtins.toPath ./resources/krita-extraConfig}" "${config.xdg.configHome}/kritarc"
-          fi
+          mkdir -p "${config.xdg.configHome}"
+          mkdir -p "${constants.home}/.local/share/krita"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${constants.home}/.local/share/krita"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${constants.home}/.local/share/krita"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${constants.home}/.local/share/krita"
         '';
       };
 
@@ -1222,6 +1247,24 @@ in {
             enable = true;
             enableTelescope = true;
             tmuxAutocloseWindows = true;
+            keymaps = {
+              addFile = "<leader>hh";
+              navFile = {
+                "1" = "<C-j>";
+                "2" = "<C-k>";
+                "3" = "<C-l>";
+                "4" = "<C-m>";
+              };
+              navNext = "<leader>hn";
+              navPrev = "<leader>hp";
+              cmdToggleQuickMenu = "<leader>hm";
+              gotoTerminal = {
+                "1" = "<C-j>";
+                "2" = "<C-k>";
+                "3" = "<C-l>";
+                "4" = "<C-m>";
+              };
+            };
           };
 
           nvim-colorizer = {
@@ -1471,10 +1514,13 @@ in {
               '';
               sources = [
                 {name = "nvim_lsp";}
+                {name = "nvim_lua";}
                 {name = "luasnip";}
                 {name = "vsnip";}
+                {name = "path";}
                 {name = "treesitter";}
                 {name = "nvim_lsp_signature_help";}
+                {name = "nvim_lsp_document_symbol";}
               ];
               mapping = {
                 "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
@@ -1751,7 +1797,7 @@ in {
           '';
 
         plugins = [
-          pkgs.hyprlandPlugins.hyprexpo
+          inputs.hyprland-plugin-hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace
         ];
 
         settings = {
@@ -1778,7 +1824,7 @@ in {
             repeat_rate = 30;
             accel_profile = "flat";
             numlock_by_default = false;
-            follow_mouse = 0;
+            follow_mouse = 2;
             sensitivity = -0.9;
           };
 
@@ -1838,11 +1884,32 @@ in {
 
           animations = {
             # Fast animations.
+            bezier = [ "easeOutQuart, 0.190, 0.91, 0.37, 1" ];
             animation = [
-              "border,1,1,default"
-              "fade,1,2,default"
-              "windows,1,1.5,default,popin 80%"
-              "workspaces,1,1,default,slide"
+            "windowsIn, 1, 5, easeOutQuart, popin 0%"
+            "windowsOut, 1, 5, easeOutQuart, popin 60%"
+            "windowsMove, 1, 5, easeOutQuart, popin 60%"
+            "windows, 1, 5, easeOutQuart"
+
+            "layers, 1, 5, easeOutQuart, popin 70%"
+
+            "fadeIn, 1, 5, easeOutQuart"
+            "fadeOut, 1, 5, easeOutQuart"
+            "fadeSwitch, 0, 5, easeOutQuart"
+            "fadeShadow, 0, 5, easeOutQuart"
+            "fadeDim, 1, 5, easeOutQuart"
+            "fadeLayers, 1, 5, easeOutQuart"
+            "fade, 1, 5, easeOutQuart"
+
+            "border, 0, 5, easeOutQuart"
+            "borderangle, 0, 5, easeOutQuart"
+
+            "specialWorkspace, 1, 5, easeOutQuart, slidevert"
+            "workspaces, 1, 5, easeOutQuart, slide"
+            #   "border,1,1,default"
+            #   "fade,1,2,default"
+            #   "windows,1,1.5,default,popin 80%"
+            #   "workspaces,1,1,default,slide"
             ];
           };
 
@@ -1856,7 +1923,7 @@ in {
           bindde = [
             # This throws an invalid dispatcher error
             # but it seems good to me and it works.
-            "$mainMod, w, Show [w]orkspaces, hyprexpo:expo, toggle"
+            "$mainMod, w, Show [w]orkspaces, overview:toggle"
             "$mainMod, q, [q]uit active, killactive,"
 
             "$mainMod CTRL, Space, Toggle floating, togglefloating,"
@@ -1981,52 +2048,49 @@ in {
 
           windowrulev2 = [
             # Needed for gloss window to tile and not focus.
-            "tile, class:^()$"
-            "noinitialfocus, class:^()$"
-
-            "noborder, onworkspace:w[t1]"
-
-            "suppressevent maximize, class:.*"
-
-            "workspace 2 silent, class:^(firefox)$"
-            "workspace 2 silent, class:^(librewolf)$"
-
-            "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
-            "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
-            # "fullscreen, class:^(Steam|steam|steam_app_.*)$"
-            # "fakefullscreen, class:^(Steam|steam|steam_app_.*)$"
-            # "noinitialfocus, class:^(steam)$, title:^(notificationtoasts.*)$, floating:1"
-
-            "float, title:^(Picture-in-Picture)$"
-            "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
-            "pin, title:^(Picture-in-Picture)$"
-            "float, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
-            "size 0 0, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
-
-            "opacity 1.0 override 1.0 override, title:^(.*imv.*)$"
-            "opacity 1.0 override 1.0 override, title:^(.*mpv.*)$"
-
-            "idleinhibit focus, class:^(mpv)$"
-            "idleinhibit fullscreen, class:^(librewolf)$"
-
-            "opacity 1.0 override 1.0 override, class:(Aseprite)"
-            "opacity 1.0 override 1.0 override, class:(Unity)"
-
-            "float, class:^(pavucontrol)$"
-            "float, class:^(SoundWireServer)$"
-            "float, class:^(.sameboy-wrapped)$"
-
-            "float, class:^(file_progress)$"
-            "float, class:^(confirm)$"
-            "float, class:^(dialog)$"
-            "float, class:^(download)$"
-            "float, class:^(notification)$"
-            "float, class:^(error)$"
-            "float, class:^(confirmreset)$"
-            "float, title:^(Open File)$"
-            "float, title:^(branchdialog)$"
-            "float, title:^(Confirm to replace files)$"
-            "float, title:^(File Operation Progress)$"
+            # "tile, class:^()$"
+            # "noinitialfocus, class:^()$"
+            #
+            # "noborder, onworkspace:w[t1]"
+            #
+            # "suppressevent maximize, class:.*"
+            #
+            # "workspace 2 silent, class:^(firefox)$"
+            # "workspace 2 silent, class:^(librewolf)$"
+            #
+            # "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
+            # "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
+            #
+            # "float, title:^(Picture-in-Picture)$"
+            # "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
+            # "pin, title:^(Picture-in-Picture)$"
+            # "float, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
+            # "size 0 0, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
+            #
+            # "opacity 1.0 override 1.0 override, title:^(.*imv.*)$"
+            # "opacity 1.0 override 1.0 override, title:^(.*mpv.*)$"
+            #
+            # "idleinhibit focus, class:^(mpv)$"
+            # "idleinhibit fullscreen, class:^(librewolf)$"
+            #
+            # "opacity 1.0 override 1.0 override, class:(Aseprite)"
+            # "opacity 1.0 override 1.0 override, class:(Unity)"
+            #
+            # "float, class:^(pavucontrol)$"
+            # "float, class:^(SoundWireServer)$"
+            # "float, class:^(.sameboy-wrapped)$"
+            #
+            # "float, class:^(file_progress)$"
+            # "float, class:^(confirm)$"
+            # "float, class:^(dialog)$"
+            # "float, class:^(download)$"
+            # "float, class:^(notification)$"
+            # "float, class:^(error)$"
+            # "float, class:^(confirmreset)$"
+            # "float, title:^(Open File)$"
+            # "float, title:^(branchdialog)$"
+            # "float, title:^(Confirm to replace files)$"
+            # "float, title:^(File Operation Progress)$"
           ];
         };
       };

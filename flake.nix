@@ -29,6 +29,11 @@
       url = "github:gbprod/cutlass.nvim";
       flake = false;
     };
+
+    hyprland-plugin-hyprspace = {
+      url = "github:KZDKM/Hyprspace";
+      inputs.hyprland.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,

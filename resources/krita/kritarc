@@ -1,0 +1,1088 @@
+AlsoSaveAsKra=false
+AntialiasSelectionOutline=false
+ArtColorSel.ColorSpace=0
+ArtColorSel.InversedSaturation=false
+ArtColorSel.Light=0
+ArtColorSel.LightPieces=11
+ArtColorSel.NumRings=7
+ArtColorSel.RingPieces=12
+ArtColorSel.SelColorH=0
+ArtColorSel.SelColorS=0
+ArtColorSel.SelColorX=0
+ArtColorSel.defaultHueSteps=12
+ArtColorSel.defaultSaturationSteps=7
+ArtColorSel.defaultValueScaleSteps=11
+ArtColorSel.enforceGamutMask=false
+ArtColorSel.lumaB=0.0722
+ArtColorSel.lumaG=0.7152
+ArtColorSel.lumaGamma=2.2
+ArtColorSel.lumaR=0.2126
+ArtColorSel.showBgColor=true
+ArtColorSel.showValueScale=false
+AutoSaveInterval=420
+BackgroundColorForNewImage=255,255,255
+BackgroundOpacityForNewImage=255
+BackgroundStyleForNewImage=0
+BundleAuthorEmail=
+BundleAuthorName=
+BundleDescription=
+BundleExportLocation=/home/samsepi0l/.config
+BundleImage=
+BundleLicense=
+BundleName=
+BundleWebsite=
+CanvasOnlyActive=false
+CanvasSize/ConstrainProportions=false
+CanvasSize/KeepAspectRatio=false
+ColorManagement/UseSystemMonitorProfile=false
+ConvertToImageColorSpaceOnImport=true
+CreateBackupFile=false
+ExportConfiguration-ANIMATION_EXPORT=<!DOCTYPE params>\n<params>\n <param name="basename" type="string"><![CDATA[A_SuperTankEnemy_Attack]]></param>\n <param name="custom_ffmpeg_options" type="string"><![CDATA[-f gif -loop 0 -gifflags +transdiff -palettegen palettegen=stats_mode=full:reserve_transparent=1 -lavfi [0:v][1:v]paletteuse=dither=sierra2_4a:diff_mode=none]]></param>\n <param name="delete_sequence" type="internal">false</param>\n <param name="directory" type="string"><![CDATA[/home/samsepi0l/builds/GMTK2023/Content/Assets/Enemies/SuperTankEnemy/Attack]]></param>\n <param name="encode_video" type="internal">false</param>\n <param name="ffmpeg_path" type="string"><![CDATA[/app/bin/ffmpeg]]></param>\n <param name="filename" type="string"><![CDATA[/home/samsepi0l/linuxart/game/enemies/realfast_enemy_walk.gif]]></param>\n <param name="first_frame" type="internal">0</param>\n <param name="frame_export/CICPCompatiblePrimaries" type="internal">1</param>\n <param name="frame_export/CICPCompatibleTransferFunction" type="internal">13</param>\n <param name="frame_export/ColorDepthID" type="string"><![CDATA[U8]]></param>\n <param name="frame_export/ColorModelID" type="string"><![CDATA[RGBA]]></param>\n <param name="frame_export/HDRSupported" type="internal">false</param>\n <param name="frame_export/ImageContainsTransparency" type="internal">true</param>\n <param name="frame_export/alpha" type="string"><![CDATA[true]]></param>\n <param name="frame_export/compression" type="string"><![CDATA[9]]></param>\n <param name="frame_export/downsample" type="string"><![CDATA[true]]></param>\n <param name="frame_export/forceSRGB" type="string"><![CDATA[false]]></param>\n <param name="frame_export/indexed" type="string"><![CDATA[false]]></param>\n <param name="frame_export/interlaced" type="string"><![CDATA[false]]></param>\n <param name="frame_export/sRGB" type="internal">true</param>\n <param name="frame_export/saveAsHDR" type="string"><![CDATA[false]]></param>\n <param name="frame_export/saveSRGBProfile" type="string"><![CDATA[true]]></param>\n <param name="frame_export/storeAuthor" type="string"><![CDATA[false]]></param>\n <param name="frame_export/storeMetaData" type="string"><![CDATA[false]]></param>\n <param name="frame_export/transparencyFillcolor" type="string"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB b="1" g="1" r="1" space="sRGB-elle-V2-srgbtrc.icc"/>\n</color>\n]]></param>\n <param name="frame_mimetype" type="string"><![CDATA[image/png]]></param>\n <param name="framerate" type="internal">7</param>\n <param name="height" type="internal">576</param>\n <param name="include_audio" type="internal">true</param>\n <param name="last_document_path" type="string"><![CDATA[/home/samsepi0l/linuxart/game/enemies/realfast_enemy_walk.kra]]></param>\n <param name="last_frame" type="internal">2</param>\n <param name="only_unique_frames" type="internal">false</param>\n <param name="sequence_start" type="internal">0</param>\n <param name="video_mimetype" type="string"><![CDATA[image/gif]]></param>\n <param name="width" type="internal">379</param>\n</params>\n
+ExportConfiguration-image/jpeg=<!DOCTYPE params>\n<params>\n <param name="baseline" type="internal">false</param>\n <param name="exif" type="internal">false</param>\n <param name="filters" type="string"><![CDATA[]]></param>\n <param name="forceSRGB" type="internal">false</param>\n <param name="iptc" type="internal">false</param>\n <param name="optimize" type="internal">true</param>\n <param name="progressive" type="internal">true</param>\n <param name="quality" type="internal">100</param>\n <param name="saveProfile" type="internal">false</param>\n <param name="smoothing" type="internal">0</param>\n <param name="storeAuthor" type="internal">false</param>\n <param name="storeMetaData" type="internal">false</param>\n <param name="subsampling" type="internal">0</param>\n <param name="transparencyFillcolor" type="color"><![CDATA[<!DOCTYPE color>\n<color>\n <Gray space="Gray-D50-elle-V4-g10.icc" g="0.0376134887337685"/>\n</color>\n]]></param>\n <param name="xmp" type="internal">false</param>\n</params>\n
+ExportConfiguration-image/jxl=<!DOCTYPE params>\n<params>\n <param type="internal" name="HLGgamma">1.2</param>\n <param type="internal" name="HLGnominalPeak">1000</param>\n <param type="internal" name="channelColorsGlobalPercent">-1</param>\n <param type="internal" name="channelColorsGroupPercent">-1</param>\n <param type="internal" name="decodingSpeed">0</param>\n <param type="internal" name="dots">-1</param>\n <param type="internal" name="effort">9</param>\n <param type="internal" name="epf">0</param>\n <param type="internal" name="exif">true</param>\n <param type="internal" name="extraChannelResampling">-1</param>\n <param type="string" name="filters"><![CDATA[]]></param>\n <param type="string" name="floatingPointConversionOption"><![CDATA[KeepSame]]></param>\n <param type="internal" name="gaborish">-1</param>\n <param type="internal" name="groupOrder">-1</param>\n <param type="internal" name="haveAnimation">false</param>\n <param type="internal" name="iptc">true</param>\n <param type="internal" name="jpegReconCFL">-1</param>\n <param type="internal" name="keepInvisible">-1</param>\n <param type="internal" name="lossless">true</param>\n <param type="internal" name="lossyPalette">-1</param>\n <param type="internal" name="modular">-1</param>\n <param type="internal" name="modularGroupSize">-1</param>\n <param type="internal" name="modularMATreeLearningPercent">-1</param>\n <param type="internal" name="modularPredictor">-1</param>\n <param type="internal" name="paletteColors">-1</param>\n <param type="internal" name="patches">-1</param>\n <param type="internal" name="photonNoise">0</param>\n <param type="internal" name="progressiveAC">-1</param>\n <param type="internal" name="progressiveDC">-1</param>\n <param type="internal" name="qProgressiveAC">-1</param>\n <param type="internal" name="removeHGLOOTF">true</param>\n <param type="internal" name="resampling">-1</param>\n <param type="internal" name="responsive">-1</param>\n <param type="internal" name="storeMetaData">false</param>\n <param type="internal" name="xmp">true</param>\n</params>\n
+ExportConfiguration-image/png=<!DOCTYPE params>\n<params>\n <param type="internal" name="alpha">false</param>\n <param type="internal" name="compression">9</param>\n <param type="internal" name="downsample">false</param>\n <param type="internal" name="forceSRGB">false</param>\n <param type="internal" name="indexed">true</param>\n <param type="internal" name="interlaced">false</param>\n <param type="internal" name="saveAsHDR">false</param>\n <param type="internal" name="saveSRGBProfile">false</param>\n <param type="internal" name="storeAuthor">true</param>\n <param type="internal" name="storeMetaData">false</param>\n <param type="color" name="transparencyFillcolor"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB r="1" space="Rec2020-elle-V4-g10.icc" b="1" g="1"/>\n</color>\n]]></param>\n</params>\n
+ExportConfiguration-image/tiff=<!DOCTYPE params>\n<params>\n <param name="alpha" type="internal">false</param>\n <param name="compressiontype" type="internal">3</param>\n <param name="deflate" type="internal">6</param>\n <param name="flatten" type="internal">true</param>\n <param name="pixarlog" type="internal">9</param>\n <param name="predictor" type="internal">0</param>\n <param name="psdCompressionType" type="internal">0</param>\n <param name="quality" type="internal">80</param>\n <param name="saveAsPhotoshop" type="internal">false</param>\n <param name="saveProfile" type="internal">false</param>\n</params>\n
+ExportConfiguration-image/webp=<!DOCTYPE params>\n<params>\n <param name="alpha_compression" type="internal">1</param>\n <param name="alpha_filtering" type="internal">1</param>\n <param name="alpha_quality" type="internal">100</param>\n <param name="autofilter" type="internal">false</param>\n <param name="dithering" type="internal">true</param>\n <param name="emulate_jpeg_size" type="internal">false</param>\n <param name="exact" type="internal">true</param>\n <param name="exif" type="internal">true</param>\n <param name="filter_sharpness" type="internal">0</param>\n <param name="filter_strength" type="internal">60</param>\n <param name="filter_type" type="internal">1</param>\n <param name="filters" type="string"><![CDATA[]]></param>\n <param name="haveAnimation" type="internal">false</param>\n <param name="lossless" type="internal">true</param>\n <param name="low_memory" type="internal">false</param>\n <param name="method" type="internal">6</param>\n <param name="near_lossless" type="internal">100</param>\n <param name="partition_limit" type="internal">0</param>\n <param name="partitions" type="internal">0</param>\n <param name="pass" type="internal">1</param>\n <param name="preprocessing" type="internal">0</param>\n <param name="preset" type="internal">0</param>\n <param name="qmax" type="internal">100</param>\n <param name="qmin" type="internal">0</param>\n <param name="quality" type="internal">100</param>\n <param name="segments" type="internal">4</param>\n <param name="show_compressed" type="internal">false</param>\n <param name="sns_strength" type="internal">50</param>\n <param name="storeMetaData" type="internal">false</param>\n <param name="target_PSNR" type="internal">0</param>\n <param name="target_size" type="internal">0</param>\n <param name="thread_level" type="internal">false</param>\n <param name="use_sharp_yuv" type="internal">false</param>\n <param name="xmp" type="internal">true</param>\n</params>\n
+ExportConfiguration-img_sequence/image/png=<!DOCTYPE params>\n<params>\n <param name="alpha" type="internal">true</param>\n <param name="compression" type="internal">9</param>\n <param name="downsample" type="internal">true</param>\n <param name="forceSRGB" type="internal">false</param>\n <param name="indexed" type="internal">false</param>\n <param name="interlaced" type="internal">false</param>\n <param name="saveAsHDR" type="internal">false</param>\n <param name="saveSRGBProfile" type="internal">true</param>\n <param name="storeAuthor" type="internal">false</param>\n <param name="storeMetaData" type="internal">false</param>\n <param name="transparencyFillcolor" type="color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB b="1" g="1" r="1" space="sRGB-elle-V2-srgbtrc.icc"/>\n</color>\n]]></param>\n</params>\n
+FilterSelector/LastUsedFilter=perchannel
+GamutMasks.viewMode=0
+KineticScrollingEnabled=true
+KineticScrollingGesture=2
+KineticScrollingHideScrollbar=true
+KineticScrollingSensitivity=75
+KisDlgPreferences/CurrentPage=shortcuts
+Krita/Ocio/DisplayDevice=sRGB
+Krita/Ocio/DisplayLook=None
+Krita/Ocio/DisplayView=Raw
+Krita/Ocio/InputColorSpace=raw
+Krita/Ocio/OcioColorManagementMode=0
+Krita/Ocio/OcioConfigPath=
+Krita/Ocio/OcioLockColorVisualRepresentation=false
+Krita/Ocio/OcioLutPath=
+Krita/Ocio/UseOcio=false
+LastBackGroundColor=<!DOCTYPE LastBackGroundColor>\n<LastBackGroundColor>\n <RGB space="Rec2020-elle-V4-g10.icc" g="0.554192423820496" r="0.20386053621769" b="0.172487989068031"/>\n</LastBackGroundColor>\n
+LastForeGroundColor=<!DOCTYPE LastForeGroundColor>\n<LastForeGroundColor>\n <RGB space="sRGB-elle-V2-g10.icc" g="0" r="0" b="0"/>\n</LastForeGroundColor>\n
+LastPreset=i) Wet Paint Details
+LastPreset_-1=i) Wet Paint Details
+LineSmoothingDelayDistance=87
+LineSmoothingDistance=68.4
+LineSmoothingFinishStabilizedCurve=true
+LineSmoothingScalableDistance=true
+LineSmoothingSmoothPressure=false
+LineSmoothingStabilizeSensors=true
+LineSmoothingTailAggressiveness=0.15
+LineSmoothingType=1
+LineSmoothingUseDelayDistance=true
+MixerSliderColors=GRAYA,U16,Gray-D50-elle-V4-g10.icc,0.14045929908752441,1.0|RGBA,U8,sRGB-elle-V2-srgbtrc.icc,0.0,0.0,0.0,1.0
+NumberOfLayersForNewImage=1
+OpenGLFilterMode=3
+PinnedFonts=Courier Prime,Courier 10 Pitch,BigBlueTermPlus Nerd Font Mono,Sans Serif,Cascadia Code
+ResourceDirectory=/home/samsepi0l/.local/share/krita
+ShowEraserOutlineWhilePainting=true
+ShowGlobalSelection=true
+ShowOutlineWhilePainting=true
+ShowRootLayer=false
+SmoothZooming=false
+SpecificColorSelector/HsxMode=3
+SpecificColorSelector/UseHsx=false
+SpecificColorSelector/UsePercentage=false
+ToolOptionsInDocker=true
+TrimFramesImport=false
+TrimKra=false
+UseZip64=false
+activateTransformToolAfterPaste=true
+adaptivePlaybackRange=true
+allowLCMSOptimization=true
+amdDisableVectorWorkaround=false
+animationCacheFrameSizeLimit=2500
+animationCacheRegionOfInterestMargin=0.25
+antialiascurves=true
+assistantsDrawMode=0
+autoPinLayers=true
+autosavefileshidden=true
+backupfilelocation=0
+backupfilesuffix=~
+baseLength=46
+brushHudSettings=<!DOCTYPE hud_properties>\n<hud_properties>\n <version value="1" type="value"/>\n <paintbrush>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="angle" type="value"/>\n  </properties_list>\n </paintbrush>\n <colorsmudge>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="smudge_mode" type="value"/>\n   <item_3 value="smudge_length" type="value"/>\n   <item_4 value="smudge_color_rate" type="value"/>\n  </properties_list>\n </colorsmudge>\n <sketchbrush>\n  <properties_list type="array">\n   <item_0 value="opacity" type="value"/>\n   <item_1 value="size" type="value"/>\n  </properties_list>\n </sketchbrush>\n <hairybrush>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n  </properties_list>\n </hairybrush>\n <experimentbrush>\n  <properties_list type="array">\n   <item_0 value="opacity" type="value"/>\n   <item_1 value="shape_windingfill" type="value"/>\n  </properties_list>\n </experimentbrush>\n <spraybrush>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="spray_particlecount" type="value"/>\n   <item_3 value="spray_density" type="value"/>\n  </properties_list>\n </spraybrush>\n <hatchingbrush>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="hatching_angle" type="value"/>\n   <item_3 value="hatching_thickness" type="value"/>\n   <item_4 value="hatching_separation" type="value"/>\n  </properties_list>\n </hatchingbrush>\n <gridbrush>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="grid_divisionlevel" type="value"/>\n  </properties_list>\n </gridbrush>\n <curvebrush>\n  <properties_list type="array">\n   <item_0 value="opacity" type="value"/>\n   <item_1 value="curve_historysize" type="value"/>\n   <item_2 value="curve_linewidth" type="value"/>\n   <item_3 value="curve_lineopacity" type="value"/>\n   <item_4 value="curve_connectionline" type="value"/>\n  </properties_list>\n </curvebrush>\n <dynabrush>\n  <properties_list type="array">\n   <item_0 value="dyna_diameter" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="dyna_mass" type="value"/>\n   <item_3 value="dyna_drag" type="value"/>\n  </properties_list>\n </dynabrush>\n <particlebrush>\n  <properties_list type="array">\n   <item_0 value="opacity" type="value"/>\n   <item_1 value="particle_particles" type="value"/>\n   <item_2 value="particle_opecityweight" type="value"/>\n   <item_3 value="particle_iterations" type="value"/>\n  </properties_list>\n </particlebrush>\n <duplicate>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="clone_healing" type="value"/>\n   <item_3 value="clone_movesource" type="value"/>\n  </properties_list>\n </duplicate>\n <deformbrush>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n   <item_2 value="deform_amount" type="value"/>\n   <item_3 value="deform_mode" type="value"/>\n  </properties_list>\n </deformbrush>\n <tangentnormal>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n  </properties_list>\n </tangentnormal>\n <filter>\n  <properties_list type="array">\n   <item_0 value="size" type="value"/>\n   <item_1 value="opacity" type="value"/>\n  </properties_list>\n </filter>\n <roundmarker>\n  <properties_list type="array">\n   <item_0 value="opacity" type="value"/>\n   <item_1 value="size" type="value"/>\n  </properties_list>\n </roundmarker>\n</hud_properties>\n
+calculateAnimationCacheInBackground=true
+canvasBorderColor=13,13,13
+canvasState=OPENGL_SUCCESS
+canvasizedlg_heightunit=cm
+canvasizedlg_widthunit=cm
+canvasizedlg_xoffsetunit=px
+canvasizedlg_yoffsetunit=px
+checkerscolor=0,0,0
+checkerscolor2=13,13,13
+checksize=32
+colorDepthDef=U8
+colorModelDef=RGBA
+colorProfileDef=sRGB-elle-V2-srgbtrc.icc
+colorsettings/forcepalettecolors=false
+compressLayersInKra=false
+convertLayerColorSpaceInProperties=true
+cumulativeUndoExcludeFromMerge=400
+cumulativeUndoMaxGroupDuration=5000
+cumulativeUndoMaxGroupSeparation=1000
+cumulativeUndoMergeTimeout=20000
+currentInputProfile=Krita Default
+cursorMaincColor=125,134,24
+custom_font_size=-1
+custom_system_font=
+defaultPalette=Concept-cookie
+defaultProofingAdaptationState=1
+defaultProofingBlackpointCompensation=true
+defaultProofingGamutwarning=0,255,0
+defaultProofingProfileDepth=U8
+defaultProofingProfileIntent=3
+defaultProofingProfileModel=CMYKA
+defaultProofingProfileName=Chemical proof
+disableTouchOnCanvas=true
+enableBrushSpeedLogging=false
+enableOpenGLFramerateLogging=false
+enablePerfLog=false
+enableProgressReporting=false
+eraserCursorMaincColor=125,134,24
+eraserCursorStyle=9
+eraserOutlineStyle=2
+favoriteCompositeOps=normal,erase,multiply,burn,darken,add,dodge,screen,overlay,soft_light_svg,luminize,lighten,saturation,color,divide,diff,and,dissolve,easy dodge,allanon,inc_saturation_hsi
+favoritePresetsTag=Impression
+ffmpegLocation=/app/bin/ffmpeg
+filterdialog/geometry=\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x03\xfe\x00\x00\x01\x0c\x00\x00\x06u\x00\x00\x02\xd8\x00\x00\x03\xff\x00\x00\x01\r\x00\x00\x06t\x00\x00\x02\xd7\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x03\xff\x00\x00\x01\r\x00\x00\x06t\x00\x00\x02\xd7
+filterdialog/rememberlastpreset=false
+forceAlwaysFullSizedEraserOutline=false
+forceAlwaysFullSizedOutline=false
+forcedDpiForQtFontBugWorkaround=-1
+fpsLimit=144
+frameRenderingClones=2
+frameRenderingTimeout=30000
+fullscreenMode=true
+generatordialog/geometry=\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x03\xca\x00\x00\x00L\x00\x00\x07\x11\x00\x00\x02\x8f\x00\x00\x03\xcb\x00\x00\x00M\x00\x00\x07\x10\x00\x00\x02\x8e\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x03\xcb\x00\x00\x00M\x00\x00\x07\x10\x00\x00\x02\x8e
+globalSnapBoundingBox=true
+globalSnapExtension=false
+globalSnapImageBounds=true
+globalSnapImageCenter=true
+globalSnapIntersection=true
+globalSnapNode=false
+globalSnapOrthogonal=true
+globalSnapToPixel=true
+gridmaincolor=99,99,99
+gridmainstyle=0
+gridsubdivisioncolor=150,150,150
+gridsubdivisionstyle=1
+guidesColor=99,99,99
+guidesLineStyle=2
+hideDockersFullScreen=false
+hideMenuFullScreen=true
+hidePopups=false
+hideScrollbars=true
+hideScrollbarsFullScreen=true
+hideStatusbarFullScreen=true
+hideTitleBarFullscreen=true
+hideToolbarFullscreen=false
+imageHeightDef=4000
+imageResolutionDef=300
+imageWidthDef=4000
+imagesizedlg_imsizeunit=%
+imagesizedlg_printSizeSeparatly=false
+imagesizedlg_ratioLock=true
+imagesizedlg_resunit=Pixels/Inch
+imagesizedlg_sizeunit=cm
+internal_selector_active_color_set=Animation Color Set
+internal_selector_active_color_set_md5=8e071366587a400f1db855c27014a5ec
+layerInfoTextStyle=3
+layerThumbnailSize=40
+layerTreeIndentation=28
+levelOfDetailEnabled=false
+logviewer_enabled=false
+maxAllowedSpeedValue=27
+maxSwapSize=20480
+maximumBrushSize=2000
+mdiBackgroundColorXML=<!DOCTYPE color>\n<color channeldepth="U8">\n <RGB r="0.0745098069310188" b="0.0745098069310188" space="sRGB-elle-V2-srgbtrc.icc" g="0.0745098069310188"/>\n</color>\n
+mdiBackgroundImage=
+mdi_rubberband=1
+mdi_viewmode=0
+memoryHardLimitPercent=100
+memoryPoolLimitPercent=0
+memorySoftLimitPercent=1.71
+monitorProfile=sRGB-elle-V2-srgbtrc.icc
+monitorProfile/OverrideX11=false
+monitorProfileAOC_24G1WG4_274322=sRGB-elle-V2-srgbtrc.icc
+moveToolChangedValueX=-11
+moveToolChangedValueY=749
+moveToolMode=0
+moveToolScale=1
+moveToolStep=1
+moveToolUnit=0
+needsPixmapCacheWorkaround=false
+newCursorStyle=1
+newOutlineStyle=2
+numFavoritePresets=10
+numberOfOnionSkins=10
+numberofbackupfiles=1
+oninSkinTintColorForward=0,255,0
+onionSkinOpacity_-1=173
+onionSkinOpacity_-10=22
+onionSkinOpacity_-2=163
+onionSkinOpacity_-3=147
+onionSkinOpacity_-4=38
+onionSkinOpacity_-5=107
+onionSkinOpacity_-6=86
+onionSkinOpacity_-7=66
+onionSkinOpacity_-8=48
+onionSkinOpacity_-9=35
+onionSkinOpacity_0=178
+onionSkinOpacity_1=173
+onionSkinOpacity_10=22
+onionSkinOpacity_2=163
+onionSkinOpacity_3=147
+onionSkinOpacity_4=114
+onionSkinOpacity_5=107
+onionSkinOpacity_6=86
+onionSkinOpacity_7=66
+onionSkinOpacity_8=48
+onionSkinOpacity_9=35
+onionSkinState_-1=true
+onionSkinState_-10=false
+onionSkinState_-2=true
+onionSkinState_-3=true
+onionSkinState_-4=true
+onionSkinState_-5=false
+onionSkinState_-6=false
+onionSkinState_-7=false
+onionSkinState_-8=false
+onionSkinState_-9=false
+onionSkinState_0=true
+onionSkinState_1=true
+onionSkinState_10=false
+onionSkinState_2=true
+onionSkinState_3=true
+onionSkinState_4=true
+onionSkinState_5=false
+onionSkinState_6=false
+onionSkinState_7=false
+onionSkinState_8=false
+onionSkinState_9=false
+onionSkinTintColorBackward=255,0,0
+onionSkinTintFactor=255
+pasteBehaviour=0
+pasteFormat=2
+pixelGridColor=24,24,24
+pixelGridDrawingThreshold=24
+popuppalette/selectorSize=240
+popuppalette/showColorHistory=true
+popuppalette/showRotationTrack=true
+popuppalette/size=450
+popuppalette/useDynamicSlotCount=true
+popuppalette/usevisualcolorselector=true
+preferredVectorImportResolution=10
+presetIconSize=46
+presethistory=b) Airbrush Soft,b1) Airbrush - deevad 23.01,SLOS 035 Sewing,SLOS 015 Van Gogh,f) Bristles-2 Flat Rough,f) Bristle Thick Textured - deevad 23.01,wojtryb6 N 02a square DA impasto,v) Distort Move,wojtryb6 N 12 messy blobs Aaron,i) Wet Paint Details
+renameMergedLayers=true
+renamePastedLayers=true
+renderIntent=0
+rulersTrackMouse=false
+saveSessionOnQuit=true
+scratchpadVisible=false
+scrollingcheckers=false
+seExpr/selectedTab=0
+seExpr/splitLayoutState=\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x02\x00\x00\x00D\x00\x00\x00d\x01\xff\xff\xff\xff\x01\x00\x00\x00\x02\x00
+selectionOutlineOpacity=1
+selectionOverlayMaskColor=125,134,24,128
+separateEraserCursor=true
+sessionOnStartup=0
+setShowFilterGalleryLayerMaskDialog=true
+showAdditionalOnionSkinsSettings=true
+showBrushHud=false
+showFilterGallery=false
+showOnCanvasMessages=true
+showPaletteBottomBar=false
+showSingleChannelAsColor=true
+showrulers=false
+speedValueSmoothing=3
+swaplocation=/var/tmp
+switchSelectionCtrlAlt=false
+tabletPressureCurve=0,0;1,1;
+tenbrushes=flockmod blend grainy,None,None,None,None,None,None,None,None,None
+tenbrushesActivatePrev2ndPress=True
+tenbrushesAutoBrushOnPress=True
+toolbarslider_1=opacity
+toolbarslider_2=size
+toolbarslider_3=flow
+toolbarslider_4=flow
+undoStackLimit=650
+useAnimationCacheFrameSizeLimit=true
+useAnimationCacheRegionOfInterest=true
+useBlackPointCompensation=true
+useCreamyAlphaDarken=true
+useCumulativeUndoRedo=true
+useDefaultColorSpace=false
+useEraserBrushOpacity=true
+useEraserBrushSize=true
+useLayerSelectionCheckbox=false
+useOnDiskAnimationCacheSwapping=true
+useOpenGLTextureBuffer=false
+useRightMiddleTabletButtonWorkaround=false
+useSubtractiveBlendingForCmykColorSpaces=true
+useTimestampsForBrushSpeed=true
+use_custom_system_font=false
+zoomMarginSize=5
+zoomSteps=2
+
+[Author]
+active-profile=
+
+[File Dialogs]
+DontUseNativeFileDialog=true
+OpenDocument=/home/samsepi0l/linuxart/2024/!sketchbook
+OpenDocumentICC=/home/samsepi0l
+OpenReferenceImage=/home/samsepi0l/linuxart/2024/png-exports
+SaveAs=/home/samsepi0l/linuxart/2024/!sketchbook
+krita_resources=/usr/share/gimp/2.0/gradients
+resource_directory=/home/samsepi0l/.local/share
+resourcebundlesavelocation=/home/samsepi0l
+
+[GenericGradientEditor]
+global/compactGradientPresetChooserMode=false
+global/useGradientPresetChooserPopUp=true
+
+[GradientChooser]
+global/itemSize=medium
+global/itemSizeCustom=32
+global/viewMode=icon
+
+[KisAssistantTool]
+AssistantType=ruler
+LimitAssistantToArea=false
+
+[KisResourceItemChooser_paintoppresets]
+splitterState_1row=\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x02\xff\xff\xff\xff\xff\xff\xff\xff\x01\xff\xff\xff\xff\x01\x00\x00\x00\x01\x00
+
+[KisShortcutsDialog Settings]
+Dialog Size=1061,561
+
+[KisToolCrop]
+allowGrow=false
+decoration=1
+growCenter=true
+
+[KisToolPath]
+outlineType=1
+patternTransformScale=100
+
+[KisToolPencil]
+outlineType=1
+patternTransformScale=100
+
+[KisToolSelectBase]
+selectionAction=0
+
+[KisToolSelectContiguous]
+antiAliasSelection=false
+contiguousSelectionMode=floodFill
+featherSelection=0
+growSelection=0
+opacitySpread=100
+sampleLayersMode=sampleAllLayers
+threshold=1
+useSelectionAsBoundary=true
+
+[KisToolSelectElliptical]
+roundCornersX=0
+roundCornersY=0
+
+[KisToolSelectMagnetic]
+filterradius=3.97
+searchradius=35
+threshold=45
+
+[KisToolSelectRectangular]
+roundCornersX=0
+roundCornersY=0
+
+[KisToolSelectSimilar]
+antiAliasSelection=true
+featherSelection=0
+growSelection=1
+sampleLayersMode=sampleAllLayers
+stopGrowingAtDarkestPixel=true
+threshold=11
+
+[KisToolTransform]
+filterId=Bilinear
+forceLodMode=false
+meshScaleHandles=true
+meshShowHandles=false
+transformAroundRotationCenter=0
+useOverlayPreviewStyle=true
+
+[KritaFill/KisToolFill]
+continuousFillMode=fillAnyRegion
+fillSelection=false
+fillWith=foregroundColor
+growSelection=0
+opacitySpread=0
+patternScale=200
+sampleLayersMode=currentLayer
+thresholdAmount=7
+
+[KritaFill/KisToolGradient]
+dither=true
+repeat=0
+shape=0
+
+[KritaShape/KisToolDyna]
+angleAmount=20
+dragAmount=0.98
+massAmount=0.01
+
+[KritaShape/KisToolEllipse]
+outlineType=1
+patternTransformScale=100
+roundCornersX=0
+roundCornersY=0
+
+[KritaShape/KisToolLine]
+showGuideline=true
+showPreview=false
+useSensors=false
+
+[KritaShape/KisToolMultiBrush]
+axesAngle=0
+handsCount=3
+showAxes=false
+transformMode=2
+translateRadius=33
+
+[KritaShape/KisToolRectangle]
+fillType=1
+outlineType=1
+patternTransformScale=100
+roundCornersX=0
+roundCornersY=0
+
+[KritaTransform/KisToolMove]
+forceLodMode=false
+
+[LiquifyTool]
+mode=1
+
+[LiquifyTool/Move]
+amount=0.08
+amountHasPressure=false
+flow=0.2
+reverseDirection=false
+size=474.0000203424158
+sizeHasPressure=false
+spacing=0.2
+useWashMode=false
+
+[LiquifyTool/Rotate]
+amount=5
+amountHasPressure=false
+flow=0.2
+reverseDirection=false
+size=161.94000053642813
+sizeHasPressure=false
+spacing=0.2
+useWashMode=false
+
+[LiquifyTool/Scale]
+amount=0.08
+amountHasPressure=false
+flow=0.2
+reverseDirection=false
+size=1000
+sizeHasPressure=false
+spacing=0.2
+useWashMode=false
+
+[MainWindow]
+1920x1080 screen: Height=1080
+1920x1080 screen: Width=1920
+HDMI-A-1 Height 1920x1080 HDMI-A-1=1018
+HDMI-A-1 Width 1920x1080 HDMI-A-1=1858
+Height 1080=1080
+State=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AAAUAEcAcgBpAGQARABvAGMAawBlAHICAAAEcQAAAmwAAAFZAAABPPsAAAAeAEgAaQBzAHQAbwBnAHIAYQBtAEQAbwBjAGsAZQByAgAAAEsAAACkAAABdgAAAsj7AAAAJgBsAGEAcwB0AGQAbwBjAHUAbQBlAG4AdABzAGQAbwBjAGsAZQByAAAAAAD/////AAAAcAD////7AAAAKgBBAG4AaQBtAGEAdABpAG8AbgBDAHUAcgB2AGUAcwBEAG8AYwBrAGUAcgAAAAAA/////wAAAHAA////+wAAACYAbQBpAHgAZQByAF8AcwBsAGkAZABlAHIAXwBkAG8AYwBrAGUAcgAAAAAA/////wAAADQA////+wAAAB4AUABoAG8AdABvAGIAYQBzAGgARABvAGMAawBlAHICAAABWAAAAM8AAANDAAACy/sAAAASAEcAYQBtAHUAdABNAGEAcwBrAAAAAAD/////AAAAoAD////7AAAAIABTAHQAbwByAHkAYgBvAGEAcgBkAEQAbwBjAGsAZQByAAAAAAD/////AAAAjwD////7AAAAFgBUAG8AdQBjAGgARABvAGMAawBlAHIAAAAAAP////8AAAASAP////sAAAA6AGMAbwBtAGkAYwBzAF8AcAByAG8AagBlAGMAdABfAG0AYQBuAGEAZwBlAHIAXwBkAG8AYwBrAGUAcgAAAAAA/////wAAAJ0A////+wAAACoAcQB1AGkAYwBrAF8AcwBlAHQAdABpAG4AZwBzAF8AZABvAGMAawBlAHIAAAAAAP////8AAAB9AP////sAAAAyAFMAdgBnAFMAeQBtAGIAbwBsAEMAbwBsAGwAZQBjAHQAaQBvAG4ARABvAGMAawBlAHIAAAAAAP////8AAAB0AP////sAAAAaAEEAcgByAGEAbgBnAGUARABvAGMAawBlAHIAAAAAAP////8AAAA0AP////sAAAAyAHAAeQBrAHIAaQB0AGEAXwBnAGQAcQB1AGUAcwB0AF8AYQByAHQAXwB0AG8AbwBsAHMAAAAAAP////8AAADwAP////sAAAASAEwAbwBnAEQAbwBjAGsAZQByAAAAAAD/////AAAAdgD////7AAAAEABTAG4AYQBwAHMAaABvAHQAAAAAAP////8AAABzAP////sAAAAcAFIAZQBjAG8AcgBkAGUAcgBEAG8AYwBrAGUAcgAAAAAA/////wAAAFYA////AAAAAgAAB4AAAAD//AEAAAAC+wAAABIATAB1AHQARABvAGMAawBlAHICAAAASgAAAK0AAAGHAAABX/sAAAAaAFQAbwBvAGwAQgBhAHIARABvAGMAawBlAHIAAAAAAP////8AAAAAAAAAAAAAAAMAAAAAAAAAAPwBAAAABPsAAAAcAEYAbABpAHAAYgBvAG8AawBEAG8AYwBrAGUAcgAAAAAA/////wAAAAAAAAAA+wAAAB4AQQBuAGkAbQBhAHQAaQBvAG4ARABvAGMAawBlAHIAAAAAAP////8AAAAAAAAAAPsAAAAgAE8AbgBpAG8AbgBTAGsAaQBuAHMARABvAGMAawBlAHIAAAAAAP////8AAAGMAP////sAAAAcAFQAaQBtAGUAbABpAG4AZQBEAG8AYwBrAGUAcgAAAAAA/////wAAA28A////AAAGOwAAA9oAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAACAAAAAwAAABYAbQBhAGkAbgBUAG8AbwBsAEIAYQByAAAAAAD/////AAAAAAAAAAAAAAAeAEIAcgB1AHMAaABlAHMAQQBuAGQAUwB0AHUAZgBmAQAAAAD/////AAAAAAAAAAAAAAAWAGUAZABpAHQAVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
+ToolBarsMovable=Disabled
+Width 1920=1920
+ko_geometry=AdnQywADAAAAAAAAAAAAAAAAB38AAAQ3AAAAAAAAAAAAAAd/AAAENwAAAAAABAAAB4AAAAAAAAAAAAAAB38AAAQ3
+
+[MainWindow][DockWidget AnimationCurvesDocker]
+DockArea=2
+Locked=false
+height=480
+width=640
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget ArrangeDocker]
+DockArea=2
+Locked=false
+height=264
+width=222
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget ArtisticColorSelector]
+DockArea=2
+Locked=false
+height=284
+width=334
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget ChannelDocker]
+DockArea=2
+Locked=false
+height=30
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget ColorSelectorNg]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget CompositionDocker]
+DockArea=2
+Locked=false
+height=300
+width=400
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget DigitalMixer]
+DockArea=2
+Locked=false
+height=30
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget GamutMask]
+DockArea=2
+Locked=false
+height=322
+width=363
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget GridDocker]
+DockArea=2
+Locked=false
+height=527
+width=258
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget HistogramDocker]
+DockArea=2
+Locked=false
+height=30
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget History]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget KisLayerBox]
+DockArea=2
+Locked=true
+height=461
+width=319
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget LogDocker]
+DockArea=2
+Locked=false
+height=260
+width=400
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget LutDocker]
+DockArea=4
+Locked=false
+height=328
+width=357
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget OnionSkinsDocker]
+DockArea=8
+Locked=false
+height=282
+width=336
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget OverviewDocker]
+DockArea=2
+Locked=false
+height=110
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget PaletteDocker]
+DockArea=2
+Locked=false
+height=422
+width=340
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget PatternDocker]
+DockArea=2
+Locked=false
+height=246
+width=177
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget PhotobashDocker]
+DockArea=2
+Locked=false
+height=882
+width=423
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget PresetDocker]
+DockArea=2
+Locked=false
+height=461
+width=319
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget PresetHistory]
+DockArea=2
+Locked=false
+height=30
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget RecorderDocker]
+DockArea=2
+Locked=false
+height=369
+width=277
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget SmallColorSelector]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget Snapshot]
+DockArea=2
+Locked=false
+height=30
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget SpecificColorSelector]
+DockArea=2
+Locked=false
+height=207
+width=268
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget StoryboardDocker]
+DockArea=2
+Locked=false
+height=561
+width=604
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget SvgSymbolCollectionDocker]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget TasksetDocker]
+DockArea=2
+Locked=false
+height=300
+width=400
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget TimelineDocker]
+DockArea=8
+Locked=false
+height=50
+width=100
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget ToolBox]
+DockArea=1
+Locked=false
+height=984
+width=26
+xPosition=0
+yPosition=12
+
+[MainWindow][DockWidget TouchDocker]
+DockArea=2
+Locked=false
+height=341
+width=116
+xPosition=0
+yPosition=0
+
+[MainWindow][DockWidget WideGamutColorSelector]
+DockArea=2
+Locked=true
+height=452
+width=319
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget comics_project_manager_docker]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget lastdocumentsdocker]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget mixer_slider_docker]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget pykrita_gdquest_art_tools]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget quick_settings_docker]
+DockArea=2
+Locked=false
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[MainWindow][DockWidget sharedtooldocker]
+DockArea=2
+Locked=true
+height=464
+width=640
+xPosition=0
+yPosition=16
+
+[OverviewDocker]
+pinControls=true
+
+[Photobash]
+currentFavourites=[]
+fitToCanvas=true
+referencesDirectory=/home/samsepi0l/linuxart/2023/photobash/medusa
+
+[RecentFiles]
+File1[$e]=$HOME/linuxart/2024/kra/im_losing_it_0.0.kra
+File10[$e]=$HOME/linuxart/2024/kra/human.kra
+File11[$e]=$HOME/linuxart/2024/kra/aluminuim.kra
+File12[$e]=$HOME/linuxart/2024/png-exports/orb pfp cropped.png
+File13[$e]=$HOME/linuxart/2024/kra/feet.kra
+File14[$e]=$HOME/linuxart/2024/kra/human2.kra
+File15[$e]=$HOME/linuxart/2023/barbie/barbie.kra
+File16[$e]=$HOME/linuxart/2024/!sketchbook/vimperator-server-picture-pride.webp
+File17[$e]=$HOME/linuxart/2024/!sketchbook/vimperator-server-picture-pride.kra
+File2[$e]=$HOME/linuxart/2024/kra/Proletarian_woman.kra
+File3[$e]=$HOME/linuxart/2024/kra/sz.kra
+File4[$e]=$HOME/linuxart/2024/kra/finland.kra
+File5[$e]=$HOME/builds/python_test/image.png
+File6[$e]=$HOME/linuxart/2024/kra/image.kra
+File7[$e]=$HOME/linuxart/2024/kra/finland-effects.kra
+File8[$e]=$HOME/linuxart/2024/kra/finland clear impression.kra
+File9[$e]=$HOME/linuxart/2024/kra/woman.kra
+Name1=im_losing_it_0.0.kra
+Name10=human.kra
+Name11=aluminuim.kra
+Name12=orb pfp cropped.png
+Name13=feet.kra
+Name14=human2.kra
+Name15=barbie.kra
+Name16=vimperator-server-picture-pride.webp
+Name17=vimperator-server-picture-pride.kra
+Name2=Proletarian_woman.kra
+Name3=sz.kra
+Name4=finland.kra
+Name5=image.png
+Name6=image.kra
+Name7=finland-effects.kra
+Name8=finland clear impression.kra
+Name9=woman.kra
+maxRecentFileItems=100
+
+[Redesign]
+usesBorderlessToolbar=true
+usesNuToolOptions=true
+usesNuToolbox=true
+usesThinDocumentTabs=true
+
+[SelectedTags]
+brushes=All
+gamutmasks=All
+gradients=All
+paintoppresets=★ My Favorites
+palettes=All
+patterns=All
+tasksets=All
+windowlayouts=All
+workspaces=All
+
+[SvgSymbolCollection]
+currentCollection=0
+
+[SvgTextTool]
+Geometry=AdnQywADAAAAAAAeAAAAHgAAB2EAAAQZAAAAHwAAAB8AAAdgAAAEGAAAAAAAAAAAB4AAAAAfAAAAHwAAB2AAAAQY
+defaultAlignment=0
+defaultFont=Courier Code
+defaultLetterSpacing=0
+defaultSize=72
+windowState=AAAA/wAAAAD9AAAAAAAAB0IAAAN6AAAABAAAAAQAAAAIAAAACPwAAAADAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgEAAAAA/////wAAAAAAAAAAAAAAAgAAAAEAAAAYAGYAbwBuAHQAUwBlAHQAdABpAG4AZwBzAQAAAAD/////AAAAAAAAAAAAAAACAAAAAQAAABQAZgBvAHIAbQBhAHQAdABpAG4AZwEAAAAA/////wAAAAAAAAAA
+
+[TemplateChooserDialog]
+AlwaysUseTemplate=/home/samsepi0l/.local/share/krita/templates/Saygo_textured/.source/_kraft_paper_38_noise.kra
+DetailsPaneSplitterSizes=334,228
+FullTemplateName[$e]=$HOME/.local/share/krita/templates/Saygo_textured/.source/_kraft_paper_38_noise.kra
+LastReturnType=Template
+
+[WideGamutColorSelector]
+colorHistory.maxCount=30
+colorHistory.orientation=1
+colorHistory.patchSize=16,16
+colorHistory.rows=1
+colorHistory.scrolling=1
+colorHistoryEnabled=true
+colorHistoryShowClearButton=false
+colorSelectorConfiguration=1|0|6|0
+colorSpaceSource=2
+commonColors.maxCount=20
+commonColors.orientation=1
+commonColors.patchSize=16,16
+commonColors.rows=1
+commonColors.scrolling=1
+commonColorsAutoUpdate=false
+commonColorsEnabled=true
+customColorSpaceDepthID=F32
+customColorSpaceModel=RGBA
+customColorSpaceProfile=Rec2020-elle-V4-g10.icc
+favoriteSelectorConfigurations=1|0|6|0
+minimalShadeSelectorLines=0.3;0;0;0;0;0;0;0;-1
+popupColorPatchOrientation=1
+popupColorPatchSize=32,32
+popupPatches.maxCount=30
+popupPatches.rows=1
+popupPatches.scrolling=1
+popupSize=500
+proofToPaintingColors=false
+quickSettingsMenuEnabled=true
+renderMode=2
+rgbColorModel=2
+shadeSelectorLineHeight=10
+shadeSelectorUpdateOnExternalChanges=false
+shadeSelectorUpdateOnInteractionEnd=false
+shadeSelectorUpdateOnRightClick=false
+
+[advancedColorSelector]
+colorSelectorConfiguration=1|0|6|0
+commonColorsShow=true
+customColorSpaceDepthID=F32
+customColorSpaceModel=LABA
+customColorSpaceProfile=Lab identity built-in
+customSelectorBackgroundColor=16,16,25
+gamma=1
+hsxSettingType=3
+lumaG=0.7152
+lumaR=0.2126
+minimalShadeSelectorLineConfig=0|0.2|0|0|0|0|0;1|0|1|1|0|0|0;2|0|-1|1|0|0|0
+showColorSelector=true
+useCustomColorForBackground=false
+useCustomColorSpace=true
+
+[asc-cdl_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param type="color" name="offset"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB b="0.432471185922623" space="Rec2020-elle-V4-g10.icc" g="0.246601060032845" r="0"/>\n</color>\n]]></param>\n <param type="color" name="power"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB b="0.283405810594559" space="Rec2020-elle-V4-g10.icc" g="0.346089869737625" r="0.460532546043396"/>\n</color>\n]]></param>\n <param type="color" name="slope"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB b="1" space="Rec2020-elle-V4-g10.icc" g="1" r="1"/>\n</color>\n]]></param>\n</params>\n
+
+[autocontrast_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1"/>\n
+
+[colorbalance_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param name="cyan_red_highlights" type="internal">0</param>\n <param name="cyan_red_midtones" type="internal">0</param>\n <param name="cyan_red_shadows" type="internal">0</param>\n <param name="magenta_green_highlights" type="internal">0</param>\n <param name="magenta_green_midtones" type="internal">0</param>\n <param name="magenta_green_shadows" type="internal">0</param>\n <param name="preserve_luminosity" type="internal">true</param>\n <param name="yellow_blue_highlights" type="internal">0</param>\n <param name="yellow_blue_midtones" type="internal">0</param>\n <param name="yellow_blue_shadows" type="internal">-2</param>\n</params>\n
+
+[colortoalpha_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="targetcolor" type="internal">#ffffff</param>\n <param name="threshold" type="internal">103</param>\n</params>\n
+
+[crashprevention]
+CreatingCanvas=false
+
+[crosschannel_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="nTransfers">8</param>\n <param name="curve0">0,0.5;1,0.5;</param>\n <param name="curve1">0,0.5;1,0.5;</param>\n <param name="curve2">0,0.5;1,0.5;</param>\n <param name="curve3">0,0.5;1,0.5;</param>\n <param name="curve4">0,0.5;1,0.5;</param>\n <param name="curve5">0,0.5;1,0.5;</param>\n <param name="curve6">0,0.5;0.249548,0.421875;0.264014,0.7375;0.368897,0.515625;0.414105,0.68125;0.444846,0.55625;0.663653,0.559375;1,0.5;</param>\n <param name="curve7">0,0.5;1,0.5;</param>\n <param name="driver0">7</param>\n <param name="driver1">7</param>\n <param name="driver2">7</param>\n <param name="driver3">7</param>\n <param name="driver4">7</param>\n <param name="driver5">7</param>\n <param name="driver6">7</param>\n <param name="driver7">7</param>\n</params>\n
+
+[desaturate_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param type="internal" name="type">2</param>\n</params>\n
+
+[dodge_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param type="internal" name="exposure">0.02</param>\n <param type="internal" name="type">1</param>\n</params>\n
+
+[edge detection_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="horizRadius" type="internal">1</param>\n <param name="lockAspect" type="internal">true</param>\n <param name="output" type="string"><![CDATA[pythagorean]]></param>\n <param name="transparency" type="internal">false</param>\n <param name="type" type="string"><![CDATA[prewitt]]></param>\n <param name="vertRadius" type="internal">1</param>\n</params>\n
+
+[emboss laplascian_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1"/>\n
+
+[emboss_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="internal" name="depth">202</param>\n</params>\n
+
+[filterdialog]
+forceLodMode=false
+showPreview=true
+
+[gaussian blur_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="horizRadius" type="internal">11.77</param>\n <param name="lockAspect" type="internal">true</param>\n <param name="vertRadius" type="internal">11.77</param>\n</params>\n
+
+[gaussianhighpass_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="internal" name="blurAmount">207.65</param>\n</params>\n
+
+[gaussiannoisereducer_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="threshold" type="internal">10</param>\n <param name="windowsize" type="internal">6</param>\n</params>\n
+
+[gradientmap_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="2">\n <param name="colorMode" type="internal">0</param>\n <param name="dither/noiseSeed" type="internal">1804289383</param>\n <param name="dither/pattern" type="string"><![CDATA[DITH 0202 GEN ]]></param>\n <param name="dither/patternValueMode" type="internal">0</param>\n <param name="dither/spread" type="internal">1</param>\n <param name="dither/thresholdMode" type="internal">0</param>\n <param name="gradientXML" type="string"><![CDATA[<gradient name="Brushed Aluminium" type="segment" md5sum="064ceb32ba096146b05ce9e12c710e67">\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.03125" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0" end-offset="0.041736">\n  <start>\n   <RGB b="0.411764711141586" space="sRGB-elle-V2-srgbtrc.icc" r="0.43529412150383" g="0.447058826684952"/>\n  </start>\n  <end>\n   <RGB b="0.477485299110413" space="sRGB-elle-V2-srgbtrc.icc" r="0.498069733381271" g="0.508369565010071"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.066308" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.041736" end-offset="0.072621">\n  <start>\n   <RGB b="0.477485299110413" space="sRGB-elle-V2-srgbtrc.icc" r="0.498069733381271" g="0.508369565010071"/>\n  </start>\n  <end>\n   <RGB b="0.510338008403778" space="sRGB-elle-V2-srgbtrc.icc" r="0.529457569122314" g="0.539009690284729"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.081803" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.072621" end-offset="0.125">\n  <start>\n   <RGB b="0.529411792755127" space="sRGB-elle-V2-srgbtrc.icc" r="0.549019634723663" g="0.556862771511078"/>\n  </start>\n  <end>\n   <RGB b="0.543205916881561" space="sRGB-elle-V2-srgbtrc.icc" r="0.560845375061035" g="0.56966507434845"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.130217" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.125" end-offset="0.154946">\n  <start>\n   <RGB b="0.543205916881561" space="sRGB-elle-V2-srgbtrc.icc" r="0.560845375061035" g="0.56966507434845"/>\n  </start>\n  <end>\n   <RGB b="0.608911275863647" space="sRGB-elle-V2-srgbtrc.icc" r="0.623620986938477" g="0.630975842475891"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.186196" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.154946" end-offset="0.203255">\n  <start>\n   <RGB b="0.608911275863647" space="sRGB-elle-V2-srgbtrc.icc" r="0.623620986938477" g="0.630975842475891"/>\n  </start>\n  <end>\n   <RGB b="0.674631893634796" space="sRGB-elle-V2-srgbtrc.icc" r="0.686396598815918" g="0.692286550998688"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.278798" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.203255" end-offset="0.285476">\n  <start>\n   <RGB b="0.674631893634796" space="sRGB-elle-V2-srgbtrc.icc" r="0.686396598815918" g="0.692286550998688"/>\n  </start>\n  <end>\n   <RGB b="0.740352511405945" space="sRGB-elle-V2-srgbtrc.icc" r="0.749172210693359" g="0.753582060337067"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="4" start-bitdepth="U16" middle-offset="0.320534" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.285476" end-offset="0.33389">\n  <start>\n   <RGB b="0.740352511405945" space="sRGB-elle-V2-srgbtrc.icc" r="0.749172210693359" g="0.753582060337067"/>\n  </start>\n  <end>\n   <RGB b="0.806073069572449" space="sRGB-elle-V2-srgbtrc.icc" r="0.811947822570801" g="0.814892828464508"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.33389" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.33389" end-offset="0.365609">\n  <start>\n   <RGB b="0.756862759590149" space="sRGB-elle-V2-srgbtrc.icc" r="0.756862759590149" g="0.756862759590149"/>\n  </start>\n  <end>\n   <RGB b="0.838925778865814" space="sRGB-elle-V2-srgbtrc.icc" r="0.843335628509521" g="0.845548152923584"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.39399" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.365609" end-offset="0.399833">\n  <start>\n   <RGB b="0.838925778865814" space="sRGB-elle-V2-srgbtrc.icc" r="0.843335628509521" g="0.845548152923584"/>\n  </start>\n  <end>\n   <RGB b="0.756862759590149" space="sRGB-elle-V2-srgbtrc.icc" r="0.800000011920929" g="0.796078443527222"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="3" start-bitdepth="U16" middle-offset="0.485392" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.399833" end-offset="0.517529">\n  <start>\n   <RGB b="0.756862759590149" space="sRGB-elle-V2-srgbtrc.icc" r="0.800000011920929" g="0.796078443527222"/>\n  </start>\n  <end>\n   <RGB b="0.937499046325684" space="sRGB-elle-V2-srgbtrc.icc" r="0.937499046325684" g="0.937499046325684"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="4" start-bitdepth="U16" middle-offset="0.53125" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.517529" end-offset="0.552483">\n  <start>\n   <RGB b="0.937499046325684" space="sRGB-elle-V2-srgbtrc.icc" r="0.937499046325684" g="0.937499046325684"/>\n  </start>\n  <end>\n   <RGB b="0.772549033164978" space="sRGB-elle-V2-srgbtrc.icc" r="0.772549033164978" g="0.772549033164978"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="3" start-bitdepth="U16" middle-offset="0.563439" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.552483" end-offset="0.569282">\n  <start>\n   <RGB b="0.658823549747467" space="sRGB-elle-V2-srgbtrc.icc" r="0.658823549747467" g="0.658823549747467"/>\n  </start>\n  <end>\n   <RGB b="0.800000011920929" space="sRGB-elle-V2-srgbtrc.icc" r="0.7843137383461" g="0.7843137383461"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.577629" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.569282" end-offset="0.586394">\n  <start>\n   <RGB b="0.800000011920929" space="sRGB-elle-V2-srgbtrc.icc" r="0.7843137383461" g="0.7843137383461"/>\n  </start>\n  <end>\n   <RGB b="0.811764717102051" space="sRGB-elle-V2-srgbtrc.icc" r="0.823529422283173" g="0.811764717102051"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.618322" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.586394" end-offset="0.626043">\n  <start>\n   <RGB b="0.811764717102051" space="sRGB-elle-V2-srgbtrc.icc" r="0.823529422283173" g="0.811764717102051"/>\n  </start>\n  <end>\n   <RGB b="0.73180741071701" space="sRGB-elle-V2-srgbtrc.icc" r="0.726588845252991" g="0.728542029857635"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.641068" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.626043" end-offset="0.663606">\n  <start>\n   <RGB b="0.73180741071701" space="sRGB-elle-V2-srgbtrc.icc" r="0.726588845252991" g="0.728542029857635"/>\n  </start>\n  <end>\n   <RGB b="0.721568644046783" space="sRGB-elle-V2-srgbtrc.icc" r="0.737254917621613" g="0.760784327983856"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.675292" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.663606" end-offset="0.682805">\n  <start>\n   <RGB b="0.721568644046783" space="sRGB-elle-V2-srgbtrc.icc" r="0.737254917621613" g="0.760784327983856"/>\n  </start>\n  <end>\n   <RGB b="0.613260090351105" space="sRGB-elle-V2-srgbtrc.icc" r="0.621103227138519" g="0.628458082675934"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="4" start-bitdepth="U16" middle-offset="0.703673" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.682805" end-offset="0.722473">\n  <start>\n   <RGB b="0.613260090351105" space="sRGB-elle-V2-srgbtrc.icc" r="0.621103227138519" g="0.628458082675934"/>\n  </start>\n  <end>\n   <RGB b="0.529411792755127" space="sRGB-elle-V2-srgbtrc.icc" r="0.529411792755127" g="0.529411792755127"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="4" start-bitdepth="U16" middle-offset="0.74668" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.722473" end-offset="0.758765">\n  <start>\n   <RGB b="0.529411792755127" space="sRGB-elle-V2-srgbtrc.icc" r="0.529411792755127" g="0.529411792755127"/>\n  </start>\n  <end>\n   <RGB b="0.472541391849518" space="sRGB-elle-V2-srgbtrc.icc" r="0.498039215803146" g="0.492164492607117"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.763773" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.758765" end-offset="0.770451">\n  <start>\n   <RGB b="0.427450984716415" space="sRGB-elle-V2-srgbtrc.icc" r="0.447058826684952" g="0.443137258291245"/>\n  </start>\n  <end>\n   <RGB b="0.549019634723663" space="sRGB-elle-V2-srgbtrc.icc" r="0.560784339904785" g="0.537254929542542"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="4" start-bitdepth="U16" middle-offset="0.799145" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.770451" end-offset="0.827838">\n  <start>\n   <RGB b="0.501960813999176" space="sRGB-elle-V2-srgbtrc.icc" r="0.513725519180298" g="0.517647087574005"/>\n  </start>\n  <end>\n   <RGB b="0.477683693170547" space="sRGB-elle-V2-srgbtrc.icc" r="0.486411839723587" g="0.479209572076797"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="3" start-bitdepth="U16" middle-offset="0.83389" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.827838" end-offset="0.851419">\n  <start>\n   <RGB b="0.477683693170547" space="sRGB-elle-V2-srgbtrc.icc" r="0.486411839723587" g="0.479209572076797"/>\n  </start>\n  <end>\n   <RGB b="0.470084697008133" space="sRGB-elle-V2-srgbtrc.icc" r="0.477866798639297" g="0.467185467481613"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.876461" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.851419" end-offset="0.892321">\n  <start>\n   <RGB b="0.470084697008133" space="sRGB-elle-V2-srgbtrc.icc" r="0.477866798639297" g="0.467185467481613"/>\n  </start>\n  <end>\n   <RGB b="0.462500959634781" space="sRGB-elle-V2-srgbtrc.icc" r="0.469321727752686" g="0.455161362886429"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="4" start-bitdepth="U16" middle-offset="0.934474" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.892321" end-offset="0.941569">\n  <start>\n   <RGB b="0.462500959634781" space="sRGB-elle-V2-srgbtrc.icc" r="0.469321727752686" g="0.455161362886429"/>\n  </start>\n  <end>\n   <RGB b="0.470588237047195" space="sRGB-elle-V2-srgbtrc.icc" r="0.47843137383461" g="0.462745100259781"/>\n  </end>\n </segment>\n <segment end-bitdepth="U16" end-type="0" start-alpha="1" interpolation="0" start-bitdepth="U16" middle-offset="0.965776" end-alpha="1" color-interpolation="0" start-type="0" start-offset="0.941569" end-offset="1">\n  <start>\n   <RGB b="0.458701461553574" space="sRGB-elle-V2-srgbtrc.icc" r="0.465049207210541" g="0.449149310588837"/>\n  </start>\n  <end>\n   <RGB b="0.552941203117371" space="sRGB-elle-V2-srgbtrc.icc" r="0.556862771511078" g="0.537254929542542"/>\n  </end>\n </segment>\n</gradient>\n]]></param>\n</params>\n
+
+[halftone_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="color" name="RGBA_channel0_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel0_background_opacity">100</param>\n <param type="color" name="RGBA_channel0_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel0_foreground_opacity">100</param>\n <param type="string" name="RGBA_channel0_generator"><![CDATA[screentone]]></param>\n <param type="internal" name="RGBA_channel0_generator_screentone_align_to_pixel_grid">true</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_align_to_pixel_grid_x">1</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_align_to_pixel_grid_y">1</param>\n <param type="color" name="RGBA_channel0_generator_screentone_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel0_generator_screentone_background_opacity">100</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_brightness">50</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_constrain_frequency">true</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_contrast">50</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_equalization_mode">2</param>\n <param type="color" name="RGBA_channel0_generator_screentone_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel0_generator_screentone_foreground_opacity">100</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_frequency_x">30</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_frequency_y">30</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_interpolation">1</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_invert">false</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_keep_size_square">true</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_pattern">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_position_x">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_position_y">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_resolution">300</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_rotation">15</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_shape">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_shear_x">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_shear_y">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_size_mode">0</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_size_x">10</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_size_y">10</param>\n <param type="internal" name="RGBA_channel0_generator_screentone_units">0</param>\n <param type="internal" name="RGBA_channel0_hardness">80</param>\n <param type="internal" name="RGBA_channel0_invert">false</param>\n <param type="color" name="RGBA_channel1_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel1_background_opacity">100</param>\n <param type="color" name="RGBA_channel1_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel1_foreground_opacity">100</param>\n <param type="string" name="RGBA_channel1_generator"><![CDATA[screentone]]></param>\n <param type="internal" name="RGBA_channel1_generator_screentone_align_to_pixel_grid">true</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_align_to_pixel_grid_x">1</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_align_to_pixel_grid_y">1</param>\n <param type="color" name="RGBA_channel1_generator_screentone_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel1_generator_screentone_background_opacity">100</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_brightness">50</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_constrain_frequency">true</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_contrast">50</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_equalization_mode">2</param>\n <param type="color" name="RGBA_channel1_generator_screentone_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel1_generator_screentone_foreground_opacity">100</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_frequency_x">30</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_frequency_y">30</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_interpolation">1</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_invert">false</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_keep_size_square">true</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_pattern">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_position_x">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_position_y">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_resolution">300</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_rotation">45</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_shape">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_shear_x">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_shear_y">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_size_mode">0</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_size_x">10</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_size_y">10</param>\n <param type="internal" name="RGBA_channel1_generator_screentone_units">0</param>\n <param type="internal" name="RGBA_channel1_hardness">80</param>\n <param type="internal" name="RGBA_channel1_invert">false</param>\n <param type="color" name="RGBA_channel2_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel2_background_opacity">100</param>\n <param type="color" name="RGBA_channel2_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel2_foreground_opacity">100</param>\n <param type="string" name="RGBA_channel2_generator"><![CDATA[screentone]]></param>\n <param type="internal" name="RGBA_channel2_generator_screentone_align_to_pixel_grid">true</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_align_to_pixel_grid_x">1</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_align_to_pixel_grid_y">1</param>\n <param type="color" name="RGBA_channel2_generator_screentone_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel2_generator_screentone_background_opacity">100</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_brightness">50</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_constrain_frequency">true</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_contrast">50</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_equalization_mode">2</param>\n <param type="color" name="RGBA_channel2_generator_screentone_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="RGBA_channel2_generator_screentone_foreground_opacity">100</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_frequency_x">30</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_frequency_y">30</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_interpolation">1</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_invert">false</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_keep_size_square">true</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_pattern">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_position_x">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_position_y">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_resolution">300</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_rotation">75</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_shape">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_shear_x">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_shear_y">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_size_mode">0</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_size_x">10</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_size_y">10</param>\n <param type="internal" name="RGBA_channel2_generator_screentone_units">0</param>\n <param type="internal" name="RGBA_channel2_hardness">80</param>\n <param type="internal" name="RGBA_channel2_invert">false</param>\n <param type="color" name="alpha_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="alpha_background_opacity">100</param>\n <param type="color" name="alpha_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="alpha_foreground_opacity">100</param>\n <param type="string" name="alpha_generator"><![CDATA[screentone]]></param>\n <param type="internal" name="alpha_generator_screentone_align_to_pixel_grid">true</param>\n <param type="internal" name="alpha_generator_screentone_align_to_pixel_grid_x">1</param>\n <param type="internal" name="alpha_generator_screentone_align_to_pixel_grid_y">1</param>\n <param type="color" name="alpha_generator_screentone_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="alpha_generator_screentone_background_opacity">100</param>\n <param type="internal" name="alpha_generator_screentone_brightness">50</param>\n <param type="internal" name="alpha_generator_screentone_constrain_frequency">true</param>\n <param type="internal" name="alpha_generator_screentone_contrast">50</param>\n <param type="internal" name="alpha_generator_screentone_equalization_mode">2</param>\n <param type="color" name="alpha_generator_screentone_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="alpha_generator_screentone_foreground_opacity">100</param>\n <param type="internal" name="alpha_generator_screentone_frequency_x">30</param>\n <param type="internal" name="alpha_generator_screentone_frequency_y">30</param>\n <param type="internal" name="alpha_generator_screentone_interpolation">1</param>\n <param type="internal" name="alpha_generator_screentone_invert">false</param>\n <param type="internal" name="alpha_generator_screentone_keep_size_square">true</param>\n <param type="internal" name="alpha_generator_screentone_pattern">0</param>\n <param type="internal" name="alpha_generator_screentone_position_x">0</param>\n <param type="internal" name="alpha_generator_screentone_position_y">0</param>\n <param type="internal" name="alpha_generator_screentone_resolution">300</param>\n <param type="internal" name="alpha_generator_screentone_rotation">45</param>\n <param type="internal" name="alpha_generator_screentone_shape">0</param>\n <param type="internal" name="alpha_generator_screentone_shear_x">0</param>\n <param type="internal" name="alpha_generator_screentone_shear_y">0</param>\n <param type="internal" name="alpha_generator_screentone_size_mode">0</param>\n <param type="internal" name="alpha_generator_screentone_size_x">10</param>\n <param type="internal" name="alpha_generator_screentone_size_y">10</param>\n <param type="internal" name="alpha_generator_screentone_units">0</param>\n <param type="internal" name="alpha_hardness">80</param>\n <param type="internal" name="alpha_invert">false</param>\n <param type="string" name="color_model_id"><![CDATA[RGBA]]></param>\n <param type="color" name="intensity_background_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="1" r="1" b="1"/>\n</color>\n]]></param>\n <param type="internal" name="intensity_background_opacity">100</param>\n <param type="color" name="intensity_foreground_color"><![CDATA[<!DOCTYPE color>\n<color>\n <RGB space="sRGB-elle-V2-srgbtrc.icc" g="0" r="0" b="0"/>\n</color>\n]]></param>\n <param type="internal" name="intensity_foreground_opacity">100</param>\n <param type="string" name="intensity_generator"><![CDATA[seexpr]]></param>\n <param type="string" name="intensity_generator_seexpr_pattern"><![CDATA[Wolthera's Color Cellnoise]]></param>\n <param type="string" name="intensity_generator_seexpr_script"><![CDATA[# Basic usage of the inbuilt seexpr color cellnoise function.\n# This is based on the prman cellnoise function\n\n# UV vector manipulation\n# ----------------------\n\n# Construction of the UV vector. $u and $v are the normalized x and y coordinates for the image. This gives non-square results by default, so we calculate the ratio and then multiply the relevant dimension with said ratio to get a square result from the algorithms.\n# The zCoordinate can be set manually in many of the inbuilt noise functions, as these produce 3d noise, but we have a 2d plane. So allowing people to manipulate the last dimension manually allows them to access other slices of the 3d noise.\n\n$ratio = $h/$w;\n$zCoord = 0.18182; #0.0, 1.0\n$uv = [$u, $v*$ratio, zCoord];\n\n# We multiply the subdivisions with the uv vector to give a sense of zooming out.\n\n$subdivisions = 700; # 1, 100;\n$uv *= $subdivisions;\n\n# We also rotate the uv coordinate around the z-axis, [0,0,1]. \n\n$rotation = 0; #0, 359;\n$uv = rotate($uv, [0,0,1], rad(rotation));\n\n\n# Cellnoise Function\n# ------------------\n\n# We input all the uv into the function to get a color.\n\n$color = ccellnoise($uv);\n\n# return the color.\n$color]]></param>\n <param type="internal" name="intensity_hardness">80</param>\n <param type="internal" name="intensity_invert">false</param>\n <param type="string" name="mode"><![CDATA[intensity]]></param>\n</params>\n
+
+[hsvadjustment_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param name="colorize" type="internal">false</param>\n <param name="compatibilityMode" type="internal">false</param>\n <param name="h" type="internal">14</param>\n <param name="s" type="internal">0</param>\n <param name="type" type="internal">3</param>\n <param name="v" type="internal">0</param>\n</params>\n
+
+[invert_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0"/>\n
+
+[krita]
+ColorSpaceExtensionsPlugins=\\0
+ColorSpaceExtensionsPluginsDisabled=
+ColorSpacePlugins=\\0
+ColorSpacePluginsDisabled=
+DockerPlugins=,,,,,,,,,,,,,,,,,,,,,,,,,,,
+DockerPluginsDisabled=
+FlakePlugins=\\0
+FlakePluginsDisabled=
+ShapePlugins=\\0
+ShapePluginsDisabled=
+ToolPlugins=,,,,,,,,,,,,,
+ToolPluginsDisabled=
+
+[krita/generators/seexpr]
+exprTe=# Basic usage of the inbuilt seexpr color cellnoise function.\n# This is based on the prman cellnoise function\n\n# UV vector manipulation\n# ----------------------\n\n# Construction of the UV vector. $u and $v are the normalized x and y coordinates for the image. This gives non-square results by default, so we calculate the ratio and then multiply the relevant dimension with said ratio to get a square result from the algorithms.\n# The zCoordinate can be set manually in many of the inbuilt noise functions, as these produce 3d noise, but we have a 2d plane. So allowing people to manipulate the last dimension manually allows them to access other slices of the 3d noise.\n\n$ratio = $h/$w;\n$zCoord = 0.18182; #0.0, 1.0\n$uv = [$u, $v*$ratio, zCoord];\n\n# We multiply the subdivisions with the uv vector to give a sense of zooming out.\n\n$subdivisions = 700; # 1, 100;\n$uv *= $subdivisions;\n\n# We also rotate the uv coordinate around the z-axis, [0,0,1]. \n\n$rotation = 0; #0, 359;\n$uv = rotate($uv, [0,0,1], rad(rotation));\n\n\n# Cellnoise Function\n# ------------------\n\n# We input all the uv into the function to get a color.\n\n$color = ccellnoise($uv);\n\n# return the color.\n$color
+exprTextEdit_horizontalBar=0
+exprTextEdit_verticalBar=180
+
+[lens blur_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="halfHeight" type="internal">21</param>\n <param name="halfWidth" type="internal">20</param>\n <param name="irisRadius" type="internal">22</param>\n <param name="irisRotation" type="internal">0</param>\n <param name="irisShape" type="string"><![CDATA[Pentagon (5)]]></param>\n</params>\n
+
+[levels_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="2">\n <param name="mode">lightness</param>\n <param name="histogram_mode">linear</param>\n <param name="lightness">0;0.835570469798658;0.63409624014026;0;1</param>\n <param name="number_of_channels">2</param>\n <param name="channel_0">0;1;1;0;1</param>\n <param name="channel_1">0;1;1;0;1</param>\n <param type="internal" name="blackvalue">0</param>\n <param type="internal" name="whitevalue">213</param>\n <param type="internal" name="gammavalue">0.63409624014026</param>\n <param type="internal" name="outblackvalue">0</param>\n <param type="internal" name="outwhitevalue">255</param>\n</params>\n
+
+[mean removal_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1"/>\n
+
+[motion blur_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="blurAngle" type="internal">90</param>\n <param name="blurLength" type="internal">99</param>\n</params>\n
+
+[noise_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="internal" name="level">83</param>\n <param type="internal" name="opacity">99</param>\n <param type="internal" name="seedBlue">1714636915</param>\n <param type="internal" name="seedGreen">1681692777</param>\n <param type="internal" name="seedRed">846930886</param>\n <param type="internal" name="seedThreshold">1804289383</param>\n</params>\n
+
+[normalize_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0"/>\n
+
+[oilpaint_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="internal" name="brushSize">5</param>\n <param type="internal" name="smooth">10</param>\n</params>\n
+
+[palettize_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="alphaClip" type="internal">0.5</param>\n <param name="alphaDither/noiseSeed" type="internal">970925433</param>\n <param name="alphaDither/pattern" type="string"><![CDATA[DITH 0202 GEN ]]></param>\n <param name="alphaDither/patternValueMode" type="internal">0</param>\n <param name="alphaDither/spread" type="internal">1</param>\n <param name="alphaDither/thresholdMode" type="internal">0</param>\n <param name="alphaEnabled" type="internal">false</param>\n <param name="alphaIndex" type="internal">0</param>\n <param name="alphaMode" type="internal">0</param>\n <param name="colorspace" type="internal">0</param>\n <param name="dither/colorMode" type="internal">0</param>\n <param name="dither/noiseSeed" type="internal">1369356620</param>\n <param name="dither/offsetScale" type="internal">0.096</param>\n <param name="dither/pattern" type="string"><![CDATA[DITH 0202 GEN ]]></param>\n <param name="dither/patternValueMode" type="internal">0</param>\n <param name="dither/spread" type="internal">1</param>\n <param name="dither/thresholdMode" type="internal">0</param>\n <param name="ditherEnabled" type="internal">true</param>\n <param name="md5sum" type="string"><![CDATA[32b82019a3d6ef59888b41ffd81cde56]]></param>\n <param name="palette" type="string"><![CDATA[Default]]></param>\n</params>\n
+
+[perchannel_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="nTransfers">8</param>\n <param name="curve0">0,0;0.306422,0.286275;0.658716,0.654902;1,1;</param>\n <param name="curve1">0,0;1,1;</param>\n <param name="curve2">0,0;1,1;</param>\n <param name="curve3">0,0;1,1;</param>\n <param name="curve4">0,0;1,1;</param>\n <param name="curve5">0,0;1,1;</param>\n <param name="curve6">0,0;1,1;</param>\n <param name="curve7">0,0;1,1;</param>\n</params>\n
+
+[phongbumpmap_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="2">\n <param name="Azimuth0" type="internal">50</param>\n <param name="Azimuth1" type="internal">100</param>\n <param name="Azimuth2" type="internal">150</param>\n <param name="Azimuth3" type="internal">200</param>\n <param name="Inclination0" type="internal">25</param>\n <param name="Inclination1" type="internal">20</param>\n <param name="Inclination2" type="internal">30</param>\n <param name="Inclination3" type="internal">40</param>\n <param name="ambientReflectivity" type="internal">0</param>\n <param name="diffuseReflectivity" type="internal">0.47</param>\n <param name="diffuseReflectivityIsEnabled" type="internal">true</param>\n <param name="heightChannel" type="string"><![CDATA[Gray]]></param>\n <param name="illuminantColor0" type="internal">#ffff00</param>\n <param name="illuminantColor1" type="internal">#ff0000</param>\n <param name="illuminantColor2" type="internal">#0000ff</param>\n <param name="illuminantColor3" type="internal">#00ff00</param>\n <param name="illuminantIsEnabled0" type="internal">true</param>\n <param name="illuminantIsEnabled1" type="internal">true</param>\n <param name="illuminantIsEnabled2" type="internal">false</param>\n <param name="illuminantIsEnabled3" type="internal">false</param>\n <param name="shinynessExponent" type="internal">200</param>\n <param name="specularReflectivity" type="internal">1</param>\n <param name="specularReflectivityIsEnabled" type="internal">true</param>\n <param name="useNormalMapIsEnabled" type="internal">false</param>\n</params>\n
+
+[pixelize_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="internal" name="pixelHeight">10</param>\n <param type="internal" name="pixelWidth">10</param>\n</params>\n
+
+[posterize_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param name="steps" type="internal">17</param>\n</params>\n
+
+[python]
+enable_batch_exporter=true
+enable_channels2layers=true
+enable_krita-redesign=true
+enable_mixer_slider_docker=true
+enable_photobash_images=true
+
+[randompick_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="level" type="internal">99</param>\n <param name="opacity" type="internal">99</param>\n <param name="seedH" type="internal">2061248689</param>\n <param name="seedThreshold" type="internal">970287085</param>\n <param name="seedV" type="internal">119278591</param>\n <param name="windowsize" type="internal">1</param>\n</params>\n
+
+[sharpen_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1"/>\n
+
+[theme]
+Theme=Krita-Wojtryb-Darker-Redesign
+
+[threshold_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="threshold" type="internal">128</param>\n</params>\n
+
+[tool_color_sampler]
+ColorSamplerDefaultActivation=<!DOCTYPE params>\n<params>\n <param name="addPalette" type="internal">false</param>\n <param name="blend" type="internal">100</param>\n <param name="normaliseValues" type="internal">false</param>\n <param name="radius" type="internal">1</param>\n <param name="sampleMerged" type="internal">false</param>\n <param name="toForegroundColor" type="internal">true</param>\n <param name="updateColor" type="internal">true</param>\n</params>\n
+
+[unsharp_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param type="internal" name="amount">0.5</param>\n <param type="internal" name="halfSize">54.87</param>\n <param type="internal" name="lightnessOnly">true</param>\n <param type="internal" name="threshold">0</param>\n</params>\n
+
+[wave_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="1">\n <param name="horizontalamplitude" type="internal">5</param>\n <param name="horizontalshape" type="internal">0</param>\n <param name="horizontalshift" type="internal">50</param>\n <param name="horizontalwavelength" type="internal">50</param>\n <param name="verticalamplitude" type="internal">4</param>\n <param name="verticalshape" type="internal">0</param>\n <param name="verticalshift" type="internal">50</param>\n <param name="verticalwavelength" type="internal">50</param>\n</params>\n
+
+[waveletnoisereducer_filter_bookmarks]
+Last Used=<!DOCTYPE params>\n<params version="0">\n <param type="internal" name="threshold">256</param>\n</params>\n

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Tag
+URL=MOJO_MyPaint
+ResourceType=paintoppresets
+Name=MOJO_MyPaint
+Comment=MOJO_MyPaint
+Default Resources=MOJO_Bloodline.kpp,MOJO_Calligreffects.kpp,MOJO_Grafight.kpp,MOJO_Hatchling.kpp,MOJO_Inker.kpp,MOJO_Kong_Letterer.kpp,MOJO_Liner.kpp,MOJO_Mega_Letterer.kpp,MOJO_Oneraser.kpp,MOJO_Pipe_Dream.kpp,MOJO_Stippler_Stickler.kpp,MOJO_Text_Letterer.kpp,MOJO_Watacolor_Brush.kpp,MOJO_Watacolor_Marker.kpp,MOJO_Watacolor_Pencil.kpp,MOJO_Watacolor_Swirl.kpp,MOJO_Bloodline.kpp,MOJO_Calligreffects.kpp,MOJO_Grafight.kpp,MOJO_Hatchling.kpp,MOJO_Inker.kpp,MOJO_Kong_Letterer.kpp,MOJO_Liner.kpp,MOJO_Mega_Letterer.kpp,MOJO_Oneraser.kpp,MOJO_Pipe_Dream.kpp,MOJO_Stippler_Stickler.kpp,MOJO_Text_Letterer.kpp,MOJO_Watacolor_Brush.kpp,MOJO_Watacolor_Marker.kpp,MOJO_Watacolor_Pencil.kpp,MOJO_Watacolor_Swirl.kpp
