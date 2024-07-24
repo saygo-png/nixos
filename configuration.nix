@@ -181,6 +181,7 @@ in {
 
     (writeShellScriptBin
       "update_krita.sh" # updates the flake krita nixos configuration files from current mutable krita config.
+
       ''
         set -o pipefail
         set -u
@@ -198,6 +199,7 @@ in {
 
     (writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
+
       ''
         gamescope -w ${builtins.toString constants.screen-width} -W ${builtins.toString constants.screen-width} -h ${builtins.toString constants.screen-height} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} -f steam
       '')
@@ -1797,7 +1799,11 @@ in {
           '';
 
         plugins = [
-          inputs.hyprland-plugin-hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace
+          # Overrides the hyprland dependency of hyprspace to use the one from pkgs.
+          (inputs.hyprland-plugin-hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs {
+            inherit (pkgs.hyprland) nativeBuildInputs;
+            buildInputs = [pkgs.hyprland] ++ pkgs.hyprland.buildInputs;
+          })
         ];
 
         settings = {
@@ -1884,32 +1890,29 @@ in {
 
           animations = {
             # Fast animations.
-            bezier = [ "easeOutQuart, 0.190, 0.91, 0.37, 1" ];
+            bezier = ["easeOutQuart, 0.190, 0.91, 0.37, 1"];
             animation = [
-            "windowsIn, 1, 5, easeOutQuart, popin 0%"
-            "windowsOut, 1, 5, easeOutQuart, popin 60%"
-            "windowsMove, 1, 5, easeOutQuart, popin 60%"
-            "windows, 1, 5, easeOutQuart"
+              "windowsIn, 1, 4, easeOutQuart, popin 0%"
+              "windowsOut, 1, 4, easeOutQuart, popin 60%"
+              "windowsMove, 1, 4, easeOutQuart, popin 60%"
+              "windows, 1, 4, easeOutQuart"
 
-            "layers, 1, 5, easeOutQuart, popin 70%"
+              # "layers, 1, 4, easeOutQuart, popin 70%"
+              "layers, 1, 4, default, slide top"
 
-            "fadeIn, 1, 5, easeOutQuart"
-            "fadeOut, 1, 5, easeOutQuart"
-            "fadeSwitch, 0, 5, easeOutQuart"
-            "fadeShadow, 0, 5, easeOutQuart"
-            "fadeDim, 1, 5, easeOutQuart"
-            "fadeLayers, 1, 5, easeOutQuart"
-            "fade, 1, 5, easeOutQuart"
+              "fadeIn, 1, 4, easeOutQuart"
+              "fadeOut, 1, 4, easeOutQuart"
+              "fadeSwitch, 0, 4, easeOutQuart"
+              "fadeShadow, 0, 4, easeOutQuart"
+              "fadeDim, 1, 4, easeOutQuart"
+              "fadeLayers, 1, 4, easeOutQuart"
+              "fade, 1, 4, easeOutQuart"
 
-            "border, 0, 5, easeOutQuart"
-            "borderangle, 0, 5, easeOutQuart"
+              "border, 0, 4, easeOutQuart"
+              "borderangle, 0, 4, easeOutQuart"
 
-            "specialWorkspace, 1, 5, easeOutQuart, slidevert"
-            "workspaces, 1, 5, easeOutQuart, slide"
-            #   "border,1,1,default"
-            #   "fade,1,2,default"
-            #   "windows,1,1.5,default,popin 80%"
-            #   "workspaces,1,1,default,slide"
+              "specialWorkspace, 1, 4, easeOutQuart, slidevert"
+              "workspaces, 1, 4, easeOutQuart, slide"
             ];
           };
 
@@ -1923,7 +1926,8 @@ in {
           bindde = [
             # This throws an invalid dispatcher error
             # but it seems good to me and it works.
-            "$mainMod, w, Show [w]orkspaces, overview:toggle"
+            # "$mainMod, w, Show [w]orkspaces, overview:toggle"
+
             "$mainMod, q, [q]uit active, killactive,"
 
             "$mainMod CTRL, Space, Toggle floating, togglefloating,"
