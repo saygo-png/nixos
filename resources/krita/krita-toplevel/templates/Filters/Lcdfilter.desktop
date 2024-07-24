@@ -1,0 +1,6 @@
+[Desktop Entry]
+Icon=.icon/Lcdfilter.png
+Name=Lcd filter
+Type=Link
+URL[$e]=.source/Lcdfilter.kra
+X-KDE-Hidden=false
