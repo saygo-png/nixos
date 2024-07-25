@@ -103,10 +103,6 @@ mode-switcher {
     border-color: rgba (21, 22, 3, 10%);
 }
 
-inputbar {
-    children:   [ prompt, textbox-prompt-sep, entry, case-indicator ];
-}
-
 case-indicator,
 entry,
 prompt,

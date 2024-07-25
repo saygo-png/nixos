@@ -1774,6 +1774,7 @@ in {
             spacing = 5;
             text-color = lib.mkForce (mkLiteral "@normal-foreground");
             padding = mkLiteral "2px";
+            children = mkLiteral "[prompt, textbox-prompt-sep, entry, case-indicator]";
           };
 
           # TODO add more colors like this.
@@ -1931,9 +1932,22 @@ in {
           #  add proper alt tab support using "hycov" plugin
           #  add descriptions to each key
           bindde = [
+            "$mainMod, g, toggle [g]roup, togglegroup"
+            "$mainMod CTRL, l, [l]ock group, lockactivegroup"
+            "$mainMod CTRL, n, [n]ext tab, changegroupactive, f"
+            "$mainMod CTRL, p, [p]revious tab, changegroupactive, b"
+            "$mainMod, o, Move [o]ut of group, moveoutofgroup,"
+            "$mainMod CTRL SHIFT, h, Move focus right, moveintogroup, l"
+            "$mainMod CTRL SHIFT, l, Move focus left, moveintogroup, r"
+            "$mainMod CTRL SHIFT, k, Move focus up, moveintogroup, u"
+            "$mainMod CTRL SHIFT, j, Move focus down, moveintogroup, d"
+
             "$mainMod, q, [q]uit active, killactive,"
 
             "$mainMod CTRL, Space, Toggle floating, togglefloating,"
+
+            "$mainMod, p, Toggle [p]in, pin,"
+            "$mainMod, p, Toggle [p]in, togglefloating,"
 
             "$mainMod, f, [f]ullscreen, fullscreen"
             "$mainMod SHIFT, f, [f]akke fullscreen, fakefullscreen"
@@ -1996,15 +2010,15 @@ in {
             "$mainMod SHIFT, 0, Move to workspace, movetoworkspacesilent, 10"
             "$mainMod SHIFT, c, Move to empty workspace, movetoworkspace, empty"
 
-            "$mainMod SHIFT, h, Move left to workspace, movewindow, l"
-            "$mainMod SHIFT, l, Move right to workspace, movewindow, r"
-            "$mainMod SHIFT, k, Move up to workspace, movewindow, u"
-            "$mainMod SHIFT, j, Move down to workspace, movewindow, d"
+            "$mainMod SHIFT, h, Move left to workspace, movewindoworgroup, l"
+            "$mainMod SHIFT, l, Move right to workspace, movewindoworgroup, r"
+            "$mainMod SHIFT, k, Move up to workspace, movewindoworgroup, u"
+            "$mainMod SHIFT, j, Move down to workspace, movewindoworgroup, d"
 
-            "$mainMod CTRL + s, h, Resize window left, resizeactive, -100 0"
-            "$mainMod CTRL + s, l, Resize window right, resizeactive, 100 0"
-            "$mainMod CTRL + s, k, Resize window up, resizeactive, 0 -100"
-            "$mainMod CTRL + s, j, Resize window down, resizeactive, 0 100"
+            "$mainMod CTRL, h, Resize window left, resizeactive, -100 0"
+            "$mainMod CTRL, l, Resize window right, resizeactive, 100 0"
+            "$mainMod CTRL, k, Resize window up, resizeactive, 0 -100"
+            "$mainMod CTRL, j, Resize window down, resizeactive, 0 100"
 
             "$mainMod ALT, H, Move floating left, moveactive, -100 0"
             "$mainMod ALT, L, Move floating right, moveactive, 100 0"
@@ -2055,49 +2069,49 @@ in {
 
           windowrulev2 = [
             # Needed for gloss window to tile and not focus.
-            # "tile, class:^()$"
-            # "noinitialfocus, class:^()$"
-            #
-            # "noborder, onworkspace:w[t1]"
-            #
-            # "suppressevent maximize, class:.*"
-            #
-            # "workspace 2 silent, class:^(firefox)$"
-            # "workspace 2 silent, class:^(librewolf)$"
-            #
-            # "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
-            # "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
-            #
-            # "float, title:^(Picture-in-Picture)$"
-            # "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
-            # "pin, title:^(Picture-in-Picture)$"
-            # "float, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
-            # "size 0 0, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
-            #
-            # "opacity 1.0 override 1.0 override, title:^(.*imv.*)$"
-            # "opacity 1.0 override 1.0 override, title:^(.*mpv.*)$"
-            #
-            # "idleinhibit focus, class:^(mpv)$"
-            # "idleinhibit fullscreen, class:^(librewolf)$"
-            #
-            # "opacity 1.0 override 1.0 override, class:(Aseprite)"
-            # "opacity 1.0 override 1.0 override, class:(Unity)"
-            #
-            # "float, class:^(pavucontrol)$"
-            # "float, class:^(SoundWireServer)$"
-            # "float, class:^(.sameboy-wrapped)$"
-            #
-            # "float, class:^(file_progress)$"
-            # "float, class:^(confirm)$"
-            # "float, class:^(dialog)$"
-            # "float, class:^(download)$"
-            # "float, class:^(notification)$"
-            # "float, class:^(error)$"
-            # "float, class:^(confirmreset)$"
-            # "float, title:^(Open File)$"
-            # "float, title:^(branchdialog)$"
-            # "float, title:^(Confirm to replace files)$"
-            # "float, title:^(File Operation Progress)$"
+            "tile, class:^()$"
+            "noinitialfocus, class:^()$"
+
+            "noborder, onworkspace:w[t1]"
+
+            "suppressevent maximize, class:.*"
+
+            "workspace 2 silent, class:^(firefox)$"
+            "workspace 2 silent, class:^(librewolf)$"
+
+            "workspace 8 silent, class:^(Steam|steam|steam_app_.*)$, title:^((?!notificationtoasts.*).)*$"
+            "workspace 8 silent, title:^(.*Steam[A-Za-z0-9\s]*)$"
+
+            "float, title:^(Picture-in-Picture)$"
+            "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
+            "pin, title:^(Picture-in-Picture)$"
+            "float, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
+            "size 0 0, title:^(Firefox — Sharing Indicator|Wine System Tray)$"
+
+            "opacity 1.0 override 1.0 override, title:^(.*imv.*)$"
+            "opacity 1.0 override 1.0 override, title:^(.*mpv.*)$"
+
+            "idleinhibit focus, class:^(mpv)$"
+            "idleinhibit fullscreen, class:^(librewolf)$"
+
+            "opacity 1.0 override 1.0 override, class:(Aseprite)"
+            "opacity 1.0 override 1.0 override, class:(Unity)"
+
+            "float, class:^(pavucontrol)$"
+            "float, class:^(SoundWireServer)$"
+            "float, class:^(.sameboy-wrapped)$"
+
+            "float, class:^(file_progress)$"
+            "float, class:^(confirm)$"
+            "float, class:^(dialog)$"
+            "float, class:^(download)$"
+            "float, class:^(notification)$"
+            "float, class:^(error)$"
+            "float, class:^(confirmreset)$"
+            "float, title:^(Open File)$"
+            "float, title:^(branchdialog)$"
+            "float, title:^(Confirm to replace files)$"
+            "float, title:^(File Operation Progress)$"
           ];
         };
       };
