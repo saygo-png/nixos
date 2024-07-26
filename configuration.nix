@@ -105,6 +105,11 @@ in {
       "steam-run"
     ];
 
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
   # Needed here and in home manager.
   programs.hyprland = {
     enable = true;
@@ -387,9 +392,6 @@ in {
   #############
   # Services. #
   #############
-
-  # SSH agent for git.
-  programs.ssh.startAgent = true;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
