@@ -200,6 +200,15 @@ in {
       '')
 
     (writeShellScriptBin
+      "hwinfolist"
+      ''
+        echo "GPU"
+        echo "nr amdgpu_top --gui"
+        echo "General Tree"
+        echo "snr lshw -json | nvim -c 'set filetype=json'"
+      '')
+
+    (writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
 
       ''
@@ -299,6 +308,9 @@ in {
   ########################
   # Hardware or drivers. #
   ########################
+
+  # Change cpu governor to performance for increased performance.
+  powerManagement.cpuFreqGovernor = "performance";
 
   # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
   systemd.tmpfiles.rules = [
@@ -598,6 +610,8 @@ in {
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "rt" = "${lib.getExe pkgs.trashy}";
+          "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
+          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${constants.home}/screencaptures/recording.wav";
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
           "shutdown" = "poweroff";
           "nhoffline" = "nh os switch ${constants.flake-path} -- --option substitute false";
@@ -1020,7 +1034,9 @@ in {
           vim-language-server
           typos-lsp
           vale # Linter
-          haskellPackages.ormolu # Haskell formatter
+          haskellPackages.fourmolu # Haskell formatter
+          jq # Json formatter
+          shfmt # Shell formatter
           marksman # Markdown LSP
           haskell-language-server # Haskell LSP
           python312Packages.python-lsp-server
@@ -1035,7 +1051,7 @@ in {
           sumneko-lua-language-server
           nodePackages.bash-language-server
           stylua # Lua formatter
-          isort
+          isort # Python import sorter
           shellcheck # Bash linter
           hadolint # Docker linter
           nodePackages.jsonlint
@@ -1152,6 +1168,13 @@ in {
           neovide_cursor_animate_command_line = true;
           neovide_cursor_animate_in_insert_mode = true;
         };
+
+        extraFiles = {
+          "ftplugin/json.vim" = ''
+            setlocal foldmethod=manual
+          '';
+        };
+
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         extraConfigLua = ''
           if vim.g.neovide then
@@ -1454,9 +1477,11 @@ in {
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "black" "yapf"];
-              haskell = ["ormolu"];
+              haskell = ["fourmolu"];
               nix = ["alejandra"];
               lua = ["stylua"];
+              json = ["jq"];
+              sh = [ "shfmt" ];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["trim_whitespace"];
             };
@@ -1519,8 +1544,14 @@ in {
           cmp = {
             enable = true;
             autoEnableSources = true;
+
             settings = {
               autocomplete = true;
+              performance = {
+                debounce = 60;
+                fetchingTimeout = 200;
+                maxViewEntries = 30;
+              };
               snippet.expand = ''
                 function(args)
                   require('luasnip').lsp_expand(args.body)
@@ -1737,14 +1768,48 @@ in {
         in {
           "*" = {
             highlight = "bold";
-            normal-background = lib.mkForce (mkLiteral "rgba (0, 0, 0, 0%)");
-            alternate-normal-background = lib.mkForce (mkLiteral "rgba (0, 0, 0, 0%)");
-            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (21, 22, 3, 60%)");
-            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (21, 22, 3, 60%)");
+
+            normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            normal-foreground = lib.mkForce (mkLiteral "@foreground");
+            alternate-normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            alternate-normal-foreground = lib.mkForce (mkLiteral "@foreground");
+            selected-normal-background = lib.mkForce (mkLiteral "@gruvbox-dark-bg3");
+            selected-normal-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg0");
+
+            active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-dark");
+            active-foreground = lib.mkForce (mkLiteral "@foreground");
+            alternate-active-background = lib.mkForce (mkLiteral "@active-background");
+            alternate-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
+            selected-active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-light");
+            selected-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
+
+            urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-dark");
+            urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
+            alternate-urgent-background = lib.mkForce (mkLiteral "@urgent-background");
+            alternate-urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
+            selected-urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-light");
+            selected-urgent-foreground = lib.mkForce (mkLiteral "@urgent-foreground");
+
+            background = lib.mkForce (mkLiteral "@gruvbox-dark-bg0");
+            background-color = lib.mkForce (mkLiteral "@background");
+            foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
+            border-color = lib.mkForce (mkLiteral "#7d8618");
+            separatorcolor = lib.mkForce (mkLiteral "@border-color");
+            scrollbar-handle = lib.mkForce (mkLiteral "@border-color");
+            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 100%)");
+            gruvbox-dark-fg0 = lib.mkForce (mkLiteral "#fbf1c7");
+            gruvbox-dark-fg1 = lib.mkForce (mkLiteral "#ebdbb2");
+            gruvbox-dark-red-dark = lib.mkForce (mkLiteral "#fe8019");
+            gruvbox-dark-red-light = lib.mkForce (mkLiteral "#fb4934");
+            gruvbox-dark-yellow-dark = lib.mkForce (mkLiteral "#fabd2f");
+            gruvbox-dark-yellow-light = lib.mkForce (mkLiteral "#8ec07c");
+            gruvbox-dark-gray = lib.mkForce (mkLiteral "#bdae93");
           };
           "window" = {
-            background-color = lib.mkForce "@background";
-            border = 2;
+            background-color = lib.mkForce (mkLiteral "@background");
+            border = 1;
             padding = 5;
           };
           "mainbox" = {
@@ -1753,17 +1818,17 @@ in {
           };
           "message" = {
             border = mkLiteral "2px 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (21, 22, 3, 10%)");
+            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
             padding = mkLiteral "1px";
           };
           "textbox" = {
-            highlight = "@highlight";
-            text-color = lib.mkForce "@foreground";
+            highlight = mkLiteral "@highlight";
+            text-color = lib.mkForce (mkLiteral "@foreground");
           };
           "listview" = {
             border = mkLiteral "0px solid 0 0";
             padding = mkLiteral "0px 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (21, 22, 3, 10%)");
+            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
             spacing = mkLiteral "0px";
           };
           "element" = {
@@ -1771,12 +1836,41 @@ in {
             padding = mkLiteral "2px";
           };
           "inputbar" = {
-            spacing = 5;
+            spacing = 2;
             text-color = lib.mkForce (mkLiteral "@normal-foreground");
             padding = mkLiteral "2px";
             children = mkLiteral "[prompt, textbox-prompt-sep, entry, case-indicator]";
           };
-
+          "case-indicator, entry, prompt, button" = {
+            spacing = 0;
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+          };
+          "case-indicator" = {
+            spacing = 0;
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+          };
+          "entry" = {
+            spacing = 0;
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+          };
+          "prompt" = {
+            spacing = 0;
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+          };
+          "button" = {
+            spacing = 0;
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+          };
+          "textbox-prompt-sep" = {
+            expand = false;
+            str = ":";
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            margin = mkLiteral "0 0.2em 0.3em 0";
+          };
+          "element.normal.normal" = {
+            background-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+          };
           # TODO add more colors like this.
           # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
         };
@@ -2135,6 +2229,10 @@ in {
           xrandr -r ${builtins.toString constants.refresh-rate}
           exec awesome
         '';
+      };
+
+      xdg.configFile."fourmolu.yaml".source = (pkgs.formats.yaml {}).generate "fourmoluExtraConfigDIY" {
+        indentation = 2;
       };
 
       xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {

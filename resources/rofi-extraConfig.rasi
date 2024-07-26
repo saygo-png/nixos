@@ -1,55 +1,6 @@
 configuration {
-/* Theme settings */
-highlight: bold;
-
-/* Gruvbox dark colors */
-gruvbox-dark-bg0:          rgba (21, 22, 3, 10%);
-gruvbox-dark-bg0-soft:     rgba (21, 22, 3, 10%);
-gruvbox-dark-bg3:          rgba (125, 134, 24, 100%);
-gruvbox-dark-fg0:          #fbf1c7;
-gruvbox-dark-fg1:          #ebdbb2;
-gruvbox-dark-red-dark:     #cc241d;
-gruvbox-dark-red-light:    #fb4934;
-gruvbox-dark-yellow-dark:  #d79921;
-gruvbox-dark-yellow-light: #689d6a;
-gruvbox-dark-gray:         #a89984;
-border-color:              rgba (21, 22, 3, 10%);
-
 /* Theme colors */
-background:                  @gruvbox-dark-bg0;
-background-color:            @background;
-foreground:                  @gruvbox-dark-fg1;
-border-color:                #7d8618;
-separatorcolor:              @border-color;
-scrollbar-handle:            @border-color;
-
-normal-background:           rgba (0, 0, 0, 0%);
-normal-foreground:           @foreground;
-alternate-normal-background: rgba (0, 0, 0, 0%);
-alternate-normal-foreground: @foreground;
-selected-normal-background:  @gruvbox-dark-bg3;
-selected-normal-foreground:  @gruvbox-dark-fg0;
-
-active-background:           @gruvbox-dark-yellow-dark;
-active-foreground:           @foreground;
-alternate-active-background: @active-background;
-alternate-active-foreground: @active-foreground;
-selected-active-background:  @gruvbox-dark-yellow-light;
-selected-active-foreground:  @active-foreground;
-
-urgent-background:           @gruvbox-dark-red-dark;
-urgent-foreground:           @gruvbox-dark-fg1;
-alternate-urgent-background: @urgent-background;
-alternate-urgent-foreground: @gruvbox-dark-fg1;
-selected-urgent-background:  @gruvbox-dark-red-light;
-selected-urgent-foreground:  @urgent-foreground;
 }
-
-element.normal.normal {
-    background-color: rgba (21, 22, 3, 0%);
-    text-color:       @normal-foreground;
-}
-
 element.normal.urgent {
     background-color: @urgent-background;
     text-color:       @urgent-foreground;
@@ -103,25 +54,11 @@ mode-switcher {
     border-color: rgba (21, 22, 3, 10%);
 }
 
-case-indicator,
-entry,
-prompt,
-button {
-    spacing:    0;
-    text-color: @normal-foreground;
-}
-
 button.selected {
     background-color: @selected-normal-background;
     text-color:       @selected-normal-foreground;
 }
 
-textbox-prompt-sep {
-    expand:     false;
-    str:        ":";
-    text-color: @normal-foreground;
-    margin:     0 0.2em 0.3em 0;
-}
 element-text, element-icon {
     background-color: inherit;
     text-color:       inherit;
