@@ -140,7 +140,7 @@ in {
     # Game launcher
     lutris
     wineWowPackages.waylandFull
-    wineWowPackages.stable
+    # wineWowPackages.stable
     winetricks
 
     # Other.
@@ -654,6 +654,8 @@ in {
           rofi-wayland # App launcher
           hydrus # File manager
 
+          python3
+
           # For minecraft
           jdk11
 
@@ -681,6 +683,7 @@ in {
         # Binary blobs.
         sessionPath = ["${constants.home}/bin"]; # Add ~/bin to path.
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
+        file."bin/ow".source = ./resources/scripts/ow.py;
 
         # This allows for semi-declarative configuration.
         # However it makes your lag when rebuilding.
@@ -1478,12 +1481,12 @@ in {
             };
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
-              python = ["isort" "black" "yapf"];
+              python = ["isort" "yapf"];
               haskell = ["fourmolu"];
               nix = ["alejandra"];
               lua = ["stylua"];
               json = ["jq"];
-              sh = [ "shfmt" ];
+              sh = ["shfmt"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["trim_whitespace"];
             };
