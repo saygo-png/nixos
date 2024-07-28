@@ -21,21 +21,19 @@ def append_to_csv(value):
 
 # Main function to get user input and append the appropriate value
 def main():
-    while True:
-        user_input = input(
-            "Enter 'a' or 'g' (or 'q' to quit): ").strip().lower()
-        if user_input == "a":
-            append_to_csv("ams")
-            print("Appended 'ams' to the CSV file.")
-        elif user_input == "g":
-            append_to_csv("gen")
-            print("Appended 'gen' to the CSV file.")
-        elif user_input == "q":
-            print("Quitting the program.")
-            break
-        else:
-            print("Invalid input. Please enter 'a' or 'g'.")
-
+    user_input = input("Enter 'a' or 'g' (or 'q' to quit): ").strip().lower()
+    if user_input == "a":
+        append_to_csv("ams")
+        print("Appended 'ams' to the CSV file.")
+        print("")
+    elif user_input == "g":
+        append_to_csv("gen")
+        print("Appended 'gen' to the CSV file.")
+        print("")
+    elif user_input == "q":
+        print("Quitting the program.")
+    else:
+        print("Invalid input. Please enter 'a', 'g', or 'q'.")
 
 if __name__ == "__main__":
     main()

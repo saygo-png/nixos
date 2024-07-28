@@ -133,7 +133,7 @@ in {
     podman # Dependency for distrobox
     nsxiv # Image viewer
 
-    kdePackages.plasma-systemmonitor # GUI system monitor
+    mission-center # GUI task manager
 
     jdk8 # Java 8 for minecraft
 
@@ -1040,6 +1040,7 @@ in {
           typos-lsp
           vale # Linter
           haskellPackages.fourmolu # Haskell formatter
+          stylish-haskell # Haskell formatter
           jq # Json formatter
           shfmt # Shell formatter
           marksman # Markdown LSP
@@ -1102,8 +1103,10 @@ in {
           # Delay on switching to normal mode.
           ttimeoutlen = 0;
 
+          # g in substitute implicit
+          gdefault = true;
+
           # Incremental search.
-          hlsearch = true;
           incsearch = true;
           updatetime = 100;
 
@@ -1264,6 +1267,7 @@ in {
             name = "cutlass.nvim";
             src = inputs.nvim-plugin-cutlass;
           })
+          pkgs.vimPlugins.splitjoin-vim
           pkgs.vimPlugins.gruvbox-material
         ];
 
@@ -1474,6 +1478,10 @@ in {
             };
           };
 
+          multicursors = {
+            enable = true;
+          };
+
           conform-nvim = {
             enable = true;
             extraOptions = {
@@ -1482,7 +1490,7 @@ in {
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "yapf"];
-              haskell = ["fourmolu"];
+              haskell = ["fourmolu" "stylish-haskell"];
               nix = ["alejandra"];
               lua = ["stylua"];
               json = ["jq"];
@@ -2032,7 +2040,7 @@ in {
           #  add descriptions to each key
           bindde = [
             "$mainMod, g, toggle [g]roup, togglegroup"
-            "$mainMod CTRL, l, [l]ock group, lockactivegroup"
+            "$mainMod, n, [n]o insert into group, lockactivegroup, toggle"
             "$mainMod CTRL, n, [n]ext tab, changegroupactive, f"
             "$mainMod CTRL, p, [p]revious tab, changegroupactive, b"
             "$mainMod, o, Move [o]ut of group, moveoutofgroup,"
@@ -2051,10 +2059,10 @@ in {
             "$mainMod, f, [f]ullscreen, fullscreen"
             "$mainMod SHIFT, f, [f]akke fullscreen, fakefullscreen"
 
-            "$mainMod, g, [g]aps on, exec, hyprctl keyword general:gaps_in 15"
-            "$mainMod, g, [g]aps on, exec, hyprctl keyword general:gaps_out 35"
-            "$mainMod SHIFT, G, [G]aps off, exec, hyprctl keyword general:gaps_in 0"
-            "$mainMod SHIFT, G, [G]aps off, exec, hyprctl keyword general:gaps_out 0"
+            "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in 15"
+            "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out 35"
+            "$mainMod SHIFT, a, g[a]ps off, exec, hyprctl keyword general:gaps_in 0"
+            "$mainMod SHIFT, a, g[a]ps off, exec, hyprctl keyword general:gaps_out 0"
 
             "$mainMod, z, Cycle next in active workspace, cyclenext,"
             "$mainMod, x, Center active, centerwindow,"
