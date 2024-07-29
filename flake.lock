@@ -484,6 +484,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-vim-visual-multi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1720162740,
+        "narHash": "sha256-ngwN3nK8/tqbuTH2zzhfynfRlGaPmTgt+mO+EBsf9g0=",
+        "owner": "mg979",
+        "repo": "vim-visual-multi",
+        "rev": "38b0e8d94a5499ccc17d6159763d32c79f53417b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mg979",
+        "repo": "vim-visual-multi",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
@@ -492,6 +508,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "nvim-plugin-cutlass": "nvim-plugin-cutlass",
+        "nvim-plugin-vim-visual-multi": "nvim-plugin-vim-visual-multi",
         "stylix": "stylix"
       }
     },

@@ -488,12 +488,12 @@ in {
     packages = with pkgs; [
       # Main font.
       courier-prime
-      jetbrains-mono
-      (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-      noto-fonts-cjk-serif
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
       noto-fonts
+      jetbrains-mono
+      noto-fonts-emoji
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
     ];
 
     fontconfig = {
@@ -522,10 +522,10 @@ in {
   stylix.enable = true;
   stylix.autoEnable = true;
   stylix.polarity = "dark";
-  stylix.image = ./resources/static/wallpaper.png;
   stylix.targets.grub.useImage = true;
-  stylix.cursor.package = pkgs.capitaine-cursors-themed;
+  stylix.image = ./resources/static/wallpaper.png;
   stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
+  stylix.cursor.package = pkgs.capitaine-cursors-themed;
   stylix.base16Scheme = {
     base00 = "282828"; # #282828 dark  ----
     base01 = "3c3836"; # #3c3836 dark  ---
@@ -547,35 +547,35 @@ in {
 
   stylix.fonts = {
     monospace = {
-      package = pkgs.courier-prime;
       name = "Courier Prime";
+      package = pkgs.courier-prime;
     };
     sansSerif = {
-      package = pkgs.courier-prime;
       name = "Courier Prime";
+      package = pkgs.courier-prime;
     };
     serif = {
-      package = pkgs.courier-prime;
       name = "Courier Prime";
+      package = pkgs.courier-prime;
     };
     emoji = {
-      package = pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];};
       name = "Symbols Nerd Font";
+      package = pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];};
     };
   };
 
   stylix.fonts.sizes = {
-    applications = 12;
-    terminal = 13;
-    desktop = 13;
     popups = 13;
+    desktop = 13;
+    terminal = 13;
+    applications = 12;
   };
 
   stylix.opacity = {
-    applications = 0.5;
-    terminal = 0.8;
-    desktop = 0.8;
     popups = 0.8;
+    desktop = 0.8;
+    terminal = 0.8;
+    applications = 0.5;
   };
 
   # Supposedly fixes some themeing/cursor issues might be useless.
@@ -605,54 +605,54 @@ in {
         stateVersion = "24.05"; # Dont change
 
         shellAliases = {
-          "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
-          "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
+          "shutdown" = "poweroff";
           "ls" = "${lib.getExe pkgs.eza}";
-          "pmem" = "vmrss"; # [p]rocess [mem]ory
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "rt" = "${lib.getExe pkgs.trashy}";
-          "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
-          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${constants.home}/screencaptures/recording.wav";
+          "pmem" = "vmrss"; # [p]rocess [mem]ory
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
-          "shutdown" = "poweroff";
+          "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
+          "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
           "nhoffline" = "nh os switch ${constants.flake-path} -- --option substitute false";
           "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
+          "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
+          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${constants.home}/screencaptures/recording.wav";
         };
 
         sessionVariables = {
           # Default programs.
           PAGER = lib.getExe pkgs.moar;
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
-          SYSTEMD_PAGER = lib.getExe pkgs.moar;
-          OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
-          VISUAL = "nvim";
           EDITOR = "nvim";
+          VISUAL = "nvim";
           SUDO_EDITOR = "nvim";
+          SYSTEMD_PAGER = lib.getExe pkgs.moar;
           TERMINAL = lib.getExe pkgs.alacritty;
           TERMINAL_PROG = lib.getExe pkgs.alacritty;
           BROWSER = lib.getExe pkgs-unstable.librewolf;
+          OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
           # Firefox hardware decode.
           MOZ_X11_EGL = 1;
           NO_AT_BRIDGE = 1;
           # Unreal engine .net cli tool turn off telemetry.
-          DOTNET_CLI_TELEMETRY_OPTOUT = "true";
           QT_QPA_PLATFORMTHEME = "qt5ct";
+          DOTNET_CLI_TELEMETRY_OPTOUT = "true";
         };
 
         # Home packages, home manager packages, user packages
         packages = with pkgs; [
           # GUI.
-          prismlauncher # Minecraft launcher
-          keepassxc # Password manager
-          tauon # Music player
-          foliate # Ebook reader
           anki # Flashcards
-          qbittorrent # Torrent client
           libreoffice # Office
           neovide # Neovim gui
-          rofi-wayland # App launcher
+          tauon # Music player
           hydrus # File manager
+          foliate # Ebook reader
+          rofi-wayland # App launcher
+          keepassxc # Password manager
+          qbittorrent # Torrent client
+          prismlauncher # Minecraft launcher
 
           python3
 
@@ -661,22 +661,27 @@ in {
 
           # Command line.
           bc # Gnu calculator, needed for vmrss
-          pulsemixer # Volume control
-          zoxide # Cd alternative
-          ffmpeg # Video and magic editor
-          hyprpicker # Color picker
-          slurp # Screenshot assistant
-          swappy # Quick drawing on images
+
+          # Haskell
+          haskell-language-server # Haskell LSP
+          ghc # Haskell LSP
+
+          moar # Pager
           termdown # Timer
           tldr # Man alternative
           htop # TUI task manager
-          moar # Pager
+          zoxide # Cd alternative
+          hyprpicker # Color picker
+          pulsemixer # Volume control
+          ffmpeg # Video and magic editor
+          swappy # Quick drawing on images
 
           # Unstable
           pkgs-unstable.krita # Painting
           pkgs-unstable.inkscape # Painting
           pkgs-unstable.librewolf # Browser
-          pkgs-unstable.blender # 3D graphics
+          blender
+          # pkgs-unstable.blender # 3D graphics
           pkgs-unstable.gomuks # TUI matrix client
         ];
 
@@ -729,9 +734,9 @@ in {
           gui.border = "single";
         };
       };
-      programs.nix-index.enable = true;
       programs.bash.enable = true;
       programs.zoxide.enable = true;
+      programs.nix-index.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
 
@@ -772,27 +777,27 @@ in {
         };
 
         config = {
-          save-position-on-quit = true;
-          hwdec = true;
-          ytdl-format = "bestvideo+bestaudio/best";
-          slang = "fin,fi,fi-fi,eng,en,en-en,en-orig";
-          sub-auto = "all";
-          sub-visibility = "yes";
-          sub-auto-exts = "srt,ass,txt";
           speed = 1;
+          hwdec = true;
+          sub-pos = 90;
           keep-open = true;
+          sub-auto = "all";
           loop-file = "inf";
-          sub-font = "${config.stylix.fonts.serif.name}";
-          sub-ass-override = "force";
-          sub-ass-force-style = "${config.stylix.fonts.serif.name}";
+          sub-font-size = 40;
+          sub-border-size = 2;
+          sub-shadow-offset = 2;
+          sub-visibility = "yes";
           sub-ass-line-spacing = 1;
           sub-ass-hinting = "normal";
-          sub-border-size = 2;
-          sub-pos = 90;
-          sub-font-size = 40;
+          sub-ass-override = "force";
+          save-position-on-quit = true;
+          sub-auto-exts = "srt,ass,txt";
+          ytdl-format = "bestvideo+bestaudio/best";
+          slang = "fin,fi,fi-fi,eng,en,en-en,en-orig";
+          sub-font = "${config.stylix.fonts.serif.name}";
+          sub-ass-force-style = "${config.stylix.fonts.serif.name}";
           sub-color = "${config.lib.stylix.colors.withHashtag.base07}";
           sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
-          sub-shadow-offset = 2;
         };
         scripts = [
           pkgs.mpvScripts.uosc
@@ -812,12 +817,12 @@ in {
       };
 
       programs.tmux = {
+        baseIndex = 1;
         enable = true;
         keyMode = "vi";
         prefix = "C-a";
-        mouse = true; # Allows you to scroll a terminal
         escapeTime = 0; # Delay after pressing escape
-        baseIndex = 1;
+        mouse = true; # Allows you to scroll a terminal
         historyLimit = 1000; # Alacritty already holds history
         extraConfig = ''
           #No hanging sessions.
@@ -856,17 +861,17 @@ in {
 
           # Status line.
           set-option -sg status on
-          set-option -sg status-interval 30
-          set-option -sg status-justify left
           set-option -sg status-keys vi
           set-option -sg status-left ""
+          set-option -sg status-interval 30
+          set-option -sg status-justify left
           set-option -sg status-left-length 10
-          set-option -sg status-left-style default
           set-option -sg status-position bottom
-          set-option -sg status-right "#(tmux-mem-cpp) %Y-%m-%d (%Ob %a) %H:%M"
           set-option -sg status-right-length 45
+          set-option -sg status-left-style default
           set-option -sg status-right-style default
           set-option -sg status-style fg=green,bg=default
+          set-option -sg status-right "#(tmux-mem-cpp) %Y-%m-%d (%Ob %a) %H:%M"
 
           # y and p as in vim.
           set-option -sg set-clipboard on
@@ -874,9 +879,9 @@ in {
           # Bind p paste-buffer.
           bind-key -T copy-mode-vi 'p' send -X paste-buffer
           bind-key -T copy-mode-vi 'v' send -X begin-selection
-          bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
-          bind-key -T copy-mode-vi 'Space' send -X halfpage-down
           bind-key -T copy-mode-vi 'Bspace' send -X halfpage-up
+          bind-key -T copy-mode-vi 'Space' send -X halfpage-down
+          bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
         '';
       };
 
@@ -1044,7 +1049,6 @@ in {
           jq # Json formatter
           shfmt # Shell formatter
           marksman # Markdown LSP
-          haskell-language-server # Haskell LSP
           python312Packages.python-lsp-server
           python312Packages.pyls-isort # Python import sort
           python312Packages.pycodestyle # Python complainer
@@ -1066,6 +1070,7 @@ in {
           yapf # Python formatter
           ruff # Python linter
           hlint # Haskell linter
+          haskell-language-server # Haskell lsp
 
           # Nix
           deadnix # Linter
@@ -1184,7 +1189,17 @@ in {
         };
 
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
+        extraConfigLuaPre = ''
+          -- Hide deprecation warnings
+          vim.notify = function(msg, ...)
+            if msg:match("has been deprecated") then
+              return
+              end
+            notify(msg, ...)
+          end
+        '';
         extraConfigLua = ''
+
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox-material]]
             vim.o.background = "dark"
@@ -1259,7 +1274,6 @@ in {
         clipboard.register = "unnamedplus";
 
         colorschemes.base16.enable = lib.mkForce false;
-        # colorschemes.gruvbox.enable = true;
         colorscheme = "gruvbox-material";
 
         extraPlugins = [
@@ -1267,17 +1281,21 @@ in {
             name = "cutlass.nvim";
             src = inputs.nvim-plugin-cutlass;
           })
-          pkgs.vimPlugins.splitjoin-vim
+          (pkgs.vimUtils.buildVimPlugin {
+            name = "vim-visual-multi";
+            src = inputs.nvim-plugin-vim-visual-multi;
+          })
           pkgs.vimPlugins.gruvbox-material
         ];
 
         plugins = {
           nix.enable = true;
-          surround.enable = true;
-          rainbow-delimiters.enable = true;
           direnv.enable = true;
           spider.enable = true;
           comment.enable = true;
+          surround.enable = true;
+          friendly-snippets.enable = true;
+          rainbow-delimiters.enable = true;
 
           nvim-ufo = {
             enable = true;
@@ -1285,8 +1303,8 @@ in {
 
           harpoon = {
             enable = true;
-            enableTelescope = true;
             markBranch = true;
+            enableTelescope = true;
             tmuxAutocloseWindows = true;
             keymaps = {
               addFile = "<leader>ha";
@@ -1422,16 +1440,15 @@ in {
               highlight = {
                 enable = true;
                 use_languagetree = true;
-                additional_vim_regex_highlighting = ["haskell"];
               };
             };
           };
 
           lsp = {
             enable = true;
-            onAttach = ''
-              client.server_capabilities.semanticTokensProvider = nil
-            '';
+            # onAttach = ''
+            #   client.server_capabilities.semanticTokensProvider = nil
+            # '';
             servers = {
               # Nix.
               nil-ls.enable = true;
@@ -1714,6 +1731,12 @@ in {
             options.desc = "Open diagnostic";
           }
           {
+            action = '':!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
+            key = "<Leader>s";
+            options.silent = true;
+            options.desc = "[s]ort lines by length";
+          }
+          {
             mode = "n";
             action = "<cmd>nohlsearch<CR>";
             key = "<Esc>";
@@ -1951,7 +1974,7 @@ in {
 
           cursor = {
             no_warps = true;
-            hide_on_key_press = true;
+            hide_on_key_press = false;
           };
 
           general = {
@@ -2081,7 +2104,7 @@ in {
             "$mainMod, d, Set [d]windle layout, exec, hyprctl keyword general:layout \"dwindle\""
             "$mainMod, m, Set [m]aster layout, exec, hyprctl keyword general:layout \"master\""
 
-            ", Print, Screenshot, exec, ${lib.getExe pkgs.hyprshot} -m region --clipboard-only"
+            ", Print, Screenshot, exec, ${lib.getExe pkgs.grimblast} --freeze copy area"
             "$mainMod, e, [e]dit image, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
             "$mainMod, r, [r]ecord, exec, hyprcorder.sh"

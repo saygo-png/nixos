@@ -29,6 +29,11 @@
       url = "github:gbprod/cutlass.nvim";
       flake = false;
     };
+
+    nvim-plugin-vim-visual-multi = {
+      url = "github:mg979/vim-visual-multi";
+      flake = false;
+    };
   };
   outputs = {
     self,
