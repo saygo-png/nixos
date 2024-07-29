@@ -1020,14 +1020,14 @@ in {
       programs.alacritty = {
         enable = true;
         settings = {
-          scrolling.history = 0; # Disables scrolling, use tmux.
-          window.dynamic_padding = true;
-          window.dynamic_title = true;
           scrolling.multiplier = 5;
-          selection.save_to_clipboard = false;
-          cursor.style.shape = "Underline";
+          window.dynamic_title = true;
           cursor.style.blinking = "on";
+          window.dynamic_padding = true;
           cursor.unfocused_hollow = false;
+          cursor.style.shape = "Underline";
+          selection.save_to_clipboard = false;
+          scrolling.history = 0; # Disables scrolling, use tmux.
           window.padding = {
             x = 8;
             y = 8;
@@ -1039,62 +1039,60 @@ in {
       programs.nixvim = {
         enable = true;
         extraPackages = with pkgs; [
-          rust-analyzer # Rust LSP
-          luajitPackages.jsregexp # Needed for luasnip
-          vim-language-server
           typos-lsp
           vale # Linter
-          haskellPackages.fourmolu # Haskell formatter
-          stylish-haskell # Haskell formatter
           jq # Json formatter
-          shfmt # Shell formatter
-          marksman # Markdown LSP
-          python312Packages.python-lsp-server
-          python312Packages.pyls-isort # Python import sort
-          python312Packages.pycodestyle # Python complainer
-          python312Packages.pylsp-mypy # Static checker plugin
-          python312Packages.jedi # Autocomplete plugin
-          python312Packages.mccabe # Flake8 plugin
-          python312Packages.flake8 # Pylsp plugin
-          python312Packages.pylsp-rope # Refactoring plugin
-          python312Packages.pyflakes # Python linter
-          sumneko-lua-language-server
-          nodePackages.bash-language-server
-          stylua # Lua formatter
-          isort # Python import sorter
-          shellcheck # Bash linter
-          hadolint # Docker linter
-          nodePackages.jsonlint
-          mypy # Python type checker
-          black # Python formatter
-          yapf # Python formatter
+          vim-language-server
+          deadnix # Nix linter
           ruff # Python linter
+          nodePackages.jsonlint
           hlint # Haskell linter
+          stylua # Lua formatter
+          marksman # Markdown LSP
+          shfmt # Shell formatter
+          yapf # Python formatter
+          black # Python formatter
+          hadolint # Docker linter
+          rust-analyzer # Rust LSP
+          shellcheck # Bash linter
+          mypy # Python type checker
+          sumneko-lua-language-server
+          isort # Python import sorter
+          nodePackages.bash-language-server
+          python312Packages.python-lsp-server
+          stylish-haskell # Haskell formatter
           haskell-language-server # Haskell lsp
-
-          # Nix
-          deadnix # Linter
+          python312Packages.flake8 # Pylsp plugin
+          python312Packages.mccabe # Flake8 plugin
+          python312Packages.pyflakes # Python linter
+          haskellPackages.fourmolu # Haskell formatter
+          luajitPackages.jsregexp # Needed for luasnip
+          python312Packages.jedi # Autocomplete plugin
+          python312Packages.pycodestyle # Python complainer
+          python312Packages.pyls-isort # Python import sort
+          python312Packages.pylsp-rope # Refactoring plugin
+          python312Packages.pylsp-mypy # Static checker plugin
         ];
 
         highlightOverride = {
           # hi noCursor blend=100 cterm=strikethrough
-          ModeMsg.fg = "#${constants.accentColor}";
-          FloatBorder.fg = "#${constants.accentColor}";
           noCursor.blend = 100;
           statusline.bg = "NONE";
+          ModeMsg.fg = "#${constants.accentColor}";
+          MsgArea.fg = "#${constants.accentColor}";
           statusline.fg = "#${constants.accentColor}";
+          FloatBorder.fg = "#${constants.accentColor}";
           CursorLineNr.fg = "#${constants.accentColor}";
           CursorLineNr.bg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray numberline
-          MsgArea.fg = "#${constants.accentColor}";
           MiniIndentscopeSymbol.fg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray indentline
         };
 
         opts = {
           # Indents.
-          expandtab = true;
           tabstop = 2;
           shiftwidth = 2;
           softtabstop = 2;
+          expandtab = true;
           autoindent = true;
           breakindent = true; # Indent when wrapping
 
@@ -1124,8 +1122,8 @@ in {
           cursorlineopt = "number";
 
           # Smartcase search and ripgrep.
-          ignorecase = true;
           smartcase = true;
+          ignorecase = true;
           grepprg = "rg --vimgrep";
           grepformat = "%f:%l:%c:%m";
 
@@ -2275,24 +2273,19 @@ in {
         font = {
           normal = ["JetBrains Mono"];
           size = 13;
-          # features = {
-          #   "JetBrains Mono" = ["-liga"];
-          # };
         };
       };
 
       xdg.configFile."zed/settings.json".text = builtins.toJSON {
-        auto_update = false;
-        base_keymap = "VSCode";
-        theme = "Gruvbox Dark";
+        tab_size = 2;
         vim_mode = true;
         ui_font_size = 16;
+        auto_update = false;
         buffer_font_size = 16;
-        tab_size = 2;
+        base_keymap = "VSCode";
+        theme = "Gruvbox Dark";
+        vim.use_system_clipboard = "always";
         buffer_font_family = "JetBrains Mono";
-        vim = {
-          use_system_clipboard = "always";
-        };
         BINDZ = [
           {
             context = "Editor && !VimWaiting && !menu";
@@ -2307,18 +2300,18 @@ in {
         ];
         inlay_hints = {
           enabled = true;
-          show_type_hints = true;
-          show_parameter_hints = true;
-          show_other_hints = true;
           edit_debounce_ms = 700;
+          show_type_hints = true;
           scroll_debounce_ms = 50;
+          show_other_hints = true;
+          show_parameter_hints = true;
         };
         journal = {
           hour_format = "hour24";
         };
         telemetry = {
-          diagnostics = false;
           metrics = false;
+          diagnostics = false;
         };
       };
     };
