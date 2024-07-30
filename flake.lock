@@ -484,6 +484,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-rainbow": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1722056440,
+        "narHash": "sha256-dBHgAc3dOoeBI/lZzIJgYYTda8ZMvdThixUZebZXRHE=",
+        "owner": "luochen1990",
+        "repo": "rainbow",
+        "rev": "76ca1a20aa42edb5c65c19029968aad4625790dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "luochen1990",
+        "repo": "rainbow",
+        "type": "github"
+      }
+    },
     "nvim-plugin-vim-visual-multi": {
       "flake": false,
       "locked": {
@@ -508,6 +524,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "nvim-plugin-cutlass": "nvim-plugin-cutlass",
+        "nvim-plugin-rainbow": "nvim-plugin-rainbow",
         "nvim-plugin-vim-visual-multi": "nvim-plugin-vim-visual-multi",
         "stylix": "stylix"
       }

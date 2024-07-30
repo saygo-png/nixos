@@ -34,6 +34,11 @@
       url = "github:mg979/vim-visual-multi";
       flake = false;
     };
+
+    nvim-plugin-rainbow = {
+      url = "github:luochen1990/rainbow";
+      flake = false;
+    };
   };
   outputs = {
     self,

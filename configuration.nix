@@ -1156,6 +1156,8 @@ in {
         globals = {
           mapleader = " ";
 
+          rainbow_active = 1;
+
           gruvbox_material_foreground = "original";
           gruvbox_material_enable_bold = 0;
           gruvbox_material_transparent_background = 2;
@@ -1189,15 +1191,25 @@ in {
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         extraConfigLuaPre = ''
           -- Hide deprecation warnings
+          local notify = vim.notify
           vim.notify = function(msg, ...)
             if msg:match("has been deprecated") then
               return
-              end
+            end
             notify(msg, ...)
           end
         '';
-        extraConfigLua = ''
+        extraConfigLuaPost = ''
+          -- Makes treesitter work with rainbow plugin
+          vim.api.nvim_set_hl(0, "@constructor", { link = "" })
+          vim.api.nvim_set_hl(0, "@constructor.lua", { link = "" })
+          vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
+          vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
+          vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
+          vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
+        '';
 
+        extraConfigLua = ''
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox-material]]
             vim.o.background = "dark"
@@ -1207,12 +1219,6 @@ in {
 
           -- Transparent hover
           vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
-
-          -- Leap bidirectional search
-          vim.keymap.set('n',        's', '<Plug>(leap)')
-          vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
-          vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
-          vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
 
           require("cutlass").setup({
             cut_key = "m",
@@ -1283,20 +1289,33 @@ in {
             name = "vim-visual-multi";
             src = inputs.nvim-plugin-vim-visual-multi;
           })
+          (pkgs.vimUtils.buildVimPlugin {
+            name = "rainbow";
+            src = inputs.nvim-plugin-rainbow;
+          })
           pkgs.vimPlugins.gruvbox-material
         ];
 
         plugins = {
           nix.enable = true;
           direnv.enable = true;
-          spider.enable = true;
           comment.enable = true;
           surround.enable = true;
           friendly-snippets.enable = true;
-          rainbow-delimiters.enable = true;
+          rainbow-delimiters.enable = false;
 
           nvim-ufo = {
             enable = true;
+          };
+
+          spider = {
+            enable = true;
+            keymaps.motions = {
+              b = "b";
+              e = "e";
+              ge = "ge";
+              w = "w";
+            };
           };
 
           harpoon = {
@@ -1358,10 +1377,8 @@ in {
             };
           };
 
-          leap = {
+          flash = {
             enable = true;
-            addDefaultMappings = false;
-            # safeLabels = [];
           };
 
           lspsaga = {
@@ -1444,9 +1461,10 @@ in {
 
           lsp = {
             enable = true;
-            # onAttach = ''
-            #   client.server_capabilities.semanticTokensProvider = nil
-            # '';
+            # Disable highlights from LSP, breaks rainbow
+            onAttach = ''
+              client.server_capabilities.semanticTokensProvider = nil
+            '';
             servers = {
               # Nix.
               nil-ls.enable = true;
@@ -1655,6 +1673,24 @@ in {
             options.desc = "Command mode with or without shift";
           }
           {
+            key = "<leader>th";
+            action = ":Telescope harpoon marks<cr>";
+            options = {
+              silent = true;
+              desc = "[t]elescope [h]arpoon Marks";
+            };
+          }
+          {
+            key = "s";
+            action.__raw = ''require("flash").remote'';
+            options.desc = "Flash";
+          }
+          {
+            key = "S";
+            action.__raw = ''require("flash").treesitter'';
+            options.desc = "Flash treesitter";
+          }
+          {
             mode = "n";
             action = "<lt><lt>";
             key = "<lt>";
@@ -1674,7 +1710,12 @@ in {
             key = ".";
             options.desc = "Dot commands over visual blocks";
           }
-
+          {
+            mode = "i";
+            action = ''<C-r>"'';
+            key = "<C-v>";
+            options.desc = "Proper paste";
+          }
           # Plugin garbage.
           {
             mode = ["n"];
@@ -1802,68 +1843,64 @@ in {
         in {
           "*" = {
             highlight = "bold";
-
-            normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
-            normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            alternate-normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
-            alternate-normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            selected-normal-background = lib.mkForce (mkLiteral "@gruvbox-dark-bg3");
-            selected-normal-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg0");
-
-            active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-dark");
-            active-foreground = lib.mkForce (mkLiteral "@foreground");
-            alternate-active-background = lib.mkForce (mkLiteral "@active-background");
-            alternate-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
-            selected-active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-light");
-            selected-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
-
-            urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-dark");
-            urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            alternate-urgent-background = lib.mkForce (mkLiteral "@urgent-background");
-            alternate-urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            selected-urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-light");
-            selected-urgent-foreground = lib.mkForce (mkLiteral "@urgent-foreground");
-
-            background = lib.mkForce (mkLiteral "@gruvbox-dark-bg0");
-            background-color = lib.mkForce (mkLiteral "@background");
-            foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
             border-color = lib.mkForce (mkLiteral "#7d8618");
-            separatorcolor = lib.mkForce (mkLiteral "@border-color");
-            scrollbar-handle = lib.mkForce (mkLiteral "@border-color");
-            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
-            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
-            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 100%)");
             gruvbox-dark-fg0 = lib.mkForce (mkLiteral "#fbf1c7");
             gruvbox-dark-fg1 = lib.mkForce (mkLiteral "#ebdbb2");
+            gruvbox-dark-gray = lib.mkForce (mkLiteral "#bdae93");
+            background-color = lib.mkForce (mkLiteral "@background");
+            background = lib.mkForce (mkLiteral "@gruvbox-dark-bg0");
+            foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
+            separatorcolor = lib.mkForce (mkLiteral "@border-color");
+            active-foreground = lib.mkForce (mkLiteral "@foreground");
             gruvbox-dark-red-dark = lib.mkForce (mkLiteral "#fe8019");
+            normal-foreground = lib.mkForce (mkLiteral "@foreground");
             gruvbox-dark-red-light = lib.mkForce (mkLiteral "#fb4934");
+            scrollbar-handle = lib.mkForce (mkLiteral "@border-color");
             gruvbox-dark-yellow-dark = lib.mkForce (mkLiteral "#fabd2f");
             gruvbox-dark-yellow-light = lib.mkForce (mkLiteral "#8ec07c");
-            gruvbox-dark-gray = lib.mkForce (mkLiteral "#bdae93");
+            urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
+            alternate-normal-foreground = lib.mkForce (mkLiteral "@foreground");
+            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-dark");
+            normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 100%)");
+            active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-dark");
+            selected-normal-background = lib.mkForce (mkLiteral "@gruvbox-dark-bg3");
+            selected-normal-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg0");
+            alternate-urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
+            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            selected-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
+            selected-urgent-foreground = lib.mkForce (mkLiteral "@urgent-foreground");
+            alternate-active-background = lib.mkForce (mkLiteral "@active-background");
+            alternate-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
+            alternate-urgent-background = lib.mkForce (mkLiteral "@urgent-background");
+            selected-urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-light");
+            alternate-normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            selected-active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-light");
           };
           "window" = {
-            background-color = lib.mkForce (mkLiteral "@background");
             border = 1;
             padding = 5;
+            background-color = lib.mkForce (mkLiteral "@background");
           };
           "mainbox" = {
             border = 0;
             padding = 0;
           };
           "message" = {
+            padding = mkLiteral "1px";
             border = mkLiteral "2px 0 0";
             border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
-            padding = mkLiteral "1px";
           };
           "textbox" = {
             highlight = mkLiteral "@highlight";
             text-color = lib.mkForce (mkLiteral "@foreground");
           };
           "listview" = {
-            border = mkLiteral "0px solid 0 0";
-            padding = mkLiteral "0px 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
             spacing = mkLiteral "0px";
+            padding = mkLiteral "0px 0 0";
+            border = mkLiteral "0px solid 0 0";
+            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
           };
           "element" = {
             border = 0;
@@ -1871,8 +1908,8 @@ in {
           };
           "inputbar" = {
             spacing = 2;
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
             padding = mkLiteral "2px";
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
             children = mkLiteral "[prompt, textbox-prompt-sep, entry, case-indicator]";
           };
           "case-indicator, entry, prompt, button" = {
@@ -1896,15 +1933,84 @@ in {
             text-color = lib.mkForce (mkLiteral "@normal-foreground");
           };
           "textbox-prompt-sep" = {
-            expand = false;
             str = ":";
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            expand = false;
             margin = mkLiteral "0 0.2em 0.3em 0";
+            text-color = lib.mkForce (mkLiteral "@normal-foreground");
           };
           "element.normal.normal" = {
-            background-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
             text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            background-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
           };
+
+          "element.normal.urgent" = {
+            text-color = lib.mkForce (mkLiteral "@urgent-foreground");
+            background-color = lib.mkForce (mkLiteral "@urgent-background");
+          };
+
+          "element.normal.active" = {
+            text-color = lib.mkForce (mkLiteral "@active-foreground");
+            background-color = lib.mkForce (mkLiteral "@active-background");
+          };
+
+          "element.selected.normal" = {
+            text-color = lib.mkForce (mkLiteral "@selected-normal-foreground");
+            background-color = lib.mkForce (mkLiteral "@selected-normal-background");
+          };
+
+          "element.selected.urgent" = {
+            text-color = lib.mkForce (mkLiteral "@selected-urgent-foreground");
+            background-color = lib.mkForce (mkLiteral "@selected-urgent-background");
+          };
+
+          "element.selected.active" = {
+            text-color = lib.mkForce (mkLiteral "@selected-active-foreground");
+            background-color = lib.mkForce (mkLiteral "@selected-active-background");
+          };
+
+          "element.alternate.normal" = {
+            text-color = lib.mkForce (mkLiteral "@alternate-normal-foreground");
+            background-color = lib.mkForce (mkLiteral "@alternate-normal-background");
+          };
+
+          "element.alternate.urgent" = {
+            text-color = lib.mkForce (mkLiteral "@alternate-urgent-foreground");
+            background-color = lib.mkForce (mkLiteral "@alternate-urgent-background");
+          };
+
+          "element.alternate.active" = {
+            text-color = lib.mkForce (mkLiteral "@alternate-active-foreground");
+            background-color = lib.mkForce (mkLiteral "@alternate-active-background");
+          };
+
+          "scrollbar" = {
+            border = 0;
+            padding = 0;
+            handle-width = mkLiteral "8px";
+            width = lib.mkForce (mkLiteral "4px");
+            handle-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 10%)");
+          };
+
+          "mode-switcher" = {
+            border = mkLiteral "2px 0 0";
+            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 10%)");
+          };
+
+          "button.selected" = {
+            text-color = lib.mkForce (mkLiteral "@selected-normal-foreground");
+            background-color = lib.mkForce (mkLiteral "@selected-normal-background");
+          };
+
+          "element-icon" = {
+            text-color = lib.mkForce (mkLiteral "inherit");
+            background-color = lib.mkForce (mkLiteral "inherit");
+          };
+
+          "element-text" = {
+            text-color = lib.mkForce (mkLiteral "inherit");
+            background-color = lib.mkForce (mkLiteral "inherit");
+          };
+
           # TODO add more colors like this.
           # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
         };
@@ -2032,9 +2138,6 @@ in {
               "windowsOut, 1, 4, easeOutQuart, popin 60%"
               "windowsMove, 1, 4, easeOutQuart, popin 60%"
               "windows, 1, 4, easeOutQuart"
-
-              # "layers, 1, 4, easeOutQuart, popin 70%"
-              "layers, 1, 4, default, slide top"
 
               "fadeIn, 1, 4, easeOutQuart"
               "fadeOut, 1, 4, easeOutQuart"
@@ -2165,7 +2268,11 @@ in {
             "$mainMod, mouse:272, movewindow"
             "$mainMod, mouse:273, resizewindow"
           ];
-
+          layerrule = [
+            # "layers, 1, 4, default, slide top"
+            "dimaround, rofi"
+            "animation slide top, rofi"
+          ];
           windowrule = [
             "workspace 1      , title:Terminal"
             "workspace 2      , title:Web"
