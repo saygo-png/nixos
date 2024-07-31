@@ -56,8 +56,25 @@ in {
 
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
+  i18n = {
+    defaultLocale = "pl_PL.UTF-8";
+    extraLocaleSettings = {
+      LANG = "en_US.UTF-8";
+      LC_CTYPE = "pl_PL.UTF-8";
+      LC_NUMERIC = "pl_PL.UTF-8";
+      LC_TIME = "pl_PL.UTF-8";
+      LC_COLLATE = "pl_PL.UTF-8";
+      LC_MONETARY = "pl_PL.UTF-8";
+      LC_MESSAGES = "pl_PL.UTF-8";
+      LC_PAPER = "pl_PL.UTF-8";
+      LC_NAME = "pl_PL.UTF-8";
+      LC_ADDRESS = "pl_PL.UTF-8";
+      LC_TELEPHONE = "pl_PL.UTF-8";
+      LC_MEASUREMENT = "pl_PL.UTF-8";
+      LC_IDENTIFICATION = "pl_PL.UTF-8";
+    };
+  };
 
-  i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Warsaw";
 
   services.libinput.enable = true;
@@ -155,7 +172,6 @@ in {
     wget # Downloader
     eza # ls rewrite
     trashy # Cli trashcan
-    tmux # Terminal multiplexer
     dash # Lightweight shell
     git # Source control
     fzf # Fuzzy finder
@@ -605,8 +621,11 @@ in {
         stateVersion = "24.05"; # Dont change
 
         shellAliases = {
+          "neovim" = "nvim";
           "shutdown" = "poweroff";
+          "nvim" = "neovide --no-fork";
           "ls" = "${lib.getExe pkgs.eza}";
+          "neovide" = "neovide --no-fork";
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "rt" = "${lib.getExe pkgs.trashy}";
@@ -816,78 +835,8 @@ in {
         };
       };
 
-      programs.tmux = {
-        baseIndex = 1;
-        enable = true;
-        keyMode = "vi";
-        prefix = "C-a";
-        escapeTime = 0; # Delay after pressing escape
-        mouse = true; # Allows you to scroll a terminal
-        historyLimit = 1000; # Alacritty already holds history
-        extraConfig = ''
-          #No hanging sessions.
-          set-option -sg destroy-unattached
-
-          # For vim autoread.
-          set-option -g focus-events on
-
-          # For truecolor inside tmux
-          set -g default-terminal 'tmux-256color'
-          set -as terminal-overrides ",alacritty*:Tc"
-
-          # Easy-to-remember split pane commands.
-          bind | split-window -h
-          bind - split-window -v
-          unbind '"'
-          unbind %
-
-          # I don't know, read the docs.
-          setw -g monitor-activity on
-          set -g visual-activity on
-
-          # Moving between panes with vim movement keys.
-          bind h select-pane -L
-          bind j select-pane -D
-          bind k select-pane -U
-          bind l select-pane -R
-          # moving between windows with vim movement keys.
-          bind -r C-h select-window -t :-
-          bind -r C-l select-window -t :+
-          # Resize panes with vim movement keys.
-          bind -r H resize-pane -L 5
-          bind -r J resize-pane -D 5
-          bind -r K resize-pane -U 5
-          bind -r L resize-pane -R 5
-
-          # Status line.
-          set-option -sg status on
-          set-option -sg status-keys vi
-          set-option -sg status-left ""
-          set-option -sg status-interval 30
-          set-option -sg status-justify left
-          set-option -sg status-left-length 10
-          set-option -sg status-position bottom
-          set-option -sg status-right-length 45
-          set-option -sg status-left-style default
-          set-option -sg status-right-style default
-          set-option -sg status-style fg=green,bg=default
-          set-option -sg status-right "#(tmux-mem-cpp) %Y-%m-%d (%Ob %a) %H:%M"
-
-          # y and p as in vim.
-          set-option -sg set-clipboard on
-          bind Escape copy-mode
-          # Bind p paste-buffer.
-          bind-key -T copy-mode-vi 'p' send -X paste-buffer
-          bind-key -T copy-mode-vi 'v' send -X begin-selection
-          bind-key -T copy-mode-vi 'Bspace' send -X halfpage-up
-          bind-key -T copy-mode-vi 'Space' send -X halfpage-down
-          bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
-        '';
-      };
-
       programs.fzf = {
         enable = true;
-        tmux.enableShellIntegration = true;
       };
 
       programs.zsh = {
@@ -1012,7 +961,7 @@ in {
             blink = "yes";
           };
           scrollback = {
-            lines = 0; # Use tmux for scrolling.
+            lines = 1000;
           };
         };
       };
@@ -1027,12 +976,19 @@ in {
           cursor.unfocused_hollow = false;
           cursor.style.shape = "Underline";
           selection.save_to_clipboard = false;
-          scrolling.history = 0; # Disables scrolling, use tmux.
+          scrolling.history = 1000;
           window.padding = {
             x = 8;
             y = 8;
           };
           font.offset.y = 3; # Line spacing
+          keyboard.bindings = [
+            {
+              key = "Escape";
+              mods = "Shift";
+              action = "ToggleViMode";
+            }
+          ];
         };
       };
 
@@ -1298,18 +1254,15 @@ in {
 
         plugins = {
           nix.enable = true;
-          direnv.enable = true;
+          flash.enable = true;
           comment.enable = true;
+          nvim-ufo.enable = true;
           surround.enable = true;
           friendly-snippets.enable = true;
-          rainbow-delimiters.enable = false;
-
-          nvim-ufo = {
-            enable = true;
-          };
 
           spider = {
             enable = true;
+            skipInsignificantPunctuation = false;
             keymaps.motions = {
               b = "b";
               e = "e";
@@ -1322,7 +1275,6 @@ in {
             enable = true;
             markBranch = true;
             enableTelescope = true;
-            tmuxAutocloseWindows = true;
             keymaps = {
               addFile = "<leader>ha";
               navFile = {
@@ -1345,9 +1297,9 @@ in {
             in [
               "*"
               ({language = "css";} // css)
-              ({language = "scss";} // css)
-              ({language = "sass";} // css)
               ({language = "less";} // css)
+              ({language = "sass";} // css)
+              ({language = "scss";} // css)
               ({language = "stylus";} // css)
             ];
             bufTypes = [
@@ -1375,10 +1327,6 @@ in {
                 options.desc = "[T]elescope [G]rep";
               };
             };
-          };
-
-          flash = {
-            enable = true;
           };
 
           lspsaga = {
@@ -1454,7 +1402,6 @@ in {
             moduleConfig = {
               highlight = {
                 enable = true;
-                use_languagetree = true;
               };
             };
           };
@@ -1584,7 +1531,19 @@ in {
             settings.defaultFileExplorer = true;
           };
 
-          luasnip.enable = true;
+          luasnip = {
+            enable = true;
+            extraConfig = {
+              enable_autosnippets = true;
+              store_selection_keys = "<Tab>";
+            };
+            fromVscode = [
+              {
+                lazyLoad = true;
+              }
+            ];
+          };
+
           cmp-nvim-lsp.enable = true;
           cmp-nvim-lsp-signature-help.enable = true;
           cmp = {
@@ -1607,7 +1566,6 @@ in {
                 {name = "nvim_lsp";}
                 {name = "nvim_lua";}
                 {name = "luasnip";}
-                {name = "vsnip";}
                 {name = "path";}
                 {name = "treesitter";}
                 {name = "nvim_lsp_signature_help";}
@@ -1637,25 +1595,25 @@ in {
         keymaps = [
           # Basic.
           {
-            mode = ["n"];
+            mode = "n";
             action = "Gzz";
             key = "G";
             options.desc = "Center bottom";
           }
           {
-            mode = ["n"];
+            mode = "n";
             action = "ggzz";
             key = "gg";
             options.desc = "Center top";
           }
           {
-            mode = ["n"];
+            mode = "n";
             action = "gj";
             key = "j";
             options.desc = "Move down through wrapped line";
           }
           {
-            mode = ["n"];
+            mode = "n";
             action = "gk";
             key = "k";
             options.desc = "Move up through wrapped line";
@@ -1711,14 +1669,14 @@ in {
             options.desc = "Dot commands over visual blocks";
           }
           {
-            mode = "i";
+            mode = ["v" "c"];
             action = ''<C-r>"'';
             key = "<C-v>";
             options.desc = "Proper paste";
           }
           # Plugin garbage.
           {
-            mode = ["n"];
+            mode = "n";
             key = "<Leader>c";
             action = "<cmd>lua require('conform').format({ timeout_ms = 500 })<CR>";
             options = {
@@ -1727,7 +1685,7 @@ in {
           }
 
           {
-            mode = ["n"];
+            mode = "n";
             key = "gm";
             action = "m";
             options = {
@@ -2017,7 +1975,10 @@ in {
       };
 
       services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
-      wayland.windowManager.hyprland = {
+      wayland.windowManager.hyprland = let
+        gaps_in = 6;
+        gaps_out = 13;
+      in {
         systemd.enable = true;
         xwayland.enable = true;
         systemd.variables = ["--all"];
@@ -2084,8 +2045,8 @@ in {
           general = {
             "$mainMod" = "SUPER";
             layout = "dwindle";
-            gaps_in = 15;
-            gaps_out = 35;
+            gaps_in = gaps_in;
+            gaps_out = gaps_out;
             border_size = 1;
             border_part_of_window = false;
             no_border_on_floating = false;
@@ -2101,7 +2062,7 @@ in {
             disable_autoreload = true;
             animate_manual_resizes = true;
             enable_swallow = true;
-            swallow_regex = "^(a|A)lacritty$";
+            swallow_regex = "^(Alacritty)$";
           };
 
           dwindle = {
@@ -2164,9 +2125,18 @@ in {
           #  add descriptions to each key
           bindde = [
             "$mainMod, g, toggle [g]roup, togglegroup"
-            "$mainMod, n, [n]o insert into group, lockactivegroup, toggle"
-            "$mainMod CTRL, n, [n]ext tab, changegroupactive, f"
-            "$mainMod CTRL, p, [p]revious tab, changegroupactive, b"
+            "$mainMod, u, [u]-lock insert into group, lockactivegroup, toggle"
+            "$mainMod, n, [n]ext tab, changegroupactive, f"
+            "ALT, 1, Switch group tab, changegroupactive, 1"
+            "ALT, 2, Switch group tab, changegroupactive, 2"
+            "ALT, 3, Switch group tab, changegroupactive, 3"
+            "ALT, 4, Switch group tab, changegroupactive, 4"
+            "ALT, 5, Switch group tab, changegroupactive, 5"
+            "ALT, 6, Switch group tab, changegroupactive, 6"
+            "ALT, 7, Switch group tab, changegroupactive, 7"
+            "ALT, 8, Switch group tab, changegroupactive, 8"
+            "ALT, 9, Switch group tab, changegroupactive, 9"
+            "ALT, 0, Switch group tab, changegroupactive, 10"
             "$mainMod, o, Move [o]ut of group, moveoutofgroup,"
             "$mainMod CTRL SHIFT, h, Move focus right, moveintogroup, l"
             "$mainMod CTRL SHIFT, l, Move focus left, moveintogroup, r"
@@ -2183,8 +2153,8 @@ in {
             "$mainMod, f, [f]ullscreen, fullscreen"
             "$mainMod SHIFT, f, [f]akke fullscreen, fakefullscreen"
 
-            "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in 15"
-            "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out 35"
+            "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
+            "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"
             "$mainMod SHIFT, a, g[a]ps off, exec, hyprctl keyword general:gaps_in 0"
             "$mainMod SHIFT, a, g[a]ps off, exec, hyprctl keyword general:gaps_out 0"
 
@@ -2251,10 +2221,10 @@ in {
             "$mainMod CTRL, k, Resize window up, resizeactive, 0 -100"
             "$mainMod CTRL, j, Resize window down, resizeactive, 0 100"
 
-            "$mainMod ALT, H, Move floating left, moveactive, -100 0"
-            "$mainMod ALT, L, Move floating right, moveactive, 100 0"
-            "$mainMod ALT, K, Move floating up, moveactive, 0 -100"
-            "$mainMod ALT, J, Move floating down, moveactive, 0 100"
+            "$mainMod ALT, h, Move floating left, moveactive, -100 0"
+            "$mainMod ALT, l, Move floating right, moveactive, 100 0"
+            "$mainMod ALT, k, Move floating up, moveactive, 0 -100"
+            "$mainMod ALT, j, Move floating down, moveactive, 0 100"
 
             "$mainMod, Equal, Volume down, exec, ${lib.getExe pkgs.pamixer} -i 2"
             "$mainMod, Minus, Volume up, exec, ${lib.getExe pkgs.pamixer} -d 2"
@@ -2308,6 +2278,9 @@ in {
             "noinitialfocus, class:^()$"
 
             "noborder, onworkspace:w[t1]"
+
+            # Shadow only for floating windows
+            "noshadow, floating:0"
 
             "suppressevent maximize, class:.*"
 
