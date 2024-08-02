@@ -57,15 +57,13 @@ in {
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
   i18n = {
-    defaultLocale = "pl_PL.UTF-8";
+    defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
-      LANG = "en_US.UTF-8";
       LC_CTYPE = "pl_PL.UTF-8";
       LC_NUMERIC = "pl_PL.UTF-8";
       LC_TIME = "pl_PL.UTF-8";
       LC_COLLATE = "pl_PL.UTF-8";
       LC_MONETARY = "pl_PL.UTF-8";
-      LC_MESSAGES = "pl_PL.UTF-8";
       LC_PAPER = "pl_PL.UTF-8";
       LC_NAME = "pl_PL.UTF-8";
       LC_ADDRESS = "pl_PL.UTF-8";
@@ -172,6 +170,7 @@ in {
     wget # Downloader
     eza # ls rewrite
     trashy # Cli trashcan
+    udiskie # Auto mount
     dash # Lightweight shell
     git # Source control
     fzf # Fuzzy finder
@@ -321,7 +320,7 @@ in {
       else
         monitor=$(hyprctl activeworkspace -j | jq -r '.monitor')
         notify-send "Recording starting on $monitor."
-        ${lib.getExe pkgs.wl-screenrec} -b "1 MB" -o $monitor -f ${constants.home}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
+        ${lib.getExe pkgs.wl-screenrec} --audio -b "1 MB" -o $monitor -f ${constants.home}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
         fi
     '')
   ];
@@ -505,6 +504,7 @@ in {
       # Main font.
       courier-prime
       noto-fonts
+      roboto
       jetbrains-mono
       noto-fonts-emoji
       noto-fonts-cjk-sans
@@ -618,14 +618,12 @@ in {
       home = {
         username = "${constants.username}";
         homeDirectory = "${constants.home}";
-        stateVersion = "24.05"; # Dont change
+        stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
         shellAliases = {
-          "neovim" = "nvim";
+          "neov" = "neovide --no-fork";
           "shutdown" = "poweroff";
-          "nvim" = "neovide --no-fork";
           "ls" = "${lib.getExe pkgs.eza}";
-          "neovide" = "neovide --no-fork";
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "rt" = "${lib.getExe pkgs.trashy}";
@@ -666,6 +664,7 @@ in {
           libreoffice # Office
           neovide # Neovim gui
           tauon # Music player
+          ardour # Music maker (daw)
           hydrus # File manager
           foliate # Ebook reader
           rofi-wayland # App launcher
@@ -699,6 +698,26 @@ in {
           pkgs-unstable.krita # Painting
           pkgs-unstable.inkscape # Painting
           pkgs-unstable.librewolf # Browser
+          # DO THIS ONE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
+          # programs = {
+          #   # use firefox dev edition
+          #   firefox = rec {
+          #     enable = true;
+          #     package = pkgs.firefox-devedition-bin.overrideAttrs (o: {
+          #       # launch firefox with user profile
+          #       buildCommand =
+          #         o.buildCommand
+          #         + ''
+          #           wrapProgram "$executablePath" \
+          #             --set 'HOME' '${config.xdg.configHome}' \
+          #             --append-flags "--name firefox -P ${user}"
+          #         '';
+          #     });
+          #
+          #     vendorPath = ".config/.mozilla";
+          #     configPath = "${vendorPath}/firefox";
+          #   };
+          # };
           blender
           # pkgs-unstable.blender # 3D graphics
           pkgs-unstable.gomuks # TUI matrix client
@@ -801,7 +820,6 @@ in {
           sub-pos = 90;
           keep-open = true;
           sub-auto = "all";
-          loop-file = "inf";
           sub-font-size = 40;
           sub-border-size = 2;
           sub-shadow-offset = 2;
@@ -1424,7 +1442,10 @@ in {
               bashls.enable = true;
 
               # Typos.
-              typos-lsp.enable = true;
+              typos-lsp = {
+                enable = true;
+                extraOptions.init_options.diagnosticSeverity = "Hint";
+              };
 
               # Lua.
               lua-ls.enable = true;
@@ -1668,29 +1689,33 @@ in {
             key = ".";
             options.desc = "Dot commands over visual blocks";
           }
+
           {
-            mode = ["v" "c"];
-            action = ''<C-r>"'';
-            key = "<C-v>";
+            mode = ["n"];
+            action = ''"+p'';
+            key = "<C-V>";
             options.desc = "Proper paste";
           }
+          {
+            mode = ["i" "c"];
+            action = ''<C-r>+'';
+            key = "<C-V>";
+            options.desc = "Proper paste";
+          }
+
           # Plugin garbage.
           {
             mode = "n";
             key = "<Leader>c";
             action = "<cmd>lua require('conform').format({ timeout_ms = 500 })<CR>";
-            options = {
-              desc = "[c]onform";
-            };
+            options.desc = "[c]onform";
           }
 
           {
             mode = "n";
             key = "gm";
             action = "m";
-            options = {
-              desc = "Set mark";
-            };
+            options.desc = "Set mark";
           }
           {
             action = "<cmd>Oil .<CR>";
@@ -2019,7 +2044,7 @@ in {
 
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
-            "${lib.getExe' pkgs.udiskie "udiskie"} &"
+            "udiskie &"
             # "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
@@ -2251,6 +2276,9 @@ in {
             "workspace 8      , title:Steam"
             "workspace 10     , title:passwordManager"
 
+            "pin, ripdrag"
+            "float, ripdrag"
+
             "float            , imv"
             "center           , imv"
             "size 1200 725    , imv"
@@ -2347,7 +2375,45 @@ in {
 
       xdg.configFile."fourmolu.yaml".source = (pkgs.formats.yaml {}).generate "fourmoluExtraConfigDIY" {
         indentation = 2;
+        respectful = false;
+        in-style = "left-align";
+        comma-style = "trailing";
+        indent-wheres = true;
+        let-style = "inline";
+        haddock-style = "single-line";
       };
+
+      xdg.configFile."stylish-haskell/config.yaml".text = ''
+        steps:
+          - simple_align:
+              cases: always
+              top_level_patterns: always
+              records: always
+              multi_way_if: always
+          - imports:
+              align: global
+              list_align: after_alias
+              pad_module_names: true
+              long_list_align: inline
+              empty_list_align: inherit
+              list_padding: 4
+              separate_lists: true
+              space_surround: false
+              post_qualify: false
+              group_imports: false
+              group_rules:
+                - match: ".*"
+                  sub_group: "^[^.]+"
+          - language_pragmas:
+              style: vertical
+              align: true
+              remove_redundant: true
+              language_prefix: LANGUAGE
+          - trailing_whitespace: {}
+        columns: 100
+        newline: native
+        cabal: true
+      '';
 
       xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {
         font = {
@@ -2397,9 +2463,5 @@ in {
     };
   };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-
-  system.stateVersion = "24.05"; # Dont change
+  system.stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 }
