@@ -75,10 +75,6 @@ in {
 
   time.timeZone = "Europe/Warsaw";
 
-  services.libinput.enable = true;
-  services.libinput.mouse.accelProfile = "flat";
-  services.libinput.mouse.accelSpeed = "-0.9";
-
   services.xserver.xkb = {
     extraLayouts = {
       plfi = {
@@ -112,14 +108,6 @@ in {
   # NixOS programs. #
   ###################
 
-  # Allowed unfree packages
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "steam"
-      "steam-original"
-      "steam-run"
-    ];
-
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
@@ -130,8 +118,6 @@ in {
     enable = true;
   };
 
-  # For distrobox.
-  virtualisation.podman.enable = true;
   # File manager.
   programs.thunar.enable = true;
 
@@ -144,19 +130,9 @@ in {
     alejandra # Nix formatter
     devenv # "Easy" dev envs
 
-    distrobox # Allows to use better distros on NixOS
-    podman # Dependency for distrobox
     nsxiv # Image viewer
 
     mission-center # GUI task manager
-
-    jdk8 # Java 8 for minecraft
-
-    # Game launcher
-    lutris
-    wineWowPackages.waylandFull
-    # wineWowPackages.stable
-    winetricks
 
     # Other.
     wl-clipboard # Wayland xclip
@@ -166,7 +142,6 @@ in {
     libqalculate # Calculator
     conky # Hardware monitor
     vim # Text editor
-    zed-editor # Another text editor
     wget # Downloader
     eza # ls rewrite
     trashy # Cli trashcan
@@ -226,13 +201,6 @@ in {
         echo "nr amdgpu_top --gui"
         echo "General Tree"
         echo "snr lshw -json | nvim -c 'set filetype=json'"
-      '')
-
-    (writeShellScriptBin
-      "sgamescope" # [s]team [gamescope]
-
-      ''
-        gamescope -w ${builtins.toString constants.screen-width} -W ${builtins.toString constants.screen-width} -h ${builtins.toString constants.screen-height} -H ${builtins.toString constants.screen-height} -r ${builtins.toString constants.refresh-rate} -f steam
       '')
 
     (writeShellScriptBin
@@ -329,67 +297,12 @@ in {
   # Hardware or drivers. #
   ########################
 
-  # Change cpu governor to performance for increased performance.
-  powerManagement.cpuFreqGovernor = "performance";
+  services.libinput.mouse.accelProfile = "flat";
 
   # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
-
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      vaapiVdpau
-      libvdpau-va-gl
-      rocm-opencl-icd
-      rocm-opencl-runtime
-    ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [libva];
-  };
-
-  services.xserver.videoDrivers = ["amdgpu"];
-
-  ##########
-  # Games. #
-  ##########
-
-  # This is the command for running all 3 programs at once that u put into steam
-  # gamemoderun gamescope -w 1920 -h 1080 -f -- mangohud %command%
-  programs.steam = {
-    enable = true;
-    gamescopeSession.enable = true;
-    # Load the extest library into Steam, to translate X11 input events to uinput events (for using Steam Input on Wayland).
-    # extest.enable = true;
-    extraCompatPackages = [
-      pkgs-unstable.proton-ge-bin
-    ];
-    extraPackages = [
-      pkgs.gamescope
-      pkgs.gamemode
-      pkgs.libkrb5
-      pkgs.keyutils
-      pkgs.xorg.libXcursor
-      pkgs.xorg.libXi
-      pkgs.xorg.libXinerama
-      pkgs.xorg.libXScrnSaver
-      pkgs.libpng
-      pkgs.libpulseaudio
-      pkgs.libvorbis
-      pkgs.stdenv.cc.cc.lib
-      pkgs.libkrb5
-      pkgs.keyutils
-    ];
-  };
-
-  programs.gamemode.enable = true;
-
-  programs.gamescope = {
-    enable = true;
-    capSysNice = true;
-  };
 
   ##########
   # NixOs. #
@@ -411,33 +324,8 @@ in {
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-  # X11 window manager for games
-  services.xserver.windowManager.awesome = {
-    enable = true;
-  };
-
   # Thumbnails for thunar
   services.tumbler.enable = true;
-
-  # File synchronization.
-  services.syncthing = {
-    enable = true;
-    settings.options.relaysEnabled = false;
-    openDefaultPorts = true;
-    overrideFolders = false;
-    overrideDevices = false;
-    user = constants.username;
-    dataDir = constants.home;
-    settings.devices = {
-      phone = {
-        addresses = [
-          "tcp://192.168.1.10:22000"
-        ];
-        id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
-        autoAcceptFolders = true;
-      };
-    };
-  };
 
   # Might fix authorization agent issues
   services.gnome.gnome-keyring.enable = true;
@@ -661,21 +549,14 @@ in {
         packages = with pkgs; [
           # GUI.
           anki # Flashcards
-          libreoffice # Office
           neovide # Neovim gui
           tauon # Music player
-          ardour # Music maker (daw)
-          hydrus # File manager
           foliate # Ebook reader
           rofi-wayland # App launcher
           keepassxc # Password manager
           qbittorrent # Torrent client
-          prismlauncher # Minecraft launcher
 
           python3
-
-          # For minecraft
-          jdk11
 
           # Command line.
           bc # Gnu calculator, needed for vmrss
@@ -718,8 +599,6 @@ in {
           #     configPath = "${vendorPath}/firefox";
           #   };
           # };
-          blender
-          # pkgs-unstable.blender # 3D graphics
           pkgs-unstable.gomuks # TUI matrix client
         ];
 
@@ -777,11 +656,6 @@ in {
       programs.nix-index.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
-
-      programs.mangohud = {
-        enable = true;
-        enableSessionWide = false;
-      };
 
       services.dunst = {
         enable = true;
@@ -1191,6 +1065,31 @@ in {
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
           end
 
+          vim.keymap.set("n", "<leader>r", function()
+            -- when rename opens the prompt, this autocommand will trigger
+            -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
+            -- in this window I can use normal mode keybindings
+            local cmdId
+            cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+              callback = function()
+                local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
+                vim.api.nvim_feedkeys(key, "c", false)
+                vim.api.nvim_feedkeys("0", "n", false)
+                -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
+                cmdId = nil
+                return true
+              end,
+            })
+            vim.lsp.buf.rename()
+            -- if LPS couldn't trigger rename on the symbol, clear the autocmd
+            vim.defer_fn(function()
+              -- the cmdId is not nil only if the LSP failed to rename
+              if cmdId then
+                vim.api.nvim_del_autocmd(cmdId)
+              end
+            end, 500)
+          end)
+
           -- Transparent hover
           vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
 
@@ -1526,7 +1425,7 @@ in {
               "gD" = "[g]o to uses";
               "gi" = "[g]o to [i]mplementation";
               "K" = "[H]over info";
-              "<Leader>l" = "+[l]sp";
+              "<Leader>rn" = "[r]e[n]ame";
               "<Leader>t" = "+[t]elescope";
               "<Leader>h" = "+[h]arpoon";
               "<leader>hh" = "[h]arpoon [a]dd file";
@@ -1741,11 +1640,6 @@ in {
             action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
             key = "<Leader>la";
             options.desc = "Code [a]ctions";
-          }
-          {
-            action = "<cmd>lua vim.lsp.buf.rename()<CR>";
-            key = "<Leader>rn";
-            options.desc = "[r]e[n]ame";
           }
           {
             action = "<cmd>lua vim.diagnostic.open_float()<CR>";
@@ -2031,11 +1925,8 @@ in {
             }
           '';
 
-        plugins = [
-        ];
-
         settings = {
-          debug.disable_logs = false;
+          debug.disable_logs = true;
           # Autostart.
           exec-once = [
             "systemctl --user import-environment WAYLAND_DISPLAY &"
@@ -2059,7 +1950,6 @@ in {
             accel_profile = "flat";
             numlock_by_default = false;
             follow_mouse = 2;
-            sensitivity = -0.9;
           };
 
           cursor = {
@@ -2419,45 +2309,6 @@ in {
         font = {
           normal = ["JetBrains Mono"];
           size = 13;
-        };
-      };
-
-      xdg.configFile."zed/settings.json".text = builtins.toJSON {
-        tab_size = 2;
-        vim_mode = true;
-        ui_font_size = 16;
-        auto_update = false;
-        buffer_font_size = 16;
-        base_keymap = "VSCode";
-        theme = "Gruvbox Dark";
-        vim.use_system_clipboard = "always";
-        buffer_font_family = "JetBrains Mono";
-        BINDZ = [
-          {
-            context = "Editor && !VimWaiting && !menu";
-            bindings = {
-              ctrl-c = "editor::Copy"; # vim default: return to normal mode
-              ctrl-v = "editor::Paste"; # vim default: visual block mode
-              ctrl-y = "editor::Undo"; # vim default: line up
-              ctrl-o = "workspace::Open"; # vim default: go back
-              ctrl-a = "editor::SelectAll"; # vim default: increment
-            };
-          }
-        ];
-        inlay_hints = {
-          enabled = true;
-          edit_debounce_ms = 700;
-          show_type_hints = true;
-          scroll_debounce_ms = 50;
-          show_other_hints = true;
-          show_parameter_hints = true;
-        };
-        journal = {
-          hour_format = "hour24";
-        };
-        telemetry = {
-          metrics = false;
-          diagnostics = false;
         };
       };
     };

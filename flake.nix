@@ -54,6 +54,7 @@
         host = "nixos";
       };
       modules = [
+        ./hosts/desktop.nix
         ./configuration.nix
         ./resources/static/hardware-configuration.nix
       ];
@@ -65,6 +66,19 @@
         host = "nixosExternalDrive";
       };
       modules = [
+        ./hosts/desktop.nix
+        ./configuration.nix
+        ./resources/static/hardware-configuration-ExternalDrive.nix
+      ];
+    };
+    nixosConfigurations.thinkpad = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {
+        inherit inputs pkgs-unstable;
+        host = "thinkpad";
+      };
+      modules = [
+        ./hosts/thinkpad.nix
         ./configuration.nix
         ./resources/static/hardware-configuration-ExternalDrive.nix
       ];
