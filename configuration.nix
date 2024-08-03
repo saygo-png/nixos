@@ -85,7 +85,6 @@
   };
 
   security.sudo.extraConfig = ''
-    Defaults pwfeedback
     Defaults timestamp_timeout=-1
   '';
 
@@ -629,24 +628,24 @@
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
         '';
 
-        activation.directories= lib.hm.dag.entryAfter ["writeBoundary"] ''
-        run mkdir -p "${conHome}/Desktop"
-
-        run mkdir -p "${conHome}/screencaptures"
-        run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures"
-
-        run mkdir -p "${conHome}/Downloads"
-        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads"
-
-        run mkdir -p "${conHome}/Sync"
-        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync"
-
-        run mkdir -p "${config.xdg.configHome}"
-        run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config"
-
-        run mkdir -p "${config.xdg.dataHome}"
-        run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local"
-        '';
+        # activation.directories= lib.hm.dag.entryAfter ["writeBoundary"] ''
+        # run mkdir -p "${conHome}/Desktop"
+        #
+        # run mkdir -p "${conHome}/screencaptures"
+        # run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures"
+        #
+        # run mkdir -p "${conHome}/Downloads"
+        # run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads"
+        #
+        # run mkdir -p "${conHome}/Sync"
+        # run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync"
+        #
+        # run mkdir -p "${config.xdg.configHome}"
+        # run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config"
+        #
+        # run mkdir -p "${config.xdg.dataHome}"
+        # run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local"
+        # '';
       };
 
       # Needed for transparency.
