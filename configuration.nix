@@ -322,6 +322,26 @@
   };
   services.displayManager.defaultSession = lib.mkDefault "none+awesome";
 
+  # File synchronization.
+  services.syncthing = {
+    enable = true;
+    dataDir = conHome;
+    user = conUsername;
+    openDefaultPorts = true;
+    overrideDevices = false;
+    overrideFolders = false;
+    settings.options.relaysEnabled = false;
+    settings.devices = {
+      phone = {
+        addresses = [
+          "tcp://192.168.1.10:22000"
+        ];
+        id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
+        autoAcceptFolders = true;
+      };
+    };
+  };
+
   # Enable sound with low latency.
   hardware.pulseaudio.enable = false;
   # RealtimeKit service, which hands out realtime scheduling priority to user processes on demand. For example, the PulseAudio server uses this to acquire realtime priority.
