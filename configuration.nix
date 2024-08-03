@@ -3,20 +3,16 @@
   lib,
   inputs,
   host,
+  conUsername,
+  conHome,
+  conFlake-path,
+  conAccentColor,
+  conRefresh-rate,
+  conScreen-width,
+  conScreen-height,
   pkgs-unstable,
   ...
-}: let
-  constants = {
-    username = "samsepi0l";
-    accentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
-    home = "/home/${constants.username}";
-    flake-path = "${constants.home}/nixos";
-
-    refresh-rate = 144;
-    screen-width = 1920;
-    screen-height = 1080;
-  };
-in {
+}: {
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
@@ -25,20 +21,6 @@ in {
   #######################
   # Essential or basic. #
   #######################
-
-  # specialisation = {
-  #   KDE.configuration = {
-  #     services.xserver.desktopManager.plasma5.enable = true;
-  #     services.xserver.displayManager = {
-  #       sddm.enable = true;
-  #     };
-  #     services.displayManager.defaultSession = "plasma";
-  #     environment.plasma6.excludePackages = with pkgs.kdePackages; [
-  #       plasma-browser-integration
-  #       konsole
-  #     ];
-  #   };
-  # };
 
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
@@ -53,6 +35,9 @@ in {
 
   networking.hostName = "${host}";
   networking.networkmanager.enable = true;
+
+  # Optimization for ssds
+  services.fstrim.enable = true;
 
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
@@ -93,7 +78,7 @@ in {
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd $USERNAME’.
-  users.users.${constants.username} = {
+  users.users.${conUsername} = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
     shell = pkgs.zsh;
@@ -130,14 +115,12 @@ in {
     alejandra # Nix formatter
     devenv # "Easy" dev envs
 
-    nsxiv # Image viewer
-
-    mission-center # GUI task manager
-
     # Other.
     wl-clipboard # Wayland xclip
     cliphist # Wayland clipboard manager
+    nsxiv # Image viewer
     jq # Json parser, needed for "hyprland-next-visible-client.sh"
+    nsxiv # Image viewer
     patool # Universal archiver
     libqalculate # Calculator
     conky # Hardware monitor
@@ -153,6 +136,7 @@ in {
     imagemagick_light # Image identifier
     ripgrep # Multithreaded grep
     gnumake # C compiling
+    xdg-utils # Includes xdg-open
     gcc # C compiling
     fd # Find alternative
     libnotify # Notifications (notify-send)
@@ -163,8 +147,6 @@ in {
     libsForQt5.qt5ct
     libsForQt5.qt5.qtwayland
     kdePackages.qtwayland
-
-    xdg-utils # Includes xdg-open
 
     # These are filepickers and whatnot
     xdg-desktop-portal-gtk
@@ -183,8 +165,8 @@ in {
         set -o pipefail
         set -u
         shopt -s failglob
-        KRITAHOME="${constants.home}/.local/share/krita"
-        KRITANIXHOME="${constants.flake-path}/resources/krita"
+        KRITAHOME="${conHome}/.local/share/krita"
+        KRITANIXHOME="${conFlake-path}/resources/krita"
 
         cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
         cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
@@ -221,8 +203,8 @@ in {
         nix store optimise
         sudo nix store optimise
 
-        rm -rf ${constants.home}/.local/state/home-manager
-        rm -f ${constants.home}/.local/state/nix/profiles/home-manager*
+        rm -rf ${conHome}/.local/state/home-manager
+        rm -f ${conHome}/.local/state/nix/profiles/home-manager*
       '')
 
     (writeShellScriptBin
@@ -281,14 +263,14 @@ in {
       if [ $recproc ]; then
         kill -2 $recproc
         notify-send "Recording stopped."
-        pushd ${constants.home}/screencaptures/
+        pushd ${conHome}/screencaptures/
         ${lib.getExe pkgs.ripdrag} $(ls -t | head -n1)
         popd
         exit
       else
         monitor=$(hyprctl activeworkspace -j | jq -r '.monitor')
         notify-send "Recording starting on $monitor."
-        ${lib.getExe pkgs.wl-screenrec} --audio -b "1 MB" -o $monitor -f ${constants.home}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
+        ${lib.getExe pkgs.wl-screenrec} --audio -b "1 MB" -o $monitor -f ${conHome}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
         fi
     '')
   ];
@@ -375,7 +357,7 @@ in {
 
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
-    FLAKE = "${constants.flake-path}"; # For nix helper.
+    FLAKE = "${conFlake-path}"; # For nix helper.
     GTK_USE_PORTAL = "1";
 
     # Transparent fzf.
@@ -492,7 +474,7 @@ in {
   home-manager = {
     extraSpecialArgs = {inherit inputs pkgs-unstable;};
     backupFileExtension = "backup"; # h-m breaks without it.
-    users.${constants.username} = {
+    users.${conUsername} = {
       lib,
       config,
       formats,
@@ -504,8 +486,8 @@ in {
         inputs.nixvim.homeManagerModules.nixvim
       ];
       home = {
-        username = "${constants.username}";
-        homeDirectory = "${constants.home}";
+        username = "${conUsername}";
+        homeDirectory = "${conHome}";
         stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
         shellAliases = {
@@ -519,10 +501,10 @@ in {
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
           "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
           "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
-          "nhoffline" = "nh os switch ${constants.flake-path} -- --option substitute false";
+          "nhoffline" = "nh os switch ${conFlake-path} -- --option substitute false";
           "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
-          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${constants.home}/screencaptures/recording.wav";
+          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${conHome}/screencaptures/recording.wav";
         };
 
         sessionVariables = {
@@ -603,7 +585,7 @@ in {
         ];
 
         # Binary blobs.
-        sessionPath = ["${constants.home}/bin"]; # Add ~/bin to path.
+        sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
         file."bin/ow".source = ./resources/scripts/ow.py;
 
@@ -611,12 +593,12 @@ in {
         # However it makes your lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
           mkdir -p "${config.xdg.configHome}"
-          mkdir -p "${constants.home}/.local/share/krita"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${constants.home}/.local/share/krita"
+          mkdir -p "${conHome}/.local/share/krita"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${constants.home}/.local/share/krita"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${constants.home}/.local/share/krita"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${conHome}/.local/share/krita"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
         '';
       };
 
@@ -926,11 +908,11 @@ in {
           # hi noCursor blend=100 cterm=strikethrough
           noCursor.blend = 100;
           statusline.bg = "NONE";
-          ModeMsg.fg = "#${constants.accentColor}";
-          MsgArea.fg = "#${constants.accentColor}";
-          statusline.fg = "#${constants.accentColor}";
-          FloatBorder.fg = "#${constants.accentColor}";
-          CursorLineNr.fg = "#${constants.accentColor}";
+          ModeMsg.fg = "#${conAccentColor}";
+          MsgArea.fg = "#${conAccentColor}";
+          statusline.fg = "#${conAccentColor}";
+          FloatBorder.fg = "#${conAccentColor}";
+          CursorLineNr.fg = "#${conAccentColor}";
           CursorLineNr.bg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray numberline
           MiniIndentscopeSymbol.fg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray indentline
         };
@@ -1021,7 +1003,7 @@ in {
           neovide_floating_blur_amount_x = 20.0;
           neovide_floating_blur_amount_y = 20.0;
           neovide_hide_mouse_when_typing = true;
-          neovide_refresh_rate = constants.refresh-rate;
+          neovide_refresh_rate = conRefresh-rate;
           neovide_cursor_vfx_mode = "ripple";
           neovide_cursor_animation_length = 0.08;
           neovide_cursor_smooth_blink = true;
@@ -1965,7 +1947,7 @@ in {
             border_size = 1;
             border_part_of_window = false;
             no_border_on_floating = false;
-            "col.active_border" = lib.mkForce "rgba(${constants.accentColor}FF)";
+            "col.active_border" = lib.mkForce "rgba(${conAccentColor}FF)";
             "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
           };
 
@@ -2258,7 +2240,7 @@ in {
         executable = true;
         text = ''
           $TERMINAL &
-          xrandr -r ${builtins.toString constants.refresh-rate}
+          xrandr -r ${builtins.toString conRefresh-rate}
           exec awesome
         '';
       };
