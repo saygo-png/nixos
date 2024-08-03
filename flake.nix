@@ -15,6 +15,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixvim = {
       url = "github:nix-community/nixvim/nixos-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -99,6 +104,7 @@
         conScreen-height = 1080;
       };
       modules = [
+        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
         ./hosts/thinkpad.nix
         ./configuration.nix
         ./resources/static/hardware-configuration-thinkpad.nix
