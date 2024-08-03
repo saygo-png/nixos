@@ -38,7 +38,21 @@
       home = {};
       # Media controls for bluetooth headphones
       services.mpris-proxy.enable = true;
-      wayland.windowManager.hyprland.settings = {
+
+      programs.alacritty.settings.window.padding = lib.mkForce {
+        x = 0;
+        y = 0;
+      };
+
+      wayland.windowManager.hyprland.settings = let
+        gaps_in = 0;
+        gaps_out = 0;
+      in {
+        general = {
+          gaps_in = lib.mkForce gaps_in;
+          gaps_out = lib.mkForce gaps_out;
+          border_size = lib.mkForce 2;
+        };
         device = [
           {
             name = "synps/2-synaptics-touchpad";

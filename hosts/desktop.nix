@@ -37,7 +37,13 @@
   home-manager = {
     users.${conUsername} = {
       home = {};
-      wayland.windowManager.hyprland.settings.input.sensitivity = -0.9;
+
+      wayland.windowManager.hyprland.settings = {
+        input.sensitivity = -0.9;
+        windowrulev2 = [
+          "noborder, onworkspace:w[t2]"
+        ];
+      };
       programs.mangohud = {
         enable = true;
         enableSessionWide = false;

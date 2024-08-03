@@ -2205,8 +2205,6 @@
             "tile, class:^()$"
             "noinitialfocus, class:^()$"
 
-            "noborder, onworkspace:w[t1]"
-
             # Shadow only for floating windows
             "noshadow, floating:0"
 
