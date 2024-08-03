@@ -39,8 +39,7 @@
 
   home-manager = {
     users.${conUsername} = {
-      home = {
-      };
+      home = {};
       wayland.windowManager.hyprland.settings.input.sensitivity = -0.9;
       programs.mangohud = {
         enable = true;
