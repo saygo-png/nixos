@@ -13,9 +13,6 @@
   conScreen-height,
   ...
 }: {
-  services.libinput.enable = true;
-  services.libinput.mouse.accelSpeed = "-0.9";
-
   # X11 window manager for games
   services.xserver.windowManager.awesome = {
     enable = true;

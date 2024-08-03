@@ -279,6 +279,7 @@
   # Hardware or drivers. #
   ########################
 
+  services.libinput.enable = true;
   services.libinput.mouse.accelProfile = "flat";
 
   # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
@@ -328,7 +329,7 @@
     dataDir = conHome;
     user = conUsername;
     openDefaultPorts = true;
-    overrideDevices = false;
+    overrideDevices = true;
     overrideFolders = false;
     settings.options.relaysEnabled = false;
     settings.devices = {
@@ -1985,7 +1986,7 @@
 
             disable_autoreload = true;
             animate_manual_resizes = true;
-            enable_swallow = true;
+            enable_swallow = false;
             swallow_regex = "^(Alacritty)$";
           };
 
