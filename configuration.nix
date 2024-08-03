@@ -519,7 +519,7 @@
         stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
         shellAliases = {
-          "neov" = "neovide --no-fork";
+          "neov" = "neovide";
           "shutdown" = "poweroff";
           "ls" = "${lib.getExe pkgs.eza}";
           "la" = "${lib.getExe pkgs.eza} -a";
@@ -627,6 +627,25 @@
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${conHome}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
+        '';
+
+        activation.directories= lib.hm.dag.entryAfter ["writeBoundary"] ''
+        run mkdir -p "${conHome}/Desktop"
+
+        run mkdir -p "${conHome}/screencaptures"
+        run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures"
+
+        run mkdir -p "${conHome}/Downloads"
+        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads"
+
+        run mkdir -p "${conHome}/Sync"
+        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync"
+
+        run mkdir -p "${config.xdg.configHome}"
+        run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config"
+
+        run mkdir -p "${config.xdg.dataHome}"
+        run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local"
         '';
       };
 
@@ -1205,10 +1224,10 @@
             keymaps = {
               addFile = "<leader>ha";
               navFile = {
-                "1" = "<C-j>";
-                "2" = "<C-k>";
-                "3" = "<C-l>";
-                "4" = "<C-m>";
+                "1" = "<C-h>";
+                "2" = "<C-j>";
+                "3" = "<C-k>";
+                "4" = "<C-l>";
               };
               navNext = "<leader>hn";
               navPrev = "<leader>hp";
