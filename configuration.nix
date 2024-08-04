@@ -349,8 +349,9 @@
     };
   };
 
-  # Enable sound with low latency.
+  # Disable pulseaudio.
   hardware.pulseaudio.enable = false;
+
   # RealtimeKit service, which hands out realtime scheduling priority to user processes on demand. For example, the PulseAudio server uses this to acquire realtime priority.
   security.rtkit.enable = true;
   services.pipewire = {
@@ -577,7 +578,8 @@
           moar # Pager
           termdown # Timer
           tldr # Man alternative
-          htop # TUI task manager
+          htop-vim # TUI task manager
+          mission-center # GUI task manager
           zoxide # Cd alternative
           hyprpicker # Color picker
           pulsemixer # Volume control
@@ -617,7 +619,7 @@
         file."bin/ow".source = ./resources/scripts/ow.py;
 
         # This allows for semi-declarative configuration.
-        # However it makes your lag when rebuilding.
+        # However it makes you lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
           mkdir -p "${config.xdg.configHome}"
           mkdir -p "${conHome}/.local/share/krita"
@@ -628,24 +630,24 @@
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
         '';
 
-        # activation.directories= lib.hm.dag.entryAfter ["writeBoundary"] ''
-        # run mkdir -p "${conHome}/Desktop"
-        #
-        # run mkdir -p "${conHome}/screencaptures"
-        # run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures"
-        #
-        # run mkdir -p "${conHome}/Downloads"
-        # run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads"
-        #
-        # run mkdir -p "${conHome}/Sync"
-        # run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync"
-        #
-        # run mkdir -p "${config.xdg.configHome}"
-        # run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config"
-        #
-        # run mkdir -p "${config.xdg.dataHome}"
-        # run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local"
-        # '';
+        activation.directories= lib.hm.dag.entryAfter ["writeBoundary"] ''
+        run mkdir -p "${conHome}/Desktop"
+
+        run mkdir -p "${conHome}/screencaptures"
+        run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
+
+        run mkdir -p "${conHome}/Downloads"
+        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads" || true
+
+        run mkdir -p "${conHome}/Sync"
+        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
+
+        run mkdir -p "${config.xdg.configHome}"
+        run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
+
+        run mkdir -p "${config.xdg.dataHome}"
+        run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
+        '';
       };
 
       # Needed for transparency.
