@@ -21,8 +21,8 @@
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
   };
 
+  # Function keys
   programs.light.enable = true;
-
   services.actkbd = {
     enable = true;
     bindings = [
@@ -89,10 +89,7 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965
-      libvdpau-va-gl
-    ];
+    extraPackages = with pkgs; [intel-vaapi-driver libvdpau-va-gl];
   };
 
   environment.systemPackages = with pkgs; [
@@ -107,10 +104,16 @@
   services.libinput.mouse.accelSpeed = "-0.9";
   home-manager = {
     users.${conUsername} = {
-      home = {};
+      home = {
+        sessionVariables = {
+          TERMINAL = lib.mkForce ''foot'';
+        };
+      };
+
       # Media controls for bluetooth headphones
       services.mpris-proxy.enable = true;
 
+      programs.foot.settings.main.pad = lib.mkForce "0x0center";
       programs.alacritty.settings.window.padding = lib.mkForce {
         x = 0;
         y = 0;
