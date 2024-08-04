@@ -28,13 +28,23 @@
       {
         keys = [225];
         events = ["key"];
-        command = "/run/current-system/sw/bin/light -A 10";
+        command = "${lib.getExe pkgs.light} -A 10";
       }
       {
         keys = [224];
         events = ["key"];
-        command = "/run/current-system/sw/bin/light -U 10";
+        command = "${lib.getExe pkgs.light} -U 10";
       }
+      # {
+      #   keys = [224];
+      #   events = ["key"];
+      #   command = "${lib.getExe pkgs.pamixer} -i 2";
+      # }
+      # {
+      #   keys = [224];
+      #   events = ["key"];
+      #   command = "${lib.getExe pkgs.pamixer} -i 2";
+      # }
     ];
   };
 
@@ -77,10 +87,12 @@
       home = {};
       # Media controls for bluetooth headphones
       services.mpris-proxy.enable = true;
+
       programs.alacritty.settings.window.padding = lib.mkForce {
         x = 0;
         y = 0;
       };
+
       wayland.windowManager.hyprland.settings = let
         gaps_in = 0;
         gaps_out = 0;
@@ -103,6 +115,15 @@
             accel_profile = "flat";
           }
         ];
+      };
+
+      programs.nixvim = {
+        globals = {
+          neovide_padding_top = 0;
+          neovide_padding_bottom = 0;
+          neovide_padding_right = 0;
+          neovide_padding_left = 0;
+        };
       };
     };
   };

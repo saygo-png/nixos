@@ -528,18 +528,16 @@
         sessionVariables = {
           # Default programs.
           PAGER = lib.getExe pkgs.moar;
-          # Systemd is retarded and doesnt use normal pager variable :DDDDD
           EDITOR = "nvim";
-          VISUAL = "nvim";
-          SUDO_EDITOR = "nvim";
-          SYSTEMD_PAGER = lib.getExe pkgs.moar;
-          TERMINAL = ''neovide -- -c ":term"'';
-          TERMINAL_PROG = lib.getExe pkgs.alacritty;
-          BROWSER = lib.getExe pkgs-unstable.librewolf;
           OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
-          # Firefox hardware decode.
-          # MOZ_X11_EGL = 1;
-          # NO_AT_BRIDGE = 1;
+          TERMINAL = ''neovide --no-fork -- -c ":term"'';
+
+          VISUAL = "${config.home.sessionVariables.EDITOR}";
+          SUDO_EDITOR = "${config.home.sessionVariables.EDITOR}";
+          # Systemd is retarded and doesnt use normal pager variable :DDDDD
+          SYSTEMD_PAGER = "${config.home.sessionVariables.PAGER}";
+          TERMINAL_PROG = "${config.home.sessionVariables.TERMINAL}";
+          BROWSER = lib.getExe pkgs-unstable.librewolf;
           # Unreal engine .net cli tool turn off telemetry.
           QT_QPA_PLATFORMTHEME = "qt5ct";
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
@@ -1035,10 +1033,10 @@
           neovide_transparency = config.stylix.opacity.terminal;
           neovide_transparency_point = 0; # config.stylix.opacity.terminal;
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
-          neovide_padding_top = 8;
-          neovide_padding_bottom = 0;
-          neovide_padding_right = 6;
-          neovide_padding_left = 6;
+          neovide_padding_top = lib.mkDefault 8;
+          neovide_padding_bottom = lib.mkDefault 0;
+          neovide_padding_right = lib.mkDefault 6;
+          neovide_padding_left = lib.mkDefault 6;
           neovide_floating_blur_amount_x = 20.0;
           neovide_floating_blur_amount_y = 20.0;
           neovide_hide_mouse_when_typing = true;
@@ -1348,6 +1346,13 @@
                 action = "find_files";
                 options = {
                   desc = "[T]elescope [F]ile search";
+                };
+              };
+
+              "<leader>to" = {
+                action = "buffers";
+                options = {
+                  desc = "[T]elescope [O]pen buffers";
                 };
               };
 
@@ -2110,8 +2115,8 @@
             "$mainMod ALT, k, Move floating up, moveactive, 0 -100"
             "$mainMod ALT, j, Move floating down, moveactive, 0 100"
 
-            "$mainMod, Equal, Volume down, exec, ${lib.getExe pkgs.pamixer} -i 2"
-            "$mainMod, Minus, Volume up, exec, ${lib.getExe pkgs.pamixer} -d 2"
+            "$mainMod, Equal, Volume up, exec, ${lib.getExe pkgs.pamixer} -i 2"
+            "$mainMod, Minus, Volume down, exec, ${lib.getExe pkgs.pamixer} -d 2"
 
             "$mainMod, mouse_down, Scroll workspace, workspace, e-1"
             "$mainMod, mouse_up, Scroll workspace, workspace, e+1"
@@ -2122,11 +2127,13 @@
             "$mainMod, mouse:272, movewindow"
             "$mainMod, mouse:273, resizewindow"
           ];
+
           layerrule = [
             # "layers, 1, 4, default, slide top"
             "dimaround, rofi"
             "animation slide top, rofi"
           ];
+
           windowrule = [
             "workspace 1      , title:Terminal"
             "workspace 2      , title:Web"
