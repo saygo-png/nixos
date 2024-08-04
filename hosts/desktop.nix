@@ -3,7 +3,7 @@
   # host,
   pkgs,
   # inputs,
-  # conHome,
+  conHome,
   conUsername,
   # conFlake-path,
   pkgs-unstable,
@@ -119,6 +119,26 @@
 
     # services.borgmatic = {
     #   enable = true;
+    # settings.location = {
+    #   repositories = [ "borg@heavy.local:/var/lib/borgbackup" ];
+    #   source_directories = [ "${conHome}" ];
+    #   exclude_caches = true;
+    #   exclude_patterns = [
+    #     "*/Desktop"
+    #     "*/.cache"
+    #     "*/.local/share/Steam"
+    #     "*/Games/battlenet"
+    #   ];
+    # };
+    # settings.storage = {
+    #   unknown_unencrypted_repo_access_is_ok = true;
+    # };
+    # settings.retention = {
+    #   keep_daily = 1;
+    #   keep_weekly = 4;
+    #   keep_monthly = 12;
+    #   keep_yearly = 10;
+    # };
     # };
 
   environment.systemPackages = with pkgs; [
