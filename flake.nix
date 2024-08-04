@@ -67,25 +67,7 @@
         ./resources/static/hardware-configuration.nix
       ];
     };
-    nixosConfigurations.nixosExternalDrive = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit inputs pkgs-unstable;
-        host = "nixosExternalDrive";
-        conUsername = "samsepi0l";
-        conHome = "/home/samsepi0l";
-        conFlake-path = "/home/samsepi0l/nixos";
-        conAccentColor = "7d8618";
-        conRefresh-rate = 144;
-        conScreen-width = 1920;
-        conScreen-height = 1080;
-      };
-      modules = [
-        ./hosts/desktop.nix
-        ./configuration.nix
-        ./resources/static/hardware-configuration-ExternalDrive.nix
-      ];
-    };
+
     nixosConfigurations.thinkpad = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
@@ -96,8 +78,8 @@
         conFlake-path = "/home/samsepi0l/nixos";
         conAccentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
         conRefresh-rate = 60;
-        conScreen-width = 1920;
-        conScreen-height = 1080;
+        conScreen-width = 1366;
+        conScreen-height = 768;
       };
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
