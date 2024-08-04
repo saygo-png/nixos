@@ -1,4 +1,5 @@
 {
+  ###### Imports ###### {{{
   pkgs,
   lib,
   inputs,
@@ -18,9 +19,9 @@
     inputs.home-manager.nixosModules.default
   ];
 
-  #######################
-  # Essential or basic. #
-  #######################
+  # }}}
+
+  ###### Essential or basic. ###### {{{
 
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
@@ -88,9 +89,9 @@
     Defaults timestamp_timeout=-1
   '';
 
-  ###################
-  # NixOS programs. #
-  ###################
+  # }}}
+
+  ###### NixOS programs ###### {{{
 
   programs.gnupg.agent = {
     enable = true;
@@ -274,21 +275,20 @@
     '')
   ];
 
-  ########################
-  # Hardware or drivers. #
-  ########################
+  # }}}
 
-  services.libinput.enable = true;
-  services.libinput.mouse.accelProfile = "flat";
+  ###### Miscellaneous ###### {{{
 
   # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
 
-  ##########
-  # NixOs. #
-  ##########
+  system.stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
+
+  # }}}
+
+  ##### NixOS ###### {{{
 
   nixpkgs.config.allowUnfree = false;
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -298,10 +298,9 @@
     dates = "2day";
     options = "--delete-older-than 15d";
   };
+  # }}}
 
-  #############
-  # Services. #
-  #############
+  ###### Services ###### {{{
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -316,11 +315,14 @@
   security.polkit.enable = true;
 
   # NixOS is retarded and turns on lightdm by default.
+  services.displayManager.defaultSession = lib.mkDefault "none+awesome";
   services.xserver.displayManager = lib.mkDefault {
     lightdm.enable = false;
     sx.enable = true;
   };
-  services.displayManager.defaultSession = lib.mkDefault "none+awesome";
+
+  services.libinput.enable = true;
+  services.libinput.mouse.accelProfile = "flat";
 
   # File synchronization.
   services.syncthing = {
@@ -359,21 +361,10 @@
     wireplumber.enable = true;
     pulse.enable = true;
     alsa.enable = true;
-    # Quirky low latency ig for gaming (it crunches)
-    # alsa.support32Bit = true;
-    # extraConfig.pipewire."92-low-latency" = {
-    #   context.properties = {
-    #     default.clock.rate = 48000;
-    #     default.clock.quantum = 24;
-    #     default.clock.min-quantum = 24;
-    #     default.clock.max-quantum = 24;
-    #   };
-    # };
   };
+  # }}}
 
-  #########
-  # Shell #
-  #########
+  ###### Shell ###### {{{
 
   programs.zsh.enable = true;
 
@@ -391,10 +382,9 @@
     # Transparent fzf.
     FZF_DEFAULT_OPTS = "--color=bg+:-1,gutter:-1,bg:-1";
   };
+  # }}}
 
-  ###########
-  # Visuals #
-  ###########
+  ###### Visuals ###### {{{
 
   # Fonts.
   fonts = {
@@ -494,10 +484,9 @@
 
   # Supposedly fixes some themeing/cursor issues might be useless.
   programs.dconf.enable = true;
+  # }}}
 
-  ################
-  # HOME MANAGER #
-  ################
+  ##### Home Manager ###### {{{
 
   home-manager = {
     extraSpecialArgs = {inherit inputs pkgs-unstable;};
@@ -520,6 +509,7 @@
 
         shellAliases = {
           "neov" = "neovide";
+          "more" = "${lib.getExe pkgs.moar}";
           "shutdown" = "poweroff";
           "ls" = "${lib.getExe pkgs.eza}";
           "la" = "${lib.getExe pkgs.eza} -a";
@@ -543,7 +533,7 @@
           VISUAL = "nvim";
           SUDO_EDITOR = "nvim";
           SYSTEMD_PAGER = lib.getExe pkgs.moar;
-          TERMINAL = lib.getExe pkgs.alacritty;
+          TERMINAL = ''neovide -- -c ":term"'';
           TERMINAL_PROG = lib.getExe pkgs.alacritty;
           BROWSER = lib.getExe pkgs-unstable.librewolf;
           OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
@@ -630,23 +620,23 @@
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
         '';
 
-        activation.directories= lib.hm.dag.entryAfter ["writeBoundary"] ''
-        run mkdir -p "${conHome}/Desktop"
+        activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          run mkdir -p "${conHome}/Desktop"
 
-        run mkdir -p "${conHome}/screencaptures"
-        run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
+          run mkdir -p "${conHome}/screencaptures"
+          run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
 
-        run mkdir -p "${conHome}/Downloads"
-        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads" || true
+          run mkdir -p "${conHome}/Downloads"
+          run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads" || true
 
-        run mkdir -p "${conHome}/Sync"
-        run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
+          run mkdir -p "${conHome}/Sync"
+          run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
 
-        run mkdir -p "${config.xdg.configHome}"
-        run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
+          run mkdir -p "${config.xdg.configHome}"
+          run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
 
-        run mkdir -p "${config.xdg.dataHome}"
-        run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
+          run mkdir -p "${config.xdg.dataHome}"
+          run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
         '';
       };
 
@@ -914,6 +904,7 @@
         };
       };
 
+      # nixvim, neovim, vim, nvim # {{{
       programs.nixvim = {
         enable = true;
         extraPackages = with pkgs; [
@@ -1046,8 +1037,8 @@
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
           neovide_padding_top = 8;
           neovide_padding_bottom = 0;
-          neovide_padding_right = 4;
-          neovide_padding_left = 4;
+          neovide_padding_right = 6;
+          neovide_padding_left = 6;
           neovide_floating_blur_amount_x = 20.0;
           neovide_floating_blur_amount_y = 20.0;
           neovide_hide_mouse_when_typing = true;
@@ -1088,12 +1079,63 @@
         '';
 
         extraConfigLua = ''
+
+          -- Vim as terminal
+          vim.cmd[[
+            augroup neovim_terminal
+                autocmd!
+                " Enter Terminal-mode (insert) automatically
+                autocmd TermOpen * startinsert
+                " Disables number lines on terminal buffers
+                autocmd TermOpen * :setlocal nonumber norelativenumber laststatus=0
+            augroup END
+          ]]
+
+          -- Neovide
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox-material]]
             vim.o.background = "dark"
             vim.o.guifont = "JetBrains Mono:h13:#e-antialias:#h-slight"
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
           end
+
+          -- Keymaps
+          -- Split movement
+          vim.keymap.set("n", "<M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
+          vim.keymap.set("n", "<M-l>", "<cmd>wincmd l<CR>", { desc = "Move to the split on the right side" })
+          vim.keymap.set("n", "<M-k>", "<cmd>wincmd k<CR>", { desc = "Move to the split above" })
+          vim.keymap.set("n", "<M-j>", "<cmd>wincmd j<CR>", { desc = "Move to the split below" })
+          -- In nvim terminal
+          vim.keymap.set("t", "<M-h>", "<c-\\><c-n><c-w>h", { desc = "Move to the split on the left side" })
+          vim.keymap.set("t", "<M-l>", "<c-\\><c-n><c-w>j", { desc = "Move to the split on the right side" })
+          vim.keymap.set("t", "<M-k>", "<c-\\><c-n><c-w>k", { desc = "Move to the split above" })
+          vim.keymap.set("t", "<M-j>", "<c-\\><c-n><c-w>l", { desc = "Move to the split below" })
+          -- Shift + Esc for normal mode in nvim terminal
+          vim.keymap.set("t", "<M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
+          vim.keymap.set("t", "<M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
+
+          -- Plugins
+          vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', {desc = "hover"})
+          vim.keymap.set('n', '<leader>a', '<cmd>Lspsaga code_action<CR>', {desc = "code [a]ctions"})
+          vim.keymap.set('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', {desc = "[r]e[n]ame"})
+          vim.keymap.set("n", "<Leader>c", '<cmd>lua require("conform").format({ timeout_ms = 500 })<CR>', { desc = "[c]onform" })
+          vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
+
+          -- Clipboard
+          vim.keymap.set("n", "<c-v>", '"+p', { desc = "proper paste" })
+          vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
+
+          -- Basic
+          vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+          vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+          vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+          vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
+          vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
+          vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
+          vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
+          vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
+          vim.keymap.set("n", "gm", "m", { desc = "Set mark" })
+          vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
           vim.keymap.set("n", "<leader>r", function()
             -- when rename opens the prompt, this autocommand will trigger
@@ -1199,6 +1241,31 @@
           pkgs.vimPlugins.gruvbox-material
         ];
 
+        keymaps = [
+          {
+            key = "s";
+            action.__raw = ''require("flash").remote'';
+            options.desc = "Flash";
+          }
+          {
+            key = "S";
+            action.__raw = ''require("flash").treesitter'';
+            options.desc = "Flash treesitter";
+          }
+          {
+            action = "<cmd>lua vim.diagnostic.open_float()<CR>";
+            key = "<Leader>e";
+            options.desc = "Open diagnostic";
+          }
+          {
+            action = ''<cmd>!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
+            key = "<Leader>s";
+            options.silent = true;
+            options.desc = "[s]ort lines by length";
+          }
+        ];
+
+        # Plugins {{{
         plugins = {
           nix.enable = true;
           flash.enable = true;
@@ -1269,9 +1336,24 @@
                   desc = "[T]elescope [B]uffr search";
                 };
               };
-              "<leader>tg" = {
+
+              "<leader>tf" = {
+                action = "find_files";
+                options = {
+                  desc = "[T]elescope [F]ile search";
+                };
+              };
+
+              "<leader>tt" = {
+                action = "find_files";
+                options = {
+                  desc = "[T]elescope [F]ile search";
+                };
+              };
+
+              "<leader>tp" = {
                 action = "live_grep";
-                options.desc = "[T]elescope [G]rep";
+                options.desc = "[T]elescope [p]roject grep";
               };
             };
           };
@@ -1283,6 +1365,7 @@
               sign = false;
               virtualText = false;
             };
+            symbolInWinbar.enable = false;
           };
 
           fidget = {
@@ -1396,7 +1479,6 @@
               "gd" = "definition";
               "gD" = "references";
               "gi" = "implementation";
-              "K" = "hover";
             };
           };
 
@@ -1420,7 +1502,7 @@
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
               python = ["isort" "yapf"];
-              haskell = ["fourmolu" "stylish-haskell"];
+              haskell = ["fourmolu"];
               nix = ["alejandra"];
               lua = ["stylua"];
               json = ["jq"];
@@ -1455,7 +1537,6 @@
               "gD" = "[g]o to uses";
               "gi" = "[g]o to [i]mplementation";
               "K" = "[H]over info";
-              "<Leader>rn" = "[r]e[n]ame";
               "<Leader>t" = "+[t]elescope";
               "<Leader>h" = "+[h]arpoon";
               "<leader>ha" = "[h]arpoon [a]dd file";
@@ -1542,153 +1623,7 @@
           };
         };
 
-        keymaps = [
-          # Basic.
-          {
-            mode = "n";
-            action = "Gzz";
-            key = "G";
-            options.desc = "Center bottom";
-          }
-          {
-            mode = "n";
-            action = "ggzz";
-            key = "gg";
-            options.desc = "Center top";
-          }
-          {
-            mode = "n";
-            action = "gj";
-            key = "j";
-            options.desc = "Move down through wrapped line";
-          }
-          {
-            mode = "n";
-            action = "gk";
-            key = "k";
-            options.desc = "Move up through wrapped line";
-          }
-          {
-            mode = "n";
-            action = ":";
-            key = ";";
-            options.desc = "Command mode with or without shift";
-          }
-          {
-            mode = "n";
-            action = ":";
-            key = ";";
-            options.desc = "Command mode with or without shift";
-          }
-          {
-            key = "<leader>th";
-            action = ":Telescope harpoon marks<cr>";
-            options = {
-              silent = true;
-              desc = "[t]elescope [h]arpoon Marks";
-            };
-          }
-          {
-            key = "s";
-            action.__raw = ''require("flash").remote'';
-            options.desc = "Flash";
-          }
-          {
-            key = "S";
-            action.__raw = ''require("flash").treesitter'';
-            options.desc = "Flash treesitter";
-          }
-          {
-            mode = "n";
-            action = "<lt><lt>";
-            key = "<lt>";
-            options.desc = "Indent less";
-            options.silent = true;
-          }
-          {
-            mode = "n";
-            action = ">>";
-            key = ">";
-            options.desc = "Indent more";
-            options.silent = true;
-          }
-          {
-            mode = "v";
-            action = ":normal .<CR>";
-            key = ".";
-            options.desc = "Dot commands over visual blocks";
-          }
-
-          {
-            mode = ["n"];
-            action = ''"+p'';
-            key = "<C-V>";
-            options.desc = "Proper paste";
-          }
-          {
-            mode = ["i" "c"];
-            action = ''<C-r>+'';
-            key = "<C-V>";
-            options.desc = "Proper paste";
-          }
-
-          # Plugin garbage.
-          {
-            mode = "n";
-            key = "<Leader>c";
-            action = "<cmd>lua require('conform').format({ timeout_ms = 500 })<CR>";
-            options.desc = "[c]onform";
-          }
-
-          {
-            mode = "n";
-            key = "gm";
-            action = "m";
-            options.desc = "Set mark";
-          }
-          {
-            action = "<cmd>Oil .<CR>";
-            key = "<Leader>f";
-            options.desc = "Open [f]ile explorer";
-          }
-          {
-            action = "<cmd>Telescope find_files<CR>";
-            key = "<leader>tf";
-            options.desc = "Telescope find [f]iles";
-          }
-          {
-            action = "<cmd>Telescope buffers<CR>";
-            key = "<Leader>to";
-            options.desc = "Pick [o]pen buffers";
-          }
-          {
-            action = "<cmd>Telescope live_grep<CR>";
-            key = "<Leader>tt";
-            options.desc = "Find [t]ext in project";
-          }
-          {
-            action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
-            key = "<Leader>la";
-            options.desc = "Code [a]ctions";
-          }
-          {
-            action = "<cmd>lua vim.diagnostic.open_float()<CR>";
-            key = "<Leader>e";
-            options.desc = "Open diagnostic";
-          }
-          {
-            action = '':!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
-            key = "<Leader>s";
-            options.silent = true;
-            options.desc = "[s]ort lines by length";
-          }
-          {
-            mode = "n";
-            action = "<cmd>nohlsearch<CR>";
-            key = "<Esc>";
-          }
-        ];
-
+        # }}}
         autoCmd = [
           {
             event = ["BufReadPost"];
@@ -1704,17 +1639,19 @@
           }
         ];
       };
+      # }}}
 
+      # rofi {{{
       programs.rofi = {
         package = pkgs.rofi-wayland;
         enable = true;
         extraConfig = {
           modi = "window,run,drun";
-          font = "${config.stylix.fonts.monospace.name} 14";
+          font = "${config.stylix.fonts.monospace.name} ${builtins.toString (config.stylix.fonts.sizes.terminal + 1)}";
           padding = 10;
           fixed-num-lines = true;
           show-icons = false;
-          terminal = "alacritty";
+          terminal = "${config.home.sessionVariables.TERMINAL}";
           run-command = "{cmd}";
           drun-show-actions = false;
           disable-history = false;
@@ -1922,7 +1859,9 @@
           # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
         };
       };
+      # }}}
 
+      # hyprland {{{
       services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
       wayland.windowManager.hyprland = let
         gaps_in = 6;
@@ -2269,8 +2208,9 @@
           ];
         };
       };
+      # }}}
 
-      # Extra Configs
+      # Extra Configs {{{
       xdg.enable = true;
 
       xdg.configFile."awesome/" = {
@@ -2287,7 +2227,7 @@
         text = ''
           $TERMINAL &
           xrandr -r ${builtins.toString conRefresh-rate}
-          exec awesome
+          exec ${lib.getExe pkgs.awesome}
         '';
       };
 
@@ -2339,8 +2279,10 @@
           size = 13;
         };
       };
+      # }}}
     };
   };
-
-  system.stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
+  # }}}
 }
+## vim:foldmethod=marker
+
