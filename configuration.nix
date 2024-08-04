@@ -8,8 +8,8 @@
   conFlake-path,
   conAccentColor,
   conRefresh-rate,
-  conScreen-width,
-  conScreen-height,
+  # conScreen-width,
+  # conScreen-height,
   pkgs-unstable,
   ...
 }: {
@@ -547,8 +547,8 @@
           BROWSER = lib.getExe pkgs-unstable.librewolf;
           OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
           # Firefox hardware decode.
-          MOZ_X11_EGL = 1;
-          NO_AT_BRIDGE = 1;
+          # MOZ_X11_EGL = 1;
+          # NO_AT_BRIDGE = 1;
           # Unreal engine .net cli tool turn off telemetry.
           QT_QPA_PLATFORMTHEME = "qt5ct";
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";

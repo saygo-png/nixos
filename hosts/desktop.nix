@@ -1,13 +1,13 @@
 {
   lib,
-  host,
+  # host,
   pkgs,
-  inputs,
-  conHome,
+  # inputs,
+  # conHome,
   conUsername,
-  conFlake-path,
+  # conFlake-path,
   pkgs-unstable,
-  conAccentColor,
+  # conAccentColor,
   conRefresh-rate,
   conScreen-width,
   conScreen-height,
@@ -44,10 +44,12 @@
           "noborder, onworkspace:w[t2]"
         ];
       };
+
       programs.mangohud = {
         enable = true;
         enableSessionWide = false;
       };
+
       xdg.configFile."zed/settings.json".text = builtins.toJSON {
         tab_size = 2;
         vim_mode = true;

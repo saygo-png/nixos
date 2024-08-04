@@ -1,17 +1,17 @@
 {
   lib,
-  host,
+  # host,
   pkgs,
-  config,
-  inputs,
-  conHome,
+  # config,
+  # inputs,
+  # conHome,
   conUsername,
-  conFlake-path,
-  pkgs-unstable,
-  conAccentColor,
-  conRefresh-rate,
-  conScreen-width,
-  conScreen-height,
+  # conFlake-path,
+  # pkgs-unstable,
+  # conAccentColor,
+  # conRefresh-rate,
+  # conScreen-width,
+  # conScreen-height,
   ...
 }: {
   # Bluetooth
@@ -42,12 +42,27 @@
   powerManagement.enable = true;
   services.thermald.enable = true;
   services.tlp.enable = true;
+
+  # Hardware decoding.
+  environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
   hardware.opengl = {
     enable = true;
     driSupport = true;
+    driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965
+      libvdpau-va-gl
+    ];
   };
 
-  environment.systemPackages = with pkgs; [acpi];
+  environment.systemPackages = with pkgs; [
+    # Cli battery interface.
+    acpi
+    # Games.
+    lutris-free
+    winetricks
+    wineWowPackages.waylandFull
+  ];
 
   services.libinput.mouse.accelSpeed = "-0.9";
   home-manager = {
@@ -55,12 +70,10 @@
       home = {};
       # Media controls for bluetooth headphones
       services.mpris-proxy.enable = true;
-
       programs.alacritty.settings.window.padding = lib.mkForce {
         x = 0;
         y = 0;
       };
-
       wayland.windowManager.hyprland.settings = let
         gaps_in = 0;
         gaps_out = 0;
@@ -74,9 +87,9 @@
           {
             name = "synps/2-synaptics-touchpad";
             enabled = false;
-            # accel_profile = "flat";
-            # natural_scroll = true;
-            # disable_while_typing = true;
+            accel_profile = "flat";
+            natural_scroll = true;
+            disable_while_typing = true;
           }
           {
             name = "tpps/2-elan-trackpoint";
