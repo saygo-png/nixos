@@ -113,12 +113,10 @@
     nil # Nix LSP
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
-    devenv # "Easy" dev envs
 
     # Other.
     wl-clipboard # Wayland xclip
     cliphist # Wayland clipboard manager
-    nsxiv # Image viewer
     jq # Json parser, needed for "hyprland-next-visible-client.sh"
     nsxiv # Image viewer
     patool # Universal archiver
@@ -126,7 +124,6 @@
     conky # Hardware monitor
     vim # Text editor
     wget # Downloader
-    eza # ls rewrite
     trashy # Cli trashcan
     udiskie # Auto mount
     dash # Lightweight shell
@@ -307,6 +304,9 @@
 
   # Thumbnails for thunar
   services.tumbler.enable = true;
+
+  # Automount
+  services.udisks2.enable = true;
 
   # Might fix authorization agent issues
   services.gnome.gnome-keyring.enable = true;
@@ -2114,12 +2114,6 @@
             "$mainMod ALT, l, Move floating right, moveactive, 100 0"
             "$mainMod ALT, k, Move floating up, moveactive, 0 -100"
             "$mainMod ALT, j, Move floating down, moveactive, 0 100"
-
-            "$mainMod, Equal, Volume up, exec, ${lib.getExe pkgs.pamixer} -i 2"
-            "$mainMod, Minus, Volume down, exec, ${lib.getExe pkgs.pamixer} -d 2"
-
-            "$mainMod, mouse_down, Scroll workspace, workspace, e-1"
-            "$mainMod, mouse_up, Scroll workspace, workspace, e+1"
           ];
 
           # mouse binding

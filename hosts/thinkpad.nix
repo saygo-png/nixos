@@ -22,29 +22,52 @@
   };
 
   programs.light.enable = true;
+
   services.actkbd = {
     enable = true;
     bindings = [
       {
-        keys = [225];
+        # Brightness down
+        keys = [63];
+        events = ["key"];
+        command = "${lib.getExe pkgs.light} -U 10";
+      }
+      {
+        # Brightness up
+        keys = [64];
         events = ["key"];
         command = "${lib.getExe pkgs.light} -A 10";
       }
       {
-        keys = [224];
+        # Volume down
+        keys = [60];
         events = ["key"];
-        command = "${lib.getExe pkgs.light} -U 10";
+        command = "${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
       }
-      # {
-      #   keys = [224];
-      #   events = ["key"];
-      #   command = "${lib.getExe pkgs.pamixer} -i 2";
-      # }
-      # {
-      #   keys = [224];
-      #   events = ["key"];
-      #   command = "${lib.getExe pkgs.pamixer} -i 2";
-      # }
+      {
+        # Volume up
+        keys = [61];
+        events = ["key"];
+        command = "${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+      }
+      {
+        # Mute
+        keys = [61];
+        events = ["key"];
+        command = "${lib.getExe pkgs.pamixer} -t && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+      }
+      {
+        # Wifi toggle
+        keys = [66];
+        events = ["key"];
+        command = "notify-send 'toggled wifi'";
+      }
+      {
+        # Bluetooth toggle
+        keys = [68];
+        events = ["key"];
+        command = "notify-send 'toggled bluetoth'";
+      }
     ];
   };
 

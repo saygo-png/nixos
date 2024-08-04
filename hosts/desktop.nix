@@ -18,6 +18,24 @@
     enable = true;
   };
 
+  services.actkbd = {
+    enable = true;
+    bindings = [
+      {
+        # Volume down
+        keys = [12];
+        events = ["key"];
+        command = "${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+      }
+      {
+        # Volume up
+        keys = [13];
+        events = ["key"];
+        command = "${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+      }
+    ];
+  };
+
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
   hardware.opengl = {
@@ -41,7 +59,7 @@
       wayland.windowManager.hyprland.settings = {
         input.sensitivity = -0.9;
         windowrulev2 = [
-          "noborder, onworkspace:w[t2]"
+          "noborder, onworkspace:w[t1]"
         ];
       };
 
@@ -99,7 +117,12 @@
       "steam-original"
     ];
 
+    # services.borgmatic = {
+    #   enable = true;
+    # };
+
   environment.systemPackages = with pkgs; [
+    borgbackup
     zed-editor # Another text editor
     # Game launcher
     lutris
@@ -128,9 +151,7 @@
     extraPackages = [
       pkgs.libpng
       pkgs.libkrb5
-      pkgs.libkrb5
       pkgs.gamemode
-      pkgs.keyutils
       pkgs.keyutils
       pkgs.gamescope
       pkgs.libvorbis
