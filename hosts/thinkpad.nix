@@ -75,7 +75,6 @@
   networking.networkmanager.wifi.powersave = true;
   powerManagement.enable = true;
   services.tlp.enable = true;
-  services.thermald.enable = true;
 
   # On battery ur cpu will go down to 400 freq if this is off
   services.throttled.enable = true;
