@@ -2114,6 +2114,9 @@
             "$mainMod ALT, l, Move floating right, moveactive, 100 0"
             "$mainMod ALT, k, Move floating up, moveactive, 0 -100"
             "$mainMod ALT, j, Move floating down, moveactive, 0 100"
+
+            "$mainMod, Equal, Volume down, exec, ${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)"
+            "$mainMod, Minus, Volume up, exec, ${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)"
           ];
 
           # mouse binding
