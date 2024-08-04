@@ -72,16 +72,10 @@
   };
 
   # Battery saving.
+  networking.networkmanager.wifi.powersave = true;
   powerManagement.enable = true;
-  services.thermald.enable = true;
-  services.tlp = {
-    enable = true;
-    settings = {
-      #Optional helps save long term battery health
-      START_CHARGE_THRESH_BAT0 = 40; # 40 and bellow it starts to charge
-      STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
-    };
-  };
+  services.tlp.enable = true;
+  # services.thermald.enable = true;
 
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
