@@ -328,7 +328,7 @@
     dataDir = conHome;
     user = conUsername;
     openDefaultPorts = true;
-    overrideDevices = true;
+    overrideDevices = false;
     overrideFolders = false;
     settings.options.relaysEnabled = false;
     settings.devices = {
@@ -1456,15 +1456,15 @@
               "<Leader>rn" = "[r]e[n]ame";
               "<Leader>t" = "+[t]elescope";
               "<Leader>h" = "+[h]arpoon";
-              "<leader>hh" = "[h]arpoon [a]dd file";
+              "<leader>ha" = "[h]arpoon [a]dd file";
               "<leader>hm" = "[h]arpoon [m]enu";
               "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
               "<leader>hn" = "[h]arpoon [n]ext";
               "<leader>hp" = "[h]arpoon [p]revious";
-              "<C-j>" = "harpoon file 1";
-              "<C-k>" = "harpoon file 2";
-              "<C-l>" = "harpoon file 3";
-              "<C-m>" = "harpoon file 4";
+              "<C-h>" = "harpoon file 1";
+              "<C-j>" = "harpoon file 2";
+              "<C-k>" = "harpoon file 3";
+              "<C-l>" = "harpoon file 4";
             };
             plugins = {
               presets = {
