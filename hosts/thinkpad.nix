@@ -30,13 +30,13 @@
         # Brightness down
         keys = [63];
         events = ["key"];
-        command = "${lib.getExe pkgs.light} -U 10";
+        command = "${lib.getExe pkgs.light} -U 1";
       }
       {
         # Brightness up
         keys = [64];
         events = ["key"];
-        command = "${lib.getExe pkgs.light} -A 10";
+        command = "${lib.getExe pkgs.light} -A 1";
       }
       {
         # Volume down
