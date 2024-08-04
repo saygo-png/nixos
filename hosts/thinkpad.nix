@@ -73,8 +73,8 @@
 
   # Battery saving.
   networking.networkmanager.wifi.powersave = true;
-  powerManagement.enable = true;
-  services.tlp.enable = true;
+  # powerManagement.enable = true;
+  # services.tlp.enable = true;
   # services.thermald.enable = true;
 
   # Hardware decoding.
