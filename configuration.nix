@@ -550,6 +550,7 @@
           neovide # Neovim gui
           tauon # Music player
           foliate # Ebook reader
+          zathura # Better for pdfs
           rofi-wayland # App launcher
           keepassxc # Password manager
           qbittorrent # Torrent client
@@ -2220,6 +2221,70 @@
       xdg.configFile."awesome/" = {
         source = ./resources/awesome;
         recursive = true;
+      };
+
+      xdg.configFile."zathura/" = {
+        text = ''
+          set notification-error-bg       "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set notification-error-fg       "${config.lib.stylix.colors.withHashtag.base08}" # bright:red
+          set notification-warning-bg     "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set notification-warning-fg     "${config.lib.stylix.colors.withHashtag.base0A}" # bright:yellow
+          set notification-bg             "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set notification-fg             "${config.lib.stylix.colors.withHashtag.base0B}" # bright:green
+
+          set completion-bg               "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+          set completion-fg               "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set completion-group-bg         "${config.lib.stylix.colors.withHashtag.base01}" # bg1
+          set completion-group-fg         "${config.lib.stylix.colors.withHashtag.base03}" # gray
+          set completion-highlight-bg     "${config.lib.stylix.colors.withHashtag.base0B}" # bright:blue
+          set completion-highlight-fg     "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+
+          # Define the color in index mode
+          set index-bg                    "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+          set index-fg                    "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set index-active-bg             "${config.lib.stylix.colors.withHashtag.base0B}" # bright:blue
+          set index-active-fg             "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+
+          set inputbar-bg                 "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set inputbar-fg                 "${config.lib.stylix.colors.withHashtag.base06}" # fg
+
+          set statusbar-bg                "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+          set statusbar-fg                "${config.lib.stylix.colors.withHashtag.base06}" # fg
+
+          set highlight-color             "${config.lib.stylix.colors.withHashtag.base0A}" # bright:yellow
+          set highlight-active-color      "${config.lib.stylix.colors.withHashtag.base09}" # bright:orange
+
+          set default-bg                  "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set default-fg                  "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set render-loading              true
+          set render-loading-bg           "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set render-loading-fg           "${config.lib.stylix.colors.withHashtag.base06}" # fg
+
+          # Recolor book content's color
+          set recolor-lightcolor          "${config.lib.stylix.colors.withHashtag.base00}" # bg
+          set recolor-darkcolor           "${config.lib.stylix.colors.withHashtag.base06}" # fg
+
+          set recolor "true"
+          set recolor-keephue false"
+
+          set font "${config.stylix.fonts.serif.name} ${builtins.toString config.stylix.fonts.sizes.terminal}"
+
+          map <C-r> reload
+          map <C-j> zoom in
+          map <C-k> zoom out
+
+          unmap i
+          map i toggle_statusbar
+
+          set guioptions "s"
+          set selection-notification "true"
+          set statusbar-home-tilde "true"
+          set adjust-open "width"
+          set statusbar-h-padding 0
+          set statusbar-v-padding 0
+          set scroll-page-aware "true"
+          set selection-clipboard clipboard
+        '';
       };
 
       xdg.configFile."wallpaper.png" = {
