@@ -28,43 +28,43 @@
     bindings = [
       {
         # Brightness down
-        keys = [63];
+        keys = [224];
         events = ["key"];
         command = "${lib.getExe pkgs.light} -U 1";
       }
       {
         # Brightness up
-        keys = [64];
+        keys = [225];
         events = ["key"];
         command = "${lib.getExe pkgs.light} -A 1";
       }
       {
+        # Mute
+        keys = [113];
+        events = ["key"];
+        command = "${lib.getExe pkgs.pamixer} -t && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+      }
+      {
         # Volume down
-        keys = [60];
+        keys = [114];
         events = ["key"];
         command = "${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
       }
       {
         # Volume up
-        keys = [61];
+        keys = [115];
         events = ["key"];
         command = "${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
       }
       {
-        # Mute
-        keys = [61];
-        events = ["key"];
-        command = "${lib.getExe pkgs.pamixer} -t && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
-      }
-      {
         # Wifi toggle
-        keys = [66];
+        keys = [238];
         events = ["key"];
         command = "notify-send 'toggled wifi'";
       }
       {
         # Bluetooth toggle
-        keys = [68];
+        keys = [237];
         events = ["key"];
         command = "notify-send 'toggled bluetoth'";
       }

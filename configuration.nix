@@ -339,14 +339,14 @@
           "tcp://192.168.1.10:22000"
         ];
         id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
-        autoAcceptFolders = true;
+        autoAcceptFolders = false;
       };
       thinkpad = {
         addresses = [
           "tcp://192.168.1.13:22000 "
         ];
         id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
-        autoAcceptFolders = true;
+        autoAcceptFolders = false;
       };
     };
   };
