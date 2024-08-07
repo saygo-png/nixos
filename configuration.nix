@@ -603,9 +603,10 @@
           pkgs-unstable.gomuks # TUI matrix client
         ];
 
-        # Binary blobs.
+        # Binary (or not) blobs.
         sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
+        file."bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
         file."bin/ow".source = ./resources/scripts/ow.py;
 
         # This allows for semi-declarative configuration.
@@ -2057,17 +2058,10 @@
             "$mainMod, q, [q]uit active, killactive,"
 
             "$mainMod, p, Toggle [p]in, pin,"
-            "$mainMod, o, Toggle fl[o]at, togglefloating,"
+            "$mainMod, v, Toggle float, togglefloating,"
 
-            "$mainMod, f, [f]ullscreen, fullscreen"
+            "$mainMod, f, [f]ullscreen, exec, hyprfullscreenfix"
             "$mainMod SHIFT, f, [f]ake fullscreen, fakefullscreen"
-
-            # Vaxry is retarded and wont implement fullscreeing a pinned window
-            # this "solution" is a dirty hack that needs a special keybind, otherwise
-            # we would be pinning every floating window if we fullscreen it
-            "SUPER, y, Wh[y] is this wont implement, pin,"
-            "SUPER, y, Wh[y] is this wont implement, fullscreen"
-            "SUPER, y, Wh[y] is this wont implement, pin,"
 
             "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
             "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"
