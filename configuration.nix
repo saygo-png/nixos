@@ -513,8 +513,8 @@
           "x-scheme-handler/about" = "librewolf.desktop";
           "x-scheme-handler/unknown" = "librewolf.desktop";
           "video/*" = "mpv.desktop"; # Default video player is MPV
-          "audio/*" = "audacious.desktop"; # Default audio player is Audacious
-          "image/*" = "viewnior.desktop"; # Default image viewer is Viewnior
+          "audio/*" = "tauon.desktop"; # Default audio player is Audacious
+          "image/*" = "nsxiv.desktop"; # Default image viewer is Viewnior
         };
       };
 
@@ -536,9 +536,13 @@
           "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
           "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
           "nhoffline" = "nh os switch ${conFlake-path} -- --option substitute false";
-          "search" = "sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
+          "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${conHome}/screencaptures/recording.wav";
+          "f" = "cd $(fd --type d --hidden
+          --exclude .git --exclude node_module --exclude .cache --exclude .npm
+          --exclude .mozilla --exclude .meteor --exclude .nv --exclude .librewolf
+          --exclude .direnv | fzf)";
         };
 
         sessionVariables = {
@@ -567,7 +571,6 @@
           tauon # Music player
           foliate # Ebook reader
           zathura # Better for pdfs
-          viewnior # Image viewer
           rofi-wayland # App launcher
           keepassxc # Password manager
           qbittorrent # Torrent client
