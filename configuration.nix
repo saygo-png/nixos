@@ -136,7 +136,6 @@
     gnumake # C compiling
     xdg-utils # Includes xdg-open
     gcc # C compiling
-    fd # Find alternative
     libnotify # Notifications (notify-send)
 
     # For Hyprland
@@ -379,9 +378,6 @@
   environment.sessionVariables = {
     FLAKE = "${conFlake-path}"; # For nix helper.
     GTK_USE_PORTAL = "1";
-
-    # Transparent fzf.
-    FZF_DEFAULT_OPTS = "--color=bg+:-1,gutter:-1,bg:-1";
   };
   # }}}
 
@@ -539,10 +535,6 @@
           "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${conHome}/screencaptures/recording.wav";
-          "f" = "cd $(fd --type d --hidden
-          --exclude .git --exclude node_module --exclude .cache --exclude .npm
-          --exclude .mozilla --exclude .meteor --exclude .nv --exclude .librewolf
-          --exclude .direnv | fzf)";
         };
 
         sessionVariables = {
@@ -770,8 +762,48 @@
         };
       };
 
+      programs.fd = {
+        enable = true;
+        hidden = true;
+        ignores = [
+          ".git"
+          ".cache"
+          "devenv"
+          "direnv"
+          ".direnv"
+          "lilipod"
+          "libraries"
+          "virtualenv"
+          "virtualenvs"
+          "*nix/store/*"
+          "*/nix/share/*"
+          "*/.local/state/*"
+          "*/.nix-profile/*"
+          "*/nix/profiles/*"
+          "*/node_modules/*"
+          "*/cargo/registry/*"
+          "*/.local/share/Trash/*"
+        ];
+        extraOptions = [
+          "color=always"
+          "--glob"
+          "--max-depth 10"
+        ];
+      };
+
       programs.fzf = {
         enable = true;
+        defaultCommand = "fd --type f";
+        defaultOptions = ["--no-height"];
+        fileWidgetCommand = "fd --type f";
+        changeDirWidgetCommand = "fd --type d";
+        fileWidgetOptions = ["--preview 'head {}'"];
+        changeDirWidgetOptions = ["--preview 'tree -C {} | head -200'"];
+        colors = {
+          "bg" = "-1";
+          "bg+" = "-1";
+          "gutter" = "-1";
+        }; # Transparent fzf.
       };
 
       programs.zsh = {
@@ -781,9 +813,7 @@
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
         historySubstringSearch.enable = true;
-        syntaxHighlighting.highlighters = [
-          "brackets"
-        ];
+        syntaxHighlighting.highlighters = ["brackets"];
         initExtra = builtins.readFile ./resources/zsh-extraConfig;
 
         history.size = 50;
@@ -842,42 +872,25 @@
 
       programs.git = {
         enable = true;
-        package = pkgs.gitAndTools.gitFull;
         userName = "saygo-png";
+        package = pkgs.gitAndTools.gitFull;
         userEmail = "saygo.mail@proton.me";
         aliases = {
-          undo = "reset HEAD~1 --mixed";
-          amend = "commit -a --amend";
           aa = "add -A"; # [A]dd [A]ll
+          amend = "commit -a --amend";
+          undo = "reset HEAD~1 --mixed";
         };
         extraConfig = {
-          # credential = {
-          #   helper = lib.mkForce "cache --timeout 21600"; # six hours
-          # };
-          color = {
-            ui = "auto";
-          };
+          pull = {rebase = true;};
+          color = {ui = "auto";};
+          merge = {tool = "splice";};
+          rerere = {enabled = true;};
+          push = {default = "simple";};
+          branch = {autosetupmerge = true;};
+          core = {excludesfile = "~/.gitignore_global";};
           diff = {
             tool = "vimdiff";
             mnemonicprefix = true;
-          };
-          merge = {
-            tool = "splice";
-          };
-          push = {
-            default = "simple";
-          };
-          pull = {
-            rebase = true;
-          };
-          core = {
-            excludesfile = "~/.gitignore_global";
-          };
-          branch = {
-            autosetupmerge = true;
-          };
-          rerere = {
-            enabled = true;
           };
         };
       };
@@ -889,15 +902,9 @@
             term = "foot";
             pad = "6x6center";
           };
-          mouse = {
-            hide-when-typing = "yes";
-          };
-          cursor = {
-            blink = "yes";
-          };
-          scrollback = {
-            lines = 1000;
-          };
+          mouse = {hide-when-typing = "yes";};
+          cursor = {blink = "yes";};
+          scrollback = {lines = 1000;};
         };
       };
 
