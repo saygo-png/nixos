@@ -42,6 +42,7 @@
 
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
+
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -624,12 +625,15 @@
 
           run mkdir -p "${conHome}/screencaptures"
           run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
+          run rm "${conHome}/screencaptures/screencaptures" || true
 
           run mkdir -p "${conHome}/Downloads"
-          run ln -s "${conHome}/Sync" "${conHome}/Desktop/Downloads" || true
+          run ln -s "${conHome}/Downloads" "${conHome}/Desktop/Downloads" || true
+          run rm "${conHome}/Downloads/Downloads" || true
 
           run mkdir -p "${conHome}/Sync"
           run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
+          run rm "${conHome}/Sync/Sync" || true
 
           run mkdir -p "${config.xdg.configHome}"
           run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
@@ -896,7 +900,7 @@
           keyboard.bindings = [
             {
               key = "Escape";
-              mods = "Shift";
+              mods = "Alt";
               action = "ToggleViMode";
             }
           ];
@@ -1097,6 +1101,23 @@
             vim.o.guifont = "JetBrains Mono:h13:#e-antialias:#h-slight"
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
           end
+
+          local open_command = "xdg-open"
+          if vim.fn.has("mac") == 1 then
+            open_command = 'open'
+          end
+
+          local function url_repo()
+            local cursorword = vim.fn.expand('<cfile>')
+            if string.find(cursorword, '^[a-zA-Z0-9-_.]*/[a-zA-Z0-9-_.]*$') then
+              cursorword = "https://github.com/" .. cursorword
+            end
+            return cursorword or ""
+          end
+
+          vim.keymap.set('n', 'gx', function()
+            vim.fn.jobstart({ open_command, url_repo() }, { detach = true })
+          end, { silent = true })
 
           -- Keymaps
           -- Split movement
@@ -2035,13 +2056,18 @@
 
             "$mainMod, q, [q]uit active, killactive,"
 
-            "$mainMod CTRL, Space, Toggle floating, togglefloating,"
-
             "$mainMod, p, Toggle [p]in, pin,"
-            "$mainMod, p, Toggle [p]in, togglefloating,"
+            "$mainMod, o, Toggle fl[o]at, togglefloating,"
 
             "$mainMod, f, [f]ullscreen, fullscreen"
-            "$mainMod SHIFT, f, [f]akke fullscreen, fakefullscreen"
+            "$mainMod SHIFT, f, [f]ake fullscreen, fakefullscreen"
+
+            # Vaxry is retarded and wont implement fullscreeing a pinned window
+            # this "solution" is a dirty hack that needs a special keybind, otherwise
+            # we would be pinning every floating window if we fullscreen it
+            "SUPER, y, Wh[y] is this wont implement, pin,"
+            "SUPER, y, Wh[y] is this wont implement, fullscreen"
+            "SUPER, y, Wh[y] is this wont implement, pin,"
 
             "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
             "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"
