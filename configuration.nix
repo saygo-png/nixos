@@ -544,6 +544,20 @@
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
         };
 
+        xdg.mimeApps = {
+          enable = true;
+          defaultApplications = {
+            "text/html" = "librewolf.desktop";
+            "x-scheme-handler/http" = "librewolf.desktop";
+            "x-scheme-handler/https" = "librewolf.desktop";
+            "x-scheme-handler/about" = "librewolf.desktop";
+            "x-scheme-handler/unknown" = "librewolf.desktop";
+            "video/*" = "mpv.desktop"; # Default video player is MPV
+            "audio/*" = "audacious.desktop"; # Default audio player is Audacious
+            "image/*" = "viewnior.desktop"; # Default image viewer is Viewnior
+          };
+        };
+
         # Home packages, home manager packages, user packages
         packages = with pkgs; [
           # GUI.
@@ -552,6 +566,7 @@
           tauon # Music player
           foliate # Ebook reader
           zathura # Better for pdfs
+          viewnior # Image viewer
           rofi-wayland # App launcher
           keepassxc # Password manager
           qbittorrent # Torrent client
@@ -1279,7 +1294,7 @@
             options.desc = "Open diagnostic";
           }
           {
-            action = ''<cmd>!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
+            action = '':!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
             key = "<Leader>s";
             options.silent = true;
             options.desc = "[s]ort lines by length";
