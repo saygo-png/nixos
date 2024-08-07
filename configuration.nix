@@ -503,6 +503,21 @@
         inputs.nix-index-database.hmModules.nix-index
         inputs.nixvim.homeManagerModules.nixvim
       ];
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "text/html" = "librewolf.desktop";
+          "x-scheme-handler/http" = "librewolf.desktop";
+          "x-scheme-handler/https" = "librewolf.desktop";
+          "x-scheme-handler/about" = "librewolf.desktop";
+          "x-scheme-handler/unknown" = "librewolf.desktop";
+          "video/*" = "mpv.desktop"; # Default video player is MPV
+          "audio/*" = "audacious.desktop"; # Default audio player is Audacious
+          "image/*" = "viewnior.desktop"; # Default image viewer is Viewnior
+        };
+      };
+
       home = {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
@@ -542,20 +557,6 @@
           # Unreal engine .net cli tool turn off telemetry.
           QT_QPA_PLATFORMTHEME = "qt5ct";
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
-        };
-
-        xdg.mimeApps = {
-          enable = true;
-          defaultApplications = {
-            "text/html" = "librewolf.desktop";
-            "x-scheme-handler/http" = "librewolf.desktop";
-            "x-scheme-handler/https" = "librewolf.desktop";
-            "x-scheme-handler/about" = "librewolf.desktop";
-            "x-scheme-handler/unknown" = "librewolf.desktop";
-            "video/*" = "mpv.desktop"; # Default video player is MPV
-            "audio/*" = "audacious.desktop"; # Default audio player is Audacious
-            "image/*" = "viewnior.desktop"; # Default image viewer is Viewnior
-          };
         };
 
         # Home packages, home manager packages, user packages
@@ -1941,17 +1942,15 @@
           debug.disable_logs = true;
           # Autostart.
           exec-once = [
-            "systemctl --user import-environment WAYLAND_DISPLAY &"
-            "hash dbus-update-activation-environment 2>/dev/null &"
-            "dbus-update-activation-environment --systemd &"
-
+            # Not sure what this does tbh
+            # "systemctl --user import-environment WAYLAND_DISPLAY &"
+            # "hash dbus-update-activation-environment 2>/dev/null &"
+            # "dbus-update-activation-environment --systemd &"
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
             "udiskie &"
-            # "${lib.getExe pkgs.wl-clip-persist} --clipboard both &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
-            # "wl-paste --watch cliphist store &"
           ];
 
           input = {
