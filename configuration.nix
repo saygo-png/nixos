@@ -500,17 +500,68 @@
         inputs.nixvim.homeManagerModules.nixvim
       ];
 
+      # Prevent default apps from being changed
+      xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
         enable = true;
         defaultApplications = {
-          "text/html" = "librewolf.desktop";
-          "x-scheme-handler/http" = "librewolf.desktop";
-          "x-scheme-handler/https" = "librewolf.desktop";
-          "x-scheme-handler/about" = "librewolf.desktop";
-          "x-scheme-handler/unknown" = "librewolf.desktop";
-          "video/*" = "mpv.desktop"; # Default video player is MPV
-          "audio/*" = "tauon.desktop"; # Default audio player is Audacious
-          "image/*" = "nsxiv.desktop"; # Default image viewer is Viewnior
+          # Text
+          "application/x-shellscript" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-java" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "inode/x-empty" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-tex" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-python" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-readme" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "application/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/rhtml" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/plain" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-markdown" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+
+          # Documents
+          "application/vnd.oasis.opendocument.text" = ["writer.desktop"];
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["writer.desktop"];
+
+          # PDF
+          "application/pdf" = ["zathura.desktop"];
+          "image/vnd.djvu" = ["zathura.desktop"];
+
+          # Web
+          "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/http" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/https" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/ftp" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/chrome" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-htm" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-shtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/xhtml+xml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-xhtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-xht" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+
+          # Image
+          "image/png" = ["nsxiv.desktop"];
+          "image/jpeg" = ["nsxiv.desktop"];
+          # bmp
+          "application/octet-stream" = ["nsxiv.desktop"];
+
+          # Video
+          "video/ogg" = ["mpv.desktop"];
+          "video/x-msvideo" = ["mpv.desktop"];
+          "video/quicktime" = ["mpv.desktop"];
+          "video/webm" = ["mpv.desktop"];
+          "video/x-flv" = ["mpv.desktop"];
+          "video/mp4" = ["mpv.desktop"];
+          "application/x-flash-video" = ["mpv.desktop"];
+          "video/MP2T" = ["mpv.desktop"];
+          "image/x-tga" = ["mpv.desktop"];
+
+          # Audio
+          "audio/mpeg" = ["mpv.desktop"];
+          "audio/x-flac" = ["mpv.desktop"];
+          "audio/mp4" = ["mpv.desktop"];
+          "application/ogg" = ["mpv.desktop"];
+          "audio/x-mod" = ["mpv.desktop"];
         };
       };
 
@@ -775,14 +826,14 @@
           "libraries"
           "virtualenv"
           "virtualenvs"
-          "*nix/store/*"
-          "*/nix/share/*"
-          "*/.local/state/*"
-          "*/.nix-profile/*"
-          "*/nix/profiles/*"
-          "*/node_modules/*"
-          "*/cargo/registry/*"
-          "*/.local/share/Trash/*"
+          "nix/store/*"
+          "/nix/share/*"
+          "/.local/state/*"
+          "/.nix-profile/*"
+          "/nix/profiles/*"
+          "/node_modules/*"
+          "/cargo/registry/*"
+          "/.local/share/Trash/*"
         ];
         extraOptions = [
           "color=always"
