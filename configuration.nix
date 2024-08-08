@@ -307,9 +307,12 @@
 
   # Automount
   services.udisks2.enable = true;
+  services.udev.extraRules = ''
+    ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"
+  '';
 
   # Might fix authorization agent issues
-  services.gnome.gnome-keyring.enable = true;
+  # services.gnome.gnome-keyring.enable = true;
 
   # Polkit (needed for window managers)
   security.polkit.enable = true;
@@ -574,6 +577,7 @@
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
           "shutdown" = "poweroff";
+          "pkill" = "pkill -f";
           "ls" = "${lib.getExe pkgs.eza}";
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
@@ -629,7 +633,6 @@
 
           moar # Pager
           termdown # Timer
-          tldr # Man alternative
           htop-vim # TUI task manager
           mission-center # GUI task manager
           zoxide # Cd alternative
@@ -743,6 +746,17 @@
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
 
+      programs.tealdeer = {
+        enable = true;
+        settings = {
+          updates = {auto_update = true;};
+          display = {
+            compact = false;
+            use_pager = true;
+          };
+        };
+      };
+
       services.dunst = {
         enable = true;
         settings = {
@@ -826,17 +840,18 @@
           "libraries"
           "virtualenv"
           "virtualenvs"
-          "nix/store/*"
-          "/nix/share/*"
-          "/.local/state/*"
-          "/.nix-profile/*"
-          "/nix/profiles/*"
-          "/node_modules/*"
-          "/cargo/registry/*"
-          "/.local/share/Trash/*"
+          "nix/store"
+          "nix/share"
+          ".local/state"
+          ".nix-profile"
+          "nix/profiles"
+          "node_modules"
+          "cargo/registry"
+          ".local/share/Trash"
         ];
         extraOptions = [
           "color=always"
+          "--follow"
           "--glob"
           "--max-depth 10"
         ];
