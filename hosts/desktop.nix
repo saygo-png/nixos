@@ -124,7 +124,6 @@
     #   source_directories = [ "${conHome}" ];
     #   exclude_caches = true;
     #   exclude_patterns = [
-    #     "*/Desktop"
     #     "*/.cache"
     #     "*/.local/share/Steam"
     #     "*/Games/battlenet"

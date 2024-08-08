@@ -156,21 +156,26 @@
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
     (writeShellScriptBin
-      "update_krita.sh" # updates the flake krita nixos configuration files from current mutable krita config.
+      "update_mutable.sh" # updates the flake krita nixos configuration files from current mutable krita config.
 
       ''
         set -o pipefail
         set -u
-        shopt -s failglob
+        IFS=   # don't split
+        set +f # do glob
+
         KRITAHOME="${conHome}/.local/share/krita"
         KRITANIXHOME="${conFlake-path}/resources/krita"
-
         cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
         cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
         cp -vf "$HOME/.config/kritadisplayrc" "$KRITANIXHOME/kritadisplayrc"
-
         # Dont include the cache
         rm -vf "$KRITANIXHOME/krita-toplevel/resourcecache.sqlite"
+
+        ANKIHOME="${conHome}/.local/share/Anki2"
+        ANKINIXHOME="${conFlake-path}/resources/anki"
+        cp -vf "$ANKIHOME"/prefs*.db "$ANKINIXHOME"/.
+        cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
       '')
 
     (writeShellScriptBin
@@ -678,12 +683,18 @@
         # However it makes you lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
           mkdir -p "${config.xdg.configHome}"
+
           mkdir -p "${conHome}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${conHome}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
+
+          mkdir -p "${conHome}/.local/share/Anki2"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/Anki2"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${conHome}/.local/share/Anki2"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/Anki2"
         '';
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
@@ -2406,7 +2417,7 @@
         text = ''
           $TERMINAL &
           xrandr -r ${builtins.toString conRefresh-rate}
-          exec ${lib.getExe pkgs.awesome}
+          exec ${lib.getExe' pkgs.awesome "awesome"}
         '';
       };
 
