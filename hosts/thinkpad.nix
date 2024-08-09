@@ -79,6 +79,21 @@
   # On battery ur cpu will go down to 400 freq if this is off
   services.throttled.enable = true;
 
+  # Fixes pipewire bug causing the camera to always be on
+  # draining battery for no reason.
+  # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2669
+  services.pipewire = {
+    wireplumber = {
+      extraConfig = {
+        "10-disable-camera" = {
+          "wireplumber.profiles" = {
+            main."monitor.libcamera" = "disabled";
+          };
+        };
+      };
+    };
+  };
+
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
   hardware.opengl = {
@@ -91,6 +106,8 @@
   environment.systemPackages = with pkgs; [
     # Cli battery interface.
     acpi
+    # Power drain check
+    powertop
     # Games.
     lutris-free
     winetricks

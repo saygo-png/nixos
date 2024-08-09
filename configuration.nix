@@ -178,6 +178,14 @@
         cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
       '')
 
+    (writeShellApplication {
+      name = "tree";
+      runtimeInputs = [eza];
+      text = ''
+        "eza --group-directories-first --tree"
+      '';
+    })
+
     (writeShellScriptBin
       "hwinfolist"
       ''
@@ -590,7 +598,6 @@
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
           "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
-          "tree" = "${lib.getExe pkgs.eza} --group-directories-first --tree";
           "nhoffline" = "nh os switch ${conFlake-path} -- --option substitute false";
           "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
