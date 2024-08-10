@@ -370,13 +370,19 @@
   # Disable pulseaudio.
   hardware.pulseaudio.enable = false;
 
+  # Disable system-wide ALSA setup, since we're using PipeWire's ALSA emulation. Enabling this can
+  # let us use media keys in TTY, for example.
+  sound.enable = false;
+
   # RealtimeKit service, which hands out realtime scheduling priority to user processes on demand. For example, the PulseAudio server uses this to acquire realtime priority.
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    wireplumber.enable = true;
-    pulse.enable = true;
     alsa.enable = true;
+    jack.enable = true;
+    pulse.enable = true;
+    alsa.support32Bit = true;
+    wireplumber.enable = true;
   };
   # }}}
 
@@ -1246,11 +1252,37 @@
           vim.keymap.set("t", "<M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
 
           -- Plugins
-          vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', {desc = "hover"})
-          vim.keymap.set('n', '<leader>a', '<cmd>Lspsaga code_action<CR>', {desc = "code [a]ctions"})
-          vim.keymap.set('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', {desc = "[r]e[n]ame"})
-          vim.keymap.set("n", "<Leader>c", '<cmd>lua require("conform").format({ timeout_ms = 500 })<CR>', { desc = "[c]onform" })
+          local utils = require "telescope.utils"
+          local builtin = require "telescope.builtin"
+
+          vim.keymap.set("n", "<leader>f", "<cmd>Oil .<CR>", {desc = "[f]ile browser"})
+          vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", {desc = "hover"})
+          vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
+          vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", {desc = "[r]e[n]ame"})
           vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
+          vim.keymap.set("n", "<leader>tn", builtin.help_tags, { desc = "[t]elescope [n]oob" })
+          vim.keymap.set("n", "<leader>tk", builtin.keymaps, { desc = "[t]elescope [k]eymaps" })
+          vim.keymap.set("n", "<leader>tf", builtin.find_files, { desc = "[t]elescope [f]iles" })
+          vim.keymap.set("n", "<leader>ts", builtin.builtin, { desc = "[t]elescope [s]elect telescope" })
+          vim.keymap.set("n", "<leader>tw", builtin.grep_string, { desc = "[t]elescope current [w]ord" })
+          vim.keymap.set("n", "<leader>tg", builtin.live_grep, { desc = "[t]elescope by [g]rep" })
+          vim.keymap.set("n", "<leader>td", builtin.diagnostics, { desc = "[t]elescope [d]iagnostics" })
+          vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
+          vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
+          vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
+
+          vim.keymap.set("n", "<Leader>c", function()
+          require("conform").format({ timeout_ms = 500 })
+          end, { desc = "[c]onform" })
+
+          vim.keymap.set("n", "<leader>tcf", function()
+            builtin.find_files({ cwd = utils.buffer_dir() })
+          end, { silent = true, desc = "[t]elescope find [f]iles in [c]urrent buffer" })
+
+          vim.keymap.set("n", "<leader>tcg", function()
+            builtin.live_grep({ cwd = utils.buffer_dir() })
+          end, { silent = true, desc = "[t]elescope grep in [c]urrent buffer" })
 
           -- Clipboard
           vim.keymap.set("n", "<c-v>", '"+p', { desc = "proper paste" })
@@ -1460,40 +1492,6 @@
           telescope = {
             enable = true;
             extensions.fzf-native.enable = true;
-            keymaps = {
-              "<leader>tb" = {
-                action = "current_buffer_fuzzy_find ";
-                options = {
-                  desc = "[T]elescope [B]uffr search";
-                };
-              };
-
-              "<leader>tf" = {
-                action = "find_files";
-                options = {
-                  desc = "[T]elescope [F]ile search";
-                };
-              };
-
-              "<leader>tt" = {
-                action = "find_files";
-                options = {
-                  desc = "[T]elescope [F]ile search";
-                };
-              };
-
-              "<leader>to" = {
-                action = "buffers";
-                options = {
-                  desc = "[T]elescope [O]pen buffers";
-                };
-              };
-
-              "<leader>tp" = {
-                action = "live_grep";
-                options.desc = "[T]elescope [p]roject grep";
-              };
-            };
           };
 
           lspsaga = {
@@ -1582,7 +1580,10 @@
             '';
             servers = {
               # Nix.
-              nil-ls.enable = true;
+              nil-ls = {
+                enable = true;
+                settings.nix.flake.autoArchive = true;
+              };
 
               # Python.
               pylsp.enable = true;
@@ -1713,8 +1714,6 @@
             ];
           };
 
-          cmp-nvim-lsp.enable = true;
-          cmp-nvim-lsp-signature-help.enable = true;
           cmp = {
             enable = true;
             autoEnableSources = true;
@@ -1722,9 +1721,9 @@
             settings = {
               autocomplete = true;
               performance = {
-                debounce = 60;
-                fetchingTimeout = 200;
-                maxViewEntries = 30;
+                debounce = 300;
+                fetchingTimeout = 50;
+                maxViewEntries = 5;
               };
               snippet.expand = ''
                 function(args)
@@ -1733,12 +1732,6 @@
               '';
               sources = [
                 {name = "nvim_lsp";}
-                {name = "nvim_lua";}
-                {name = "luasnip";}
-                {name = "path";}
-                {name = "treesitter";}
-                {name = "nvim_lsp_signature_help";}
-                {name = "nvim_lsp_document_symbol";}
               ];
               mapping = {
                 "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
