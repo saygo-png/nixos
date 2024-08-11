@@ -65,9 +65,9 @@
   services.xserver.xkb = {
     extraLayouts = {
       plfi = {
-        description = "plfi";
+        description = "Polish finnish layout";
         languages = ["pol"];
-        symbolsFile = ./resources/static/plfi;
+        symbolsFile = ./resources/static/symbols/plfi;
       };
     };
     layout = "pl,plfi";
@@ -139,14 +139,11 @@
     libnotify # Notifications (notify-send)
 
     # For Hyprland
-    qt5.qtwayland
-    qt6.qtwayland
-    libsForQt5.qt5ct
     libsForQt5.qt5.qtwayland
     kdePackages.qtwayland
 
     # These are filepickers and whatnot
-    xdg-desktop-portal-gtk
+    lxqt.xdg-desktop-portal-lxqt
     xdg-desktop-portal-hyprland
     hyprland-protocols
 
@@ -182,7 +179,7 @@
       name = "tree";
       runtimeInputs = [eza];
       text = ''
-        "eza --group-directories-first --tree"
+        eza --group-directories-first --tree
       '';
     })
 
@@ -196,7 +193,7 @@
       '')
 
     (writeShellScriptBin
-      "clean-nix"
+      "clean-nix-hard"
       ''
         nix-env --delete-generations 3d
         sudo nix-env --delete-generations 3d
@@ -212,6 +209,8 @@
 
         nix store optimise
         sudo nix store optimise
+
+        nh clean all
 
         rm -rf ${conHome}/.local/state/home-manager
         rm -f ${conHome}/.local/state/nix/profiles/home-manager*
@@ -260,29 +259,56 @@
         fi
       '')
 
-    (writeShellScriptBin
-      "pizzatimer"
-      ''
-        ${lib.getExe pkgs.termdown} 15m && \
-        for i in {1..10}; do ${lib.getExe pkgs.libnotify} "Pizza is done."; done
-      '')
+    (writeShellApplication {
+      name = "pizzatimer";
+      bashOptions = ["pipefail"];
+      runtimeInputs = with pkgs; [termdown libnotify sox];
+      text = ''
+        termdown 15m
+        notify-send "Pizza is done."
+        play ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/bell.oga
+      '';
+    })
 
-    (writeShellScriptBin "hyprcorder.sh" ''
-      set -e
-      recproc=$(ps -A | grep wl-screenrec | awk '{print $1}')
-      if [ $recproc ]; then
-        kill -2 $recproc
-        notify-send "Recording stopped."
-        pushd ${conHome}/screencaptures/
-        ${lib.getExe pkgs.ripdrag} $(ls -t | head -n1)
-        popd
-        exit
-      else
-        monitor=$(hyprctl activeworkspace -j | jq -r '.monitor')
-        notify-send "Recording starting on $monitor."
-        ${lib.getExe pkgs.wl-screenrec} --audio -b "1 MB" -o $monitor -f ${conHome}/screencaptures/$(date  +"%y.%m.%d-%H:%M").mp4
+    (writeShellApplication {
+      name = "hyprcorder.sh";
+      bashOptions = ["pipefail"];
+      runtimeInputs = with pkgs; [wl-screenrec slurp ripdrag libnotify coreutils procps];
+      text = ''
+        notify() {
+          notify-send "$@"
+          echo "$@"
+        }
+        dir="${conHome}/screencaptures"
+        [ -d "$dir" ] || mkdir -p "$dir"
+        filename="$dir/$(date +%y.%m.%d-%H:%M).mp4"
+
+        if pgrep wl-screenrec &>/dev/null; then
+          kill -s SIGINT $(pgrep wl-screenrec) && notify "wl-screenrec stopped"
+          pushd "$dir" || exit 2
+          ripdrag "$(find . -maxdepth 1 -type f -printf '%T@\t%Tc %6k Ki\t%P\n' | sort -n | cut -f 3- | tail -n1)"
+          popd || exit 2
+          exit 0
         fi
-    '')
+
+        if [ $# -eq 0 ]; then
+          wl-screenrec --audio -b "1 MB" -f "$filename" &
+        else
+          dim="$(slurp)"
+          if [ -z "$dim" ]; then
+            notify "No area selected"
+            exit 2
+          fi
+          wl-screenrec --audio -b "1 MB" -f "$filename" -g "$dim" &
+        fi
+
+        if pgrep wl-screenrec &>/dev/null; then
+          notify "wl-screenrec started"
+        else
+          notify "wl-screenrec failed to start"
+        fi
+      '';
+    })
   ];
 
   # }}}
@@ -399,7 +425,6 @@
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
     FLAKE = "${conFlake-path}"; # For nix helper.
-    GTK_USE_PORTAL = "1";
   };
   # }}}
 
@@ -593,6 +618,7 @@
         stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
         shellAliases = {
+          "nix-shell" ="nix-shell --run zsh";
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
           "shutdown" = "poweroff";
@@ -756,6 +782,10 @@
           adwaita-qt6
         ];
       };
+      home.file.".config/qt5ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
+      home.file.".config/qt6ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
+      home.file.".config/qt5ct/qt5ct.conf".source = ./resources/static/qt/qt5ct.conf;
+      home.file.".config/qt6ct/qt6ct.conf".source = ./resources/static/qt/qt6ct.conf;
 
       # Development, internal.
       programs.lazygit = {
@@ -2014,6 +2044,7 @@
             env = GDK_BACKEND, wayland, x11, *
             env = CLUTTER_BACKEND, wayland
             env = QT_QPA_PLATFORM, wayland;xcb
+            env = QT_QPA_PLATFORMTHEME, qt5ct 
             env = QT_WAYLAND_DISABLE_WINDOWDECORATION, 1
             env = QT_AUTO_SCREEN_SCALE_FACTOR, 1
             env = MOZ_ENABLE_WAYLAND, 1
@@ -2041,7 +2072,7 @@
           ];
 
           input = {
-            kb_layout = "pl";
+            kb_layout = "pl,plfi";
             kb_options = "caps:escape,grp:sclk_toggle";
             repeat_delay = 300;
             repeat_rate = 30;
@@ -2158,8 +2189,12 @@
 
             "$mainMod, q, [q]uit active, killactive,"
 
+            "$mainMod, p, Toggle float, setfloating,"
             "$mainMod, p, Toggle [p]in, pin,"
+            "$mainMod, p, Toggle [p]in, tagwindow, 69PINNED69"
+
             "$mainMod, v, Toggle float, togglefloating,"
+            "$mainMod, v, Toggle [p]in, tagwindow, -69PINNED69"
 
             "$mainMod, f, [f]ullscreen, exec, hyprfullscreenfix"
             "$mainMod SHIFT, f, [f]ake fullscreen, fakefullscreen"
@@ -2190,6 +2225,7 @@
             "$mainMod, e, [e]dit image, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
             "$mainMod, r, [r]ecord, exec, hyprcorder.sh"
+            "$mainMod SHIFT, r, [r]ecord area, exec, hyprcorder.sh -a"
 
             "ALT, Tab, Cycle programs, exec, hyprland-next-visible-client.sh next"
             "$mainMod, Tab, Open program menu, exec, ${lib.getExe pkgs.rofi-wayland} -show window"

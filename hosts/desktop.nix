@@ -58,9 +58,6 @@
 
       wayland.windowManager.hyprland.settings = {
         input.sensitivity = -0.9;
-        windowrulev2 = [
-          "noborder, onworkspace:w[t1]"
-        ];
       };
 
       programs.mangohud = {
@@ -117,28 +114,28 @@
       "steam-original"
     ];
 
-    # services.borgmatic = {
-    #   enable = true;
-    # settings.location = {
-    #   repositories = [ "borg@heavy.local:/var/lib/borgbackup" ];
-    #   source_directories = [ "${conHome}" ];
-    #   exclude_caches = true;
-    #   exclude_patterns = [
-    #     "*/.cache"
-    #     "*/.local/share/Steam"
-    #     "*/Games/battlenet"
-    #   ];
-    # };
-    # settings.storage = {
-    #   unknown_unencrypted_repo_access_is_ok = true;
-    # };
-    # settings.retention = {
-    #   keep_daily = 1;
-    #   keep_weekly = 4;
-    #   keep_monthly = 12;
-    #   keep_yearly = 10;
-    # };
-    # };
+  # services.borgmatic = {
+  #   enable = true;
+  # settings.location = {
+  #   repositories = [ "borg@heavy.local:/var/lib/borgbackup" ];
+  #   source_directories = [ "${conHome}" ];
+  #   exclude_caches = true;
+  #   exclude_patterns = [
+  #     "*/.cache"
+  #     "*/.local/share/Steam"
+  #     "*/Games/battlenet"
+  #   ];
+  # };
+  # settings.storage = {
+  #   unknown_unencrypted_repo_access_is_ok = true;
+  # };
+  # settings.retention = {
+  #   keep_daily = 1;
+  #   keep_weekly = 4;
+  #   keep_monthly = 12;
+  #   keep_yearly = 10;
+  # };
+  # };
 
   environment.systemPackages = with pkgs; [
     borgbackup
