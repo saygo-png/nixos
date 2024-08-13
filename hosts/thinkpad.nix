@@ -117,12 +117,6 @@
   services.libinput.mouse.accelSpeed = "-0.9";
   home-manager = {
     users.${conUsername} = {
-      home = {
-        sessionVariables = {
-          TERMINAL = lib.mkForce ''foot'';
-        };
-      };
-
       # Media controls for bluetooth headphones
       services.mpris-proxy.enable = true;
 

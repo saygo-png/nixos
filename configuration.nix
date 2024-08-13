@@ -641,7 +641,7 @@
           PAGER = lib.getExe pkgs.moar;
           EDITOR = "nvim";
           OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
-          TERMINAL = ''neovide --no-fork -- -c ":term"'';
+          TERMINAL = "alacritty";
 
           VISUAL = "${config.home.sessionVariables.EDITOR}";
           SUDO_EDITOR = "${config.home.sessionVariables.EDITOR}";
@@ -1480,7 +1480,7 @@
           friendly-snippets.enable = true;
 
           spider = {
-            enable = true;
+            enable = false;
             skipInsignificantPunctuation = false;
             keymaps.motions = {
               b = "b";
