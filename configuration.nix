@@ -299,7 +299,7 @@
             notify "No area selected"
             exit 2
           fi
-          wl-screenrec --audio -b "1 MB" -f "$filename" -g "$dim" &
+          wl-screenrec -b "1 MB" -f "$filename" -g "$dim" &
         fi
 
         if pgrep wl-screenrec &>/dev/null; then
@@ -520,9 +520,9 @@
   };
 
   stylix.opacity = {
-    popups = 0.8;
-    desktop = 0.8;
-    terminal = 0.8;
+    popups = 0.7;
+    desktop = 0.7;
+    terminal = 0.7;
     applications = 0.5;
   };
 
@@ -618,7 +618,7 @@
         stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
         shellAliases = {
-          "nix-shell" ="nix-shell --run zsh";
+          "nix-shell" = "nix-shell --run zsh";
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
           "shutdown" = "poweroff";
@@ -907,7 +907,8 @@
           "color=always"
           "--follow"
           "--glob"
-          "--max-depth 10"
+          "--max-depth"
+          "15"
         ];
       };
 
@@ -1074,7 +1075,9 @@
           hadolint # Docker linter
           rust-analyzer # Rust LSP
           shellcheck # Bash linter
-          mypy # Python type checker
+          clojure-lsp # Clojure lsp
+          cljfmt # Clojure formatter
+          clj-kondo # Clojure linter
           sumneko-lua-language-server
           isort # Python import sorter
           nodePackages.bash-language-server
@@ -1183,7 +1186,7 @@
 
           # Neovide neovim gui client.
           neovide_transparency = config.stylix.opacity.terminal;
-          neovide_transparency_point = 0; # config.stylix.opacity.terminal;
+          neovide_transparency_point = 0;
           neovide_background_color = "${config.lib.stylix.colors.withHashtag.base00}";
           neovide_padding_top = lib.mkDefault 8;
           neovide_padding_bottom = lib.mkDefault 0;
@@ -1239,6 +1242,12 @@
                 " Disables number lines on terminal buffers
                 autocmd TermOpen * :setlocal nonumber norelativenumber laststatus=0
             augroup END
+
+            " Vim visual multi binds
+            let g:VM_leader = '\'
+            let g:VM_maps = {}
+            let g:VM_maps["Add Cursor Down"] = '<M-j>'
+            let g:VM_maps["Add Cursor Up"] = '<M-k>'
           ]]
 
           -- Neovide
@@ -1268,18 +1277,18 @@
 
           -- Keymaps
           -- Split movement
-          vim.keymap.set("n", "<M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
-          vim.keymap.set("n", "<M-l>", "<cmd>wincmd l<CR>", { desc = "Move to the split on the right side" })
-          vim.keymap.set("n", "<M-k>", "<cmd>wincmd k<CR>", { desc = "Move to the split above" })
-          vim.keymap.set("n", "<M-j>", "<cmd>wincmd j<CR>", { desc = "Move to the split below" })
+          vim.keymap.set("n", "<S-M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
+          vim.keymap.set("n", "<S-M-l>", "<cmd>wincmd l<CR>", { desc = "Move to the split on the right side" })
+          vim.keymap.set("n", "<S-M-k>", "<cmd>wincmd k<CR>", { desc = "Move to the split above" })
+          vim.keymap.set("n", "<S-M-j>", "<cmd>wincmd j<CR>", { desc = "Move to the split below" })
           -- In nvim terminal
-          vim.keymap.set("t", "<M-h>", "<c-\\><c-n><c-w>h", { desc = "Move to the split on the left side" })
-          vim.keymap.set("t", "<M-l>", "<c-\\><c-n><c-w>j", { desc = "Move to the split on the right side" })
-          vim.keymap.set("t", "<M-k>", "<c-\\><c-n><c-w>k", { desc = "Move to the split above" })
-          vim.keymap.set("t", "<M-j>", "<c-\\><c-n><c-w>l", { desc = "Move to the split below" })
+          vim.keymap.set("t", "<S-M-h>", "<c-\\><c-n><c-w>h", { desc = "Move to the split on the left side" })
+          vim.keymap.set("t", "<S-M-l>", "<c-\\><c-n><c-w>j", { desc = "Move to the split on the right side" })
+          vim.keymap.set("t", "<S-M-k>", "<c-\\><c-n><c-w>k", { desc = "Move to the split above" })
+          vim.keymap.set("t", "<S-M-j>", "<c-\\><c-n><c-w>l", { desc = "Move to the split below" })
           -- Shift + Esc for normal mode in nvim terminal
-          vim.keymap.set("t", "<M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
-          vim.keymap.set("t", "<M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
+          vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
+          vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
 
           -- Plugins
           local utils = require "telescope.utils"
@@ -1322,8 +1331,8 @@
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-          vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
-          vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
+          -- vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
+          -- vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
           vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
           vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
           vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
@@ -1431,7 +1440,10 @@
             name = "rainbow";
             src = inputs.nvim-plugin-rainbow;
           })
+          pkgs.vimPlugins.vim-sexp
+          pkgs.vimPlugins.vim-repeat
           pkgs.vimPlugins.gruvbox-material
+          pkgs.vimPlugins.vim-sexp-mappings-for-regular-people
         ];
 
         keymaps = [
@@ -1604,10 +1616,10 @@
 
           lsp = {
             enable = true;
-            # Disable highlights from LSP, breaks rainbow
-            onAttach = ''
-              client.server_capabilities.semanticTokensProvider = nil
-            '';
+            # Disable highlights from LSP
+            # onAttach = ''
+            #   client.server_capabilities.semanticTokensProvider = nil
+            # '';
             servers = {
               # Nix.
               nil-ls = {
@@ -1619,7 +1631,6 @@
               pylsp.enable = true;
               ruff.enable = true;
 
-              # Bash.
               bashls.enable = true;
 
               # Typos.
@@ -1631,10 +1642,11 @@
               # Lua.
               lua-ls.enable = true;
 
+              clojure-lsp.enable = true;
+
               # Haskell.
               hls.enable = true;
 
-              # Rust.
               rust-analyzer = {
                 enable = true;
                 installCargo = false;
@@ -1672,12 +1684,20 @@
               # Conform will run multiple formatters sequentially.
               python = ["isort" "yapf"];
               haskell = ["fourmolu"];
+              clojure = ["cljfmt"];
               nix = ["alejandra"];
               lua = ["stylua"];
               json = ["jq"];
               sh = ["shfmt"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["trim_whitespace"];
+            };
+            formatters = {
+              cljfmt = {
+                command = "${lib.getExe pkgs.cljfmt}";
+                args = ["fix" "-"];
+                stdin = true;
+              };
             };
           };
 
@@ -1721,7 +1741,7 @@
             plugins = {
               presets = {
                 # Needs to be false for indent keybindings
-                operators = false; #adds help for operators like d, y, ...";
+                operators = true; #adds help for operators like d, y, ...";
               };
             };
           };
@@ -1751,7 +1771,7 @@
             settings = {
               autocomplete = true;
               performance = {
-                debounce = 300;
+                debounce = 500;
                 fetchingTimeout = 50;
                 maxViewEntries = 5;
               };
@@ -1865,27 +1885,27 @@
             gruvbox-dark-yellow-light = lib.mkForce (mkLiteral "#8ec07c");
             urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
             alternate-normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
             urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-dark");
-            normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
-            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 100%)");
+            normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
+            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 0%)");
             active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-dark");
-            selected-normal-background = lib.mkForce (mkLiteral "@gruvbox-dark-bg3");
+            selected-normal-background = lib.mkForce (mkLiteral "rgba (125, 134, 24, 100%)");
             selected-normal-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg0");
             alternate-urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
             selected-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
             selected-urgent-foreground = lib.mkForce (mkLiteral "@urgent-foreground");
             alternate-active-background = lib.mkForce (mkLiteral "@active-background");
             alternate-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
             alternate-urgent-background = lib.mkForce (mkLiteral "@urgent-background");
             selected-urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-light");
-            alternate-normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            alternate-normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
             selected-active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-light");
           };
           "window" = {
-            border = 1;
             padding = 5;
+            border = 0;
             background-color = lib.mkForce (mkLiteral "@background");
           };
           "mainbox" = {
@@ -1895,7 +1915,7 @@
           "message" = {
             padding = mkLiteral "1px";
             border = mkLiteral "2px 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
           };
           "textbox" = {
             highlight = mkLiteral "@highlight";
@@ -1905,7 +1925,7 @@
             spacing = mkLiteral "0px";
             padding = mkLiteral "0px 0 0";
             border = mkLiteral "0px solid 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
           };
           "element" = {
             border = 0;
@@ -1945,7 +1965,7 @@
           };
           "element.normal.normal" = {
             text-color = lib.mkForce (mkLiteral "@normal-foreground");
-            background-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 100%)");
+            background-color = lib.mkForce (mkLiteral "@normal-background");
           };
 
           "element.normal.urgent" = {
@@ -1993,12 +2013,12 @@
             padding = 0;
             handle-width = mkLiteral "8px";
             width = lib.mkForce (mkLiteral "4px");
-            handle-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 10%)");
+            handle-color = lib.mkForce (mkLiteral "@normal-background");
           };
 
           "mode-switcher" = {
             border = mkLiteral "2px 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 10%)");
+            border-color = lib.mkForce (mkLiteral "@normal-background");
           };
 
           "button.selected" = {
@@ -2015,9 +2035,6 @@
             text-color = lib.mkForce (mkLiteral "inherit");
             background-color = lib.mkForce (mkLiteral "inherit");
           };
-
-          # TODO add more colors like this.
-          # urgent = lib.mkForce (mkLiteral "${config.lib.stylix.colors.withHashtag.base0E}");
         };
       };
       # }}}
@@ -2044,7 +2061,7 @@
             env = GDK_BACKEND, wayland, x11, *
             env = CLUTTER_BACKEND, wayland
             env = QT_QPA_PLATFORM, wayland;xcb
-            env = QT_QPA_PLATFORMTHEME, qt5ct 
+            env = QT_QPA_PLATFORMTHEME, qt5ct
             env = QT_WAYLAND_DISABLE_WINDOWDECORATION, 1
             env = QT_AUTO_SCREEN_SCALE_FACTOR, 1
             env = MOZ_ENABLE_WAYLAND, 1
@@ -2069,6 +2086,7 @@
             "udiskie &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
+            "hyprctl keyword decoration:blur:special 1"
           ];
 
           input = {
@@ -2127,8 +2145,15 @@
 
           decoration = {
             rounding = 0;
-            blur.enabled = false;
+            blur = {
+              enabled = false;
+              size = 8;
+              passes = 2;
+              new_optimizations = true;
+              special = true;
+            };
             drop_shadow = true;
+            dim_around = 0.8;
             shadow_ignore_window = true;
             shadow_range = 10;
             shadow_render_power = 2;
@@ -2284,7 +2309,7 @@
           ];
 
           layerrule = [
-            # "layers, 1, 4, default, slide top"
+            "blur, rofi"
             "dimaround, rofi"
             "animation slide top, rofi"
           ];
@@ -2296,6 +2321,8 @@
             "workspace 4      , title:Chat"
             "workspace 8      , title:Steam"
             "workspace 10     , title:passwordManager"
+
+            "noblur,^(?!(rofi))"
 
             "pin, ripdrag"
             "float, ripdrag"
@@ -2312,7 +2339,6 @@
 
             "pin              , rofi"
             "float            , rofi"
-            "noborder         , rofi"
 
             "tile             , neovide"
 
@@ -2328,7 +2354,6 @@
 
             # Shadow only for floating windows
             "noshadow, floating:0"
-
             "suppressevent maximize, class:.*"
 
             "workspace 2 silent, class:^(firefox)$"
