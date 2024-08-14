@@ -18,6 +18,8 @@
     enable = true;
   };
 
+  services.libinput.mouse.accelSpeed = "-0.9";
+
   services.actkbd = {
     enable = true;
     bindings = [
