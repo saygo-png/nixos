@@ -659,6 +659,7 @@
           # GUI.
           anki # Flashcards
           neovide # Neovim gui
+          fontforge-gtk # Font editor
           tauon # Music player
           foliate # Ebook reader
           zathura # Better for pdfs
@@ -1400,15 +1401,7 @@
                 winblend = 100
               },
               border = border,
-              format = function(diagnostic)
-                return string.format(
-                  "%s (%s) [%s]",
-                  diagnostic.message,
-                  diagnostic.source,
-                  diagnostic.code or diagnostic.user_data.lsp.code
-                )
-              end,
-            },
+            }
           })
 
           -- Turn off cmp in comments.
@@ -1440,10 +1433,10 @@
             name = "rainbow";
             src = inputs.nvim-plugin-rainbow;
           })
-          pkgs.vimPlugins.vim-sexp
-          pkgs.vimPlugins.vim-repeat
+          # pkgs.vimPlugins.vim-sexp
+          # pkgs.vimPlugins.vim-repeat
           pkgs.vimPlugins.gruvbox-material
-          pkgs.vimPlugins.vim-sexp-mappings-for-regular-people
+          # pkgs.vimPlugins.vim-sexp-mappings-for-regular-people
         ];
 
         keymaps = [
@@ -1477,6 +1470,7 @@
           comment.enable = true;
           nvim-ufo.enable = true;
           surround.enable = true;
+          parinfer-rust.enable = true;
           friendly-snippets.enable = true;
 
           spider = {
@@ -1769,9 +1763,9 @@
             autoEnableSources = true;
 
             settings = {
-              autocomplete = true;
+              autocomplete = false;
               performance = {
-                debounce = 500;
+                debounce = 300;
                 fetchingTimeout = 50;
                 maxViewEntries = 5;
               };
