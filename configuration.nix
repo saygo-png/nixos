@@ -1179,7 +1179,7 @@
         globals = {
           mapleader = " ";
 
-          rainbow_active = 1;
+          # rainbow_active = 1;
 
           gruvbox_material_foreground = "original";
           gruvbox_material_enable_bold = 0;
@@ -1224,12 +1224,12 @@
         '';
         extraConfigLuaPost = ''
           -- Makes treesitter work with rainbow plugin
-          vim.api.nvim_set_hl(0, "@constructor", { link = "" })
-          vim.api.nvim_set_hl(0, "@constructor.lua", { link = "" })
-          vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
-          vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
-          vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
-          vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
+          -- vim.api.nvim_set_hl(0, "@constructor", { link = "" })
+          -- vim.api.nvim_set_hl(0, "@constructor.lua", { link = "" })
+          -- vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
+          -- vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
+          -- vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
+          -- vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
         '';
 
         extraConfigLua = ''
@@ -1429,10 +1429,10 @@
             name = "vim-visual-multi";
             src = inputs.nvim-plugin-vim-visual-multi;
           })
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "rainbow";
-            src = inputs.nvim-plugin-rainbow;
-          })
+          # (pkgs.vimUtils.buildVimPlugin {
+          #   name = "rainbow";
+          #   src = inputs.nvim-plugin-rainbow;
+          # })
           # pkgs.vimPlugins.vim-sexp
           # pkgs.vimPlugins.vim-repeat
           pkgs.vimPlugins.gruvbox-material
@@ -1471,10 +1471,11 @@
           nvim-ufo.enable = true;
           surround.enable = true;
           parinfer-rust.enable = true;
-          friendly-snippets.enable = true;
+          friendly-snippets.enable = false;
+          rainbow-delimiters.enable = true;
 
           spider = {
-            enable = false;
+            enable = true;
             skipInsignificantPunctuation = false;
             keymaps.motions = {
               b = "b";
@@ -1746,7 +1747,7 @@
           };
 
           luasnip = {
-            enable = true;
+            enable = false;
             extraConfig = {
               enable_autosnippets = true;
               store_selection_keys = "<Tab>";
@@ -1759,7 +1760,7 @@
           };
 
           cmp = {
-            enable = true;
+            enable = false;
             autoEnableSources = true;
 
             settings = {
