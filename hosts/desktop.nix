@@ -116,28 +116,31 @@
       "steam-original"
     ];
 
-  # services.borgmatic = {
-  #   enable = true;
-  # settings.location = {
-  #   repositories = [ "borg@heavy.local:/var/lib/borgbackup" ];
-  #   source_directories = [ "${conHome}" ];
-  #   exclude_caches = true;
-  #   exclude_patterns = [
-  #     "*/.cache"
-  #     "*/.local/share/Steam"
-  #     "*/Games/battlenet"
-  #   ];
-  # };
-  # settings.storage = {
-  #   unknown_unencrypted_repo_access_is_ok = true;
-  # };
-  # settings.retention = {
-  #   keep_daily = 1;
-  #   keep_weekly = 4;
-  #   keep_monthly = 12;
-  #   keep_yearly = 10;
-  # };
-  # };
+
+  # There is a module for this but i find nix -> yaml weird
+  services.borgmatic.enable = true;
+  environment.etc = {
+    "borgmatic/config.yaml" = {
+      mode = "0777";
+      text = ''
+        before_backup:
+        - findmnt /media/backup > /dev/null || exit 75
+        keep_daily: 1
+        keep_monthly: 12
+        keep_weekly: 4
+        keep_yearly: 10
+        exclude_caches: true
+        exclude_patterns:
+        - '*/.cache'
+        - '*/.local/share/Steam'
+        - '*/Games/battlenet'
+        repositories:
+        - path: /media/backup/backup.borg
+        source_directories:
+        - ${conHome}
+      '';
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     borgbackup

@@ -318,6 +318,7 @@
   # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+    "d /media 0755 root root"
   ];
 
   system.stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
@@ -1079,6 +1080,7 @@
           clojure-lsp # Clojure lsp
           cljfmt # Clojure formatter
           clj-kondo # Clojure linter
+          zprint # Clojure formatter
           sumneko-lua-language-server
           isort # Python import sorter
           nodePackages.bash-language-server
@@ -1468,10 +1470,11 @@
           nix.enable = true;
           flash.enable = true;
           comment.enable = true;
+          conjure.enable = true;
           nvim-ufo.enable = true;
           surround.enable = true;
           parinfer-rust.enable = true;
-          friendly-snippets.enable = false;
+          friendly-snippets.enable = true;
           rainbow-delimiters.enable = true;
 
           spider = {
@@ -1679,7 +1682,7 @@
               # Conform will run multiple formatters sequentially.
               python = ["isort" "yapf"];
               haskell = ["fourmolu"];
-              clojure = ["cljfmt"];
+              clojure = ["zprint"];
               nix = ["alejandra"];
               lua = ["stylua"];
               json = ["jq"];
@@ -1747,7 +1750,7 @@
           };
 
           luasnip = {
-            enable = false;
+            enable = true;
             extraConfig = {
               enable_autosnippets = true;
               store_selection_keys = "<Tab>";
@@ -1760,15 +1763,15 @@
           };
 
           cmp = {
-            enable = false;
+            enable = true;
             autoEnableSources = true;
-
             settings = {
               autocomplete = false;
               performance = {
-                debounce = 300;
-                fetchingTimeout = 50;
+                debounce = 500;
+                throttle = 500;
                 maxViewEntries = 5;
+                fetchingTimeout = 50;
               };
               snippet.expand = ''
                 function(args)
