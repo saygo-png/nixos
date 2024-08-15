@@ -32,26 +32,6 @@ vim.api.nvim_create_autocmd('User', { pattern = 'LeapLeave',
   }
 )
 
--- Leap bidirectional search
-vim.keymap.set('n',        's', '<Plug>(leap)')
-vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
-vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
-vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
-
--- Rainbow delimiters.
-local rainbow_delimiters = require 'rainbow-delimiters'
-vim.g.rainbow_delimiters = {
- highlight = {
-  'RainbowDelimiterRed',
-  'RainbowDelimiterYellow',
-  'RainbowDelimiterBlue',
-  'RainbowDelimiterOrange',
-  'RainbowDelimiterGreen',
-  'RainbowDelimiterViolet',
-  'RainbowDelimiterCyan'
- }
-}
-
 -- Statusline
 local cmp = {} -- statusline components
 function _G._statusline_component(name)
@@ -136,25 +116,16 @@ local statusline = {
 
 vim.o.statusline = table.concat(statusline, '')
 
--- vim.api.nvim_create_autocmd({'FileType'}, {
---   desc = 'keymap \'q\' to close help/quickfix/netrw/etc windows',
---   pattern = 'help,qf,netrw',
---   callback = function()
---    vim.keymap.set('n', 'Q', '<C-w>c', {buffer = true, desc = 'Quit (or Close) help, quickfix, netrw, etc windows', })
---   end
--- })
+vim.api.nvim_create_autocmd({'FileType'}, {
+  desc = 'keymap \'q\' to close help/quickfix/netrw/etc windows',
+  pattern = 'help,qf,netrw',
+  callback = function()
+   vim.keymap.set('n', 'Q', '<C-w>c', {buffer = true, desc = 'Quit (or Close) help, quickfix, netrw, etc windows', })
+  end
+})
 -- Close buffer
--- vim.keymap.set("n", "Q", ":close<CR>", { desc = "Close the current buffer" })
+vim.keymap.set("n", "Q", ":close<CR>", { desc = "Close the current buffer" })
 
--- Keep selection when indenting.
-vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
-vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
-
--- Window switching.
-vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
-vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
-vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
-vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
 EOF
 
 augroup remember_folds

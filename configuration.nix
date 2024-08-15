@@ -1181,7 +1181,7 @@
         globals = {
           mapleader = " ";
 
-          # rainbow_active = 1;
+          rainbow_active = 1;
 
           gruvbox_material_foreground = "original";
           gruvbox_material_enable_bold = 0;
@@ -1226,12 +1226,12 @@
         '';
         extraConfigLuaPost = ''
           -- Makes treesitter work with rainbow plugin
-          -- vim.api.nvim_set_hl(0, "@constructor", { link = "" })
+          vim.api.nvim_set_hl(0, "@constructor", { link = "" })
           -- vim.api.nvim_set_hl(0, "@constructor.lua", { link = "" })
-          -- vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
-          -- vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
-          -- vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
-          -- vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
+          vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
+          vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
+          vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
+          vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
         '';
 
         extraConfigLua = ''
@@ -1279,6 +1279,28 @@
           end, { silent = true })
 
           -- Keymaps
+          -- Keep selection when indenting.
+          vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
+          vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
+
+          -- Window switching.
+          vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
+          vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
+          vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
+          vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
+
+          -- Previous buffer
+          vim.keymap.set('n', '<S-B>', '<C-6>')
+
+          -- Leap bidirectional search
+          vim.keymap.set('n',        's', '<Plug>(leap)')
+          vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
+          vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
+          vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
+
+          -- Conflicts with lsp hover
+          vim.g["conjure#mapping#doc_word"] = false
+
           -- Split movement
           vim.keymap.set("n", "<S-M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
           vim.keymap.set("n", "<S-M-l>", "<cmd>wincmd l<CR>", { desc = "Move to the split on the right side" })
@@ -1431,14 +1453,11 @@
             name = "vim-visual-multi";
             src = inputs.nvim-plugin-vim-visual-multi;
           })
-          # (pkgs.vimUtils.buildVimPlugin {
-          #   name = "rainbow";
-          #   src = inputs.nvim-plugin-rainbow;
-          # })
-          # pkgs.vimPlugins.vim-sexp
-          # pkgs.vimPlugins.vim-repeat
+          (pkgs.vimUtils.buildVimPlugin {
+            name = "rainbow";
+            src = inputs.nvim-plugin-rainbow;
+          })
           pkgs.vimPlugins.gruvbox-material
-          # pkgs.vimPlugins.vim-sexp-mappings-for-regular-people
         ];
 
         keymaps = [
@@ -1475,7 +1494,6 @@
           surround.enable = true;
           parinfer-rust.enable = true;
           friendly-snippets.enable = true;
-          rainbow-delimiters.enable = true;
 
           spider = {
             enable = true;
