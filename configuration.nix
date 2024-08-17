@@ -941,7 +941,8 @@
         syntaxHighlighting.highlighters = ["brackets"];
         initExtra = builtins.readFile ./resources/zsh-extraConfig;
         plugins = [
-          { name = "vi-mode";
+          {
+            name = "vi-mode";
             src = pkgs.zsh-vi-mode;
             file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
           }
@@ -1298,12 +1299,6 @@
           -- Previous buffer
           vim.keymap.set('n', '<S-B>', '<C-6>')
 
-          -- Leap bidirectional search
-          vim.keymap.set('n',        's', '<Plug>(leap)')
-          vim.keymap.set('n',        'S', '<Plug>(leap-from-window)')
-          vim.keymap.set({'x', 'o'}, 's', '<Plug>(leap-forward)')
-          vim.keymap.set({'x', 'o'}, 'S', '<Plug>(leap-backward)')
-
           -- Conflicts with lsp hover
           vim.g["conjure#mapping#doc_word"] = false
 
@@ -1362,39 +1357,17 @@
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-          -- vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
-          -- vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
+          vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
+          vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
           vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
           vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
           vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
           vim.keymap.set("n", "gm", "m", { desc = "Set mark" })
           vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
-          vim.keymap.set("n", "<leader>r", function()
-            -- when rename opens the prompt, this autocommand will trigger
-            -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
-            -- in this window I can use normal mode keybindings
-            local cmdId
-            cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-              callback = function()
-                local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
-                vim.api.nvim_feedkeys(key, "c", false)
-                vim.api.nvim_feedkeys("0", "n", false)
-                -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
-                cmdId = nil
-                return true
-              end,
-            })
-            vim.lsp.buf.rename()
-            -- if LPS couldn't trigger rename on the symbol, clear the autocmd
-            vim.defer_fn(function()
-              -- the cmdId is not nil only if the LSP failed to rename
-              if cmdId then
-                vim.api.nvim_del_autocmd(cmdId)
-              end
-            end, 500)
-          end)
 
+          vim.keymap.set('n', '<leader>q', vim.cmd.quit)
+          vim.keymap.set('n', '<leader>Q', vim.cmd.only)
           -- Transparent hover
           vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
 
@@ -1464,6 +1437,8 @@
             src = inputs.nvim-plugin-rainbow;
           })
           pkgs.vimPlugins.gruvbox-material
+          pkgs.vimPlugins.vim-dispatch
+          pkgs.vimPlugins.vim-jack-in
         ];
 
         keymaps = [
@@ -1498,7 +1473,7 @@
           conjure.enable = true;
           nvim-ufo.enable = true;
           surround.enable = true;
-          # parinfer-rust.enable = true;
+          parinfer-rust.enable = true;
           friendly-snippets.enable = true;
 
           spider = {
@@ -1763,7 +1738,7 @@
             plugins = {
               presets = {
                 # Needs to be false for indent keybindings
-                operators = true; #adds help for operators like d, y, ...";
+                operators = false; #adds help for operators like d, y, ...";
               };
             };
           };
@@ -2138,10 +2113,19 @@
             "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
           };
 
-          # group = {
-# "col.border_active" =
-# base0B
-          # }:
+          group = {
+            "col.border_active" = lib.mkForce "rgba(${conAccentColor}FF)";
+            "col.border_inactive" = lib.mkForce "rgba(${conAccentColor}00)";
+            "col.border_locked_active" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}FF)";
+            "col.border_locked_inactive" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}00)";
+            groupbar = {
+              gradients = false;
+              "col.active" = lib.mkForce "rgba(${conAccentColor}FF)";
+              "col.inactive" = lib.mkForce "rgba(${conAccentColor}00)";
+              "col.locked_active" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}FF)";
+              "col.locked_inactive" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}00)";
+            };
+          };
 
           misc = {
             # Hides text on bottom of the screen.

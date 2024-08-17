@@ -116,16 +116,6 @@ local statusline = {
 
 vim.o.statusline = table.concat(statusline, '')
 
-vim.api.nvim_create_autocmd({'FileType'}, {
-  desc = 'keymap \'q\' to close help/quickfix/netrw/etc windows',
-  pattern = 'help,qf,netrw',
-  callback = function()
-   vim.keymap.set('n', 'Q', '<C-w>c', {buffer = true, desc = 'Quit (or Close) help, quickfix, netrw, etc windows', })
-  end
-})
--- Close buffer
-vim.keymap.set("n", "Q", ":close<CR>", { desc = "Close the current buffer" })
-
 EOF
 
 augroup remember_folds
