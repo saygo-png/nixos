@@ -931,16 +931,21 @@
 
       programs.zsh = {
         enable = true;
-        enableCompletion = false;
+        history.save = 50;
+        history.size = 50;
         defaultKeymap = "viins";
+        enableCompletion = false;
         autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
         historySubstringSearch.enable = true;
         syntaxHighlighting.highlighters = ["brackets"];
         initExtra = builtins.readFile ./resources/zsh-extraConfig;
-
-        history.size = 50;
-        history.save = 50;
+        plugins = [
+          { name = "vi-mode";
+            src = pkgs.zsh-vi-mode;
+            file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+          }
+        ];
       };
 
       programs.btop = {
@@ -1180,6 +1185,7 @@
         };
         globals = {
           mapleader = " ";
+          maplocalleader = ",";
 
           rainbow_active = 1;
 
@@ -1492,7 +1498,7 @@
           conjure.enable = true;
           nvim-ufo.enable = true;
           surround.enable = true;
-          parinfer-rust.enable = true;
+          # parinfer-rust.enable = true;
           friendly-snippets.enable = true;
 
           spider = {
@@ -2131,6 +2137,11 @@
             "col.active_border" = lib.mkForce "rgba(${conAccentColor}FF)";
             "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
           };
+
+          # group = {
+# "col.border_active" =
+# base0B
+          # }:
 
           misc = {
             # Hides text on bottom of the screen.
