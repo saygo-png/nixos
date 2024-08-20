@@ -143,7 +143,7 @@
     kdePackages.qtwayland
 
     # These are filepickers and whatnot
-    lxqt.xdg-desktop-portal-lxqt
+    xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     hyprland-protocols
 
@@ -366,6 +366,8 @@
 
   services.libinput.enable = true;
   services.libinput.mouse.accelProfile = "flat";
+  services.xserver.autoRepeatDelay = 135;
+  services.xserver.autoRepeatInterval = 45;
 
   # File synchronization.
   services.syncthing = {
@@ -620,6 +622,7 @@
 
         shellAliases = {
           "nix-shell" = "nix-shell --run zsh";
+          "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
           "shutdown" = "poweroff";
@@ -1072,7 +1075,6 @@
           jq # Json formatter
           vim-language-server
           deadnix # Nix linter
-          ruff # Python linter
           nodePackages.jsonlint
           hlint # Haskell linter
           stylua # Lua formatter
@@ -1089,15 +1091,18 @@
           zprint # Clojure formatter
           sumneko-lua-language-server
           isort # Python import sorter
+          prettierd # Javascript formatter
           nodePackages.bash-language-server
           python312Packages.python-lsp-server
           stylish-haskell # Haskell formatter
           haskell-language-server # Haskell lsp
           python312Packages.flake8 # Pylsp plugin
+          vscode-langservers-extracted # Web LSPs
           python312Packages.mccabe # Flake8 plugin
           python312Packages.pyflakes # Python linter
           haskellPackages.fourmolu # Haskell formatter
           luajitPackages.jsregexp # Needed for luasnip
+          nodePackages.prettier # Javascript formatter
           python312Packages.jedi # Autocomplete plugin
           python312Packages.pycodestyle # Python complainer
           python312Packages.pyls-isort # Python import sort
@@ -1242,7 +1247,6 @@
         '';
 
         extraConfigLua = ''
-
           -- Vim as terminal
           vim.cmd[[
             augroup neovim_terminal
@@ -1626,8 +1630,8 @@
 
               # Python.
               pylsp.enable = true;
-              ruff.enable = true;
 
+              # Bash
               bashls.enable = true;
 
               # Typos.
@@ -1639,7 +1643,12 @@
               # Lua.
               lua-ls.enable = true;
 
+              # Clojure
               clojure-lsp.enable = true;
+
+              # Typescript
+              tsserver.enable = true;
+              eslint.enable = true; # Linter as lsp
 
               # Haskell.
               hls.enable = true;
@@ -1679,13 +1688,22 @@
             };
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
-              python = ["isort" "yapf"];
-              haskell = ["fourmolu"];
-              clojure = ["zprint"];
-              nix = ["alejandra"];
-              lua = ["stylua"];
               json = ["jq"];
               sh = ["shfmt"];
+              lua = ["stylua"];
+              nix = ["alejandra"];
+              clojure = ["zprint"];
+              haskell = ["fourmolu"];
+              python = ["isort" "yapf"];
+              javascript = {
+              };
+              typescript = ["prettierd"];
+              javascriptreact = ["prettierd"];
+              typescriptreact = ["prettierd"];
+              css = ["prettierd"];
+              html = ["prettierd"];
+              graphql = ["prettierd"];
+              markdown = ["prettierd"];
               # Use the "*" filetype to run formatters on all filetypes.
               "*" = ["trim_whitespace"];
             };
@@ -1701,17 +1719,18 @@
           lint = {
             enable = true;
             lintersByFt = {
+              rst = ["vale"];
               text = ["vale"];
+              c = ["clangtidy"];
+              cpp = ["clangtidy"];
+              haskell = ["hlint"];
               json = ["jsonlint"];
+              markdown = ["vale"];
               bash = ["shellcheck"];
               shell = ["shellcheck"];
-              haskell = ["hlint"];
-              markdown = ["vale"];
-              python = ["ruff"];
-              rst = ["vale"];
               clojure = ["clj-kondo"];
-              dockerfile = ["hadolint"];
               nix = ["nix" "deadnix"];
+              dockerfile = ["hadolint"];
             };
           };
 
@@ -2089,8 +2108,8 @@
           input = {
             kb_layout = "pl,plfi";
             kb_options = "caps:escape,grp:sclk_toggle";
-            repeat_delay = 300;
-            repeat_rate = 30;
+            repeat_delay = 135;
+            repeat_rate = 45;
             accel_profile = "flat";
             numlock_by_default = false;
             follow_mouse = 2;
