@@ -58,14 +58,14 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
 	-- awful.layout.suit.floating,
-	awful.layout.suit.tile,
+	-- awful.layout.suit.tile,
 	-- awful.layout.suit.tile.left,
 	-- awful.layout.suit.tile.bottom,
 	-- awful.layout.suit.tile.top,
 	-- awful.layout.suit.fair,
 	-- awful.layout.suit.fair.horizontal,
 	-- awful.layout.suit.spiral,
-	-- awful.layout.suit.spiral.dwindle,
+	awful.layout.suit.spiral.dwindle,
 	-- awful.layout.suit.max,
 	-- awful.layout.suit.max.fullscreen,
 	-- awful.layout.suit.magnifier,
@@ -122,29 +122,17 @@ globalkeys = gears.table.join(
 		quake:toggle()
 	end, { description = "dropdown terminal", group = "launcher" }),
 
-	awful.key({ modkey }, "p", function()
-		awful.util.spawn("keyboard-switcher.sh")
-	end, { description = "Change keyboard layout", group = "launcher" }),
-
 	awful.key({ modkey }, "b", function()
 		awful.util.spawn("librewolf")
 	end, { description = "start librewolf", group = "launcher" }),
 
-	awful.key({ modkey }, "c", function()
-		awful.util.spawn("rofi -modi \"clipboard:greenclip print\" -show clipboard -run-command '{cmd}'")
-	end, { description = "clipboard history", group = "launcher" }),
-
 	awful.key({ modkey }, "space", function()
-		awful.util.spawn("rofi -show run")
-	end, { description = "start rofi", group = "launcher" }),
-
-	awful.key({ modkey }, "y", function()
-		awful.util.spawn("invidious.sh")
-	end, { description = "start rofi youtube search", group = "launcher" }),
-
-	awful.key({ modkey }, "Tab", function()
 		awful.util.spawn("rofi -show drun")
 	end, { description = "start rofi in drun", group = "launcher" }),
+
+	awful.key({ modkey }, "Tab", function()
+		awful.util.spawn("rofi -show run")
+	end, { description = "start rofi in run", group = "launcher" }),
 
 	awful.key({ "Mod1" }, "Tab", function()
 		awful.util.spawn("rofi -show window")
@@ -197,53 +185,67 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "j", function()
 		awful.client.focus.byidx(1)
 	end, { description = "focus next by index", group = "client" }),
+
 	awful.key({ modkey }, "k", function()
 		awful.client.focus.byidx(-1)
 	end, { description = "focus previous by index", group = "client" }),
+
 	-- Layout manipulation
 	awful.key({ modkey, "Shift" }, "j", function()
 		awful.client.swap.byidx(1)
 	end, { description = "swap with next client by index", group = "client" }),
+
 	awful.key({ modkey, "Shift" }, "k", function()
 		awful.client.swap.byidx(-1)
 	end, { description = "swap with previous client by index", group = "client" }),
+
 	awful.key({ modkey, "Control" }, "j", function()
 		awful.screen.focus_relative(1)
 	end, { description = "focus the next screen", group = "screen" }),
+
 	awful.key({ modkey, "Control" }, "k", function()
 		awful.screen.focus_relative(-1)
 	end, { description = "focus the previous screen", group = "screen" }),
+
 	awful.key({ modkey }, "u", awful.client.urgent.jumpto, { description = "jump to urgent client", group = "client" }),
-	-- Standard program
+
 	awful.key({ modkey }, "Return", function()
 		awful.spawn(terminal)
 	end, { description = "open a terminal", group = "launcher" }),
+
 	awful.key({ modkey, "Control" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
 
+	awful.key({ modkey }, "h", function()
+		awful.client.swap.byidx(-1)
+	end, { description = "swap with previous client by index", group = "client" }),
+
 	awful.key({ modkey }, "l", function()
+		awful.client.focus.byidx(1)
+	end, { description = "focus next by index", group = "client" }),
+
+	awful.key({ modkey, "Shift" }, "l", function()
 		awful.tag.incmwfact(0.05)
 	end, { description = "increase master width factor", group = "layout" }),
-	awful.key({ modkey }, "h", function()
+
+	awful.key({ modkey, "Shift" }, "h", function()
 		awful.tag.incmwfact(-0.05)
 	end, { description = "decrease master width factor", group = "layout" }),
-	awful.key({ modkey, "Shift" }, "h", function()
+
+	awful.key({ modkey }, "]", function()
 		awful.tag.incnmaster(1, nil, true)
 	end, { description = "increase the number of master clients", group = "layout" }),
-	awful.key({ modkey, "Shift" }, "l", function()
+
+	awful.key({ modkey }, "[", function()
 		awful.tag.incnmaster(-1, nil, true)
 	end, { description = "decrease the number of master clients", group = "layout" }),
-	awful.key({ modkey, "Control" }, "h", function()
+
+	awful.key({ modkey }, "}", function()
 		awful.tag.incncol(1, nil, true)
 	end, { description = "increase the number of columns", group = "layout" }),
-	awful.key({ modkey, "Control" }, "l", function()
+
+	awful.key({ modkey }, "{", function()
 		awful.tag.incncol(-1, nil, true)
 	end, { description = "decrease the number of columns", group = "layout" }),
-	awful.key({ modkey }, "space", function()
-		awful.layout.inc(1)
-	end, { description = "select next", group = "layout" }),
-	awful.key({ modkey, "Shift" }, "space", function()
-		awful.layout.inc(-1)
-	end, { description = "select previous", group = "layout" }),
 
 	awful.key({ modkey, "Control" }, "n", function()
 		local c = awful.client.restore()
@@ -424,15 +426,13 @@ awful.rules.rules = {
 	},
 
 	{ rule = { class = "mpv" }, properties = { screen = 1, tag = "4" } },
-	{ rule = { class = "KeePassXC" }, properties = { screen = 1, tag = "8" } },
+	{ rule = { class = "KeePassXC" }, properties = { screen = 1, tag = "9" } },
 	{ rule = { class = "LibreWolf" }, properties = { screen = 1, tag = "2" } },
 	{ rule = { name = "MarkdownPreview — LibreWolf" }, properties = { screen = 1, tag = "1" } },
 	{ rule = { class = "qBittorrent" }, properties = { screen = 1, tag = "9" } },
 	{ rule = { class = "leagueclientux.exe" }, properties = { screen = 1, tag = "7" } },
 	{ rule = { class = "Anki" }, properties = { screen = 1, tag = "6" } },
-	{ rule = { class = "league of legends.exe" }, properties = { screen = 1, tag = "7" } },
 	{ rule = { class = "explorer.exe" }, properties = { screen = 1, tag = "8", minimized = true } },
-	{ rule = { class = "leagueclient.exe" }, properties = { screen = 1, tag = "7" } },
 	{ rule = { class = "steam_app_2357570" }, properties = { screen = 1, tag = "8" } },
 	{ rule = { class = "steam" }, properties = { screen = 1, tag = "8" } },
 	{ rule = { class = "Steam" }, properties = { screen = 1, tag = "8" } },
@@ -523,6 +523,7 @@ end
 client.connect_signal("property::size", check_resize_client)
 client.connect_signal("property::position", check_resize_client)
 client.connect_signal("manage", function(c)
+	c.maximized = false
 	local parent_client = awful.client.focus.history.get(c.screen, 1)
 	get_parent_pid(c.pid, function(err, ppid)
 		if err then

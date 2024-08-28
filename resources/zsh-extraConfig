@@ -114,34 +114,34 @@ fi
 # change Ctrl+C to Ctrl+Q
 stty intr '^q'
 
-_copy-using-wlclipboard() {
-  if ((REGION_ACTIVE)) then
-  zle copy-region-as-kill
-  printf "$CUTBUFFER" | wl-copy
-  ((REGION_ACTIVE = 0))
-  fi
-}
-
-zle -N _copy-using-wlclipboard
-bindkey '^C' _copy-using-wlclipboard # Copy text
-
-_cut-using-wlclipboard() {
-  if ((REGION_ACTIVE)) then
-       zle copy-region-as-kill
-       printf "$CUTBUFFER" | wl-copy
-       zle kill-region
-  fi
-}
-
-zle -N _cut-using-wlclipboard
-bindkey '^X' _cut-using-wlclipboard # Cut text
-
-_paste-copy-using-wlclipboard() {
-  LBUFFER+="$(wl-paste)"
-}
-
-zle -N _paste-copy-using-wlclipboard
-bindkey '^V' _paste-copy-using-wlclipboard # Paste
+# _copy-using-wlclipboard() {
+#   if ((REGION_ACTIVE)) then
+#   zle copy-region-as-kill
+#   printf "$CUTBUFFER" | wl-copy
+#   ((REGION_ACTIVE = 0))
+#   fi
+# }
+#
+# zle -N _copy-using-wlclipboard
+# bindkey '^C' _copy-using-wlclipboard # Copy text
+#
+# _cut-using-wlclipboard() {
+#   if ((REGION_ACTIVE)) then
+#        zle copy-region-as-kill
+#        printf "$CUTBUFFER" | wl-copy
+#        zle kill-region
+#   fi
+# }
+#
+# zle -N _cut-using-wlclipboard
+# bindkey '^X' _cut-using-wlclipboard # Cut text
+#
+# _paste-copy-using-wlclipboard() {
+#   LBUFFER+="$(wl-paste)"
+# }
+#
+# zle -N _paste-copy-using-wlclipboard
+# bindkey '^V' _paste-copy-using-wlclipboard # Paste
 
 # Vi mode.
 export KEYTIMEOUT=1

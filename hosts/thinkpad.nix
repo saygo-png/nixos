@@ -21,6 +21,9 @@
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
   };
 
+  # Wifi
+  networking.networkmanager.enable = true;
+
   # Function keys
   programs.light.enable = true;
   services.actkbd = {

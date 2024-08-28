@@ -54,9 +54,15 @@
   };
   services.xserver.videoDrivers = ["amdgpu"];
 
+  # autologin
+  services.getty.autologinUser = "${conUsername}";
+
   home-manager = {
     users.${conUsername} = {
       home = {};
+
+      services.easyeffects.enable = true;
+      services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
       wayland.windowManager.hyprland.settings = {
         input.sensitivity = -0.9;
@@ -116,7 +122,6 @@
       "steam-original"
     ];
 
-
   # There is a module for this but i find nix -> yaml weird
   services.borgmatic.enable = true;
   environment.etc = {
@@ -150,6 +155,7 @@
     winetricks
     jdk8 # Java 8 for minecraft
     wineWowPackages.waylandFull
+    blender
 
     (writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
@@ -187,6 +193,6 @@
   programs.gamemode.enable = true;
   programs.gamescope = {
     enable = true;
-    capSysNice = true;
+    capSysNice = true; # Breaks it inside of hyprland
   };
 }

@@ -35,7 +35,6 @@
   networking.dhcpcd.wait = "background";
 
   networking.hostName = "${host}";
-  networking.networkmanager.enable = true;
 
   # Optimization for ssds
   services.fstrim.enable = true;
@@ -86,6 +85,7 @@
     shell = pkgs.zsh;
   };
 
+  # Keep sudo password cached infinitely
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=-1
   '';
@@ -107,6 +107,8 @@
   # File manager.
   programs.thunar.enable = true;
 
+  # Fixes dolphin not having mime types.
+  environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
   # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
@@ -115,19 +117,22 @@
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
 
-    # Other.
+    # Other.a
+    xclip # Xorg wl-clipboard
     wl-clipboard # Wayland xclip
-    cliphist # Wayland clipboard manager
     jq # Json parser, needed for "hyprland-next-visible-client.sh"
     nsxiv # Image viewer
+
+    kdePackages.dolphin # File manager
+    kdePackages.qtsvg # Icons for dolphin
+
+    hydrus # Image collection
     patool # Universal archiver
     libqalculate # Calculator
-    conky # Hardware monitor
     vim # Text editor
     wget # Downloader
     trashy # Cli trashcan
     udiskie # Auto mount
-    dash # Lightweight shell
     git # Source control
     fzf # Fuzzy finder
     file # File identifier
@@ -158,7 +163,7 @@
       ''
         set -o pipefail
         set -u
-        IFS=   # don't split
+        IFS= # don't split
         set +f # do glob
 
         KRITAHOME="${conHome}/.local/share/krita"
@@ -180,6 +185,54 @@
       runtimeInputs = [eza];
       text = ''
         eza --group-directories-first --tree
+      '';
+    })
+
+    (writeShellApplication {
+      name = "remaps";
+      runtimeInputs = [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
+      text = ''
+        # This script is called on startup to remap keys.
+        # Decrease key repeat delay and increase key repeat rate.
+        xset r rate 135 45
+        # Turn off caps lock if on since there is no longer a key for it.
+        xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
+      '';
+    })
+
+    (writeShellApplication {
+      name = "flameshot_wrapper";
+      runtimeInputs = [flameshot xdotool];
+      text = ''
+        # This script is called instead of flameshot in awesome to fix an issue
+        # where calling flameshot would drop focus, even after taking a screenshot
+        focusedwindow_before=$(xdotool getactivewindow)
+        flameshot gui
+        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
+      '';
+    })
+
+    (writeShellApplication {
+      name = "flameshot_wrapper_ocr";
+      runtimeInputs = [flameshot xdotool tesseract];
+      text = ''
+        # This script does what flameshot_wrapper does, and
+        # copies the screenshoted text to your clipboard
+        focusedwindow_before=$(xdotool getactivewindow)
+        flameshot gui -r -s | tesseract -l eng+rus+fin+pol stdin stdout | xclip -r
+        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
+      '';
+    })
+
+    (writeShellApplication {
+      name = "flameshot_wrapper_ocr_trans";
+      runtimeInputs = [flameshot xdotool tesseract translate-shell libnotify];
+      text = ''
+        # This script does what flameshot_wrapper does, and
+        # translates the screenshotted text, sending a notification with the translation
+        focusedwindow_before=$(xdotool getactivewindow)
+        notify-send -t 3000 "$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin stdin stdout | trans -brief)"
+        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
       '';
     })
 
@@ -361,11 +414,12 @@
   services.displayManager.defaultSession = lib.mkDefault "none+awesome";
   services.xserver.displayManager = lib.mkDefault {
     lightdm.enable = false;
-    sx.enable = true;
+    startx.enable = true;
   };
 
   services.libinput.enable = true;
   services.libinput.mouse.accelProfile = "flat";
+  services.libinput.mouse.middleEmulation = false;
   services.xserver.autoRepeatDelay = 135;
   services.xserver.autoRepeatInterval = 45;
 
@@ -471,6 +525,7 @@
   };
 
   stylix.enable = true;
+  stylix.cursor.size = 32;
   stylix.autoEnable = true;
   stylix.polarity = "dark";
   stylix.targets.grub.useImage = true;
@@ -529,8 +584,10 @@
     applications = 0.5;
   };
 
-  # Supposedly fixes some themeing/cursor issues might be useless.
+  # Fixes some themeing/cursor issues and is needed for some things.
   programs.dconf.enable = true;
+
+  xdg.menus.enable = true;
   # }}}
 
   ##### Home Manager ###### {{{
@@ -622,6 +679,7 @@
 
         shellAliases = {
           "nix-shell" = "nix-shell --run zsh";
+          "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
@@ -654,7 +712,6 @@
           TERMINAL_PROG = "${config.home.sessionVariables.TERMINAL}";
           BROWSER = lib.getExe pkgs-unstable.librewolf;
           # Unreal engine .net cli tool turn off telemetry.
-          QT_QPA_PLATFORMTHEME = "qt5ct";
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
         };
 
@@ -664,17 +721,21 @@
           anki # Flashcards
           neovide # Neovim gui
           fontforge-gtk # Font editor
-          tauon # Music player
+          sayonara # Music player
           foliate # Ebook reader
           zathura # Better for pdfs
           rofi-wayland # App launcher
           keepassxc # Password manager
           qbittorrent # Torrent client
+          flameshot # X11 screenshot tool
+          mission-center # GUI task manager
+          swappy # Quick drawing on images
 
           python3
 
           # Command line.
           bc # Gnu calculator, needed for vmrss
+          gmic # Image processing language
 
           # Haskell
           haskell-language-server # Haskell LSP
@@ -683,12 +744,10 @@
           moar # Pager
           termdown # Timer
           htop-vim # TUI task manager
-          mission-center # GUI task manager
           zoxide # Cd alternative
           hyprpicker # Color picker
           pulsemixer # Volume control
           ffmpeg # Video and magic editor
-          swappy # Quick drawing on images
 
           # Unstable
           pkgs-unstable.krita # Painting
@@ -722,6 +781,21 @@
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
         file."bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
         file."bin/ow".source = ./resources/scripts/ow.py;
+        file.".xinitrc" = {
+          text = ''
+            if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+              eval $(dbus-launch --exit-with-session --sh-syntax)
+            fi
+            systemctl --user import-environment DISPLAY XAUTHORITY
+            if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+              dbus-update-activation-environment DISPLAY XAUTHORITY
+            fi
+            export XDG_SESSION_TYPE=x11
+            xrandr -r ${builtins.toString conRefresh-rate}
+            $TERMINAL &
+            exec awesome
+          '';
+        };
 
         # This allows for semi-declarative configuration.
         # However it makes you lag when rebuilding.
@@ -781,16 +855,26 @@
 
       qt = {
         enable = true;
-        platformTheme.name = "qtct";
-        style.package = with pkgs; [
-          adwaita-qt
-          adwaita-qt6
-        ];
+
+        platformTheme = "qtct";
+
+        style.name = "kvantum";
       };
-      home.file.".config/qt5ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
-      home.file.".config/qt6ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
-      home.file.".config/qt5ct/qt5ct.conf".source = ./resources/static/qt/qt5ct.conf;
-      home.file.".config/qt6ct/qt6ct.conf".source = ./resources/static/qt/qt6ct.conf;
+
+      xdg.configFile = {
+        "Kvantum/kvantum.kvconfig".text = ''
+          [General]
+          theme=gruvbox-fallnn
+        '';
+
+        "Kvantum/gruvbox-fallnn".source = ./resources/static/qt/gruvbox-fallnn;
+      };
+
+      # This doesnt really work :(
+      # home.file.".config/qt5ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
+      # home.file.".config/qt6ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
+      # home.file.".config/qt5ct/qt5ct.conf".source = ./resources/static/qt/qt5ct.conf;
+      # home.file.".config/qt6ct/qt6ct.conf".source = ./resources/static/qt/qt6ct.conf;
 
       # Development, internal.
       programs.lazygit = {
@@ -1062,6 +1146,22 @@
               mods = "Alt";
               action = "ToggleViMode";
             }
+            # Copy paste
+            {
+              key = "V";
+              mods = "Control";
+              action = "Paste";
+            }
+            {
+              key = "C";
+              mods = "Control";
+              action = "Copy";
+            }
+            {
+              key = "C";
+              mods = "Control|Shift";
+              chars = "\x03";
+            }
           ];
         };
       };
@@ -1329,6 +1429,7 @@
           vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
           vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", {desc = "[r]e[n]ame"})
           vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
+          vim.keymap.set("n", "<leader>tb", builtin.current_buffer_fuzzy_find, { desc = "[t]elescope [b]uffer" })
           vim.keymap.set("n", "<leader>tn", builtin.help_tags, { desc = "[t]elescope [n]oob" })
           vim.keymap.set("n", "<leader>tk", builtin.keymaps, { desc = "[t]elescope [k]eymaps" })
           vim.keymap.set("n", "<leader>tf", builtin.find_files, { desc = "[t]elescope [f]iles" })
@@ -1474,11 +1575,13 @@
           nix.enable = true;
           flash.enable = true;
           comment.enable = true;
-          conjure.enable = true;
-          nvim-ufo.enable = true;
           surround.enable = true;
-          parinfer-rust.enable = true;
           friendly-snippets.enable = true;
+
+          nvim-ufo.enable = false;
+          # Lisps
+          conjure.enable = false;
+          parinfer-rust.enable = false;
 
           spider = {
             enable = true;
@@ -1547,26 +1650,6 @@
             symbolInWinbar.enable = false;
           };
 
-          fidget = {
-            enable = true;
-            progress = {
-              ignore = ["hls"]; # Hls keeps a popup on and its annoying
-              ignoreDoneAlready = true;
-              suppressOnInsert = true;
-              pollRate = 1;
-              display = {
-                doneIcon = "ok"; # Icon shown when all LSP progress tasks are complete
-              };
-            };
-            notification = {
-              window = {
-                normalHl = "Comment";
-                winblend = 0;
-                border = "single"; # none, single, double, rounded, solid, shadow
-              };
-            };
-          };
-
           mini = {
             enable = true;
             modules = {
@@ -1595,10 +1678,10 @@
 
           treesitter = {
             enable = true;
-            indent = true;
             nixvimInjections = true;
             nixGrammars = true; # Install grammars with Nix
             ensureInstalled = ["all"];
+            ignoreInstall = ["comment"];
             incrementalSelection = {
               enable = true;
               keymaps = {
@@ -1658,9 +1741,6 @@
                 installCargo = false;
                 installRustc = false;
               };
-
-              # Filesystem.
-              fsautocomplete.enable = true;
             };
             keymaps.lspBuf = {
               "gd" = "definition";
@@ -1677,10 +1757,6 @@
             };
           };
 
-          multicursors = {
-            enable = true;
-          };
-
           conform-nvim = {
             enable = true;
             extraOptions = {
@@ -1695,8 +1771,7 @@
               clojure = ["zprint"];
               haskell = ["fourmolu"];
               python = ["isort" "yapf"];
-              javascript = {
-              };
+              javascript = ["prettierd"];
               typescript = ["prettierd"];
               javascriptreact = ["prettierd"];
               typescriptreact = ["prettierd"];
@@ -1786,8 +1861,8 @@
             settings = {
               autocomplete = false;
               performance = {
-                debounce = 500;
-                throttle = 500;
+                debounce = 200;
+                throttle = 200;
                 maxViewEntries = 5;
                 fetchingTimeout = 50;
               };
@@ -1888,35 +1963,36 @@
             gruvbox-dark-fg0 = lib.mkForce (mkLiteral "#fbf1c7");
             gruvbox-dark-fg1 = lib.mkForce (mkLiteral "#ebdbb2");
             gruvbox-dark-gray = lib.mkForce (mkLiteral "#bdae93");
+            gruvbox-dark-red-dark = lib.mkForce (mkLiteral "#fe8019");
+            gruvbox-dark-red-light = lib.mkForce (mkLiteral "#fb4934");
+            gruvbox-dark-yellow-dark = lib.mkForce (mkLiteral "#fabd2f");
+            gruvbox-dark-yellow-light = lib.mkForce (mkLiteral "#8ec07c");
+            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
+            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 0%)");
+            selected-normal-background = lib.mkForce (mkLiteral "#7d8618");
+
+            normal-background = lib.mkForce (mkLiteral "@background");
+            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "@background");
+            alternate-normal-background = lib.mkForce (mkLiteral "@background");
             background-color = lib.mkForce (mkLiteral "@background");
             background = lib.mkForce (mkLiteral "@gruvbox-dark-bg0");
             foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
             separatorcolor = lib.mkForce (mkLiteral "@border-color");
             active-foreground = lib.mkForce (mkLiteral "@foreground");
-            gruvbox-dark-red-dark = lib.mkForce (mkLiteral "#fe8019");
             normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            gruvbox-dark-red-light = lib.mkForce (mkLiteral "#fb4934");
             scrollbar-handle = lib.mkForce (mkLiteral "@border-color");
-            gruvbox-dark-yellow-dark = lib.mkForce (mkLiteral "#fabd2f");
-            gruvbox-dark-yellow-light = lib.mkForce (mkLiteral "#8ec07c");
             urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
             alternate-normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
             urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-dark");
-            normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
-            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 0%)");
             active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-dark");
-            selected-normal-background = lib.mkForce (mkLiteral "rgba (125, 134, 24, 100%)");
             selected-normal-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg0");
             alternate-urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
             selected-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
             selected-urgent-foreground = lib.mkForce (mkLiteral "@urgent-foreground");
             alternate-active-background = lib.mkForce (mkLiteral "@active-background");
             alternate-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
             alternate-urgent-background = lib.mkForce (mkLiteral "@urgent-background");
             selected-urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-light");
-            alternate-normal-background = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
             selected-active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-light");
           };
           "window" = {
@@ -1931,7 +2007,7 @@
           "message" = {
             padding = mkLiteral "1px";
             border = mkLiteral "2px 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
+            border-color = lib.mkForce (mkLiteral "@background");
           };
           "textbox" = {
             highlight = mkLiteral "@highlight";
@@ -1941,7 +2017,7 @@
             spacing = mkLiteral "0px";
             padding = mkLiteral "0px 0 0";
             border = mkLiteral "0px solid 0 0";
-            border-color = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
+            border-color = lib.mkForce (mkLiteral "@background");
           };
           "element" = {
             border = 0;
