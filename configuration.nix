@@ -114,6 +114,7 @@
     # Nix.
     nh # Nix helper
     nil # Nix LSP
+    nix-tree # Reverse dependency search
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
 
@@ -236,6 +237,30 @@
       '';
     })
 
+      (pkgs.writeShellApplication {
+        name = "rdepends";
+        runtimeInputs = [nix];
+        text = ''
+            if [ "$#" -eq 0 ]; then
+                echo "No package(s) provided."
+                exit 1
+            fi
+
+            parent="/run/current-system"
+            child="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
+
+            if [ "$#" -eq 2 ]; then
+            parent="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
+            child="\$(nix eval --raw \"nixpkgs#$2.outPath\")"
+            fi
+
+            # echo then run the command
+            cmd="nix why-depends \"$parent\" \"$child\""
+            echo "$cmd" >&2
+            eval "$cmd"
+        '';
+      })
+
     (writeShellScriptBin
       "hwinfolist"
       ''
@@ -262,8 +287,6 @@
 
         nix store optimise
         sudo nix store optimise
-
-        nh clean all
 
         rm -rf ${conHome}/.local/state/home-manager
         rm -f ${conHome}/.local/state/nix/profiles/home-manager*
@@ -591,7 +614,6 @@
   # }}}
 
   ##### Home Manager ###### {{{
-
   home-manager = {
     extraSpecialArgs = {inherit inputs pkgs-unstable;};
     backupFileExtension = "backup"; # h-m breaks without it.
@@ -618,56 +640,6 @@
           "inode/x-empty" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-tex" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-python" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-readme" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "application/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/rhtml" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/plain" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-markdown" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-
-          # Documents
-          "application/vnd.oasis.opendocument.text" = ["writer.desktop"];
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["writer.desktop"];
-
-          # PDF
-          "application/pdf" = ["zathura.desktop"];
-          "image/vnd.djvu" = ["zathura.desktop"];
-
-          # Web
-          "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/http" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/https" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/ftp" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/chrome" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-htm" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-shtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/xhtml+xml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-xhtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-xht" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-
-          # Image
-          "image/png" = ["nsxiv.desktop"];
-          "image/jpeg" = ["nsxiv.desktop"];
-          # bmp
-          "application/octet-stream" = ["nsxiv.desktop"];
-
-          # Video
-          "video/ogg" = ["mpv.desktop"];
-          "video/x-msvideo" = ["mpv.desktop"];
-          "video/quicktime" = ["mpv.desktop"];
-          "video/webm" = ["mpv.desktop"];
-          "video/x-flv" = ["mpv.desktop"];
-          "video/mp4" = ["mpv.desktop"];
-          "application/x-flash-video" = ["mpv.desktop"];
-          "video/MP2T" = ["mpv.desktop"];
-          "image/x-tga" = ["mpv.desktop"];
-
-          # Audio
-          "audio/mpeg" = ["mpv.desktop"];
-          "audio/x-flac" = ["mpv.desktop"];
-          "audio/mp4" = ["mpv.desktop"];
-          "application/ogg" = ["mpv.desktop"];
           "audio/x-mod" = ["mpv.desktop"];
         };
       };
@@ -731,7 +703,16 @@
           mission-center # GUI task manager
           swappy # Quick drawing on images
 
-          python3
+          # Dependencies for intersubs for mpv
+          (pkgs.python3.withPackages (python312Packages: [
+            python312Packages.pyqt5
+            python312Packages.numpy
+            python312Packages.beautifulsoup4
+            python312Packages.requests
+            python312Packages.lxml
+            python312Packages.httpx
+          ]))
+          socat
 
           # Command line.
           bc # Gnu calculator, needed for vmrss
@@ -751,7 +732,7 @@
 
           # Unstable
           pkgs-unstable.krita # Painting
-          pkgs-unstable.inkscape # Painting
+          pkgs-unstable.inkscape # Vector graphics
           pkgs-unstable.librewolf # Browser
           # DO THIS ONE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
           # programs = {
@@ -773,7 +754,6 @@
           #     configPath = "${vendorPath}/firefox";
           #   };
           # };
-          pkgs-unstable.gomuks # TUI matrix client
         ];
 
         # Binary (or not) blobs.
@@ -800,16 +780,16 @@
         # This allows for semi-declarative configuration.
         # However it makes you lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          mkdir -p "${config.xdg.configHome}"
+          run mkdir -p "${config.xdg.configHome}"
 
-          mkdir -p "${conHome}/.local/share/krita"
+          run mkdir -p "${conHome}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${conHome}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
 
-          mkdir -p "${conHome}/.local/share/Anki2"
+          run mkdir -p "${conHome}/.local/share/Anki2"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/Anki2"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${conHome}/.local/share/Anki2"
           run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/Anki2"
@@ -835,6 +815,10 @@
 
           run mkdir -p "${config.xdg.dataHome}"
           run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
+        '';
+
+        activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
+          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
         '';
       };
 
@@ -1859,7 +1843,7 @@
             enable = true;
             autoEnableSources = true;
             settings = {
-              autocomplete = false;
+              autocomplete = true;
               performance = {
                 debounce = 200;
                 throttle = 200;
@@ -2169,16 +2153,11 @@
           debug.disable_logs = true;
           # Autostart.
           exec-once = [
-            # Not sure what this does tbh
-            # "systemctl --user import-environment WAYLAND_DISPLAY &"
-            # "hash dbus-update-activation-environment 2>/dev/null &"
-            # "dbus-update-activation-environment --systemd &"
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
             "udiskie &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
-            "hyprctl keyword decoration:blur:special 1"
           ];
 
           input = {
@@ -2510,6 +2489,12 @@
         source = ./resources/awesome;
         recursive = true;
       };
+ 
+      # InterSubs plugin install
+      xdg.configFile."mpv/scripts/" = {
+        source = ./resources/mpv;
+        recursive = true;
+      };
 
       xdg.configFile."zathura/" = {
         text = ''
@@ -2585,6 +2570,74 @@
           $TERMINAL &
           xrandr -r ${builtins.toString conRefresh-rate}
           exec ${lib.getExe' pkgs.awesome "awesome"}
+        '';
+      };
+
+      xdg.configFile."flameshot/flameshot.ini" = {
+        executable = true;
+        text = ''
+          [General]
+          allowMultipleGuiInstances=false
+          antialiasingPinZoom=false
+          autoCloseIdleDaemon=false
+          buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\b\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\x16\0\0\0\n)
+          contrastOpacity=188
+          contrastUiColor=${config.lib.stylix.colors.withHashtag.base0A}
+          copyAndCloseAfterUpload=true
+          copyOnDoubleClick=true
+          copyPathAfterSave=true
+          disabledTrayIcon=true
+          drawColor=${config.lib.stylix.colors.withHashtag.base08}
+          drawFontSize=7
+          drawThickness=2
+          filenamePattern=screen.png
+          historyConfirmationToDelete=false
+          saveAfterCopy=false
+          saveAsFileExtension=png
+          savePath=${conHome}/Pictures/Screenshots
+          savePathFixed=true
+          showDesktopNotification=true
+          showHelp=false
+          showSidePanelButton=false
+          showStartupLaunchMessage=false
+          startupLaunch=false
+          uiColor=${config.lib.stylix.colors.withHashtag.base0B}
+          uploadWithoutConfirmation=false
+          useJpgForClipboard=false
+          userColors=picker, ${config.lib.stylix.colors.withHashtag.base08}, ${config.lib.stylix.colors.withHashtag.base0B}
+
+          [Shortcuts]
+          TYPE_ARROW=A
+          TYPE_CIRCLE=C
+          TYPE_CIRCLECOUNT=
+          TYPE_COMMIT_CURRENT_TOOL=Ctrl+Return
+          TYPE_COPY=Ctrl+C
+          TYPE_DRAWER=D
+          TYPE_EXIT=Ctrl+Q
+          TYPE_IMAGEUPLOADER=Return
+          TYPE_MARKER=M
+          TYPE_MOVESELECTION=Ctrl+M
+          TYPE_MOVE_DOWN=Down
+          TYPE_MOVE_LEFT=Left
+          TYPE_MOVE_RIGHT=Right
+          TYPE_MOVE_UP=Up
+          TYPE_OPEN_APP=Ctrl+O
+          TYPE_PENCIL=P
+          TYPE_PIN=
+          TYPE_PIXELATE=B
+          TYPE_RECTANGLE=R
+          TYPE_REDO=Ctrl+Shift+Z
+          TYPE_RESIZE_DOWN=Shift+Down
+          TYPE_RESIZE_LEFT=Shift+Left
+          TYPE_RESIZE_RIGHT=Shift+Right
+          TYPE_RESIZE_UP=Shift+Up
+          TYPE_SAVE=Ctrl+S
+          TYPE_SELECTION=S
+          TYPE_SELECTIONINDICATOR=
+          TYPE_SELECT_ALL=Ctrl+A
+          TYPE_TEXT=T
+          TYPE_TOGGLE_PANEL=Space
+          TYPE_UNDO=Ctrl+Z
         '';
       };
 

@@ -149,7 +149,7 @@
 
   environment.systemPackages = with pkgs; [
     borgbackup
-    zed-editor # Another text editor
+    pkgs-unstable.zed-editor # Another text editor
     # Game launcher
     lutris
     winetricks

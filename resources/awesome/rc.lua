@@ -169,10 +169,10 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "Right", function()
 		lain.util.tag_view_nonempty(1)
 	end, { description = "view next non empty", group = "tag" }),
-	awful.key({ modkey, "Control" }, "h", function()
+	awful.key({ modkey}, ")", function()
 		lain.util.tag_view_nonempty(-1)
 	end, { description = "view previous non empty", group = "tag" }),
-	awful.key({ modkey, "Control" }, "l", function()
+	awful.key({ modkey}, "(", function()
 		lain.util.tag_view_nonempty(1)
 	end, { description = "view next non empty", group = "tag" }),
 	awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
@@ -191,21 +191,13 @@ globalkeys = gears.table.join(
 	end, { description = "focus previous by index", group = "client" }),
 
 	-- Layout manipulation
-	awful.key({ modkey, "Shift" }, "j", function()
-		awful.client.swap.byidx(1)
-	end, { description = "swap with next client by index", group = "client" }),
-
-	awful.key({ modkey, "Shift" }, "k", function()
-		awful.client.swap.byidx(-1)
-	end, { description = "swap with previous client by index", group = "client" }),
-
 	awful.key({ modkey, "Control" }, "j", function()
-		awful.screen.focus_relative(1)
-	end, { description = "focus the next screen", group = "screen" }),
+		awful.client.swap.byidx(1)
+	end, { description = "swap with next by index", group = "client" }),
 
 	awful.key({ modkey, "Control" }, "k", function()
-		awful.screen.focus_relative(-1)
-	end, { description = "focus the previous screen", group = "screen" }),
+		awful.client.swap.byidx(-1)
+	end, { description = "swap with previous by index", group = "client" }),
 
 	awful.key({ modkey }, "u", awful.client.urgent.jumpto, { description = "jump to urgent client", group = "client" }),
 
@@ -216,18 +208,26 @@ globalkeys = gears.table.join(
 	awful.key({ modkey, "Control" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
 
 	awful.key({ modkey }, "h", function()
-		awful.client.swap.byidx(-1)
-	end, { description = "swap with previous client by index", group = "client" }),
+		awful.client.focus.byidx(-1)
+	end, { description = "focus previous by index", group = "client" }),
 
 	awful.key({ modkey }, "l", function()
 		awful.client.focus.byidx(1)
 	end, { description = "focus next by index", group = "client" }),
 
+	awful.key({ modkey, "Shift" }, "h", function()
+		awful.client.swap.byidx(-1)
+	end, { description = "swap with previous by index", group = "client" }),
+
 	awful.key({ modkey, "Shift" }, "l", function()
+		awful.client.swap.byidx(1)
+	end, { description = "swap with next by index", group = "client" }),
+
+	awful.key({ modkey, "Control" }, "l", function()
 		awful.tag.incmwfact(0.05)
 	end, { description = "increase master width factor", group = "layout" }),
 
-	awful.key({ modkey, "Shift" }, "h", function()
+	awful.key({ modkey, "Control" }, "h", function()
 		awful.tag.incmwfact(-0.05)
 	end, { description = "decrease master width factor", group = "layout" }),
 
