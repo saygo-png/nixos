@@ -117,6 +117,7 @@
     nix-tree # Reverse dependency search
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
+    appimage-run # Appimage runner
 
     # Other.a
     xclip # Xorg wl-clipboard
@@ -685,6 +686,7 @@
           BROWSER = lib.getExe pkgs-unstable.librewolf;
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
+          QT_QPA_PLATFORM_PLUGIN_PATH="${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
         };
 
         # Home packages, home manager packages, user packages
@@ -707,6 +709,8 @@
           (pkgs.python3.withPackages (python312Packages: [
             python312Packages.pyqt5
             python312Packages.numpy
+            python312Packages.six
+            python312Packages.thttp
             python312Packages.beautifulsoup4
             python312Packages.requests
             python312Packages.lxml
@@ -839,9 +843,7 @@
 
       qt = {
         enable = true;
-
-        platformTheme = "qtct";
-
+        platformTheme.name = "qtct";
         style.name = "kvantum";
       };
 
@@ -861,17 +863,15 @@
       # home.file.".config/qt6ct/qt6ct.conf".source = ./resources/static/qt/qt6ct.conf;
 
       # Development, internal.
-      programs.lazygit = {
-        enable = true;
-        settings = {
-          gui.border = "single";
-        };
-      };
       programs.bash.enable = true;
       programs.zoxide.enable = true;
       programs.nix-index.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+      programs.lazygit = {
+        enable = true;
+        settings.gui.border = "single";
+      };
 
       programs.tealdeer = {
         enable = true;
@@ -1248,10 +1248,10 @@
           grepformat = "%f:%l:%c:%m";
 
           # Folds.
+          foldenable = true;
+          foldlevelstart = 99;
           foldmethod = "marker";
           foldlevel = 99; # Ufo provider needs a large value, feel free to decrease the value
-          foldlevelstart = 99;
-          foldenable = true;
 
           # More space.
           cmdheight = 0;
@@ -1351,8 +1351,8 @@
           -- Neovide
           if vim.g.neovide then
             vim.cmd[[colorscheme gruvbox-material]]
-            vim.o.background = "dark"
-            vim.o.guifont = "JetBrains Mono:h13:#e-antialias:#h-slight"
+            vim.o.background = 'dark'
+            vim.o.guifont = '${config.stylix.fonts.monospace.name}:h${builtins.toString (config.stylix.fonts.sizes.terminal + 1)}:#e-antialias:#h-slight'
             vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
           end
 
@@ -2685,7 +2685,7 @@
 
       xdg.configFile."neovide/neovide.toml".source = (pkgs.formats.toml {}).generate "neovideExtraConfigDIY" {
         font = {
-          normal = ["JetBrains Mono"];
+          normal = ["${config.stylix.fonts.monospace.name}"];
           size = 13;
         };
       };
