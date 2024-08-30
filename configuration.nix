@@ -595,10 +595,10 @@
   };
 
   stylix.fonts.sizes = {
-    popups = 13;
-    desktop = 13;
-    terminal = 13;
-    applications = 12;
+    popups = lib.mkDefault 13;
+    desktop = lib.mkDefault 13;
+    terminal = lib.mkDefault 13;
+    applications = lib.mkDefault 12;
   };
 
   stylix.opacity = {

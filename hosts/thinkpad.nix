@@ -118,6 +118,14 @@
   ];
 
   services.libinput.mouse.accelSpeed = "-0.9";
+
+  stylix.fonts.sizes = {
+    popups = 17;
+    desktop = 17;
+    terminal = 17;
+    applications = 16;
+  };
+
   home-manager = {
     users.${conUsername} = {
       # Media controls for bluetooth headphones
