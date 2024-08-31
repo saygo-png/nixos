@@ -827,9 +827,10 @@
           run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
         '';
 
-        # activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
-        #   run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
-        # '';
+        activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
+          [[ -z "$DISPLAY" ]] && echo Display not set && exit 1
+          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
+        '';
       };
 
       # Needed for transparency.
@@ -1254,10 +1255,8 @@
           grepformat = "%f:%l:%c:%m";
 
           # Folds.
-          foldenable = true;
-          foldlevelstart = 99;
+          foldenable = false;
           foldmethod = "marker";
-          foldlevel = 99; # Ufo provider needs a large value, feel free to decrease the value
 
           # More space.
           cmdheight = 0;
@@ -1423,7 +1422,6 @@
           vim.keymap.set("n", "<leader>f", "<cmd>Oil .<CR>", {desc = "[f]ile browser"})
           vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", {desc = "hover"})
           vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
-          vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", {desc = "[r]e[n]ame"})
           vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
           vim.keymap.set("n", "<leader>tb", builtin.current_buffer_fuzzy_find, { desc = "[t]elescope [b]uffer" })
           vim.keymap.set("n", "<leader>tn", builtin.help_tags, { desc = "[t]elescope [n]oob" })
@@ -1437,6 +1435,30 @@
           vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
           vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
+          vim.keymap.set("n", "<leader>rn", function()
+            -- when rename opens the prompt, this autocommand will trigger
+            -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
+            -- in this window I can use normal mode keybindings
+            local cmdId
+            cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+              callback = function()
+                local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
+                vim.api.nvim_feedkeys(key, "c", false)
+                vim.api.nvim_feedkeys("0", "n", false)
+                -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
+                cmdId = nil
+                return true
+              end,
+            })
+            vim.lsp.buf.rename()
+            -- if LPS couldn't trigger rename on the symbol, clear the autocmd
+            vim.defer_fn(function()
+              -- the cmdId is not nil only if the LSP failed to rename
+              if cmdId then
+                vim.api.nvim_del_autocmd(cmdId)
+              end
+            end, 500)
+          end)
 
           vim.keymap.set("n", "<Leader>c", function()
           require("conform").format({ timeout_ms = 500 })
@@ -1466,6 +1488,7 @@
           vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
           vim.keymap.set("n", "gm", "m", { desc = "Set mark" })
           vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+          vim.keymap.set("v", "gj", "J", { desc = "join lines" })
           vim.keymap.set("v", "J", ":m '>+1<CR>gv==kgvo<esc>=kgvo", { desc = "move highlighted text down" })
           vim.keymap.set("v", "K", ":m '<-2<CR>gv==jgvo<esc>=jgvo", { desc = "move highlighted text up" })
           vim.keymap.set( "i", "<C-r>", "<C-r><C-o>", { desc = "Insert contents of named register. Inserts text literally, not as if you typed it." })
@@ -1511,16 +1534,6 @@
               border = border,
             }
           })
-
-          -- Turn off cmp in comments.
-          -- enabled = function()
-          --    local in_prompt = vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt'
-          --    if in_prompt then  -- this will disable cmp in the Telescope window (taken from the default config)
-          --      return false
-          --    end
-          --    local context = require("cmp.config.context")
-          --    return not(context.in_treesitter_capture("comment") == true or context.in_syntax_group("Comment"))
-          -- end
         '';
         package = pkgs.neovim-unwrapped;
         clipboard.register = "unnamedplus";
@@ -1572,13 +1585,12 @@
 
         # Plugins {{{
         plugins = {
-          nix.enable = true;
+          nix.enable = false;
           flash.enable = true;
           comment.enable = true;
           surround.enable = true;
           friendly-snippets.enable = true;
 
-          nvim-ufo.enable = false;
           # Lisps
           conjure.enable = false;
           parinfer-rust.enable = false;

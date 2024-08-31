@@ -117,7 +117,7 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = "-0.9";
+  services.libinput.mouse.accelSpeed = "-0.4";
 
   stylix.fonts.sizes = {
     popups = 17;
