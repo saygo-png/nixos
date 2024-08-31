@@ -827,9 +827,9 @@
           run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
         '';
 
-        activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
-          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
-        '';
+        # activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
+        #   run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
+        # '';
       };
 
       # Needed for transparency.
