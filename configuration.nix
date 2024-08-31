@@ -104,6 +104,11 @@
     enable = true;
   };
 
+  # X11 window manager for games
+  services.xserver.windowManager.awesome = {
+    enable = true;
+  };
+
   # File manager.
   programs.thunar.enable = true;
 

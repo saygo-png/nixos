@@ -13,11 +13,6 @@
   conScreen-height,
   ...
 }: {
-  # X11 window manager for games
-  services.xserver.windowManager.awesome = {
-    enable = true;
-  };
-
   services.libinput.mouse.accelSpeed = "-0.9";
 
   services.actkbd = {
@@ -61,6 +56,7 @@
     users.${conUsername} = {
       home = {};
 
+      # THis requires imperative action
       services.easyeffects.enable = true;
       services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
