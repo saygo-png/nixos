@@ -1,7 +1,4 @@
 " TODO put this shit in configuration.nix
-" Set contrast.
-" This configuration option should be placed before `colorscheme gruvbox-material`.
-" Available values: 'hard', 'medium'(default), 'soft'
 
 " Colorscheme.
 if has('termguicolors')
@@ -94,21 +91,12 @@ function cmp.git_status()
   }
 end
 
-function cmp.lint_progress()
-  local linters = require("lint").get_running()
-  if #linters == 0 then
-      return "lint: ok"
-  end
-  return "lint: search" .. table.concat(linters, ", ")
-end
-
 local statusline = {
   '%{%v:lua._statusline_component("diagnostic_status")%}',
   '%t',
   '%r',
   '%m',
   '%{%v:lua._statusline_component("git_status")%}',
-  '%{%v:lua._statusline_component("lint_progress")%}',
   '%=',
   '%{&filetype} ',
   '%2p%%',
@@ -207,7 +195,7 @@ function! ToggleQuickFix()
     endif
 endfunction
 
-nnoremap <silent> F :call ToggleQuickFix()<cr>
+nnoremap <silent> <C-f> :call ToggleQuickFix()<cr>
 
 " Faster syntax highlight.
 syntax sync minlines=256

@@ -131,6 +131,7 @@
     hydrus # Image collection
     patool # Universal archiver
     libqalculate # Calculator
+    qalculate-gtk # ^
     vim # Text editor
     wget # Downloader
     trashy # Cli trashcan
@@ -238,29 +239,29 @@
       '';
     })
 
-      (pkgs.writeShellApplication {
-        name = "rdepends";
-        runtimeInputs = [nix];
-        text = ''
-            if [ "$#" -eq 0 ]; then
-                echo "No package(s) provided."
-                exit 1
-            fi
+    (pkgs.writeShellApplication {
+      name = "rdepends";
+      runtimeInputs = [nix];
+      text = ''
+        if [ "$#" -eq 0 ]; then
+            echo "No package(s) provided."
+            exit 1
+        fi
 
-            parent="/run/current-system"
-            child="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
+        parent="/run/current-system"
+        child="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
 
-            if [ "$#" -eq 2 ]; then
-            parent="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
-            child="\$(nix eval --raw \"nixpkgs#$2.outPath\")"
-            fi
+        if [ "$#" -eq 2 ]; then
+        parent="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
+        child="\$(nix eval --raw \"nixpkgs#$2.outPath\")"
+        fi
 
-            # echo then run the command
-            cmd="nix why-depends \"$parent\" \"$child\""
-            echo "$cmd" >&2
-            eval "$cmd"
-        '';
-      })
+        # echo then run the command
+        cmd="nix why-depends \"$parent\" \"$child\""
+        echo "$cmd" >&2
+        eval "$cmd"
+      '';
+    })
 
     (writeShellScriptBin
       "hwinfolist"
@@ -673,9 +674,9 @@
 
         sessionVariables = {
           # Default programs.
-          PAGER = lib.getExe pkgs.moar;
+          PAGER = "moar";
           EDITOR = "nvim";
-          OPENER = lib.getExe' pkgs.xdg-utils "xdg-open";
+          OPENER = "xdg-open";
           TERMINAL = "alacritty";
 
           VISUAL = "${config.home.sessionVariables.EDITOR}";
@@ -683,10 +684,10 @@
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = "${config.home.sessionVariables.PAGER}";
           TERMINAL_PROG = "${config.home.sessionVariables.TERMINAL}";
-          BROWSER = lib.getExe pkgs-unstable.librewolf;
+          BROWSER = "librewolf";
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
-          QT_QPA_PLATFORM_PLUGIN_PATH="${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
+          QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
         };
 
         # Home packages, home manager packages, user packages
@@ -733,11 +734,11 @@
           hyprpicker # Color picker
           pulsemixer # Volume control
           ffmpeg # Video and magic editor
+          pkgs.inkscape # Vector graphics
+          pkgs.librewolf # Browser
 
           # Unstable
           pkgs-unstable.krita # Painting
-          pkgs-unstable.inkscape # Vector graphics
-          pkgs-unstable.librewolf # Browser
           # DO THIS ONE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
           # programs = {
           #   # use firefox dev edition
@@ -1378,6 +1379,9 @@
           vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
           vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
 
+          -- Keep cursor position after yank
+          vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
+
           -- Window switching.
           vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
           vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
@@ -1389,6 +1393,9 @@
 
           -- Conflicts with lsp hover
           vim.g["conjure#mapping#doc_word"] = false
+
+          -- Autocomplete
+          vim.keymap.set("i", "<S-Space>", "<C-x><C-o>", { desc = "Autocomplete" })
 
           -- Split movement
           vim.keymap.set("n", "<S-M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
@@ -1447,16 +1454,20 @@
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
+          vim.keymap.set("n", "p", "p=`]", { desc = "Paste with fixed indent"})
           vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
           vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
           vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
           vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
           vim.keymap.set("n", "gm", "m", { desc = "Set mark" })
           vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
+          vim.keymap.set("v", "J", ":m '>+1<CR>gv==kgvo<esc>=kgvo", { desc = "move highlighted text down" })
+          vim.keymap.set("v", "K", ":m '<-2<CR>gv==jgvo<esc>=jgvo", { desc = "move highlighted text up" })
+          vim.keymap.set( "i", "<C-r>", "<C-r><C-o>", { desc = "Insert contents of named register. Inserts text literally, not as if you typed it." })
 
           vim.keymap.set('n', '<leader>q', vim.cmd.quit)
           vim.keymap.set('n', '<leader>Q', vim.cmd.only)
+
           -- Transparent hover
           vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
 
@@ -1497,14 +1508,14 @@
           })
 
           -- Turn off cmp in comments.
-          enabled = function()
-             local in_prompt = vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt'
-             if in_prompt then  -- this will disable cmp in the Telescope window (taken from the default config)
-               return false
-             end
-             local context = require("cmp.config.context")
-             return not(context.in_treesitter_capture("comment") == true or context.in_syntax_group("Comment"))
-          end
+          -- enabled = function()
+          --    local in_prompt = vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt'
+          --    if in_prompt then  -- this will disable cmp in the Telescope window (taken from the default config)
+          --      return false
+          --    end
+          --    local context = require("cmp.config.context")
+          --    return not(context.in_treesitter_capture("comment") == true or context.in_syntax_group("Comment"))
+          -- end
         '';
         package = pkgs.neovim-unwrapped;
         clipboard.register = "unnamedplus";
@@ -1669,10 +1680,10 @@
             incrementalSelection = {
               enable = true;
               keymaps = {
-                initSelection = "gnn";
-                nodeIncremental = "grn";
+                initSelection = "<Enter>";
+                nodeIncremental = "<Enter>";
                 scopeIncremental = "grc";
-                nodeDecremental = "grm";
+                nodeDecremental = "<BS>";
               };
             };
             moduleConfig = {
@@ -1824,58 +1835,6 @@
           oil = {
             enable = true;
             settings.defaultFileExplorer = true;
-          };
-
-          luasnip = {
-            enable = true;
-            extraConfig = {
-              enable_autosnippets = true;
-              store_selection_keys = "<Tab>";
-            };
-            fromVscode = [
-              {
-                lazyLoad = true;
-              }
-            ];
-          };
-
-          cmp = {
-            enable = true;
-            autoEnableSources = true;
-            settings = {
-              autocomplete = true;
-              performance = {
-                debounce = 200;
-                throttle = 200;
-                maxViewEntries = 5;
-                fetchingTimeout = 50;
-              };
-              snippet.expand = ''
-                function(args)
-                  require('luasnip').lsp_expand(args.body)
-                end
-              '';
-              sources = [
-                {name = "nvim_lsp";}
-              ];
-              mapping = {
-                "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
-                "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
-                "<C-j>" = "cmp.mapping.select_next_item()";
-                "<C-k>" = "cmp.mapping.select_prev_item()";
-                "<C-e>" = "cmp.mapping.abort()";
-                "<C-b>" = "cmp.mapping.scroll_docs(-4)";
-                "<C-f>" = "cmp.mapping.scroll_docs(4)";
-                "<C-Space>" = "cmp.mapping.complete()";
-                "<CR>" = "cmp.mapping.confirm({ select = false })";
-                "<S-CR>" = "cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })";
-              };
-
-              window = {
-                completion.scrollbar = true;
-                documentation.border = "single";
-              };
-            };
           };
         };
 
@@ -2489,7 +2448,7 @@
         source = ./resources/awesome;
         recursive = true;
       };
- 
+
       # InterSubs plugin install
       xdg.configFile."mpv/scripts/" = {
         source = ./resources/mpv;
