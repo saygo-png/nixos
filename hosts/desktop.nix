@@ -1,15 +1,16 @@
 {
   lib,
-  # host,
   pkgs,
-  # inputs,
+  # host,
+  config,
   conHome,
+  # inputs,
   conUsername,
-  # conFlake-path,
   pkgs-unstable,
-  # conAccentColor,
+  # conFlake-path,
   conRefresh-rate,
   conScreen-width,
+  # conAccentColor,
   conScreen-height,
   ...
 }: {
@@ -61,7 +62,7 @@
       services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
       wayland.windowManager.hyprland.settings = {
-        input.sensitivity = -0.9;
+        input.sensitivity = config.services.libinput.mouse.accelSpeed;
       };
 
       programs.mangohud = {

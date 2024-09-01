@@ -9,6 +9,7 @@
   conFlake-path,
   conAccentColor,
   conRefresh-rate,
+  conGaps,
   # conScreen-width,
   # conScreen-height,
   pkgs-unstable,
@@ -207,9 +208,6 @@
       name = "remaps";
       runtimeInputs = [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
       text = ''
-        # This script is called on startup to remap keys.
-        # Decrease key repeat delay and increase key repeat rate.
-        xset r rate 135 45
         # Turn off caps lock if on since there is no longer a key for it.
         xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
       '';
@@ -457,7 +455,7 @@
   services.libinput.enable = true;
   services.libinput.mouse.accelProfile = "flat";
   services.libinput.mouse.middleEmulation = false;
-  services.xserver.autoRepeatDelay = 135;
+  services.xserver.autoRepeatDelay = 200;
   services.xserver.autoRepeatInterval = 45;
 
   # File synchronization.
@@ -2104,8 +2102,8 @@
       # hyprland {{{
       services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
       wayland.windowManager.hyprland = let
-        gaps_in = 6;
-        gaps_out = 13;
+        gaps_in = conGaps;
+        gaps_out = conGaps * 2;
       in {
         systemd.enable = true;
         xwayland.enable = true;
@@ -2149,8 +2147,9 @@
           input = {
             kb_layout = "pl,plfi";
             kb_options = "caps:escape,grp:sclk_toggle";
-            repeat_delay = 135;
-            repeat_rate = 45;
+
+            repeat_delay = config.services.xserver.autoRepeatDelay;
+            repeat_rate = config.services.xserver.autoRepeatInterval;
             accel_profile = "flat";
             numlock_by_default = false;
             follow_mouse = 2;
@@ -2472,8 +2471,60 @@
       xdg.enable = true;
 
       xdg.configFile."awesome/" = {
-        source = ./resources/awesome;
+        source = ./resources/awesome/topdir;
         recursive = true;
+      };
+
+      xdg.configFile."awesome/theme.lua" = {
+        text = ''
+        local theme_assets = require("beautiful.theme_assets")
+        local xresources = require("beautiful.xresources")
+        local dpi = xresources.apply_dpi
+        local gfs = require("gears.filesystem")
+        local themes_path = "${config.xdg.configHome}/awesome"
+        local theme = {}
+
+        theme.font = "${config.stylix.fonts.sansSerif.name} ${builtins.toString config.stylix.fonts.sizes.popups}"
+
+        theme.bg_normal = "#28282866"
+        theme.bg_focus = "${conAccentColor}"
+        theme.bg_urgent = "#ff0000"
+        theme.bg_minimize = "#b8bb26"
+        theme.bg_systray = theme.bg_normal
+
+        theme.fg_normal = "${config.lib.stylix.colors.withHashtag.base07}"
+        theme.fg_focus = theme.fg_normal
+        theme.fg_urgent = theme.fg_normal
+        theme.fg_minimize = theme.fg_normal
+
+        theme.gap_single_client = true
+        theme.useless_gap = dpi(${conGaps})
+        theme.border_width = dpi(1)
+        theme.border_normal = "#00000000"
+        theme.border_marked = theme.bg_focus
+        theme.border_focus = theme.bg_focus
+        --snap
+        theme.snap_bg = theme.bg_focus
+        --notifications
+        naughty.config = {
+          defaults = {
+            ontop = true,
+            font = theme.font,
+            timeout = 10,
+            margin = 20,
+            border_width = 1.5,
+            font = theme.font,
+            fg = beautiful.fg_normal,
+            bg = beautiful.bg_normal,
+            position = "top_middle",
+          },
+          padding = 60,
+          spacing = 4,
+        }
+        theme.wallpaper = "~/.config/wallpaper.png"
+        return theme
+        -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80
+        '';
       };
 
       # InterSubs plugin install

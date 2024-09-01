@@ -63,6 +63,7 @@
         conRefresh-rate = 144;
         conScreen-width = 1920;
         conScreen-height = 1080;
+        conGaps = 6;
       };
       modules = [
         ./hosts/desktop.nix
@@ -83,6 +84,7 @@
         conRefresh-rate = 60;
         conScreen-width = 1366;
         conScreen-height = 768;
+        conGaps = 0;
       };
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270

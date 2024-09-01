@@ -2,7 +2,7 @@
   lib,
   # host,
   pkgs,
-  # config,
+  config,
   # inputs,
   # conHome,
   conUsername,
@@ -117,13 +117,13 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = "-0.4";
+  services.libinput.mouse.accelSpeed = "-0.5";
 
   stylix.fonts.sizes = {
-    popups = 17;
-    desktop = 17;
-    terminal = 17;
-    applications = 16;
+    popups = 16;
+    desktop = 16;
+    terminal = 16;
+    applications = 15;
   };
 
   home-manager = {
@@ -137,13 +137,9 @@
         y = 0;
       };
 
-      wayland.windowManager.hyprland.settings = let
-        gaps_in = 0;
-        gaps_out = 0;
-      in {
+      wayland.windowManager.hyprland.settings = {
+        input.sensitivity = config.services.libinput.mouse.accelSpeed;
         general = {
-          gaps_in = lib.mkForce gaps_in;
-          gaps_out = lib.mkForce gaps_out;
           border_size = lib.mkForce 2;
         };
         device = [
