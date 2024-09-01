@@ -124,7 +124,8 @@
     alejandra # Nix formatter
     appimage-run # Appimage runner
 
-    # Other.a
+    # Other.
+    udftools # Udf filesystem
     xclip # Xorg wl-clipboard
     wl-clipboard # Wayland xclip
     jq # Json parser, needed for "hyprland-next-visible-client.sh"
@@ -164,6 +165,12 @@
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
 
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
+
+    (writeShellApplication {
+     name = "format-udf";
+     runtimeInputs = [coreutils udftools];
+     text = builtins.readFile ./resources/scripts/format-udf.sh; 
+     })
 
     (writeShellScriptBin
       "update_mutable.sh" # updates the flake krita nixos configuration files from current mutable krita config.
@@ -781,8 +788,11 @@
               dbus-update-activation-environment DISPLAY XAUTHORITY
             fi
             export XDG_SESSION_TYPE=x11
+            "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
             xrandr -r ${builtins.toString conRefresh-rate}
+            udiskie &
             $TERMINAL &
+            $BROWSER &
             exec awesome
           '';
         };

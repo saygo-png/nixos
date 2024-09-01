@@ -133,6 +133,8 @@
         exclude_caches: true
         exclude_patterns:
         - '*/.cache'
+        - '*/.npm'
+        - '*/node_modules'
         - '*/.local/share/Steam'
         - '*/Games/battlenet'
         repositories:
