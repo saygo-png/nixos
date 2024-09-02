@@ -64,6 +64,7 @@
         conScreen-width = 1920;
         conScreen-height = 1080;
         conGaps = 6;
+        conBorderSize = 1;
       };
       modules = [
         ./hosts/desktop.nix
@@ -85,6 +86,7 @@
         conScreen-width = 1366;
         conScreen-height = 768;
         conGaps = 0;
+        conBorderSize = 2;
       };
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270

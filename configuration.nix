@@ -8,13 +8,17 @@
   conHome,
   conFlake-path,
   conAccentColor,
+  conBorderSize,
   conRefresh-rate,
   conGaps,
   # conScreen-width,
   # conScreen-height,
   pkgs-unstable,
   ...
-}: {
+}: let
+  autoRepeatDelay = 200;
+  autoRepeatInterval = 45;
+in {
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
@@ -168,10 +172,10 @@
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
     (writeShellApplication {
-     name = "format-udf";
-     runtimeInputs = [coreutils udftools];
-     text = builtins.readFile ./resources/scripts/format-udf.sh; 
-     })
+      name = "format-udf";
+      runtimeInputs = [coreutils udftools];
+      text = builtins.readFile ./resources/scripts/format-udf.sh;
+    })
 
     (writeShellScriptBin
       "update_mutable.sh" # updates the flake krita nixos configuration files from current mutable krita config.
@@ -249,7 +253,7 @@
       '';
     })
 
-    (pkgs.writeShellApplication {
+    (writeShellApplication {
       name = "rdepends";
       runtimeInputs = [nix];
       text = ''
@@ -455,8 +459,8 @@
   services.libinput.enable = true;
   services.libinput.mouse.accelProfile = "flat";
   services.libinput.mouse.middleEmulation = false;
-  services.xserver.autoRepeatDelay = 200;
-  services.xserver.autoRepeatInterval = 45;
+  services.xserver.autoRepeatDelay = autoRepeatDelay;
+  services.xserver.autoRepeatInterval = autoRepeatInterval;
 
   # File synchronization.
   services.syncthing = {
@@ -1406,9 +1410,6 @@
           -- Conflicts with lsp hover
           vim.g["conjure#mapping#doc_word"] = false
 
-          -- Autocomplete
-          vim.keymap.set("i", "<S-Space>", "<C-x><C-o>", { desc = "Autocomplete" })
-
           -- Split movement
           vim.keymap.set("n", "<S-M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
           vim.keymap.set("n", "<S-M-l>", "<cmd>wincmd l<CR>", { desc = "Move to the split on the right side" })
@@ -1500,6 +1501,9 @@
           vim.keymap.set("v", "J", ":m '>+1<CR>gv==kgvo<esc>=kgvo", { desc = "move highlighted text down" })
           vim.keymap.set("v", "K", ":m '<-2<CR>gv==jgvo<esc>=jgvo", { desc = "move highlighted text up" })
           vim.keymap.set( "i", "<C-r>", "<C-r><C-o>", { desc = "Insert contents of named register. Inserts text literally, not as if you typed it." })
+
+          -- Autocomplete
+          vim.keymap.set("i", "<C-x>", "<C-x><C-o>", { desc = "Autocomplete" })
 
           vim.keymap.set('n', '<leader>q', vim.cmd.quit)
           vim.keymap.set('n', '<leader>Q', vim.cmd.only)
@@ -2138,7 +2142,7 @@
           # Autostart.
           exec-once = [
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
-            "${lib.getExe pkgs.swaybg} -m fill -i ${./resources/static/wallpaper.png} &"
+            "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
             "udiskie &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
@@ -2148,8 +2152,8 @@
             kb_layout = "pl,plfi";
             kb_options = "caps:escape,grp:sclk_toggle";
 
-            repeat_delay = config.services.xserver.autoRepeatDelay;
-            repeat_rate = config.services.xserver.autoRepeatInterval;
+            repeat_delay = autoRepeatDelay;
+            repeat_rate = autoRepeatInterval;
             accel_profile = "flat";
             numlock_by_default = false;
             follow_mouse = 2;
@@ -2165,7 +2169,7 @@
             layout = "dwindle";
             gaps_in = gaps_in;
             gaps_out = gaps_out;
-            border_size = 1;
+            border_size = conBorderSize;
             border_part_of_window = false;
             no_border_on_floating = false;
             "col.active_border" = lib.mkForce "rgba(${conAccentColor}FF)";
@@ -2477,53 +2481,53 @@
 
       xdg.configFile."awesome/theme.lua" = {
         text = ''
-        local theme_assets = require("beautiful.theme_assets")
-        local xresources = require("beautiful.xresources")
-        local dpi = xresources.apply_dpi
-        local gfs = require("gears.filesystem")
-        local themes_path = "${config.xdg.configHome}/awesome"
-        local theme = {}
+          local theme_assets = require("beautiful.theme_assets")
+          local xresources = require("beautiful.xresources")
+          local dpi = xresources.apply_dpi
+          local gfs = require("gears.filesystem")
+          local themes_path = "${config.xdg.configHome}/awesome"
+          local theme = {}
 
-        theme.font = "${config.stylix.fonts.sansSerif.name} ${builtins.toString config.stylix.fonts.sizes.popups}"
+          theme.font = "${config.stylix.fonts.sansSerif.name} ${builtins.toString config.stylix.fonts.sizes.popups}"
 
-        theme.bg_normal = "#28282866"
-        theme.bg_focus = "${conAccentColor}"
-        theme.bg_urgent = "#ff0000"
-        theme.bg_minimize = "#b8bb26"
-        theme.bg_systray = theme.bg_normal
+          theme.bg_normal = "${config.lib.stylix.colors.withHashtag.base00}66"
+          theme.bg_focus = "#${conAccentColor}"
+          theme.bg_urgent = "${config.lib.stylix.colors.withHashtag.base08}"
+          theme.bg_minimize = "${config.lib.stylix.colors.withHashtag.base0B}"
+          theme.bg_systray = theme.bg_normal
 
-        theme.fg_normal = "${config.lib.stylix.colors.withHashtag.base07}"
-        theme.fg_focus = theme.fg_normal
-        theme.fg_urgent = theme.fg_normal
-        theme.fg_minimize = theme.fg_normal
+          theme.fg_normal = "${config.lib.stylix.colors.withHashtag.base07}"
+          theme.fg_focus = theme.fg_normal
+          theme.fg_urgent = theme.fg_normal
+          theme.fg_minimize = theme.fg_normal
 
-        theme.gap_single_client = true
-        theme.useless_gap = dpi(${conGaps})
-        theme.border_width = dpi(1)
-        theme.border_normal = "#00000000"
-        theme.border_marked = theme.bg_focus
-        theme.border_focus = theme.bg_focus
-        --snap
-        theme.snap_bg = theme.bg_focus
-        --notifications
-        naughty.config = {
-          defaults = {
-            ontop = true,
-            font = theme.font,
-            timeout = 10,
-            margin = 20,
-            border_width = 1.5,
-            font = theme.font,
-            fg = beautiful.fg_normal,
-            bg = beautiful.bg_normal,
-            position = "top_middle",
-          },
-          padding = 60,
-          spacing = 4,
-        }
-        theme.wallpaper = "~/.config/wallpaper.png"
-        return theme
-        -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80
+          theme.gap_single_client = true
+          theme.useless_gap = dpi(${builtins.toString conGaps})
+          theme.border_width = dpi(${builtins.toString conBorderSize})
+          theme.border_normal = "#00000000"
+          theme.border_marked = theme.bg_focus
+          theme.border_focus = theme.bg_focus
+          --snap
+          theme.snap_bg = theme.bg_focus
+          --notifications
+          naughty.config = {
+            defaults = {
+              ontop = true,
+              font = theme.font,
+              timeout = 10,
+              margin = 20,
+              border_width = 1.5,
+              font = theme.font,
+              fg = beautiful.fg_normal,
+              bg = beautiful.bg_normal,
+              position = "top_middle",
+            },
+            padding = 60,
+            spacing = 4,
+          }
+          theme.wallpaper = "${config.stylix.image}"
+          return theme
+          -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80
         '';
       };
 

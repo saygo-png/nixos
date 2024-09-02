@@ -117,13 +117,13 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = "-0.5";
+  services.libinput.mouse.accelSpeed = "-0.1";
 
   stylix.fonts.sizes = {
-    popups = 16;
-    desktop = 16;
-    terminal = 16;
-    applications = 15;
+    popups = 13;
+    desktop = 13;
+    terminal = 13;
+    applications = 13;
   };
 
   home-manager = {
