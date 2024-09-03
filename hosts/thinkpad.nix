@@ -123,12 +123,12 @@
   # If using hypralnd uncomment
   # for some reason text is much larger on awesomewm
   # and does not need a resize
-  # stylix.fonts.sizes = {
-  #   popups = 17;
-  #   desktop = 17;
-  #   terminal = 17;
-  #   applications = 15;
-  # };
+  stylix.fonts.sizes = {
+    popups = 13;
+    desktop = 13;
+    terminal = 13;
+    applications = 14;
+  };
 
   home-manager = {
     users.${conUsername} = {

@@ -16,7 +16,7 @@
   pkgs-unstable,
   ...
 }: let
-  autoRepeatDelay = 200;
+  autoRepeatDelay = 120;
   autoRepeatInterval = 45;
 in {
   imports = [
@@ -624,7 +624,9 @@ in {
   };
 
   # Fixes some themeing/cursor issues and is needed for some things.
-  programs.dconf.enable = true;
+  programs.dconf = {
+    enable = true;
+  };
 
   xdg.menus.enable = true;
   # }}}
@@ -645,6 +647,11 @@ in {
         inputs.nixvim.homeManagerModules.nixvim
       ];
 
+      dconf.settings = {
+        "org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+        };
+      };
       # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
@@ -796,7 +803,6 @@ in {
             xrandr -r ${builtins.toString conRefresh-rate}
             udiskie &
             $TERMINAL &
-            $BROWSER &
             exec awesome
           '';
         };
