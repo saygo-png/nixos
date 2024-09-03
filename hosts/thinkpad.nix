@@ -9,9 +9,9 @@
   # conFlake-path,
   # pkgs-unstable,
   # conAccentColor,
-  # conRefresh-rate,
-  # conScreen-width,
-  # conScreen-height,
+  conRefresh-rate,
+  conScreen-width,
+  conScreen-height,
   ...
 }: {
   # Bluetooth
@@ -80,6 +80,8 @@
   services.tlp.enable = true;
 
   # On battery ur cpu will go down to 400 freq if this is off
+  # Still does after pluggin in cable and unplugging :(
+  # TODO fix
   services.throttled.enable = true;
 
   # Fixes pipewire bug causing the camera to always be on
@@ -107,10 +109,9 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # Cli battery interface.
-    acpi
-    # Power drain check
-    powertop
+    acpi # Cli battery interface.
+    powertop # Power drain check
+
     # Games.
     lutris-free
     winetricks
@@ -119,12 +120,15 @@
 
   services.libinput.mouse.accelSpeed = "-0.1";
 
-  stylix.fonts.sizes = {
-    popups = 13;
-    desktop = 13;
-    terminal = 13;
-    applications = 13;
-  };
+  # If using hypralnd uncomment
+  # for some reason text is much larger on awesomewm
+  # and does not need a resize
+  # stylix.fonts.sizes = {
+  #   popups = 17;
+  #   desktop = 17;
+  #   terminal = 17;
+  #   applications = 15;
+  # };
 
   home-manager = {
     users.${conUsername} = {
@@ -138,10 +142,10 @@
       };
 
       wayland.windowManager.hyprland.settings = {
+        general.border_size = lib.mkForce 2;
+        animations.enabled = false;
         input.sensitivity = config.services.libinput.mouse.accelSpeed;
-        general = {
-          border_size = lib.mkForce 2;
-        };
+
         device = [
           {
             name = "synps/2-synaptics-touchpad";
@@ -154,6 +158,15 @@
             name = "tpps/2-elan-trackpoint";
             accel_profile = "flat";
           }
+        ];
+        monitor = let
+          res = lib.concatStrings [
+            "${builtins.toString conScreen-width}x"
+            "${builtins.toString conScreen-height}@"
+            "${builtins.toString conRefresh-rate}"
+          ];
+        in [
+          "eDP-1, ${res}, 0x0, 1"
         ];
       };
 

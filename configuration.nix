@@ -669,6 +669,7 @@ in {
           "nix-shell" = "nix-shell --run zsh";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
+          "cp" = ''cp -v'';
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
           "shutdown" = "poweroff";
@@ -791,6 +792,7 @@ in {
             fi
             export XDG_SESSION_TYPE=x11
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
+            ${pkgs.xorg.xinput}/bin/xinput disable 'SynPS/2 Synaptics TouchPad'
             xrandr -r ${builtins.toString conRefresh-rate}
             udiskie &
             $TERMINAL &
@@ -827,6 +829,10 @@ in {
           run mkdir -p "${conHome}/Downloads"
           run ln -s "${conHome}/Downloads" "${conHome}/Desktop/Downloads" || true
           run rm "${conHome}/Downloads/Downloads" || true
+
+          run mkdir -p "${conHome}/Videos"
+          run ln -s "${conHome}/Videos" "${conHome}/Desktop/Videos" || true
+          run rm "${conHome}/Videos/Videos" || true
 
           run mkdir -p "${conHome}/Sync"
           run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
@@ -969,6 +975,7 @@ in {
           manager = {
             show_hidden = true;
             sort_dir_first = true;
+            sort_by = "natural";
           };
         };
       };
@@ -2131,7 +2138,6 @@ in {
             env = MOZ_ENABLE_WAYLAND, 1
             env = GTK_USE_PORTAL, 1
 
-            monitor =, highres@highrr, auto, 1
             xwayland {
               force_zero_scaling = true
             }
@@ -2139,6 +2145,7 @@ in {
 
         settings = {
           debug.disable_logs = true;
+
           # Autostart.
           exec-once = [
             "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
@@ -2151,7 +2158,6 @@ in {
           input = {
             kb_layout = "pl,plfi";
             kb_options = "caps:escape,grp:sclk_toggle";
-
             repeat_delay = autoRepeatDelay;
             repeat_rate = autoRepeatInterval;
             accel_profile = "flat";
@@ -2488,7 +2494,7 @@ in {
           local themes_path = "${config.xdg.configHome}/awesome"
           local theme = {}
 
-          theme.font = "${config.stylix.fonts.sansSerif.name} ${builtins.toString config.stylix.fonts.sizes.popups}"
+          theme.font = "${config.stylix.fonts.sansSerif.name} ${builtins.toString config.stylix.fonts.sizes.terminal}"
 
           theme.bg_normal = "${config.lib.stylix.colors.withHashtag.base00}66"
           theme.bg_focus = "#${conAccentColor}"

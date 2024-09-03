@@ -63,6 +63,9 @@
 
       wayland.windowManager.hyprland.settings = {
         input.sensitivity = config.services.libinput.mouse.accelSpeed;
+        monitor = [
+          ", highres@highrr, auto, 1"
+        ];
       };
 
       programs.mangohud = {
