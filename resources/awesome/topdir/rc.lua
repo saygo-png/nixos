@@ -166,15 +166,19 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "Left", function()
 		lain.util.tag_view_nonempty(-1)
 	end, { description = "view previous non empty", group = "tag" }),
+
 	awful.key({ modkey }, "Right", function()
 		lain.util.tag_view_nonempty(1)
 	end, { description = "view next non empty", group = "tag" }),
-	awful.key({ modkey}, ")", function()
+
+	awful.key({ modkey}, ",", function()
 		lain.util.tag_view_nonempty(-1)
 	end, { description = "view previous non empty", group = "tag" }),
-	awful.key({ modkey}, "(", function()
+
+	awful.key({ modkey}, ".", function()
 		lain.util.tag_view_nonempty(1)
 	end, { description = "view next non empty", group = "tag" }),
+
 	awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
 	--awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
 	--{description = "view previous", group = "tag"}),
@@ -523,7 +527,8 @@ end
 client.connect_signal("property::size", check_resize_client)
 client.connect_signal("property::position", check_resize_client)
 client.connect_signal("manage", function(c)
-	c.maximized = false
+  -- Breaks rofi window swap
+	-- c.maximized = false
 	local parent_client = awful.client.focus.history.get(c.screen, 1)
 	get_parent_pid(c.pid, function(err, ppid)
 		if err then

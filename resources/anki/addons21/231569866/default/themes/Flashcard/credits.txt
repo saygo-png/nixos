@@ -1,0 +1,6 @@
+Below are the License and source of files in this directory
+
+again.m4a [CC0] https://freesound.org/people/timgormly/sounds/181858/
+hard.m4a [CC0] https://freesound.org/people/timgormly/sounds/181857/
+good.m4a [CC0] https://freesound.org/people/unadamlar/sounds/476178/
+easy.m4a [CC0] https://freesound.org/people/timgormly/sounds/181859/

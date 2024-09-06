@@ -2,6 +2,7 @@
   ###### Imports ###### {{{
   pkgs,
   lib,
+  self,
   inputs,
   host,
   conUsername,
@@ -16,7 +17,7 @@
   pkgs-unstable,
   ...
 }: let
-  autoRepeatDelay = 120;
+  autoRepeatDelay = 170;
   autoRepeatInterval = 45;
 in {
   imports = [
@@ -130,6 +131,8 @@ in {
     appimage-run # Appimage runner
 
     # Other.
+    rclone
+    ntfs3g # ntfs filesystem interop (windows fs)
     udftools # Udf filesystem
     xclip # Xorg wl-clipboard
     wl-clipboard # Wayland xclip
@@ -212,6 +215,11 @@ in {
       name = "remaps";
       runtimeInputs = [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
       text = ''
+        # This script is called on startup to remap keys.
+        # Disable touchpad
+        ${lib.getExe pkgs.xorg.xinput} disable 'SynPS/2 Synaptics TouchPad'
+        # Decrease key repeat delay and increase key repeat rate.
+        xset r rate ${builtins.toString autoRepeatDelay} ${builtins.toString autoRepeatInterval}
         # Turn off caps lock if on since there is no longer a key for it.
         xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
       '';
@@ -418,6 +426,7 @@ in {
   # }}}
 
   ##### NixOS ###### {{{
+  system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
 
   nixpkgs.config.allowUnfree = false;
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -676,6 +685,7 @@ in {
           "nix-shell" = "nix-shell --run zsh";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
+          "plan" = ''nsxiv ${conHome}/Sync/notes/plan.png'';
           "cp" = ''cp -v'';
           "neov" = "neovide";
           "more" = "${lib.getExe pkgs.moar}";
@@ -783,6 +793,15 @@ in {
           # };
         ];
 
+        activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
+            '';
+
+        # auto xrdb
+        file.${config.xresources.path}.onChange = ''
+          [[ -z "$\{DISPLAY:-}" ]] && echo Display not set && exit 0
+          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
+        '';
+
         # Binary (or not) blobs.
         sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
@@ -798,9 +817,9 @@ in {
               dbus-update-activation-environment DISPLAY XAUTHORITY
             fi
             export XDG_SESSION_TYPE=x11
-            "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
-            ${pkgs.xorg.xinput}/bin/xinput disable 'SynPS/2 Synaptics TouchPad'
             xrandr -r ${builtins.toString conRefresh-rate}
+            ${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &
+            ${lib.getExe pkgs.xmousepasteblock} &
             udiskie &
             $TERMINAL &
             exec awesome
@@ -826,7 +845,10 @@ in {
         '';
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          run mkdir -p "${conHome}/Pictures/screenshots"
+
           run mkdir -p "${conHome}/Desktop"
+          run rm "${conHome}/Desktop/Desktop" || true
 
           run mkdir -p "${conHome}/screencaptures"
           run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
@@ -849,11 +871,6 @@ in {
 
           run mkdir -p "${config.xdg.dataHome}"
           run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
-        '';
-
-        activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
-          [[ -z "$DISPLAY" ]] && echo Display not set && exit 1
-          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
         '';
       };
 
@@ -1009,11 +1026,9 @@ in {
           ".local/share/Trash"
         ];
         extraOptions = [
-          "color=always"
-          "--follow"
+          # "color=always"
+          # "--follow"
           "--glob"
-          "--max-depth"
-          "15"
         ];
       };
 
@@ -2154,7 +2169,7 @@ in {
 
           # Autostart.
           exec-once = [
-            "${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1 &"
+            "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
             "udiskie &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
@@ -2647,7 +2662,7 @@ in {
           historyConfirmationToDelete=false
           saveAfterCopy=false
           saveAsFileExtension=png
-          savePath=${conHome}/Pictures/Screenshots
+          savePath=${conHome}/Pictures/screenshots
           savePathFixed=true
           showDesktopNotification=true
           showHelp=false

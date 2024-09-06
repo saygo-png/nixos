@@ -54,7 +54,7 @@
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit inputs pkgs-unstable;
+        inherit inputs self pkgs-unstable;
         host = "nixos";
         conUsername = "samsepi0l";
         conHome = "/home/samsepi0l";
@@ -76,7 +76,7 @@
     nixosConfigurations.thinkpad = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit inputs pkgs-unstable;
+        inherit inputs self pkgs-unstable;
         host = "thinkpad";
         conUsername = "samsepi0l";
         conHome = "/home/samsepi0l";

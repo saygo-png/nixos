@@ -1,0 +1,21 @@
+#visualFeedback {
+  position: fixed;
+  bottom: 10px;
+  right: 0px;
+  box-shadow: none;
+}
+
+#visualFeedback {
+  display: none;
+}
+
+#visualFeedback.visible {
+  display: block;
+}
+
+#visualFeedback img {
+  display: block;
+  margin: 0;
+  height: 280px;
+  max-width: 100%;
+}
