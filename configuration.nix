@@ -81,7 +81,7 @@ in {
 
   console = {
     useXkbConfig = true;
-    font = "Lat2-Terminus16";
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd $USERNAME’.
@@ -216,12 +216,12 @@ in {
       runtimeInputs = [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
       text = ''
         # This script is called on startup to remap keys.
-        # Disable touchpad
-        ${lib.getExe pkgs.xorg.xinput} disable 'SynPS/2 Synaptics TouchPad'
         # Decrease key repeat delay and increase key repeat rate.
         xset r rate ${builtins.toString autoRepeatDelay} ${builtins.toString autoRepeatInterval}
         # Turn off caps lock if on since there is no longer a key for it.
         xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
+        # Disable touchpad
+        ${lib.getExe pkgs.xorg.xinput} disable 'SynPS/2 Synaptics TouchPad'
       '';
     })
 
@@ -244,8 +244,10 @@ in {
         # This script does what flameshot_wrapper does, and
         # copies the screenshoted text to your clipboard
         focusedwindow_before=$(xdotool getactivewindow)
-        flameshot gui -r -s | tesseract -l eng+rus+fin+pol stdin stdout | xclip -r
+        message=$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin+pol stdin stdout)
         [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
+        notify-send "$message"
+        echo "$message" | xclip -r -sel clip
       '';
     })
 

@@ -58,8 +58,8 @@
       home = {};
 
       # THis requires imperative action
-      services.easyeffects.enable = true;
-      services.easyeffects.preset = "Audio-Technica ATH-M30x";
+      # services.easyeffects.enable = true;
+      # services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
       wayland.windowManager.hyprland.settings = {
         input.sensitivity = config.services.libinput.mouse.accelSpeed;

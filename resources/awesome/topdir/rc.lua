@@ -441,7 +441,18 @@ awful.rules.rules = {
 	{ rule = { class = "steam" }, properties = { screen = 1, tag = "8" } },
 	{ rule = { class = "Steam" }, properties = { screen = 1, tag = "8" } },
 }
+
 -- {{{ Signals
+client.connect_signal("property::floating", function(c)
+  if not c.fullscreen then
+    if c.floating then
+      c.ontop = true
+    else
+      c.ontop = false
+    end
+  end
+end)
+
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
 	-- Set the windows at the slave,
