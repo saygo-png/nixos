@@ -158,9 +158,14 @@ globalkeys = gears.table.join(
 		awful.util.spawn("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+")
 	end, { description = "increase volume by 5%", group = "launcher" }),
 
-	awful.key({ modkey }, "a", function(c)
-		c.sticky = not c.sticky
+	awful.key({ modkey }, "p", function()
+		awful.client.ontop = not awful.client.ontop
+	end, { description = "toggle keep on top", group = "client" }),
+
+	awful.key({ modkey }, "a", function()
+		awful.client.sticky = not awful.client.sticky
 	end, { description = "toggle sticky", group = "client" }),
+
 	--end of custom binds
 	-- Non-empty tag browsing
 	awful.key({ modkey }, "Left", function()
@@ -171,11 +176,11 @@ globalkeys = gears.table.join(
 		lain.util.tag_view_nonempty(1)
 	end, { description = "view next non empty", group = "tag" }),
 
-	awful.key({ modkey}, ",", function()
+	awful.key({ modkey }, ",", function()
 		lain.util.tag_view_nonempty(-1)
 	end, { description = "view previous non empty", group = "tag" }),
 
-	awful.key({ modkey}, ".", function()
+	awful.key({ modkey }, ".", function()
 		lain.util.tag_view_nonempty(1)
 	end, { description = "view next non empty", group = "tag" }),
 
@@ -379,19 +384,25 @@ awful.rules.rules = {
 			maximized = false,
 		},
 	},
-	-- {-- always on top
-	--  rule_any = {
-	--   class = {
-	--    "mpv"
-	--   },
-	--  },
-	--  properties = {
-	--   floating = true,
-	--   on top = true,
-	--   sticky = true
-	--  },
-	--  callback = function(c) c:connect_signal("property::fullscreen", function() if not c.fullscreen then c.on top = true end end) end
-	-- },
+	{ -- always on top
+		rule_any = {
+			class = {
+				"mpv",
+			},
+		},
+		properties = {
+			floating = true,
+			ontop = true,
+			sticky = true,
+		},
+		callback = function(c)
+			c:connect_signal("property::fullscreen", function()
+				if not c.fullscreen then
+					c.ontop = true
+				end
+			end)
+		end,
+	},
 	{ -- Floating clients.
 		rule_any = {
 			instance = {
@@ -444,13 +455,13 @@ awful.rules.rules = {
 
 -- {{{ Signals
 client.connect_signal("property::floating", function(c)
-  if not c.fullscreen then
-    if c.floating then
-      c.ontop = true
-    else
-      c.ontop = false
-    end
-  end
+	if not c.fullscreen then
+		if c.floating then
+			c.ontop = true
+		else
+			c.ontop = false
+		end
+	end
 end)
 
 -- Signal function to execute when a new client appears.
@@ -538,7 +549,7 @@ end
 client.connect_signal("property::size", check_resize_client)
 client.connect_signal("property::position", check_resize_client)
 client.connect_signal("manage", function(c)
-  -- Breaks rofi window swap
+	-- Breaks rofi window swap
 	-- c.maximized = false
 	local parent_client = awful.client.focus.history.get(c.screen, 1)
 	get_parent_pid(c.pid, function(err, ppid)

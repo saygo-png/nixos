@@ -131,6 +131,9 @@ in {
     appimage-run # Appimage runner
 
     # Other.
+    ungoogled-chromium
+    ncdu
+    exiftool
     rclone
     ntfs3g # ntfs filesystem interop (windows fs)
     udftools # Udf filesystem
@@ -659,10 +662,12 @@ in {
       ];
 
       dconf.settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-        };
+        # Remove min and max buttons
+        "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
+        # Prefer darkmode
+        "org/gnome/desktop/interface".color-scheme = "prefer-dark";
       };
+
       # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
@@ -795,8 +800,9 @@ in {
           # };
         ];
 
-        activation.load-xresources = lib.hm.dag.entryAfter ["installPackages"] ''
-            '';
+        activation.load-xresources =
+          lib.hm.dag.entryAfter ["installPackages"] ''
+          '';
 
         # auto xrdb
         file.${config.xresources.path}.onChange = ''
@@ -848,6 +854,7 @@ in {
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${conHome}/Pictures/screenshots"
+          run mkdir -p "${conHome}/backups"
 
           run mkdir -p "${conHome}/Desktop"
           run rm "${conHome}/Desktop/Desktop" || true
@@ -961,8 +968,8 @@ in {
           W = "add sub-pos -1"; # move subtitles up
           e = "add sub-pos +10"; # move subtitles down
           E = "add sub-pos +1"; # move subtitles down
-          "ALT+=" = "add sub-scale +0.1";
-          "ALT+-" = "add sub-scale -0.1";
+          "=" = "add sub-scale +0.1";
+          "-" = "add sub-scale -0.1";
         };
 
         config = {
@@ -986,6 +993,7 @@ in {
           sub-ass-force-style = "${config.stylix.fonts.serif.name}";
           sub-color = "${config.lib.stylix.colors.withHashtag.base07}";
           sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
+          watch-later-options-clr = true; # Dont save settings like brightness
         };
         scripts = [
           pkgs.mpvScripts.uosc
@@ -996,12 +1004,10 @@ in {
       programs.yazi = {
         enable = true;
         enableZshIntegration = true;
-        settings = {
-          manager = {
-            show_hidden = true;
-            sort_dir_first = true;
-            sort_by = "natural";
-          };
+        settings.manager = {
+          show_hidden = true;
+          sort_dir_first = true;
+          sort_by = "natural";
         };
       };
 
@@ -1458,7 +1464,7 @@ in {
           local utils = require "telescope.utils"
           local builtin = require "telescope.builtin"
 
-          vim.keymap.set("n", "<leader>f", "<cmd>Oil .<CR>", {desc = "[f]ile browser"})
+          vim.keymap.set("n", "<leader>f", "<cmd>Oil<CR>", {desc = "[f]ile browser"})
           vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", {desc = "hover"})
           vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
           vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
@@ -1473,6 +1479,43 @@ in {
           vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
           vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
           vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+          -- dial.nvim
+          local augend = require("dial.augend")
+          require("dial.config").augends:register_group{
+            default = {
+              augend.constant.alias.alpha,
+              augend.constant.alias.Alpha,
+              augend.constant.alias.bool,
+              augend.date.alias["%-d.%-m."],
+              augend.date.alias["%d.%m."],
+              augend.date.alias["%d/%m/%y"],
+              augend.date.alias["%d/%m/%Y"],
+              augend.date.alias["%H:%M"],
+              augend.date.alias["%H:%M:%S"],
+              augend.date.alias["%-m/%-d"],
+              augend.date.alias["%m/%d"],
+              augend.date.alias["%m/%d/%y"],
+              augend.date.alias["%m/%d/%Y"],
+              augend.date.alias["%Y/%m/%d"],
+              augend.integer.alias.binary,
+              augend.integer.alias.decimal,
+              augend.integer.alias.decimal_int,
+              augend.integer.alias.hex,
+              augend.integer.alias.octal,
+              augend.semver.alias.semver,
+            },
+            typescript = {
+              augend.constant.new{ elements = {"let", "const"} },
+            },
+          }
+          vim.keymap.set("n", "<C-a>",  function() require("dial.map").manipulate("increment", "normal")  end)
+          vim.keymap.set("n", "<C-x>",  function() require("dial.map").manipulate("decrement", "normal")  end)
+          vim.keymap.set("n", "g<C-a>", function() require("dial.map").manipulate("increment", "gnormal") end)
+          vim.keymap.set("n", "g<C-x>", function() require("dial.map").manipulate("decrement", "gnormal") end)
+          vim.keymap.set("v", "<C-a>",  function() require("dial.map").manipulate("increment", "visual")  end)
+          vim.keymap.set("v", "<C-x>",  function() require("dial.map").manipulate("decrement", "visual")  end)
+          vim.keymap.set("v", "g<C-a>", function() require("dial.map").manipulate("increment", "gvisual") end)
+          vim.keymap.set("v", "g<C-x>", function() require("dial.map").manipulate("decrement", "gvisual") end)
 
           vim.keymap.set("n", "<leader>rn", function()
             -- when rename opens the prompt, this autocommand will trigger
@@ -1597,6 +1640,7 @@ in {
             src = inputs.nvim-plugin-rainbow;
           })
           pkgs.vimPlugins.gruvbox-material
+          pkgs.vimPlugins.dial-nvim
           pkgs.vimPlugins.vim-dispatch
           pkgs.vimPlugins.vim-jack-in
         ];
