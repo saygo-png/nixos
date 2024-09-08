@@ -1364,14 +1364,15 @@ in {
 
         extraConfigVim = builtins.readFile ./resources/nvim-extraConfig.vim;
         extraConfigLuaPre = ''
-          -- Hide deprecation warnings
-          local notify = vim.notify
-          vim.notify = function(msg, ...)
-            if msg:match("has been deprecated") then
-              return
-            end
-            notify(msg, ...)
-          end
+          -- Hide deprecation warnings, i used this as a fix to
+          -- multicursors plugin, but might be useful later on
+          -- local notify = vim.notify
+          -- vim.notify = function(msg, ...)
+          --   if msg:match("has been deprecated") then
+          --     return
+          --   end
+          --   notify(msg, ...)
+          -- end
         '';
         extraConfigLuaPost = ''
           -- Makes treesitter work with rainbow plugin
@@ -2688,7 +2689,7 @@ in {
       };
 
       xdg.configFile."flameshot/flameshot.ini" = {
-        executable = true;
+        # executable = true;
         text = ''
           [General]
           allowMultipleGuiInstances=false
