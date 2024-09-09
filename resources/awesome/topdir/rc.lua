@@ -158,14 +158,6 @@ globalkeys = gears.table.join(
 		awful.util.spawn("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+")
 	end, { description = "increase volume by 5%", group = "launcher" }),
 
-	awful.key({ modkey }, "p", function()
-		awful.client.ontop = not awful.client.ontop
-	end, { description = "toggle keep on top", group = "client" }),
-
-	awful.key({ modkey }, "a", function()
-		awful.client.sticky = not awful.client.sticky
-	end, { description = "toggle sticky", group = "client" }),
-
 	--end of custom binds
 	-- Non-empty tag browsing
 	awful.key({ modkey }, "Left", function()
@@ -269,15 +261,26 @@ clientkeys = gears.table.join(
 		c.fullscreen = not c.fullscreen
 		c:raise()
 	end, { description = "toggle fullscreen", group = "client" }),
+
 	awful.key({ modkey }, "q", function(c)
 		c:kill()
 	end, { description = "close", group = "client" }),
+
 	awful.key(
 		{ modkey, "Control" },
 		"space",
 		awful.client.floating.toggle,
 		{ description = "toggle floating", group = "client" }
 	),
+
+	awful.key({ modkey }, "p", function(c)
+		c.ontop = not c.ontop
+	end, { description = "toggle keep on top", group = "client" }),
+
+	awful.key({ modkey }, "a", function(c)
+		c.sticky = not c.sticky
+	end, { description = "toggle sticky", group = "client" }),
+
 	awful.key({ modkey, "Control" }, "Return", function(c)
 		c:swap(awful.client.getmaster())
 	end, { description = "move to master", group = "client" }),
@@ -385,16 +388,16 @@ awful.rules.rules = {
 		},
 	},
 	{ -- always on top
-		rule_any = {
-			class = {
-				"mpv",
-			},
-		},
-		properties = {
-			floating = true,
-			ontop = true,
-			sticky = true,
-		},
+		-- rule_any = {
+		-- 	class = {
+		-- 		"mpv",
+		-- 	},
+		-- },
+		-- properties = {
+		-- 	floating = true,
+		-- 	ontop = true,
+		-- 	sticky = true,
+		-- },
 		callback = function(c)
 			c:connect_signal("property::fullscreen", function()
 				if not c.fullscreen then

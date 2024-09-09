@@ -112,6 +112,7 @@ in {
 
   # X11 window manager for games
   services.xserver.windowManager.awesome = {
+    package = pkgs-unstable.awesome;
     enable = true;
   };
 
@@ -133,6 +134,7 @@ in {
     # Other.
     ungoogled-chromium
     ncdu
+    wmctrl
     exiftool
     rclone
     ntfs3g # ntfs filesystem interop (windows fs)
@@ -177,11 +179,14 @@ in {
 
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
+    (writeShellScriptBin "monitor-toggle" (builtins.readFile ./resources/scripts/monitor-toggle.sh))
+
     (writeShellApplication {
       name = "format-udf";
       runtimeInputs = [coreutils udftools];
       text = builtins.readFile ./resources/scripts/format-udf.sh;
     })
+
 
     (writeShellScriptBin
       "update_mutable.sh" # updates the flake krita nixos configuration files from current mutable krita config.
@@ -738,7 +743,6 @@ in {
           sayonara # Music player
           foliate # Ebook reader
           zathura # Better for pdfs
-          rofi-wayland # App launcher
           keepassxc # Password manager
           qbittorrent # Torrent client
           flameshot # X11 screenshot tool
@@ -2601,7 +2605,6 @@ in {
           }
           theme.wallpaper = "${config.stylix.image}"
           return theme
-          -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80
         '';
       };
 

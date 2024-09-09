@@ -166,7 +166,8 @@
             "${builtins.toString conRefresh-rate}"
           ];
         in [
-          "eDP-1, ${res}, 0x0, 1"
+          # "eDP-1, ${res}, 0x0, 1"
+          ", preferred, auto, 1"
         ];
       };
 
