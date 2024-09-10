@@ -132,7 +132,7 @@ in {
     appimage-run # Appimage runner
 
     # Other.
-    chromium
+    firefox
     ncdu
     wmctrl
     exiftool
@@ -685,6 +685,7 @@ in {
           "text/x-tex" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "audio/x-mod" = ["mpv.desktop"];
+          "image/svg+xml" = ["nsxiv.desktop"];
         };
       };
 
