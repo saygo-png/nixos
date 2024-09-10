@@ -132,7 +132,7 @@ in {
     appimage-run # Appimage runner
 
     # Other.
-    ungoogled-chromium
+    chromium
     ncdu
     wmctrl
     exiftool
