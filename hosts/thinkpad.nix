@@ -33,13 +33,13 @@
         # Brightness down
         keys = [224];
         events = ["key"];
-        command = "${lib.getExe pkgs.light} -U 1";
+        command = "${lib.getExe pkgs.light} -U 1 && notify-send -t 500 $(light)";
       }
       {
         # Brightness up
         keys = [225];
         events = ["key"];
-        command = "${lib.getExe pkgs.light} -A 1";
+        command = "${lib.getExe pkgs.light} -A 1 && notify-send -t 500 $(light)";
       }
       {
         # Mute

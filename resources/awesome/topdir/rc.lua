@@ -44,7 +44,8 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/samsepi0l/.config/awesome/theme.lua")
-terminal = "alacritty"
+browser = os.getenv("BROWSER") or "firefox"
+terminal = os.getenv("TERMINAL") or "xterm"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 -- Dropdown terminal
@@ -123,7 +124,7 @@ globalkeys = gears.table.join(
 	end, { description = "dropdown terminal", group = "launcher" }),
 
 	awful.key({ modkey }, "b", function()
-		awful.util.spawn("librewolf")
+    awful.spawn(browser)
 	end, { description = "start librewolf", group = "launcher" }),
 
 	awful.key({ modkey }, "space", function()

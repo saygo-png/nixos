@@ -29,6 +29,14 @@ in {
 
   ###### Essential or basic. ###### {{{
 
+  specialisation = {
+    class.configuration = {
+      home-manager.users.${conUsername} = {
+        home.sessionVariables.BROWSER = lib.mkForce "firefox";
+      };
+    };
+  };
+
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
@@ -186,7 +194,6 @@ in {
       runtimeInputs = [coreutils udftools];
       text = builtins.readFile ./resources/scripts/format-udf.sh;
     })
-
 
     (writeShellScriptBin
       "update_mutable.sh" # updates the flake krita nixos configuration files from current mutable krita config.
@@ -642,6 +649,11 @@ in {
     applications = 0.5;
   };
 
+  xdg.portal.enable = true;
+  xdg.portal.xdgOpenUsePortal = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.config.common.default = "*";
+
   # Fixes some themeing/cursor issues and is needed for some things.
   programs.dconf = {
     enable = true;
@@ -666,11 +678,21 @@ in {
         inputs.nixvim.homeManagerModules.nixvim
       ];
 
+      # Needed for transparency.
+      stylix.targets.fzf.enable = false;
+      # Hopefully will set dark mode properly
+      stylix.targets.gnome.enable = true;
+      stylix.targets.kde.enable = true;
+
       dconf.settings = {
         # Remove min and max buttons
         "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
         # Prefer darkmode
         "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+        # "org/gnome/desktop/interface" = {
+        #   color-scheme = "prefer-dark";
+        #   gtk-theme = lib.mkForce "adw-gtk3-dark";
+        # };
       };
 
       # Prevent default apps from being changed
@@ -684,8 +706,58 @@ in {
           "inode/x-empty" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-tex" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "audio/x-mod" = ["mpv.desktop"];
+          "text/x-python" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-readme" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "application/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/rhtml" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/plain" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-markdown" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+
+          # Documents
+          "application/vnd.oasis.opendocument.text" = ["writer.desktop"];
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["writer.desktop"];
           "image/svg+xml" = ["nsxiv.desktop"];
+
+          # PDF
+          "application/pdf" = ["zathura.desktop"];
+          "image/vnd.djvu" = ["zathura.desktop"];
+
+          # Web
+          "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/http" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/https" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/ftp" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/chrome" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-htm" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-shtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/xhtml+xml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-xhtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-xht" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+
+          # Image
+          "image/png" = ["nsxiv.desktop"];
+          "image/jpeg" = ["nsxiv.desktop"];
+          # bmp
+          "application/octet-stream" = ["nsxiv.desktop"];
+
+          # Video
+          "video/ogg" = ["mpv.desktop"];
+          "video/x-msvideo" = ["mpv.desktop"];
+          "video/quicktime" = ["mpv.desktop"];
+          "video/webm" = ["mpv.desktop"];
+          "video/x-flv" = ["mpv.desktop"];
+          "video/mp4" = ["mpv.desktop"];
+          "application/x-flash-video" = ["mpv.desktop"];
+          "video/MP2T" = ["mpv.desktop"];
+          "image/x-tga" = ["mpv.desktop"];
+
+          # Audio
+          "audio/mpeg" = ["mpv.desktop"];
+          "audio/x-flac" = ["mpv.desktop"];
+          "audio/mp4" = ["mpv.desktop"];
+          "application/ogg" = ["mpv.desktop"];
+          "audio/x-mod" = ["mpv.desktop"];
         };
       };
 
@@ -693,6 +765,11 @@ in {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
         stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
+
+        pointerCursor = {
+          gtk.enable = true;
+          x11.enable = true;
+        };
 
         shellAliases = {
           "nix-shell" = "nix-shell --run zsh";
@@ -723,32 +800,36 @@ in {
           EDITOR = "nvim";
           OPENER = "xdg-open";
           TERMINAL = "alacritty";
+          BROWSER = "librewolf";
 
           VISUAL = "${config.home.sessionVariables.EDITOR}";
           SUDO_EDITOR = "${config.home.sessionVariables.EDITOR}";
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = "${config.home.sessionVariables.PAGER}";
           TERMINAL_PROG = "${config.home.sessionVariables.TERMINAL}";
-          BROWSER = "librewolf";
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
           QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
         };
 
-        # Home packages, home manager packages, user packages
+        # Home packages, home manager packages, user packages, home programs
         packages = with pkgs; [
           # GUI.
           anki # Flashcards
           neovide # Neovim gui
-          fontforge-gtk # Font editor
-          sayonara # Music player
           foliate # Ebook reader
+          sayonara # Music player
           zathura # Better for pdfs
+          fontforge-gtk # Font editor
           keepassxc # Password manager
           qbittorrent # Torrent client
           flameshot # X11 screenshot tool
-          mission-center # GUI task manager
           swappy # Quick drawing on images
+          mission-center # GUI task manager
+          localsend # Send via local network
+          hyprpicker # Color picker
+          librewolf # Browser
+          scribus
 
           # Dependencies for intersubs for mpv
           (pkgs.python3.withPackages (python312Packages: [
@@ -765,25 +846,24 @@ in {
 
           # Command line.
           bc # Gnu calculator, needed for vmrss
+          tokei # Line counter
           gmic # Image processing language
+          moar # Pager
+          termdown # Timer
+          htop-vim # TUI task manager
+          zoxide # Cd alternative
+          pulsemixer # Volume control
+          ffmpeg # Video and magic editor
 
           # Haskell
           haskell-language-server # Haskell LSP
           ghc # Haskell LSP
 
-          moar # Pager
-          termdown # Timer
-          htop-vim # TUI task manager
-          zoxide # Cd alternative
-          hyprpicker # Color picker
-          pulsemixer # Volume control
-          ffmpeg # Video and magic editor
-          pkgs.inkscape # Vector graphics
-          pkgs.librewolf # Browser
-
           # Unstable
           pkgs-unstable.krita # Painting
-          # DO THIS ONE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
+          pkgs-unstable.inkscape # Vector graphics
+
+          # DO THIS ONCE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
           # programs = {
           #   # use firefox dev edition
           #   firefox = rec {
@@ -888,15 +968,24 @@ in {
         '';
       };
 
-      # Needed for transparency.
-      stylix.targets.fzf.enable = false;
-
-      # Unable to set wallpaper bug fix
-      stylix.targets.kde.enable = false;
+      # Wayland, X, etc. support for session vars
+      systemd.user.sessionVariables = config.home.sessionVariables;
 
       # More visuals.
       gtk = {
         enable = true;
+
+        gtk3.extraConfig = {
+          Settings = ''
+            gtk-application-prefer-dark-theme = 1;
+          '';
+        };
+        gtk4.extraConfig = {
+          Settings = ''
+            gtk-application-prefer-dark-theme = 1;
+          '';
+        };
+
         iconTheme = {
           name = "Gruvbox-Plus-Dark";
           package = pkgs.gruvbox-plus-icons;
@@ -905,24 +994,18 @@ in {
 
       qt = {
         enable = true;
-        platformTheme.name = "qtct";
-        style.name = "kvantum";
+        # platformTheme.name = "qtct";
+        # style.name = "kvantum";
       };
 
-      xdg.configFile = {
-        "Kvantum/kvantum.kvconfig".text = ''
-          [General]
-          theme=gruvbox-fallnn
-        '';
-
-        "Kvantum/gruvbox-fallnn".source = ./resources/static/qt/gruvbox-fallnn;
-      };
-
-      # This doesnt really work :(
-      # home.file.".config/qt5ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
-      # home.file.".config/qt6ct/colors/gruvbox-dark-medium.conf".source = ./resources/static/qt/gruvbox-dark-medium.conf;
-      # home.file.".config/qt5ct/qt5ct.conf".source = ./resources/static/qt/qt5ct.conf;
-      # home.file.".config/qt6ct/qt6ct.conf".source = ./resources/static/qt/qt6ct.conf;
+      # xdg.configFile = {
+      #   "Kvantum/kvantum.kvconfig".text = ''
+      #     [General]
+      #     theme=gruvbox-fallnn
+      #   '';
+      #
+      #   "Kvantum/gruvbox-fallnn".source = ./resources/static/qt/gruvbox-fallnn;
+      # };
 
       # Development, internal.
       programs.bash.enable = true;
@@ -1219,6 +1302,7 @@ in {
           jq # Json formatter
           vim-language-server
           deadnix # Nix linter
+          pyright # python lsp
           nodePackages.jsonlint
           hlint # Haskell linter
           stylua # Lua formatter
@@ -1240,7 +1324,6 @@ in {
           python312Packages.python-lsp-server
           stylish-haskell # Haskell formatter
           haskell-language-server # Haskell lsp
-          python312Packages.flake8 # Pylsp plugin
           vscode-langservers-extracted # Web LSPs
           python312Packages.mccabe # Flake8 plugin
           python312Packages.pyflakes # Python linter
@@ -1250,8 +1333,6 @@ in {
           python312Packages.jedi # Autocomplete plugin
           python312Packages.pycodestyle # Python complainer
           python312Packages.pyls-isort # Python import sort
-          python312Packages.pylsp-rope # Refactoring plugin
-          python312Packages.pylsp-mypy # Static checker plugin
         ];
 
         highlightOverride = {
@@ -1677,6 +1758,7 @@ in {
 
         # Plugins {{{
         plugins = {
+          nvim-ufo.enable = true;
           nix.enable = false;
           flash.enable = true;
           comment.enable = true;
@@ -1686,6 +1768,7 @@ in {
           # Lisps
           conjure.enable = false;
           parinfer-rust.enable = false;
+          fugitive.enable = true;
 
           spider = {
             enable = true;
@@ -1816,7 +1899,7 @@ in {
               };
 
               # Python.
-              pylsp.enable = true;
+              pyright.enable = true;
 
               # Bash
               bashls.enable = true;
@@ -1864,7 +1947,7 @@ in {
           conform-nvim = {
             enable = true;
             extraOptions = {
-              lsp_fallback = true;
+              lsp_fallback = false;
             };
             formattersByFt = {
               # Conform will run multiple formatters sequentially.
@@ -2681,6 +2764,44 @@ in {
 
       xdg.configFile."wallpaper.png" = {
         source = ./resources/static/wallpaper.png;
+      };
+
+      xdg.configFile."yapf/style" = {
+        text = ''
+          [style]
+            based_on_style = google
+            indent_width = 2
+            use_tabs = False
+            column_limit = 100
+            coalesce_brackets = True
+            align_closing_bracket_with_visual_indent = True
+            allow_multiline_dictionary_keys = True
+            allow_multiline_lambdas = True
+            blank_lines_around_top_level_definition = 1
+            blank_line_before_class_docstring = False
+            blank_line_before_nested_class_or_def = False
+            continuation_align_style = SPACE
+            continuation_indent_width = 2
+            dedent_closing_brackets = True
+            each_dict_entry_on_separate_line = False
+            join_multiple_lines = True
+            no_spaces_around_selected_binary_operators = *,/
+            spaces_around_default_or_named_assign = False
+            spaces_around_power_operator = False
+            spaces_before_comment = 1
+            space_between_ending_comma_and_closing_bracket = False
+            split_before_bitwise_operator = True
+            # Indent the dictionary value if it cannot fit on the same line as the
+            # dictionary key. For example:
+            #
+            #   config = {
+            #       'key1':
+            #           'value1',
+            #       'key2': value1 +
+            #               value2,
+            #   }
+            #indent_dictionary_value = False
+        '';
       };
 
       xdg.configFile."sx/sxrc" = {
