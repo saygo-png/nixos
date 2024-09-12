@@ -557,8 +557,9 @@ in {
     packages = with pkgs; [
       # Main font.
       courier-prime
-      noto-fonts
+
       roboto
+      noto-fonts
       jetbrains-mono
       noto-fonts-emoji
       noto-fonts-cjk-sans
@@ -689,10 +690,6 @@ in {
         "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
         # Prefer darkmode
         "org/gnome/desktop/interface".color-scheme = "prefer-dark";
-        # "org/gnome/desktop/interface" = {
-        #   color-scheme = "prefer-dark";
-        #   gtk-theme = lib.mkForce "adw-gtk3-dark";
-        # };
       };
 
       # Prevent default apps from being changed
@@ -773,6 +770,7 @@ in {
 
         shellAliases = {
           "nix-shell" = "nix-shell --run zsh";
+          "cbonsai" = "cbonsai --screensaver";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "plan" = ''nsxiv ${conHome}/Sync/notes/plan.png'';
@@ -802,11 +800,12 @@ in {
           TERMINAL = "alacritty";
           BROWSER = "librewolf";
 
-          VISUAL = "${config.home.sessionVariables.EDITOR}";
-          SUDO_EDITOR = "${config.home.sessionVariables.EDITOR}";
+          VISUAL = config.home.sessionVariables.EDITOR;
+          SUDO_EDITOR = config.home.sessionVariables.EDITOR;
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
-          SYSTEMD_PAGER = "${config.home.sessionVariables.PAGER}";
-          TERMINAL_PROG = "${config.home.sessionVariables.TERMINAL}";
+          SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
+          TERMINAL_PROG = config.home.sessionVariables.TERMINAL;
+          XCURSOR_SIZE = config.home.pointerCursor.size;
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
           QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
@@ -845,6 +844,7 @@ in {
           socat
 
           # Command line.
+          cbonsai # pretty tree
           bc # Gnu calculator, needed for vmrss
           tokei # Line counter
           gmic # Image processing language
@@ -974,18 +974,8 @@ in {
       # More visuals.
       gtk = {
         enable = true;
-
-        gtk3.extraConfig = {
-          Settings = ''
-            gtk-application-prefer-dark-theme = 1;
-          '';
-        };
-        gtk4.extraConfig = {
-          Settings = ''
-            gtk-application-prefer-dark-theme = 1;
-          '';
-        };
-
+        gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+        gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
         iconTheme = {
           name = "Gruvbox-Plus-Dark";
           package = pkgs.gruvbox-plus-icons;
@@ -994,18 +984,18 @@ in {
 
       qt = {
         enable = true;
-        # platformTheme.name = "qtct";
-        # style.name = "kvantum";
+        style.name = "kvantum";
+        platformTheme.name = "qtct";
       };
 
-      # xdg.configFile = {
-      #   "Kvantum/kvantum.kvconfig".text = ''
-      #     [General]
-      #     theme=gruvbox-fallnn
-      #   '';
-      #
-      #   "Kvantum/gruvbox-fallnn".source = ./resources/static/qt/gruvbox-fallnn;
-      # };
+      xdg.configFile = {
+        "Kvantum/kvantum.kvconfig".text = ''
+          [General]
+          theme=gruvbox-fallnn
+        '';
+
+        "Kvantum/gruvbox-fallnn".source = ./resources/static/qt/gruvbox-fallnn;
+      };
 
       # Development, internal.
       programs.bash.enable = true;
@@ -1758,17 +1748,16 @@ in {
 
         # Plugins {{{
         plugins = {
-          nvim-ufo.enable = true;
           nix.enable = false;
           flash.enable = true;
           comment.enable = true;
+          fugitive.enable = true;
           surround.enable = true;
           friendly-snippets.enable = true;
 
           # Lisps
           conjure.enable = false;
           parinfer-rust.enable = false;
-          fugitive.enable = true;
 
           spider = {
             enable = true;
