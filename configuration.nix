@@ -814,6 +814,7 @@ in {
         # Home packages, home manager packages, user packages, home programs
         packages = with pkgs; [
           # GUI.
+          jetbrains.pycharm-community # python IDE
           anki # Flashcards
           neovide # Neovim gui
           foliate # Ebook reader
