@@ -195,10 +195,10 @@ in {
       text = builtins.readFile ./resources/scripts/format-udf.sh;
     })
 
-    (writeShellScriptBin
-      "update_mutable.sh" # updates the flake krita nixos configuration files from current mutable krita config.
-
-      ''
+    (writeShellApplication {
+      name = "update_mutable.sh";
+      runtimeInputs = [coreutils];
+      text = ''
         set -o pipefail
         set -u
         IFS= # don't split
@@ -216,7 +216,9 @@ in {
         ANKINIXHOME="${conFlake-path}/resources/anki"
         cp -vf "$ANKIHOME"/prefs*.db "$ANKINIXHOME"/.
         cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
-      '')
+        find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
+      '';
+    })
 
     (writeShellApplication {
       name = "tree";
@@ -652,7 +654,7 @@ in {
 
   xdg.portal.enable = true;
   xdg.portal.xdgOpenUsePortal = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   xdg.portal.config.common.default = "*";
 
   # Fixes some themeing/cursor issues and is needed for some things.
@@ -814,7 +816,7 @@ in {
         # Home packages, home manager packages, user packages, home programs
         packages = with pkgs; [
           # GUI.
-          jetbrains.pycharm-community # python IDE
+          jetbrains.pycharm-community-src # python IDE
           anki # Flashcards
           neovide # Neovim gui
           foliate # Ebook reader
@@ -943,29 +945,31 @@ in {
           run mkdir -p "${conHome}/backups"
 
           run mkdir -p "${conHome}/Desktop"
-          run rm "${conHome}/Desktop/Desktop" || true
+          run rm -f "${conHome}/Desktop/Desktop" || true
 
           run mkdir -p "${conHome}/screencaptures"
           run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
-          run rm "${conHome}/screencaptures/screencaptures" || true
+          run rm -f "${conHome}/screencaptures/screencaptures" || true
 
           run mkdir -p "${conHome}/Downloads"
           run ln -s "${conHome}/Downloads" "${conHome}/Desktop/Downloads" || true
-          run rm "${conHome}/Downloads/Downloads" || true
+          run rm -f "${conHome}/Downloads/Downloads" || true
 
           run mkdir -p "${conHome}/Videos"
           run ln -s "${conHome}/Videos" "${conHome}/Desktop/Videos" || true
-          run rm "${conHome}/Videos/Videos" || true
+          run rm -f "${conHome}/Videos/Videos" || true
 
           run mkdir -p "${conHome}/Sync"
           run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
-          run rm "${conHome}/Sync/Sync" || true
+          run rm -f "${conHome}/Sync/Sync" || true
 
           run mkdir -p "${config.xdg.configHome}"
           run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
+          run rm -f "${conHome}/Desktop/.config" || true
 
           run mkdir -p "${config.xdg.dataHome}"
           run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
+          run rm -f "${conHome}/Desktop/.local" || true
         '';
       };
 
@@ -2742,7 +2746,6 @@ in {
           map i toggle_statusbar
 
           set guioptions "s"
-          set selection-notification "true"
           set statusbar-home-tilde "true"
           set adjust-open "width"
           set statusbar-h-padding 0
