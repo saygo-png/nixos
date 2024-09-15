@@ -118,7 +118,8 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = "-0.1";
+  services.libinput.mouse.accelSpeed = "1";
+  services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   # If using hypralnd uncomment
   # for some reason text is much larger on awesomewm
@@ -145,18 +146,19 @@
         general.border_size = lib.mkForce 2;
         animations.enabled = false;
         input.sensitivity = config.services.libinput.mouse.accelSpeed;
+        input.accel_profile = lib.mkForce "adaptive";
 
         device = [
           {
             name = "synps/2-synaptics-touchpad";
             enabled = false;
-            accel_profile = "flat";
+            accel_profile = "adaptive";
             natural_scroll = true;
             disable_while_typing = true;
           }
           {
             name = "tpps/2-elan-trackpoint";
-            accel_profile = "flat";
+            accel_profile = "adaptive";
           }
         ];
         monitor = let

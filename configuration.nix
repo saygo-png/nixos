@@ -19,6 +19,7 @@
 }: let
   autoRepeatDelay = 170;
   autoRepeatInterval = 45;
+  accelProfile = "adaptive";
 in {
   imports = [
     inputs.stylix.nixosModules.stylix
@@ -485,7 +486,7 @@ in {
   };
 
   services.libinput.enable = true;
-  services.libinput.mouse.accelProfile = "flat";
+  services.libinput.mouse.accelProfile = accelProfile;
   services.libinput.mouse.middleEmulation = false;
   services.xserver.autoRepeatDelay = autoRepeatDelay;
   services.xserver.autoRepeatInterval = autoRepeatInterval;
@@ -718,8 +719,8 @@ in {
           "image/svg+xml" = ["nsxiv.desktop"];
 
           # PDF
-          "application/pdf" = ["zathura.desktop"];
-          "image/vnd.djvu" = ["zathura.desktop"];
+          "application/pdf" = ["org.pwmt.zathura.desktop"];
+          "image/vnd.djvu" = ["org.pwmt.zathura.desktop"];
 
           # Web
           "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
@@ -965,11 +966,13 @@ in {
 
           run mkdir -p "${config.xdg.configHome}"
           run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
-          run rm -f "${conHome}/Desktop/.config" || true
+          run rm -f "${conHome}/Desktop/.config/.config" || true
+          run rm -f "${conHome}/.config/.config" || true
 
           run mkdir -p "${config.xdg.dataHome}"
           run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
-          run rm -f "${conHome}/Desktop/.local" || true
+          run rm -f "${conHome}/Desktop/.local/.local" || true
+          run rm -f "${conHome}/.local/.local" || true
         '';
       };
 
@@ -2310,7 +2313,7 @@ in {
             kb_options = "caps:escape,grp:sclk_toggle";
             repeat_delay = autoRepeatDelay;
             repeat_rate = autoRepeatInterval;
-            accel_profile = "flat";
+            accel_profile = accelProfile;
             numlock_by_default = false;
             follow_mouse = 2;
           };

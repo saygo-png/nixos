@@ -14,7 +14,7 @@
   conScreen-height,
   ...
 }: {
-  services.libinput.mouse.accelSpeed = "-0.9";
+  services.libinput.mouse.accelSpeed = "-1.3";
 
   services.actkbd = {
     enable = true;
@@ -174,9 +174,7 @@
     gamescopeSession.enable = true;
     # Load the extest library into Steam, to translate X11 input events to uinput events (for using Steam Input on Wayland).
     # extest.enable = true;
-    extraCompatPackages = [
-      pkgs-unstable.proton-ge-bin
-    ];
+    extraCompatPackages = [ pkgs.proton-ge-bin ];
     extraPackages = [
       pkgs.libpng
       pkgs.libkrb5
