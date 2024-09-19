@@ -118,7 +118,7 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = "1";
+  services.libinput.mouse.accelSpeed = "-0.5";
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   # If using hypralnd uncomment
@@ -146,7 +146,7 @@
         general.border_size = lib.mkForce 2;
         animations.enabled = false;
         input.sensitivity = config.services.libinput.mouse.accelSpeed;
-        input.accel_profile = lib.mkForce "adaptive";
+        input.accel_profile = lib.mkForce config.services.libinput.mouse.accelProfile;
 
         device = [
           {

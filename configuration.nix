@@ -1,20 +1,21 @@
 {
   ###### Imports ###### {{{
-  pkgs,
   lib,
-  self,
-  inputs,
   host,
-  conUsername,
-  conHome,
-  conFlake-path,
-  conAccentColor,
-  conBorderSize,
-  conRefresh-rate,
+  pkgs,
+  self,
+  config,
+  inputs,
   conGaps,
+  conHome,
+  conUsername,
+  conBorderSize,
+  conFlake-path,
+  pkgs-unstable,
+  conAccentColor,
+  conRefresh-rate,
   # conScreen-width,
   # conScreen-height,
-  pkgs-unstable,
   ...
 }: let
   autoRepeatDelay = 170;
@@ -159,6 +160,16 @@ in {
     hydrus # Image collection
     patool # Universal archiver
     libqalculate # Calculator
+    cups
+    cups-bjnp
+    # cups-brother-hl1110
+    # cups-brother-hl2260d
+    # cups-brother-hl1210w
+    # cups-brother-hl3140cw
+    # cups-brother-hll2375dw
+    # cups-brother-hll2340dw
+    # cups-brother-mfcl2750dw
+    # cups-brother-hll3230cdw
     qalculate-gtk # ^
     vim # Text editor
     wget # Downloader
@@ -463,6 +474,10 @@ in {
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  # Printing
+  services.printing.enable = true;
+  services.printing.cups-pdf.enable = true;
+
   # Thumbnails for thunar
   services.tumbler.enable = true;
 
@@ -695,47 +710,49 @@ in {
         "org/gnome/desktop/interface".color-scheme = "prefer-dark";
       };
 
-      # Prevent default apps from being changed
-      xdg.configFile."mimeapps.list".force = true;
+      # # Prevent default apps from being changed
+      # xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
         enable = true;
+        associations.added = config.xdg.mimeApps.defaultApplications;
         defaultApplications = {
           # Text
-          "application/x-shellscript" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-java" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "inode/x-empty" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/plain" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/rhtml" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-tex" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "text/x-java" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "inode/x-empty" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-python" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-readme" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "application/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/rhtml" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/plain" = ["${config.home.sessionVariables.EDITOR}.desktop"];
           "text/x-markdown" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "application/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+          "application/x-shellscript" = ["${config.home.sessionVariables.EDITOR}.desktop"];
 
           # Documents
+          "image/svg+xml" = ["nsxiv.desktop"];
           "application/vnd.oasis.opendocument.text" = ["writer.desktop"];
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["writer.desktop"];
-          "image/svg+xml" = ["nsxiv.desktop"];
 
           # PDF
-          "application/pdf" = ["org.pwmt.zathura.desktop"];
           "image/vnd.djvu" = ["org.pwmt.zathura.desktop"];
+          "application/pdf" = ["${config.home.sessionVariables.BROWSER}.desktop"];
 
           # Web
           "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "x-scheme-handler/ftp" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/xhtml+xml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "x-scheme-handler/http" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "x-scheme-handler/https" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/ftp" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "x-scheme-handler/chrome" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "application/x-extension-htm" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/x-extension-xht" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "application/x-extension-html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "application/x-extension-shtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/xhtml+xml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
           "application/x-extension-xhtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-xht" = ["${config.home.sessionVariables.BROWSER}.desktop"];
 
           # Image
+          "image/*" = ["nsxiv.desktop"];
           "image/png" = ["nsxiv.desktop"];
           "image/jpeg" = ["nsxiv.desktop"];
           # bmp
@@ -818,6 +835,7 @@ in {
         packages = with pkgs; [
           # GUI.
           jetbrains.pycharm-community-src # python IDE
+          libreoffice # office
           anki # Flashcards
           neovide # Neovim gui
           foliate # Ebook reader
@@ -917,6 +935,7 @@ in {
             xrandr -r ${builtins.toString conRefresh-rate}
             ${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &
             ${lib.getExe pkgs.xmousepasteblock} &
+            ${lib.getExe pkgs.xssproxy} &
             udiskie &
             $TERMINAL &
             exec awesome
@@ -2313,7 +2332,7 @@ in {
             kb_options = "caps:escape,grp:sclk_toggle";
             repeat_delay = autoRepeatDelay;
             repeat_rate = autoRepeatInterval;
-            accel_profile = accelProfile;
+            accel_profile = config.services.libinput.mouse.accelProfile;
             numlock_by_default = false;
             follow_mouse = 2;
           };
