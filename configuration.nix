@@ -17,11 +17,7 @@
   # conScreen-width,
   # conScreen-height,
   ...
-}: let
-  autoRepeatDelay = 170;
-  autoRepeatInterval = 45;
-  accelProfile = "adaptive";
-in {
+}: {
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
@@ -246,7 +242,7 @@ in {
       text = ''
         # This script is called on startup to remap keys.
         # Decrease key repeat delay and increase key repeat rate.
-        xset r rate ${builtins.toString autoRepeatDelay} ${builtins.toString autoRepeatInterval}
+        xset r rate ${builtins.toString config.services.xserver.autoRepeatDelay} ${builtins.toString config.services.xserver.autoRepeatInterval}
         # Turn off caps lock if on since there is no longer a key for it.
         xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
         # Disable touchpad
@@ -501,10 +497,10 @@ in {
   };
 
   services.libinput.enable = true;
-  services.libinput.mouse.accelProfile = accelProfile;
+  services.libinput.mouse.accelProfile = "adaptive";
   services.libinput.mouse.middleEmulation = false;
-  services.xserver.autoRepeatDelay = autoRepeatDelay;
-  services.xserver.autoRepeatInterval = autoRepeatInterval;
+  services.xserver.autoRepeatDelay = 170;
+  services.xserver.autoRepeatInterval = 45;
 
   # File synchronization.
   services.syncthing = {
@@ -688,6 +684,7 @@ in {
     users.${conUsername} = {
       lib,
       config,
+      osConfig,
       formats,
       rasi,
       ...
@@ -2330,9 +2327,9 @@ in {
           input = {
             kb_layout = "pl,plfi";
             kb_options = "caps:escape,grp:sclk_toggle";
-            repeat_delay = autoRepeatDelay;
-            repeat_rate = autoRepeatInterval;
-            accel_profile = config.services.libinput.mouse.accelProfile;
+            repeat_delay = osConfig.services.xserver.autoRepeatDelay;
+            repeat_rate = osConfig.services.xserver.autoRepeatInterval;
+            accel_profile = osConfig.services.libinput.mouse.accelProfile;
             numlock_by_default = false;
             follow_mouse = 2;
           };
