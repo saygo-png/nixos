@@ -14,7 +14,15 @@
   conScreen-height,
   ...
 }: {
-  services.libinput.mouse.accelSpeed = "-3.0";
+  services.libinput.mouse.accelSpeed = "-0.9";
+  services.libinput.mouse.accelProfile = lib.mkForce "flat";
+
+  # Optimization for ssds
+  services.fstrim.enable = true;
+  fileSystems."/".options = ["noatime" "nodiratime" "discard"];
+
+  # Swap super and ctrl
+  services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle:altwin:ctrl_alt_win";
 
   services.actkbd = {
     enable = true;
@@ -174,7 +182,7 @@
     gamescopeSession.enable = true;
     # Load the extest library into Steam, to translate X11 input events to uinput events (for using Steam Input on Wayland).
     # extest.enable = true;
-    extraCompatPackages = [ pkgs.proton-ge-bin ];
+    extraCompatPackages = [pkgs.proton-ge-bin];
     extraPackages = [
       pkgs.libpng
       pkgs.libkrb5

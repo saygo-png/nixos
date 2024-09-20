@@ -48,9 +48,6 @@
 
   networking.hostName = "${host}";
 
-  # Optimization for ssds
-  services.fstrim.enable = true;
-
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
 
@@ -2325,8 +2322,8 @@
           ];
 
           input = {
-            kb_layout = "pl,plfi";
-            kb_options = "caps:escape,grp:sclk_toggle";
+            kb_layout = osConfig.services.xserver.xkb.layout;
+            kb_options = osConfig.services.xserver.xkb.options;
             repeat_delay = osConfig.services.xserver.autoRepeatDelay;
             repeat_rate = osConfig.services.xserver.autoRepeatInterval;
             accel_profile = osConfig.services.libinput.mouse.accelProfile;

@@ -21,6 +21,10 @@
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
   };
 
+  # Optimization for ssds
+  services.fstrim.enable = true;
+  fileSystems."/".options = ["noatime" "nodiratime" "discard"];
+
   # Wifi
   networking.networkmanager.enable = true;
 
@@ -80,7 +84,7 @@
   services.tlp.enable = true;
 
   # On battery ur cpu will go down to 400 freq if this is off
-  # Still does after pluggin in cable and unplugging :(
+  # Still does after plugin in cable and unplugging :(
   # TODO fix
   services.throttled.enable = true;
 
@@ -161,13 +165,7 @@
             accel_profile = "adaptive";
           }
         ];
-        monitor = let
-          res = lib.concatStrings [
-            "${builtins.toString conScreen-width}x"
-            "${builtins.toString conScreen-height}@"
-            "${builtins.toString conRefresh-rate}"
-          ];
-        in [
+        monitor = [
           # "eDP-1, ${res}, 0x0, 1"
           ", preferred, auto, 1"
         ];
