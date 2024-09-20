@@ -14,7 +14,7 @@
   conScreen-height,
   ...
 }: {
-  services.libinput.mouse.accelSpeed = "-1.3";
+  services.libinput.mouse.accelSpeed = "-3.0";
 
   services.actkbd = {
     enable = true;
