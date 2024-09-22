@@ -446,6 +446,25 @@
     "d /media 0755 root root"
   ];
 
+  systemd.user.services."wait-for-full-path-gtk" = {
+    description = "wait for systemd units to have full PATH";
+    wantedBy = [ "xdg-desktop-portal-gtk.service" ];
+    before = [ "xdg-desktop-portal-gtk.service" ];
+    path = with pkgs; [ systemd coreutils gnugrep ];
+    script = ''
+      ispresent () {
+        systemctl --user show-environment | grep -E '^PATH=.*/.nix-profile/bin'
+      }
+    while ! ispresent; do
+      sleep 0.1;
+    done
+      '';
+    serviceConfig = {
+      Type = "oneshot";
+      TimeoutStartSec = "60";
+    };
+  };
+
   system.stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
   # }}}
