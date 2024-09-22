@@ -663,7 +663,7 @@
   };
 
   xdg.portal.enable = true;
-  xdg.portal.xdgOpenUsePortal = true;
+  xdg.portal.xdgOpenUsePortal = false;
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   xdg.portal.config.common.default = "*";
 
