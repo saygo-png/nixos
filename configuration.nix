@@ -135,6 +135,7 @@
     appimage-run # Appimage runner
 
     # Other.
+    dbus # Bugfix for incorrect paths, might be useless
     firefox
     ncdu
     wmctrl
@@ -730,7 +731,7 @@
 
           # PDF
           "image/vnd.djvu" = ["org.pwmt.zathura.desktop"];
-          "application/pdf" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "application/pdf" = ["org.pwmt.zathura.desktop"];
 
           # Web
           "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
@@ -749,8 +750,7 @@
           "image/*" = ["nsxiv.desktop"];
           "image/png" = ["nsxiv.desktop"];
           "image/jpeg" = ["nsxiv.desktop"];
-          # bmp
-          "application/octet-stream" = ["nsxiv.desktop"];
+          "application/octet-stream" = ["nsxiv.desktop"]; #bmp
 
           # Video
           "video/ogg" = ["mpv.desktop"];
@@ -918,13 +918,18 @@
         file."bin/ow".source = ./resources/scripts/ow.py;
         file.".xinitrc" = {
           text = ''
-            if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-              eval $(dbus-launch --exit-with-session --sh-syntax)
+            # Ensure dbus session is running
+            if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+                eval "$(dbus-launch --exit-with-session)"
             fi
-            systemctl --user import-environment DISPLAY XAUTHORITY
-            if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-              dbus-update-activation-environment DISPLAY XAUTHORITY
-            fi
+
+            # Import relevant environment variables for user services
+            systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP PATH
+
+            # Update dbus environment for systemd
+            dbus-update-activation-environment --systemd DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP PATH
+            dbus-update-activation-environment --systemd --all
+
             export XDG_SESSION_TYPE=x11
             xrandr -r ${builtins.toString conRefresh-rate}
             ${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &
@@ -932,7 +937,7 @@
             ${lib.getExe pkgs.xssproxy} &
             udiskie &
             $TERMINAL &
-            exec awesome
+            exec dbus-run-session awesome
           '';
         };
 
@@ -2316,6 +2321,9 @@
           exec-once = [
             "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
             "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
+            "systemctl --user import-environment PATH &"
+            "hash dbus-update-activation-environment 2>/dev/null &"
+            "dbus-update-activation-environment --systemd --all &"
             "udiskie &"
             "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
             "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"

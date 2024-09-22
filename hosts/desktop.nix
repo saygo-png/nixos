@@ -22,7 +22,7 @@
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];
 
   # Swap super and ctrl
-  services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle:altwin:ctrl_alt_win";
+  services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
 
   services.actkbd = {
     enable = true;
