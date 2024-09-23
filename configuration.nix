@@ -220,7 +220,6 @@
 
         ANKIHOME="${conHome}/.local/share/Anki2"
         ANKINIXHOME="${conFlake-path}/resources/anki"
-        cp -vf "$ANKIHOME"/prefs*.db "$ANKINIXHOME"/.
         cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
         find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
       '';
