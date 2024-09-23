@@ -937,17 +937,16 @@
         file."bin/ow".source = ./resources/scripts/ow.py;
         file.".xinitrc" = {
           text = ''
-            # Ensure dbus session is running
-            if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-                eval "$(dbus-launch --exit-with-session)"
+            if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+              eval $(dbus-launch --exit-with-session --sh-syntax)
             fi
-
-            # Import relevant environment variables for user services
-            systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP PATH
-
-            # Update dbus environment for systemd
-            dbus-update-activation-environment --systemd DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP PATH
-            dbus-update-activation-environment --systemd --all
+            systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+            if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+              dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+            fi
+            systemctl --user import-environment PATH &
+            dbus-update-activation-environment --systemd PATH &
+            hash dbus-update-activation-environment 2>/dev/null &
 
             export XDG_SESSION_TYPE=x11
             xrandr -r ${builtins.toString conRefresh-rate}
