@@ -935,6 +935,7 @@
         file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
         file."bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
         file."bin/ow".source = ./resources/scripts/ow.py;
+
         file.".xinitrc" = {
           text = ''
             if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
@@ -2725,7 +2726,7 @@
       xdg.enable = true;
 
       xdg.configFile."awesome/" = {
-        source = ./resources/awesome/topdir;
+        source = ./resources/awesome;
         recursive = true;
       };
 
