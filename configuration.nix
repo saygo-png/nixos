@@ -802,6 +802,7 @@
         };
 
         shellAliases = {
+          "countlines" = "tokei";
           "nix-shell" = "nix-shell --run zsh";
           "cbonsai" = "cbonsai --screensaver";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
