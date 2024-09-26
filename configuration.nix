@@ -149,7 +149,17 @@
     nsxiv # Image viewer
 
     kdePackages.dolphin # File manager
+
+    # QT SHIT
     kdePackages.qtsvg # Icons for dolphin
+    kdePackages.qtwayland # qt6
+    libsForQt5.qt5.qtwayland
+
+    # fix kirigami apps look
+    # for example in filelight, without it the app looks weird
+    # https://github.com/NixOS/nixpkgs/pull/202990#issuecomment-1328068486
+    kdePackages.qqc2-desktop-style # qt6
+    libsForQt5.qqc2-desktop-style
 
     hydrus # Image collection
     patool # Universal archiver
@@ -178,10 +188,6 @@
     xdg-utils # Includes xdg-open
     gcc # C compiling
     libnotify # Notifications (notify-send)
-
-    # For Hyprland
-    libsForQt5.qt5.qtwayland
-    kdePackages.qtwayland
 
     # These are filepickers and whatnot
     xdg-desktop-portal-gtk
@@ -447,17 +453,17 @@
 
   systemd.user.services."wait-for-full-path-gtk" = {
     description = "wait for systemd units to have full PATH";
-    wantedBy = [ "xdg-desktop-portal-gtk.service" ];
-    before = [ "xdg-desktop-portal-gtk.service" ];
-    path = with pkgs; [ systemd coreutils gnugrep ];
+    wantedBy = ["xdg-desktop-portal-gtk.service"];
+    before = ["xdg-desktop-portal-gtk.service"];
+    path = with pkgs; [systemd coreutils gnugrep];
     script = ''
-      ispresent () {
-        systemctl --user show-environment | grep -E '^PATH=.*/.nix-profile/bin'
-      }
-    while ! ispresent; do
-      sleep 0.1;
-    done
-      '';
+        ispresent () {
+          systemctl --user show-environment | grep -E '^PATH=.*/.nix-profile/bin'
+        }
+      while ! ispresent; do
+        sleep 0.1;
+      done
+    '';
     serviceConfig = {
       Type = "oneshot";
       TimeoutStartSec = "60";
@@ -833,6 +839,11 @@
           TERMINAL = "alacritty";
           BROWSER = "librewolf";
 
+          # Fake running KDE
+          # https://wiki.archlinux.org/title/qt#Configuration_of_Qt_5_applications_under_environments_other_than_KDE_Plasma
+          # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#The_KDE_Plasma_XDG_Desktop_Portal_is_not_being_used
+          DESKTOP_SESSION = "KDE";
+
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
@@ -924,40 +935,175 @@
           lib.hm.dag.entryAfter ["installPackages"] ''
           '';
 
-        # auto xrdb
-        file.${config.xresources.path}.onChange = ''
-          [[ -z "$\{DISPLAY:-}" ]] && echo Display not set && exit 0
-          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
-        '';
-
         # Binary (or not) blobs.
         sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
-        file."bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
-        file."bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
-        file."bin/ow".source = ./resources/scripts/ow.py;
+        file = let
+          # Qt config
+          colorSchemeName = "gruvbox-medium-dark";
+          mkScheme = colors: lib.concatStringsSep ", " (map (color: "#ff${color}") colors);
+          colorScheme = lib.generators.toINI {} {
+            ColorScheme = with config.lib.stylix.colors; {
+              active_colors = mkScheme [
+                base06 # Window text
+                base00 # Button background
+                base06 # Bright
+                base05 # Less bright
+                base01 # Dark
+                base02 # Less dark
+                base06 # Normal text
+                base07 # Bright text
+                base06 # Button text
+                base00 # Normal background
+                base00 # Window
+                base00 # Shadow
+                base02 # Highlight
+                base05 # Highlighted text
+                base0D # Link
+                base0E # Visited link
+                base00 # Alternate background
+                base01 # Default
+                base01 # Tooltip background
+                base06 # Tooltip text
+                base05 # Placeholder text
+              ];
 
-        file.".xinitrc" = {
-          text = ''
-            if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-              eval $(dbus-launch --exit-with-session --sh-syntax)
-            fi
-            systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-            if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-              dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-            fi
-            systemctl --user import-environment PATH &
-            dbus-update-activation-environment --systemd PATH &
-            hash dbus-update-activation-environment 2>/dev/null &
+              inactive_colors = mkScheme [
+                base04 # Window text
+                base00 # Button background
+                base05 # Bright
+                base04 # Less bright
+                base01 # Dark
+                base02 # Less dark
+                base04 # Normal text
+                base05 # Bright text
+                base04 # Button text
+                base00 # Normal background
+                base00 # Window
+                base00 # Shadow
+                base02 # Highlight
+                base05 # Highlighted text
+                base0D # Link
+                base0E # Visited link
+                base00 # Alternate background
+                base01 # Default
+                base01 # Tooltip background
+                base05 # Tooltip text
+                base04 # Placeholder text
+              ];
 
-            export XDG_SESSION_TYPE=x11
-            xrandr -r ${builtins.toString conRefresh-rate}
-            ${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &
-            ${lib.getExe pkgs.xmousepasteblock} &
-            ${lib.getExe pkgs.xssproxy} &
-            udiskie &
-            $TERMINAL &
-            exec dbus-run-session awesome
+              disabled_colors = mkScheme [
+                base04 # Window text
+                base00 # Button background
+                base04 # Bright
+                base03 # Less bright
+                base00 # Dark
+                base01 # Less dark
+                base04 # Normal text
+                base05 # Bright text
+                base04 # Button text
+                base00 # Normal background
+                base00 # Window
+                base00 # Shadow
+                base02 # Highlight
+                base05 # Highlighted text
+                base0D # Link
+                base0E # Visited link
+                base00 # Alternate background
+                base01 # Default
+                base01 # Tooltip background
+                base04 # Tooltip text
+                base03 # Placeholder text
+              ];
+            };
+          };
+
+          baseConfig = {
+            Appearance = {
+              color_scheme_path = "${conHome}/.config/qt5ct/colors/${colorSchemeName}.conf";
+              custom_palette = true;
+              icon_theme = config.gtk.iconTheme.name;
+              standard_dialogs = "default";
+              # style = "Fusion";
+              style = "Adwaita-Dark";
+            };
+
+            Troubleshooting = {
+              force_raster_widgets = 1;
+              ignored_applications = "@Invalid()";
+            };
+
+            Interface = {
+              cursor_flash_time = 1200;
+              double_click_interval = 400;
+              menus_have_icons = true;
+              show_shortcuts_in_context_menus = true;
+              gui_effects = "@Invalid()";
+              stylesheets = "@Invalid()";
+              buttonbox_layout = 3; # GNOME dialog button layout
+              toolbutton_style = 4; # Follow the application style
+              activate_item_on_single_click = 1; # ... - i think that means let the application decide
+              dialog_buttons_have_icons = 1; # ...
+              underline_shortcut = 1; # ...
+              wheel_scroll_lines = 3;
+              keyboard_scheme = 2; # X11
+            };
+          };
+        in {
+          "bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
+          "bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
+          "bin/ow".source = ./resources/scripts/ow.py;
+
+          # auto xrdb
+          ${config.xresources.path}.onChange = ''
+            [[ -z "$\{DISPLAY:-}" ]] && echo Display not set && exit 0
+            run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
           '';
+
+          ".xinitrc" = {
+            text = ''
+              if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+                eval $(dbus-launch --exit-with-session --sh-syntax)
+              fi
+              systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+              if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+                dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+              fi
+              systemctl --user import-environment PATH &
+              dbus-update-activation-environment --systemd PATH &
+              hash dbus-update-activation-environment 2>/dev/null &
+
+              export XDG_SESSION_TYPE=x11
+              xrandr -r ${builtins.toString conRefresh-rate}
+              ${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &
+              ${lib.getExe pkgs.xmousepasteblock} &
+              ${lib.getExe pkgs.xssproxy} &
+              udiskie &
+              $TERMINAL &
+              exec dbus-run-session awesome
+            '';
+          };
+
+          # QT theme
+          ".config/qt5ct/colors/${colorSchemeName}.conf".text = colorScheme;
+          ".config/qt6ct/colors/${colorSchemeName}.conf".text = colorScheme;
+          ".config/qt5ct/qt5ct.conf".text = lib.generators.toINI {} (
+            baseConfig
+            // {
+              Fonts = {
+                fixed = "\"${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications},-1,5,50,0,0,0,0,0,Regular\"";
+                general = "\"${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications},-1,5,50,0,0,0,0,0,Regular\"";
+              };
+            }
+          );
+          ".config/qt6ct/qt6ct.conf".text = lib.generators.toINI {} (
+            baseConfig
+            // {
+              Fonts = {
+                fixed = "\"${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular\"";
+                general = "\"${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular\"";
+              };
+            }
+          );
         };
 
         # This allows for semi-declarative configuration.
@@ -1029,17 +1175,11 @@
 
       qt = {
         enable = true;
-        style.name = "kvantum";
         platformTheme.name = "qtct";
-      };
-
-      xdg.configFile = {
-        "Kvantum/kvantum.kvconfig".text = ''
-          [General]
-          theme=gruvbox-fallnn
-        '';
-
-        "Kvantum/gruvbox-fallnn".source = ./resources/static/qt/gruvbox-fallnn;
+        style.package = with pkgs; [
+          adwaita-qt
+          adwaita-qt6
+        ];
       };
 
       # Development, internal.
