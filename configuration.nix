@@ -725,9 +725,12 @@
 
       # Needed for transparency.
       stylix.targets.fzf.enable = false;
+
       # Hopefully will set dark mode properly
       stylix.targets.gnome.enable = true;
       stylix.targets.kde.enable = true;
+
+      # stylix.targets.regreet.enable = false;
 
       dconf.settings = {
         # Remove min and max buttons
@@ -1481,7 +1484,6 @@
         enable = true;
         extraPackages = with pkgs; [
           typos-lsp
-          vale # Linter
           jq # Json formatter
           vim-language-server
           deadnix # Nix linter
@@ -1504,7 +1506,7 @@
           isort # Python import sorter
           prettierd # Javascript formatter
           nodePackages.bash-language-server
-          python312Packages.python-lsp-server
+          markdownlint-cli # Markdown linter
           stylish-haskell # Haskell formatter
           haskell-language-server # Haskell lsp
           vscode-langservers-extracted # Web LSPs
@@ -1514,7 +1516,6 @@
           luajitPackages.jsregexp # Needed for luasnip
           nodePackages.prettier # Javascript formatter
           python312Packages.jedi # Autocomplete plugin
-          python312Packages.pycodestyle # Python complainer
           python312Packages.pyls-isort # Python import sort
         ];
 
@@ -2106,6 +2107,9 @@
               tsserver.enable = true;
               eslint.enable = true; # Linter as lsp
 
+              # Markdown
+              marksman.enable = true;
+
               # Haskell.
               hls.enable = true;
 
@@ -2173,7 +2177,7 @@
               cpp = ["clangtidy"];
               haskell = ["hlint"];
               json = ["jsonlint"];
-              markdown = ["vale"];
+              markdown = ["markdownlint"];
               bash = ["shellcheck"];
               shell = ["shellcheck"];
               clojure = ["clj-kondo"];
