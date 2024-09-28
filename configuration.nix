@@ -54,14 +54,14 @@
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
-      LC_CTYPE = "pl_PL.UTF-8";
-      LC_NUMERIC = "pl_PL.UTF-8";
-      LC_TIME = "pl_PL.UTF-8";
-      LC_COLLATE = "pl_PL.UTF-8";
-      LC_MONETARY = "pl_PL.UTF-8";
-      LC_PAPER = "pl_PL.UTF-8";
       LC_NAME = "pl_PL.UTF-8";
+      LC_TIME = "pl_PL.UTF-8";
+      LC_CTYPE = "pl_PL.UTF-8";
+      LC_PAPER = "pl_PL.UTF-8";
       LC_ADDRESS = "pl_PL.UTF-8";
+      LC_COLLATE = "pl_PL.UTF-8";
+      LC_NUMERIC = "pl_PL.UTF-8";
+      LC_MONETARY = "pl_PL.UTF-8";
       LC_TELEPHONE = "pl_PL.UTF-8";
       LC_MEASUREMENT = "pl_PL.UTF-8";
       LC_IDENTIFICATION = "pl_PL.UTF-8";
@@ -105,8 +105,8 @@
 
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = true;
   };
+  programs.gnupg.agent.enableSSHSupport = true;
 
   # Needed here and in home manager.
   programs.hyprland = {
@@ -673,17 +673,24 @@
   };
 
   stylix.fonts.sizes = {
-    popups = lib.mkDefault 13;
-    desktop = lib.mkDefault 13;
+    popups = lib.mkDefault 12;
+    desktop = lib.mkDefault 12;
     terminal = lib.mkDefault 13;
-    applications = lib.mkDefault 12;
+    applications = lib.mkDefault 11;
   };
 
+  # stylix.opacity = {
+  #   popups = 0.7;
+  #   desktop = 0.7;
+  #   terminal = 0.7;
+  #   applications = 0.5;
+  # };
+
   stylix.opacity = {
-    popups = 0.7;
-    desktop = 0.7;
-    terminal = 0.7;
-    applications = 0.5;
+    popups = 1.0;
+    desktop = 1.0;
+    terminal = 1.0;
+    applications = 1.0;
   };
 
   xdg.portal.enable = true;
@@ -1397,6 +1404,7 @@
           aa = "add -A"; # [A]dd [A]ll
           amend = "commit -a --amend";
           undo = "reset HEAD~1 --mixed";
+          deleteGitignored = "rm --cached `git ls-files -i -c --exclude-from=.gitignore`";
         };
         extraConfig = {
           pull = {rebase = true;};
@@ -1533,6 +1541,7 @@
           breakindent = true; # Indent when wrapping
 
           # Wrapping.
+          linebreak = true;
           wrap = false;
 
           # Center it all.
@@ -1620,6 +1629,9 @@
         extraFiles = {
           "ftplugin/json.vim" = ''
             setlocal foldmethod=manual
+          '';
+          "ftplugin/md.vim" = ''
+            setlocal wrap
           '';
         };
 
@@ -2817,7 +2829,12 @@
             "tile, class:^()$"
             "noinitialfocus, class:^()$"
 
-            # Shadow only for floating windows
+            # Drag and drop hack fixes.
+            "nofocus, class:^krita$, title:^Krita$, floating:1"
+            "nofocus, class:^Inkscape$, title:^Inkscape$, floating:1"
+            "nofocus, class:^dolphin$, title:^Dolphin$, floating:1"
+
+            # Shadow only for floating windows.
             "noshadow, floating:0"
             "suppressevent maximize, class:.*"
 
