@@ -468,6 +468,12 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
+-- This fixes wmctrl (thus rofi)
+client.connect_signal("property::urgent", function(c)
+  c.minimized = false
+  c:jump_to()
+end)
+
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
 	-- Set the windows at the slave,

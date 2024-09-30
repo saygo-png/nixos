@@ -164,7 +164,7 @@ lfcd () {
  fi
 }
 
-bindkey -s '^f' 'lfcd\n'
+bindkey -s '^y' 'lfcd\n'
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line

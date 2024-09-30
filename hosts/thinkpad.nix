@@ -20,6 +20,18 @@
     enable = true; # enables support for Bluetooth
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
   };
+  # boot.kernelModules = ["btqca"];
+  # boot.kernelPatches = [
+  #   {
+  #     name = "enable-qca6390-bluetooth";
+  #     patch = null;
+  #     extraConfig = ''
+  #       BT_QCA m
+  #       BT_HCIUART m
+  #       BT_HCIUART_QCA y
+  #     '';
+  #   }
+  # ];
 
   # Optimization for ssds
   services.fstrim.enable = true;
@@ -27,6 +39,22 @@
 
   # Wifi
   networking.networkmanager.enable = true;
+
+  # Audio needs pulse due to old hardware ig
+  services.pipewire = {
+    enable = lib.mkForce false;
+    alsa.enable = lib.mkForce false;
+    jack.enable = lib.mkForce false;
+    pulse.enable = lib.mkForce false;
+    alsa.support32Bit = lib.mkForce false;
+    wireplumber.enable = lib.mkForce false;
+  };
+
+  hardware.pulseaudio.enable = lib.mkForce true;
+  hardware.pulseaudio.support32Bit = true;
+  hardware.pulseaudio.extraConfig = "load-module module-combine-sink";
+  hardware.pulseaudio.package = pkgs.pulseaudioFull;
+  sound.enable = lib.mkForce true;
 
   # Function keys
   programs.light.enable = true;
@@ -98,10 +126,10 @@
     };
   };
 
-# On battery ur cpu will go down to 400 freq if this is off
-# Still does after plugin in cable and unplugging :(
-# TODO fix
-    services.throttled.enable = true;
+  # On battery ur cpu will go down to 400 freq if this is off
+  # Still does after plugin in cable and unplugging :(
+  # TODO fix
+  services.throttled.enable = true;
 
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
