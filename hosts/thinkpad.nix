@@ -47,7 +47,6 @@
     jack.enable = lib.mkForce false;
     pulse.enable = lib.mkForce false;
     alsa.support32Bit = lib.mkForce false;
-    wireplumber.enable = lib.mkForce false;
   };
 
   hardware.pulseaudio.enable = lib.mkForce true;
@@ -116,6 +115,7 @@
   # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2669
   services.pipewire = {
     wireplumber = {
+      enable = lib.mkForce false;
       extraConfig = {
         "10-disable-camera" = {
           "wireplumber.profiles" = {

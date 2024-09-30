@@ -209,10 +209,10 @@
 
     (pkgs.writers.writeHaskellBin "convertlink" {
         libraries = with pkgs; [
-        haskellPackages.directory_1_3_8_5
-        haskellPackages.unix_2_8_5_1
-        haskellPackages.process_1_6_20_0
-        haskellPackages.optparse-applicative
+          haskellPackages.directory_1_3_8_5
+          haskellPackages.unix_2_8_5_1
+          haskellPackages.process_1_6_20_0
+          haskellPackages.optparse-applicative
         ];
       }
       ''
@@ -621,7 +621,7 @@
   # let us use media keys in TTY, for example.
   sound.enable = false;
 
-# Pipewire
+  # Pipewire
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -1694,7 +1694,7 @@
           "ftplugin/json.vim" = ''
             setlocal foldmethod=manual
           '';
-          "ftplugin/md.vim" = ''
+          "ftplugin/markdown.vim" = ''
             setlocal wrap
           '';
         };
@@ -2598,15 +2598,14 @@
             env = QT_AUTO_SCREEN_SCALE_FACTOR, 1
             env = MOZ_ENABLE_WAYLAND, 1
             env = GTK_USE_PORTAL, 1
-
-            xwayland {
-              force_zero_scaling = true
-            }
           '';
 
         settings = {
           debug.disable_logs = true;
-
+          xwayland = {
+            enabled = true;
+            force_zero_scaling = true;
+          };
           # Autostart.
           exec-once = [
             "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
