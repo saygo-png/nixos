@@ -199,19 +199,6 @@
 
     (writeShellScriptBin "monitor-toggle" (builtins.readFile ./resources/scripts/monitor-toggle.sh))
 
-    (writeShellScriptBin "nr"
-      ''
-        # Parametrized alias.
-        # $@ is an array of all arguments quoted, (w) operates on words,
-        # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
-        nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
-      '')
-
-    (writeShellScriptBin "snr"
-      ''
-        sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
-      '')
-
     (writeShellApplication {
       name = "format-udf";
       runtimeInputs = [coreutils udftools];
@@ -277,6 +264,18 @@
                 pure ()
             False -> printf "convertlink: cannot convert %s: Not a symlink\n" filepath
       '')
+
+    (writeShellApplication {
+      name = "fzfcd";
+      runtimeInputs = [fzf coreutils];
+      text = ''
+        dir=$(find ~/Sync ~/Documents ~/Downloads ~/nixos -mindepth 1 -maxdepth 3 | fzf)
+        if [ -z "$dir" ]; then
+         exit 1
+        fi
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+      '';
+    })
 
     (writeShellApplication {
       name = "update_mutable.sh";
@@ -887,6 +886,7 @@
         };
 
         shellAliases = {
+          "f" = "fzfcd";
           "countlines" = "tokei";
           "nix-shell" = "nix-shell --run zsh";
           "cbonsai" = "cbonsai --screensaver";
@@ -941,6 +941,7 @@
           jetbrains.pycharm-community-src # python IDE
           libreoffice # office
           anki # Flashcards
+          xdragon # drag items from terminal
           neovide # Neovim gui
           foliate # Ebook reader
           sayonara # Music player
@@ -1132,6 +1133,23 @@
           "bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
           "bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
           "bin/ow".source = ./resources/scripts/ow.py;
+          "bin/nr" = {
+            executable = true;
+            text = ''
+              #!/usr/bin/env zsh
+              # Parametrized alias.
+              # $@ is an array of all arguments quoted, (w) operates on words,
+              # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
+              nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+            '';
+          };
+          "bin/snr" = {
+            executable = true;
+            text = ''
+              #!/usr/bin/env zsh
+              sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+            '';
+          };
 
           # auto xrdb
           ${config.xresources.path}.onChange = ''

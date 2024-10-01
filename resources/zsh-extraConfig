@@ -120,14 +120,4 @@ export KEYTIMEOUT=1
 # Backspace delete.
 bindkey -v '^?' backward-delete-char
 
-# Use fzf to switch dirs and bind it to ctrl-f
-fzfcd () {
- dir=$(find ~/Sync ~/art/generative-art -mindepth 1 -maxdepth 3 | fzf)
- if [ -z $dir ]; then
-  exit 1
- fi
- [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-}
-bindkey -s '^f' 'fzfcd\n'
-
 cd ~/Desktop/
