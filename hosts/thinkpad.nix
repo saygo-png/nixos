@@ -6,7 +6,7 @@
   # inputs,
   # conHome,
   conUsername,
-  # conFlake-path,
+  # conFlakePath,
   # pkgs-unstable,
   # conAccentColor,
   conRefresh-rate,
@@ -194,7 +194,6 @@
           }
         ];
         monitor = [
-          # "eDP-1, ${res}, 0x0, 1"
           ", preferred, auto, 1"
         ];
       };

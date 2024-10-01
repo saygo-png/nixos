@@ -58,7 +58,8 @@
         host = "nixos";
         conUsername = "samsepi0l";
         conHome = "/home/samsepi0l";
-        conFlake-path = "/home/samsepi0l/nixos";
+        conFlakePath = "/home/samsepi0l/nixos";
+        conFlakePathRel = builtins.toString ./.;
         conAccentColor = "7d8618";
         conRefresh-rate = 144;
         conScreen-width = 1920;
@@ -80,7 +81,8 @@
         host = "thinkpad";
         conUsername = "samsepi0l";
         conHome = "/home/samsepi0l";
-        conFlake-path = "/home/samsepi0l/nixos";
+        conFlakePath = "/home/samsepi0l/nixos";
+        conFlakePathRel = builtins.toString ./.;
         conAccentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
         conRefresh-rate = 60;
         conScreen-width = 1366;

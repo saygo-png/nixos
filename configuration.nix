@@ -4,13 +4,14 @@
   host,
   pkgs,
   self,
-  config,
+  # config,
   inputs,
   conGaps,
   conHome,
   conUsername,
   conBorderSize,
-  conFlake-path,
+  conFlakePath,
+  conFlakePathRel,
   pkgs-unstable,
   conAccentColor,
   conRefresh-rate,
@@ -21,6 +22,8 @@
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
+    "${conFlakePathRel}/modules/myPackages.nix"
+    "${conFlakePathRel}/modules/myTmux.nix"
   ];
 
   # }}}
@@ -191,321 +194,6 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     hyprland-protocols
-
-    # Shellscripts.
-    (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile ./resources/scripts/hyprland-next-visible-client.sh))
-
-    (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
-
-    (writeShellScriptBin "monitor-toggle" (builtins.readFile ./resources/scripts/monitor-toggle.sh))
-
-    (writeShellApplication {
-      name = "format-udf";
-      runtimeInputs = [coreutils udftools];
-      text = builtins.readFile ./resources/scripts/format-udf.sh;
-    })
-
-    (pkgs.writers.writeHaskellBin "convertlink" {
-        libraries = with pkgs; [
-          haskellPackages.directory_1_3_8_5
-          haskellPackages.unix_2_8_5_1
-          haskellPackages.process_1_6_20_0
-          haskellPackages.optparse-applicative
-        ];
-      }
-      ''
-        {-# LANGUAGE LambdaCase #-}
-        import Control.Monad (when)
-        import Options.Applicative
-        import System.Directory
-        import System.Posix.Files
-        import System.Process (callProcess)
-        import Text.Printf (printf)
-
-        data Sample = Sample
-          { path :: FilePath,
-            write :: Bool
-          }
-
-        sample :: Parser Sample
-        sample =
-          Sample
-            <$> argument
-              str
-              ( help "Target for the greeting"
-                  <> metavar "SYMLINK"
-                  <> help "Symlink that will be converted"
-              )
-            <*> switch
-              ( long "write"
-                  <> short 'w'
-                  <> help "Give write permissions to the resulting file"
-              )
-
-        main :: IO ()
-        main = convertlinkAndWrite =<< execParser opts
-          where
-            opts =
-              info
-                (sample <**> helper)
-                ( fullDesc
-                    <> progDesc "Convert a symlink to the file its pointing to"
-                )
-
-        convertlinkAndWrite :: Sample -> IO ()
-        convertlinkAndWrite (Sample filepath giveWrite) = do
-          pathIsSymbolicLink filepath >>= \case
-            True -> do
-              fileFromSymlink <- readSymbolicLink filepath
-              _ <- callProcess "cp" ["--remove-destination", fileFromSymlink, filepath]
-              printf "Converted symlink %s\n" filepath
-              when giveWrite $ do
-                _ <- callProcess "chmod" ["+w", filepath]
-                pure ()
-            False -> printf "convertlink: cannot convert %s: Not a symlink\n" filepath
-      '')
-
-    (writeShellApplication {
-      name = "fzfcd";
-      runtimeInputs = [fzf coreutils];
-      text = ''
-        dir=$(find ~/Sync ~/Documents ~/Downloads ~/nixos -mindepth 1 -maxdepth 3 | fzf)
-        if [ -z "$dir" ]; then
-         exit 1
-        fi
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-      '';
-    })
-
-    (writeShellApplication {
-      name = "update_mutable.sh";
-      runtimeInputs = [coreutils];
-      text = ''
-        set -o pipefail
-        set -u
-        IFS= # don't split
-        set +f # do glob
-
-        KRITAHOME="${conHome}/.local/share/krita"
-        KRITANIXHOME="${conFlake-path}/resources/krita"
-        cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
-        cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
-        cp -vf "$HOME/.config/kritadisplayrc" "$KRITANIXHOME/kritadisplayrc"
-        # Dont include the cache
-        rm -vf "$KRITANIXHOME/krita-toplevel/resourcecache.sqlite"
-
-        ANKIHOME="${conHome}/.local/share/Anki2"
-        ANKINIXHOME="${conFlake-path}/resources/anki"
-        cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
-        find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
-      '';
-    })
-
-    (writeShellApplication {
-      name = "tree";
-      runtimeInputs = [eza];
-      text = ''
-        eza --group-directories-first --tree
-      '';
-    })
-
-    (writeShellApplication {
-      name = "remaps";
-      runtimeInputs = [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
-      text = ''
-        # This script is called on startup to remap keys.
-        # Decrease key repeat delay and increase key repeat rate.
-        xset r rate ${builtins.toString config.services.xserver.autoRepeatDelay} ${builtins.toString config.services.xserver.autoRepeatInterval}
-        # Turn off caps lock if on since there is no longer a key for it.
-        xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
-        # Disable touchpad
-        ${lib.getExe pkgs.xorg.xinput} disable 'SynPS/2 Synaptics TouchPad'
-      '';
-    })
-
-    (writeShellApplication {
-      name = "flameshot_wrapper";
-      runtimeInputs = [flameshot xdotool];
-      text = ''
-        # This script is called instead of flameshot in awesome to fix an issue
-        # where calling flameshot would drop focus, even after taking a screenshot
-        focusedwindow_before=$(xdotool getactivewindow)
-        flameshot gui
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-      '';
-    })
-
-    (writeShellApplication {
-      name = "flameshot_wrapper_ocr";
-      runtimeInputs = [flameshot xdotool tesseract];
-      text = ''
-        # This script does what flameshot_wrapper does, and
-        # copies the screenshoted text to your clipboard
-        focusedwindow_before=$(xdotool getactivewindow)
-        message=$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin+pol stdin stdout)
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-        notify-send "$message"
-        echo "$message" | xclip -r -sel clip
-      '';
-    })
-
-    (writeShellApplication {
-      name = "flameshot_wrapper_ocr_trans";
-      runtimeInputs = [flameshot xdotool tesseract translate-shell libnotify];
-      text = ''
-        # This script does what flameshot_wrapper does, and
-        # translates the screenshotted text, sending a notification with the translation
-        focusedwindow_before=$(xdotool getactivewindow)
-        notify-send -t 3000 "$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin stdin stdout | trans -brief)"
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-      '';
-    })
-
-    (writeShellApplication {
-      name = "rdepends";
-      runtimeInputs = [nix];
-      text = ''
-        if [ "$#" -eq 0 ]; then
-            echo "No package(s) provided."
-            exit 1
-        fi
-
-        parent="/run/current-system"
-        child="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
-
-        if [ "$#" -eq 2 ]; then
-        parent="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
-        child="\$(nix eval --raw \"nixpkgs#$2.outPath\")"
-        fi
-
-        # echo then run the command
-        cmd="nix why-depends \"$parent\" \"$child\""
-        echo "$cmd" >&2
-        eval "$cmd"
-      '';
-    })
-
-    (writeShellScriptBin "hwinfolist"
-      ''
-        echo "GPU"
-        echo "nr amdgpu_top --gui"
-        echo "General Tree"
-        echo "snr lshw -json | nvim -c 'set filetype=json'"
-      '')
-
-    (writeShellScriptBin "clean-nix-hard"
-      ''
-        nix-env --delete-generations 3d
-        sudo nix-env --delete-generations 3d
-
-        nix-collect-garbage --delete-older-than 3d
-        sudo nix-collect-garbage --delete-older-than 3d
-
-        nix-collect-garbage -d
-        sudo nix-collect-garbage -d
-
-        nix-store --gc
-        sudo nix-store --gc
-
-        nix store optimise
-        sudo nix store optimise
-
-        rm -rf ${conHome}/.local/state/home-manager
-        rm -f ${conHome}/.local/state/nix/profiles/home-manager*
-      '')
-
-    (writeShellScriptBin "connection-tester"
-      ''
-        connected_to_internet() {
-          test_urls="\
-          https://www.google.com/ \
-          https://www.duck.com/ \
-          https://www.cloudflare.com/ \
-          "
-          processes="0"
-          pids=""
-          for test_url in $test_urls; do
-            curl --silent --head "$test_url" > /dev/null &
-            pids="$pids $!"
-            processes=$(($processes + 1))
-          done
-          while [ $processes -gt 0 ]; do
-            for pid in $pids; do
-              if ! ps | grep "^[[:blank:]]*$pid[[:blank:]]" > /dev/null; then
-                # Process no longer running
-                processes=$(($processes - 1))
-                pids=$(echo "$pids" | sed --regexp-extended "s/(^| )$pid($| )/ /g")
-
-                if wait $pid; then
-                  # Success! We have a connection to at least one public site, so the
-                  # internet is up. Ignore other exit statuses.
-                  kill -TERM $pids > /dev/null 2>&1 || true
-                  wait $pids
-                  return 0
-                fi
-              fi
-            done
-            wait -n $pids # Better than sleep, but not supported on all systems
-          done
-          return 1
-        }
-        if connected_to_internet; then
-            echo "Connected to internet" && ${lib.getExe pkgs.libnotify} "Connected to internet"
-          else
-            echo "No internet connection"
-        fi
-      '')
-
-    (writeShellApplication {
-      name = "pizzatimer";
-      bashOptions = ["pipefail"];
-      runtimeInputs = with pkgs; [termdown libnotify sox];
-      text = ''
-        termdown 15m
-        notify-send "Pizza is done."
-        play ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/bell.oga
-      '';
-    })
-
-    (writeShellApplication {
-      name = "hyprcorder.sh";
-      bashOptions = ["pipefail"];
-      runtimeInputs = with pkgs; [wl-screenrec slurp ripdrag libnotify coreutils procps];
-      text = ''
-        notify() {
-          notify-send "$@"
-          echo "$@"
-        }
-        dir="${conHome}/screencaptures"
-        [ -d "$dir" ] || mkdir -p "$dir"
-        filename="$dir/$(date +%y.%m.%d-%H:%M).mp4"
-
-        if pgrep wl-screenrec &>/dev/null; then
-          kill -s SIGINT $(pgrep wl-screenrec) && notify "wl-screenrec stopped"
-          pushd "$dir" || exit 2
-          ripdrag "$(find . -maxdepth 1 -type f -printf '%T@\t%Tc %6k Ki\t%P\n' | sort -n | cut -f 3- | tail -n1)"
-          popd || exit 2
-          exit 0
-        fi
-
-        if [ $# -eq 0 ]; then
-          wl-screenrec --audio -b "1 MB" -f "$filename" &
-        else
-          dim="$(slurp)"
-          if [ -z "$dim" ]; then
-            notify "No area selected"
-            exit 2
-          fi
-          wl-screenrec -b "1 MB" -f "$filename" -g "$dim" &
-        fi
-
-        if pgrep wl-screenrec &>/dev/null; then
-          notify "wl-screenrec started"
-        else
-          notify "wl-screenrec failed to start"
-        fi
-      '';
-    })
   ];
 
   # }}}
@@ -651,7 +339,7 @@
 
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
-    FLAKE = "${conFlake-path}"; # For nix helper.
+    FLAKE = "${conFlakePath}"; # For nix helper.
   };
   # }}}
 
@@ -809,7 +497,7 @@
       };
 
       # # Prevent default apps from being changed
-      # xdg.configFile."mimeapps.list".force = true;
+      xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
         enable = true;
         associations.added = config.xdg.mimeApps.defaultApplications;
@@ -905,7 +593,7 @@
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
           "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
-          "nhoffline" = "nh os switch ${conFlake-path} -- --option substitute false";
+          "nhoffline" = "nh os switch ${conFlakePath} -- --option substitute false";
           "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${conHome}/screencaptures/recording.wav";
@@ -1016,8 +704,6 @@
           lib.hm.dag.entryAfter ["installPackages"] ''
           '';
 
-        # Binary (or not) blobs.
-        sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
         file = let
           # Qt config
           colorSchemeName = "gruvbox-medium-dark";
@@ -1130,27 +816,7 @@
             };
           };
         in {
-          "bin/tmux-mem-cpp".source = ./resources/static/tmux-mem-cpp;
           "bin/hyprfullscreenfix".source = ./resources/static/hyprfullscreenfix;
-          "bin/ow".source = ./resources/scripts/ow.py;
-          "bin/nr" = {
-            executable = true;
-            text = ''
-              #!/usr/bin/env zsh
-              # Parametrized alias.
-              # $@ is an array of all arguments quoted, (w) operates on words,
-              # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
-              nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
-            '';
-          };
-          "bin/snr" = {
-            executable = true;
-            text = ''
-              #!/usr/bin/env zsh
-              sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
-            '';
-          };
-
           # auto xrdb
           ${config.xresources.path}.onChange = ''
             [[ -z "$\{DISPLAY:-}" ]] && echo Display not set && exit 0
@@ -1401,75 +1067,6 @@
         ];
       };
 
-      programs.tmux = {
-        baseIndex = 1;
-        enable = true;
-        keyMode = "vi";
-        prefix = "C-a";
-        escapeTime = 0; # Delay after pressing escape
-        mouse = true; # Allows you to scroll a terminal
-        historyLimit = 1000; # Alacritty already holds history
-        extraConfig = ''
-          #No hanging sessions.
-          set-option -sg destroy-unattached
-
-          # For vim autoread.
-          set-option -g focus-events on
-
-          # For truecolor inside tmux
-          set -g default-terminal 'tmux-256color'
-          set -as terminal-overrides ",alacritty*:Tc"
-
-          # Easy-to-remember split pane commands.
-          bind | split-window -h
-          bind - split-window -v
-          unbind '"'
-          unbind %
-
-          # I don't know, read the docs.
-          setw -g monitor-activity on
-          set -g visual-activity on
-
-          # Moving between panes with vim movement keys.
-          bind h select-pane -L
-          bind j select-pane -D
-          bind k select-pane -U
-          bind l select-pane -R
-          # moving between windows with vim movement keys.
-          bind -r C-h select-window -t :-
-          bind -r C-l select-window -t :+
-          # Resize panes with vim movement keys.
-          bind -r H resize-pane -L 5
-          bind -r J resize-pane -D 5
-          bind -r K resize-pane -U 5
-          bind -r L resize-pane -R 5
-
-          # Status line.
-          set-option -sg status on
-          set-option -sg status-keys vi
-          set-option -sg status-left ""
-          set-option -sg status-interval 30
-          set-option -sg status-justify left
-          set-option -sg status-left-length 10
-          set-option -sg status-position bottom
-          set-option -sg status-right-length 45
-          set-option -sg status-left-style default
-          set-option -sg status-right-style default
-          set-option -sg status-style fg=green,bg=default
-          set-option -sg status-right "#(tmux-mem-cpp) %Y-%m-%d (%Ob %a) %H:%M"
-
-          # y and p as in vim.
-          set-option -sg set-clipboard on
-          bind Escape copy-mode
-          # Bind p paste-buffer.
-          bind-key -T copy-mode-vi 'p' send -X paste-buffer
-          bind-key -T copy-mode-vi 'v' send -X begin-selection
-          bind-key -T copy-mode-vi 'Bspace' send -X halfpage-up
-          bind-key -T copy-mode-vi 'Space' send -X halfpage-down
-          bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
-        '';
-      };
-
       programs.fzf = {
         enable = true;
         defaultCommand = "fd --type f";
@@ -1483,7 +1080,6 @@
           "bg+" = "-1";
           "gutter" = "-1";
         }; # Transparent fzf.
-        tmux.enableShellIntegration = true;
       };
 
       programs.zsh = {

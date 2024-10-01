@@ -7,7 +7,7 @@
   # inputs,
   conUsername,
   pkgs-unstable,
-  # conFlake-path,
+  # conFlakePath,
   conRefresh-rate,
   conScreen-width,
   # conAccentColor,
