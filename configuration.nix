@@ -135,10 +135,8 @@
     appimage-run # Appimage runner
 
     # Other.
-    dbus # Bugfix for incorrect paths, might be useless
     firefox
     ncdu
-    wmctrl
     exiftool
     rclone
     ntfs3g # ntfs filesystem interop (windows fs)
@@ -200,6 +198,19 @@
     (writeShellScriptBin "vmrss" (builtins.readFile ./resources/scripts/vmrss.sh))
 
     (writeShellScriptBin "monitor-toggle" (builtins.readFile ./resources/scripts/monitor-toggle.sh))
+
+    (writeShellScriptBin "nr"
+      ''
+        # Parametrized alias.
+        # $@ is an array of all arguments quoted, (w) operates on words,
+        # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
+        nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+      '')
+
+    (writeShellScriptBin "snr"
+      ''
+        sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+      '')
 
     (writeShellApplication {
       name = "format-udf";
@@ -375,8 +386,7 @@
       '';
     })
 
-    (writeShellScriptBin
-      "hwinfolist"
+    (writeShellScriptBin "hwinfolist"
       ''
         echo "GPU"
         echo "nr amdgpu_top --gui"
@@ -384,8 +394,7 @@
         echo "snr lshw -json | nvim -c 'set filetype=json'"
       '')
 
-    (writeShellScriptBin
-      "clean-nix-hard"
+    (writeShellScriptBin "clean-nix-hard"
       ''
         nix-env --delete-generations 3d
         sudo nix-env --delete-generations 3d
@@ -406,8 +415,7 @@
         rm -f ${conHome}/.local/state/nix/profiles/home-manager*
       '')
 
-    (writeShellScriptBin
-      "connection-tester"
+    (writeShellScriptBin "connection-tester"
       ''
         connected_to_internet() {
           test_urls="\
@@ -1373,6 +1381,8 @@
           # "--follow"
           "--glob"
         ];
+      };
+
       programs.tmux = {
         baseIndex = 1;
         enable = true;
@@ -1969,7 +1979,6 @@
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
           vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
-          vim.keymap.set("n", "p", "p=`]", { desc = "Paste with fixed indent"})
           vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
           vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
           vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
