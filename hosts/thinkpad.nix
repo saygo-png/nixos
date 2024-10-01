@@ -9,11 +9,14 @@
   # conFlakePath,
   # pkgs-unstable,
   # conAccentColor,
-  conRefresh-rate,
-  conScreen-width,
-  conScreen-height,
   ...
 }: {
+  specialisation.class.configuration = {
+    home-manager.users.${conUsername} = {
+      home.sessionVariables.BROWSER = lib.mkForce "firefox";
+    };
+  };
+
   # Bluetooth
   services.blueman.enable = true;
   hardware.bluetooth = {
