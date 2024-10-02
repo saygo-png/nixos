@@ -1,12 +1,9 @@
 {
   lib,
-  # host,
   pkgs,
-  # self,
   config,
   conGaps,
   conUsername,
-  # conFlakePath,
   conBorderSize,
   conAccentColor,
   conFlakePathRel,

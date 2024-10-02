@@ -1,11 +1,5 @@
 {
-  # lib,
-  # host,
-  # pkgs,
-  # self,
-  # config,
   conUsername,
-  conFlakePath,
   conFlakePathRel,
   ...
 }: {

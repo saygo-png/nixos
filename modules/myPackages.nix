@@ -1,19 +1,11 @@
 {
   lib,
-  host,
   pkgs,
-  self,
   config,
-  inputs,
-  conGaps,
   conHome,
   conUsername,
   conFlakePath,
-  conBorderSize,
-  pkgs-unstable,
-  conAccentColor,
   conFlakePathRel,
-  conRefresh-rate,
   ...
 }: {
   # imports = [
