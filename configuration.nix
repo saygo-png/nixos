@@ -6,6 +6,7 @@
   self,
   inputs,
   conHome,
+  options,
   conUsername,
   conFlakePath,
   pkgs-unstable,
@@ -94,6 +95,12 @@
 
   ###### NixOS programs ###### {{{
 
+  # Appimage support.
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
   programs.gnupg.agent.enable = true;
   programs.gnupg.agent.enableSSHSupport = true;
 
@@ -102,6 +109,7 @@
 
   # Fixes dolphin not having mime types.
   environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
   # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
@@ -110,7 +118,6 @@
     nix-tree # Reverse dependency search
     nix-output-monitor # Pretty nix build output
     alejandra # Nix formatter
-    appimage-run # Appimage runner
 
     # Other.
     firefox
@@ -211,6 +218,17 @@
     dates = "2day";
     options = "--delete-older-than 15d";
   };
+  programs.nix-ld.enable = true;
+  ## If needed, you can add missing libraries here. nix-index-database is your friend to
+  ## find the name of the package from the error message:
+  ## https://github.com/nix-community/nix-index-database
+  programs.nix-ld.libraries =
+    options.programs.nix-ld.libraries.default
+    ++ (with pkgs; [
+      gcc
+      libgcc
+      e2fsprogs
+    ]);
   # }}}
 
   ###### Services ###### {{{
