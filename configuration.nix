@@ -17,10 +17,12 @@
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
     "${conFlakePathRel}/modules/myTmux.nix"
+    "${conFlakePathRel}/modules/myRawQT.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
     "${conFlakePathRel}/modules/myAwesome.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
+    "${conFlakePathRel}/modules/myZSH.nix"
   ];
 
   # }}}
@@ -83,7 +85,6 @@
   users.users.${conUsername} = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
-    shell = pkgs.zsh;
   };
 
   # Keep sudo password cached infinitely
@@ -131,17 +132,6 @@
     nsxiv # Image viewer
 
     kdePackages.dolphin # File manager
-
-    # QT SHIT
-    kdePackages.qtsvg # Icons for dolphin
-    kdePackages.qtwayland # qt6
-    libsForQt5.qt5.qtwayland
-
-    # fix kirigami apps look
-    # for example in filelight, without it the app looks weird
-    # https://github.com/NixOS/nixpkgs/pull/202990#issuecomment-1328068486
-    kdePackages.qqc2-desktop-style # qt6
-    libsForQt5.qqc2-desktop-style
 
     hydrus # Image collection
     patool # Universal archiver
@@ -300,21 +290,10 @@
   };
   # }}}
 
-  ###### Shell ###### {{{
-
-  programs.zsh.enable = true;
-
-  # Declare zsh as an available shell.
-  environment.shells = [pkgs.zsh];
-
-  # Provides autocompletion for system programs for zsh.
-  environment.pathsToLink = ["/share/zsh"];
-
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
     FLAKE = "${conFlakePath}"; # For nix helper.
   };
-  # }}}
 
   ###### Visuals ###### {{{
 
@@ -545,7 +524,6 @@
         shellAliases = {
           "f" = "fzfcd";
           "countlines" = "tokei";
-          "nix-shell" = "nix-shell --run zsh";
           "cbonsai" = "cbonsai --screensaver";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
@@ -574,12 +552,6 @@
           OPENER = "xdg-open";
           TERMINAL = "alacritty";
           BROWSER = "librewolf";
-
-          # Fake running KDE
-          # https://wiki.archlinux.org/title/qt#Configuration_of_Qt_5_applications_under_environments_other_than_KDE_Plasma
-          # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#The_KDE_Plasma_XDG_Desktop_Portal_is_not_being_used
-          DESKTOP_SESSION = "KDE";
-
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
@@ -588,7 +560,6 @@
           XCURSOR_SIZE = config.home.pointerCursor.size;
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
-          QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
         };
 
         # Home packages, home manager packages, user packages, home programs
@@ -669,141 +640,6 @@
           lib.hm.dag.entryAfter ["installPackages"] ''
           '';
 
-        file = let
-          # Qt config
-          colorSchemeName = "gruvbox-medium-dark";
-          mkScheme = colors: lib.concatStringsSep ", " (map (color: "#ff${color}") colors);
-          colorScheme = lib.generators.toINI {} {
-            ColorScheme = with config.lib.stylix.colors; {
-              active_colors = mkScheme [
-                base06 # Window text
-                base00 # Button background
-                base06 # Bright
-                base05 # Less bright
-                base01 # Dark
-                base02 # Less dark
-                base06 # Normal text
-                base07 # Bright text
-                base06 # Button text
-                base00 # Normal background
-                base00 # Window
-                base00 # Shadow
-                base02 # Highlight
-                base05 # Highlighted text
-                base0D # Link
-                base0E # Visited link
-                base00 # Alternate background
-                base01 # Default
-                base01 # Tooltip background
-                base06 # Tooltip text
-                base05 # Placeholder text
-              ];
-
-              inactive_colors = mkScheme [
-                base04 # Window text
-                base00 # Button background
-                base05 # Bright
-                base04 # Less bright
-                base01 # Dark
-                base02 # Less dark
-                base04 # Normal text
-                base05 # Bright text
-                base04 # Button text
-                base00 # Normal background
-                base00 # Window
-                base00 # Shadow
-                base02 # Highlight
-                base05 # Highlighted text
-                base0D # Link
-                base0E # Visited link
-                base00 # Alternate background
-                base01 # Default
-                base01 # Tooltip background
-                base05 # Tooltip text
-                base04 # Placeholder text
-              ];
-
-              disabled_colors = mkScheme [
-                base04 # Window text
-                base00 # Button background
-                base04 # Bright
-                base03 # Less bright
-                base00 # Dark
-                base01 # Less dark
-                base04 # Normal text
-                base05 # Bright text
-                base04 # Button text
-                base00 # Normal background
-                base00 # Window
-                base00 # Shadow
-                base02 # Highlight
-                base05 # Highlighted text
-                base0D # Link
-                base0E # Visited link
-                base00 # Alternate background
-                base01 # Default
-                base01 # Tooltip background
-                base04 # Tooltip text
-                base03 # Placeholder text
-              ];
-            };
-          };
-
-          baseConfig = {
-            Appearance = {
-              color_scheme_path = "${conHome}/.config/qt5ct/colors/${colorSchemeName}.conf";
-              custom_palette = true;
-              icon_theme = config.gtk.iconTheme.name;
-              standard_dialogs = "default";
-              # style = "Fusion";
-              style = "Adwaita-Dark";
-            };
-
-            Troubleshooting = {
-              force_raster_widgets = 1;
-              ignored_applications = "@Invalid()";
-            };
-
-            Interface = {
-              cursor_flash_time = 1200;
-              double_click_interval = 400;
-              menus_have_icons = true;
-              show_shortcuts_in_context_menus = true;
-              gui_effects = "@Invalid()";
-              stylesheets = "@Invalid()";
-              buttonbox_layout = 3; # GNOME dialog button layout
-              toolbutton_style = 4; # Follow the application style
-              activate_item_on_single_click = 1; # ... - i think that means let the application decide
-              dialog_buttons_have_icons = 1; # ...
-              underline_shortcut = 1; # ...
-              wheel_scroll_lines = 3;
-              keyboard_scheme = 2; # X11
-            };
-          };
-        in {
-          # QT theme
-          ".config/qt5ct/colors/${colorSchemeName}.conf".text = colorScheme;
-          ".config/qt6ct/colors/${colorSchemeName}.conf".text = colorScheme;
-          ".config/qt5ct/qt5ct.conf".text = lib.generators.toINI {} (
-            baseConfig
-            // {
-              Fonts = {
-                fixed = "\"${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications},-1,5,50,0,0,0,0,0,Regular\"";
-                general = "\"${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications},-1,5,50,0,0,0,0,0,Regular\"";
-              };
-            }
-          );
-          ".config/qt6ct/qt6ct.conf".text = lib.generators.toINI {} (
-            baseConfig
-            // {
-              Fonts = {
-                fixed = "\"${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular\"";
-                general = "\"${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular\"";
-              };
-            }
-          );
-        };
-
         # This allows for semi-declarative configuration.
         # However it makes you lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
@@ -869,15 +705,6 @@
           name = "Gruvbox-Plus-Dark";
           package = pkgs.gruvbox-plus-icons;
         };
-      };
-
-      qt = {
-        enable = true;
-        platformTheme.name = "qtct";
-        style.package = with pkgs; [
-          adwaita-qt
-          adwaita-qt6
-        ];
       };
 
       # Development, internal.
@@ -964,7 +791,6 @@
 
       programs.yazi = {
         enable = true;
-        enableZshIntegration = true;
         settings.manager = {
           show_hidden = true;
           sort_dir_first = true;
@@ -1014,26 +840,6 @@
           "bg+" = "-1";
           "gutter" = "-1";
         }; # Transparent fzf.
-      };
-
-      programs.zsh = {
-        enable = true;
-        history.save = 50;
-        history.size = 50;
-        defaultKeymap = "viins";
-        enableCompletion = false;
-        autosuggestion.enable = true;
-        syntaxHighlighting.enable = true;
-        historySubstringSearch.enable = true;
-        syntaxHighlighting.highlighters = ["brackets"];
-        initExtra = builtins.readFile ./resources/zsh-extraConfig;
-        plugins = [
-          {
-            name = "vi-mode";
-            src = pkgs.zsh-vi-mode;
-            file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
-          }
-        ];
       };
 
       programs.btop = {
