@@ -1,6 +1,6 @@
 mapfile -t ARR < <(
   hyprctl clients -j |
-          jq -r '
+    jq -r '
            sort_by(.monitor,.workspace.id) |
           .[] |
           select(.hidden==false) |

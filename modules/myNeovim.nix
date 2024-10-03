@@ -12,10 +12,7 @@
     neovide # Neovim gui
   ];
 
-  home-manager.users.${conUsername} = {
-    inputs,
-    ...
-  }: {
+  home-manager.users.${conUsername} = {inputs, ...}: {
     home.shellAliases = {"neov" = "neovide";};
     home.sessionVariables = {EDITOR = "nvim";};
     programs.nixvim = {
@@ -703,6 +700,7 @@
               args = ["fix" "-"];
               stdin = true;
             };
+            shfmt.args = lib.mkOptionDefault ["-i" "2"];
           };
         };
 

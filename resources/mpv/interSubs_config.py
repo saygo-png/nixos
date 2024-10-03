@@ -17,14 +17,14 @@ lang_to = 'en'
 # dictionaries to use, one or more
 # or other function's name you might write that will return ([[word, translation]..], [morphology = '', gender = ''])
 # available:
-#	pons
-#	reverso
-#	dict_cc
-#	leo
-#	google
-#	morfix (he/en en/he)
-#	redensarten (redensarten-index.de - German idioms etc.)
-#	tab_divided_dict - simple offline dictionary with word \t translation per line
+#   pons
+#   reverso
+#   dict_cc
+#   leo
+#   google
+#   morfix (he/en en/he)
+#   redensarten (redensarten-index.de - German idioms etc.)
+#   tab_divided_dict - simple offline dictionary with word \t translation per line
 translation_function_names = ['pons', 'reverso']
 # for automatic switch to Hebrew. Skip if it isn't your language.
 # translation_function_names_2 = ['google', 'morfix']
@@ -104,20 +104,20 @@ split_long_lines_in_popup_symbols_min = 80
 '''
 /* Examples of css: */
 
-background: transparent;				/* fully transparent */
-background: black;						/* black background*/
-background: #ffffff;					/* white background*/
-background: rgba(0, 0, 0, 20%);			/* semi-opaque black 20% */
-background: rgba(0, 0, 0, 50%);			/* semi-opaque black 50% */
-background: rgba(0, 0, 0, 80%);			/* semi-opaque black 80% */
-background: rgba(255, 255, 255, 40%);	/* semi-opaque white 40% */
-background: rgba(44, 44, 44, 90%);		/* semi-opaque dark-grey 90% */
+background: transparent;                /* fully transparent */
+background: black;                      /* black background*/
+background: #ffffff;                    /* white background*/
+background: rgba(0, 0, 0, 20%);         /* semi-opaque black 20% */
+background: rgba(0, 0, 0, 50%);         /* semi-opaque black 50% */
+background: rgba(0, 0, 0, 80%);         /* semi-opaque black 80% */
+background: rgba(255, 255, 255, 40%);   /* semi-opaque white 40% */
+background: rgba(44, 44, 44, 90%);      /* semi-opaque dark-grey 90% */
 
 /* Font colors: */
 color: white;
 color: #BAC4D6;
-color: rgb(217, 49, 49);				/* red */
-color: rgba(217, 49, 49, 70%);			/* semi-opaque red 70% */
+color: rgb(217, 49, 49);                /* red */
+color: rgba(217, 49, 49, 70%);          /* semi-opaque red 70% */
 
 font-family: "Trebuchet MS";
 font-weight: bold;
@@ -125,62 +125,62 @@ font-size: 33px;
 
 font: bold italic large "Times New Roman" 34px;
 
-		font-family: "FiraGO";
-		font-family: "Trebuchet MS";
-		font-family: "American Typewriter";
+        font-family: "FiraGO";
+        font-family: "Trebuchet MS";
+        font-family: "American Typewriter";
 '''
 
 # CSS styles for subtitles
 style_subs = '''
-	/* looks of subtitles */
-	QFrame {
-		background: transparent;
-		color: white;
-		color: #FFF0CD;
+    /* looks of subtitles */
+    QFrame {
+        background: transparent;
+        color: white;
+        color: #FFF0CD;
 
-		font-family: "American Typewriter";
-		/* font-weight: bold; */
-		font-size: 52px;
-	}
+        font-family: "American Typewriter";
+        /* font-weight: bold; */
+        font-size: 52px;
+    }
 '''
 
 # CSS styles for translations(popup)
 style_popup = '''
-	/* main */
-	QFrame {
-		background: rgb(44, 44, 44);
+    /* main */
+    QFrame {
+        background: rgb(44, 44, 44);
 
-		font-family: "Trebuchet MS";
-		font-weight: bold;
-		font-size: 40px;
-	}
-	/* original language */
-	QLabel#first_line {
-		color: #DCDCCC;
-	}
+        font-family: "Trebuchet MS";
+        font-weight: bold;
+        font-size: 40px;
+    }
+    /* original language */
+    QLabel#first_line {
+        color: #DCDCCC;
+    }
 
-	/* original language - underlining exact word */
-	QLabel#first_line_emphasize_word {
-		color: #DCDCCC;
-		text-decoration: underline;
-	}
+    /* original language - underlining exact word */
+    QLabel#first_line_emphasize_word {
+        color: #DCDCCC;
+        text-decoration: underline;
+    }
 
-	/* translation */
-	QLabel#second_line {
-		color: #8B8F88;
-	}
+    /* translation */
+    QLabel#second_line {
+        color: #8B8F88;
+    }
 
-	/* colorizing morphology */
-	[morphology=""]		{ color: #CA8200; }
-	[morphology="m"]	{ color: #5EB0FF; }
-	[morphology="f"]	{ color: #E34840; }
-	[morphology="nt"]	{ color: #8BC34A; }
+    /* colorizing morphology */
+    [morphology=""]     { color: #CA8200; }
+    [morphology="m"]    { color: #5EB0FF; }
+    [morphology="f"]    { color: #E34840; }
+    [morphology="nt"]   { color: #8BC34A; }
 
-	/* delimiter between dictionaries */
-	QFrame#delimiter {
-		background: #8B8F88;
-		font-size: 4px;	/* emulating thickness */
-	}
+    /* delimiter between dictionaries */
+    QFrame#delimiter {
+        background: #8B8F88;
+        font-size: 4px; /* emulating thickness */
+    }
 '''
 
 # for subtitles to be visible on background with similar color
@@ -197,7 +197,7 @@ outline_bottom_padding = 2
 
 # highlighting the word under cursor
 hover_color = '#F44336'
-hover_hightlight = False	# may look ugly due to only int precision of QFontMetrics
+hover_hightlight = False # may look ugly due to only int precision of QFontMetrics
 hover_underline = True
 hover_underline_thickness = 5
 
@@ -217,65 +217,63 @@ hover_underline_thickness = 5
 
 # https://doc.qt.io/qt-5/qt.html#MouseButton-enum
 # mouse_event:
-	# LeftButton
-	# RightButton
-	# MiddleButton (wheel-click)
-	# BackButton (Typically present on the 'thumb' side of a mouse with extra buttons. This is NOT the tilt wheel.)
-	# ForwardButton
+# LeftButton
+# RightButton
+# MiddleButton (wheel-click)
+# BackButton (Typically present on the 'thumb' side of a mouse with extra buttons. This is NOT the tilt wheel.)
+# ForwardButton
 
-	# wheel scroll up/down left/right names' are arbitrary and not from Qt
-	# ScrollUp
-	# ScrollDown
-	# ScrollLeft (This is the tilt wheel.)
-	# ScrollRight
+# wheel scroll up/down left/right names' are arbitrary and not from Qt
+# ScrollUp
+# ScrollDown
+# ScrollLeft (This is the tilt wheel.)
+# ScrollRight
 
 # Note: On macOS, the ControlModifier value corresponds to the Command keys on the keyboard.
 # https://doc.qt.io/qt-5/qt.html#KeyboardModifier-enum
 # modifier_key:
-	# NoModifier
-	# ControlModifier
-	# ShiftModifier
-	# AltModifier
+# NoModifier
+# ControlModifier
+# ShiftModifier
+# AltModifier
 
 # self_explanatory_function_name:
-	# f_show_in_browser
-	# f_auto_pause_options
-	# f_listen
-	# f_scroll_translations_down
-	# f_scroll_translations_up
-	# f_subs_screen_edge_padding_decrease
-	# f_subs_screen_edge_padding_increase
-	# f_font_size_decrease
-	# f_font_size_increase
-	# f_auto_pause_min_words_decrease
-	# f_auto_pause_min_words_increase
-	# f_translation_full_sentence
-	# f_save_word_to_file
-	# f_deepl_translation < obsolete, changed into f_translation_full_sentence
+# f_show_in_browser
+# f_auto_pause_options
+# f_listen
+# f_scroll_translations_down
+# f_scroll_translations_up
+# f_subs_screen_edge_padding_decrease
+# f_subs_screen_edge_padding_increase
+# f_font_size_decrease
+# f_font_size_increase
+# f_auto_pause_min_words_decrease
+# f_auto_pause_min_words_increase
+# f_translation_full_sentence
+# f_save_word_to_file
+# f_deepl_translation < obsolete, changed into f_translation_full_sentence
 
 mouse_buttons = [
-	['LeftButton',		'NoModifier',		'f_show_in_browser'],
-	['RightButton',		'NoModifier',		'f_translation_full_sentence'],
-	['MiddleButton',	'NoModifier',		'f_auto_pause_options'],
+  ['LeftButton', 'NoModifier', 'f_show_in_browser'],
+  ['RightButton', 'NoModifier', 'f_translation_full_sentence'],
+  ['MiddleButton', 'NoModifier', 'f_auto_pause_options'],
+  ['BackButton', 'NoModifier', 'f_listen'],
+  ['ScrollDown', 'NoModifier', 'f_scroll_translations_down'],
+  ['ScrollUp', 'NoModifier', 'f_scroll_translations_up'],
+  ['ScrollDown', 'ControlModifier', 'f_font_size_decrease'],
+  ['ScrollUp', 'ControlModifier', 'f_font_size_increase'],
 
-	['BackButton',		'NoModifier',		'f_listen'],
-
-	['ScrollDown',		'NoModifier',		'f_scroll_translations_down'],
-	['ScrollUp',		'NoModifier',		'f_scroll_translations_up'],
-
-	['ScrollDown',		'ControlModifier',		'f_font_size_decrease'],
-	['ScrollUp',		'ControlModifier',		'f_font_size_increase'],
-
-	# ['ScrollLeft',		'NoModifier',		'f_auto_pause_min_words_decrease'],
-	# ['ScrollRight',		'NoModifier',		'f_auto_pause_min_words_increase'],
-	['ScrollRight',		'NoModifier',		'f_listen'],
-
-	['ScrollDown',		'ShiftModifier',		'f_subs_screen_edge_padding_decrease'],
-	['ScrollUp',		'ShiftModifier',		'f_subs_screen_edge_padding_increase'],
+  # ['ScrollLeft',      'NoModifier',       'f_auto_pause_min_words_decrease'],
+  # ['ScrollRight',     'NoModifier',       'f_auto_pause_min_words_increase'],
+  ['ScrollRight', 'NoModifier', 'f_listen'],
+  ['ScrollDown', 'ShiftModifier', 'f_subs_screen_edge_padding_decrease'],
+  ['ScrollUp', 'ShiftModifier', 'f_subs_screen_edge_padding_increase'],
 ]
 
 # http://culmus.sourceforge.net/summary.html
-he_fonts = ['Miriam', 'Miriam Mono', 'Drugulin', 'David', 'Frank Ruehl', 'Shofar', 'Varela Round', 'FiraGO']
+he_fonts = [
+  'Miriam', 'Miriam Mono', 'Drugulin', 'David', 'Frank Ruehl', 'Shofar', 'Varela Round', 'FiraGO'
+]
 
 # obsolete vars
 hover_underline_width = hover_underline_thickness

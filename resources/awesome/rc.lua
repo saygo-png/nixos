@@ -124,7 +124,7 @@ globalkeys = gears.table.join(
 	end, { description = "dropdown terminal", group = "launcher" }),
 
 	awful.key({ modkey }, "b", function()
-    awful.spawn(browser)
+		awful.spawn(browser)
 	end, { description = "start librewolf", group = "launcher" }),
 
 	awful.key({ modkey }, "space", function()
@@ -470,8 +470,8 @@ end)
 
 -- This fixes wmctrl (thus rofi)
 client.connect_signal("property::urgent", function(c)
-  c.minimized = false
-  c:jump_to()
+	c.minimized = false
+	c:jump_to()
 end)
 
 -- Signal function to execute when a new client appears.

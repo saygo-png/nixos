@@ -438,8 +438,6 @@
       stylix.targets.gnome.enable = true;
       stylix.targets.kde.enable = true;
 
-      # stylix.targets.regreet.enable = false;
-
       dconf.settings = {
         # Remove min and max buttons
         "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
@@ -725,18 +723,6 @@
           display = {
             compact = false;
             use_pager = true;
-          };
-        };
-      };
-
-      services.dunst = {
-        enable = true;
-        settings = {
-          global = {
-            width = 300;
-            height = 300;
-            offset = "30x50";
-            origin = "top-center";
           };
         };
       };

@@ -54,7 +54,7 @@ if [ "$NUM_MONITORS" -gt 1 ]; then # Handling multiple monitors
     move_all_workspaces_to_monitor $EXTERNAL_MONITOR
     hyprctl keyword monitor "$INTERNAL_MONITOR, disable"
   fi
-else  # If the external monitor is disconnected without running this script first, it might become the case that no monitor is on - therefore turn on the laptop monitor!
+else # If the external monitor is disconnected without running this script first, it might become the case that no monitor is on - therefore turn on the laptop monitor!
   hyprctl keyword monitor $INTERNAL_MONITOR,preferred,0x0,1
   move_all_workspaces_to_monitor $INTERNAL_MONITOR
 fi

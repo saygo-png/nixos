@@ -20,6 +20,15 @@
   home-manager.users.${conUsername} = {osConfig, ...}: {
     home.file."bin/hyprfullscreenfix".source = "${conFlakePathRel}/resources/static/hyprfullscreenfix";
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
+    services.dunst = {
+      enable = true;
+      settings.global = {
+        width = 300;
+        height = 300;
+        offset = "30x50";
+        origin = "top-center";
+      };
+    };
     wayland.windowManager.hyprland = let
       gaps_in = conGaps;
       gaps_out = conGaps * 2;
