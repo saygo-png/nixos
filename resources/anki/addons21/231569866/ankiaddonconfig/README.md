@@ -14,7 +14,7 @@ def general_tab(conf_window: ConfigWindow) -> None:
     tab = conf_window.add_tab("General")
     tab.text("Addon Config")
     tab.checkbox("use_fruit", "Should this addon use a fruit?")
-    
+
     fruit_labels = ["Apples", "Pears", "Grapes"] # Shown to the user in the config window
     fruit_values = ["apple", "pear", "grape"] # Actual value the json config will have
     tab.dropdown("fruit", fruit_labels, fruit_values)
@@ -24,19 +24,17 @@ def general_tab(conf_window: ConfigWindow) -> None:
     # This adds a stretchable blank space.
     # If you are not sure what this does,
     # Try resizing the config window without this line
-    tab.stretch() 
+    tab.stretch()
 
 conf.use_custom_window()
 conf.add_config_tab(general_tab)
 ```
 
-When the user opens the config window, a ConfigWindow object is created. Then before it is shown, every function you registered with `conf.add_config_tab` is run. 
+When the user opens the config window, a ConfigWindow object is created. Then before it is shown, every function you registered with `conf.add_config_tab` is run.
 
 Each widget is linked to a single config entry. When the user interacts with a widget and saves it, its corresponding config entry is modified and saved in the ConfigManager real-time. The config entry key that it will be linked to is passed as the first argument to the input widget. When you have a dictionary inside your config, you can link a config widget to one of its value using `"dict_name.dict_key"`. The config that ConfigManager stores will be saved to `meta.json` if 'Save' is clicked and discarded if 'Cancel' is clicked.
 
 Each ConfigManager instance stores its own config separately. And its configs are synced with `meta.json` only when `load()` and `save()` is called. This is intended so the config value changing while the add-on is running will not cause unanticipated errors. You should only call `conf.load()` when it is safe to do so. With that in mind, it is recommended to use separate ConfigManager instances for your config window.
-
-
 
 ### Compatibility
 
@@ -44,9 +42,9 @@ This library is compatible from Anki v2.1.0+. And atleast python v3.6.
 It should also remain compatible with newer Anki versions for a long time.
 
 ### Methods in ConfigLayout
+
 When you call `ConfigWindow.add_tab(name)`, you get a ConfigLayout object.
 Creating the widgets is done in ConfigLayout. All the below methods are methods of the ConfigLayout.
-
 
 List of all inputs.
 
@@ -66,12 +64,13 @@ def number_input(self, key: str, description: Optional[str] = None,
         assert isinstance(conf[key], int)
 def color_input(self, key: str, description: Optional[str] = None) -> QPushButton:
     assert conf[key] is 'a hex color string like "#000", "#000000" that QColor can understand'
-def path_input(self, key: str, description: Optional[str] = None, get_directory: bool = False, filter="Any files (*)") 
+def path_input(self, key: str, description: Optional[str] = None, get_directory: bool = False, filter="Any files (*)")
 -> Tuple[QLineEdit, QPushButton]:
     assert isinstance(conf[key], str)
 ```
 
 Commonly used methods:
+
 ```python
 def text(self, text: str, bold: bool = False, html: bool = False, size: int = 0, multiline: bool = False) -> QLabel:
     # Text label. `size`: font size
@@ -86,6 +85,7 @@ def vlayout(self) -> ConfigLayout:
 ```
 
 ## Using ConfigManager
+
 ```python
 from .ankiaddon import ConfigManager
 conf = ConfigManager()
@@ -97,6 +97,7 @@ conf.save() # Save conf to disk
 ```
 
 If you have a dictionary in your config, you can also do this:
+
 ```python
 value = conf.get("apple.color", "#ff0000") # conf["apple.color"] will raise KeyError if it doesn't exist
 conf["apple.color"] = "#ffff00"
@@ -106,6 +107,7 @@ del conf["apple.size"]
 ```
 
 Other features:
+
 ```python
 conf.load() # discards current config and loads config from disk.
 conf.get_default("fruit") # returns the value set in config.json
@@ -116,8 +118,8 @@ conf.clone() # returns a deepcopy of the config dictionary
 ## Contributing
 
 Please run mypy and black before creating a pull request. You may need to run `python -m pip install aqt PyQt5-stubs` for mypy checks to work.
+
 ```
 python -m mypy .
 python -m black .
 ```
-

@@ -90,6 +90,7 @@
         conGaps = 0;
         conBorderSize = 2;
       };
+
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
         ./hosts/thinkpad.nix

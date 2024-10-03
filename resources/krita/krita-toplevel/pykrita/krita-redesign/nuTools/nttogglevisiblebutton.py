@@ -15,21 +15,21 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtWidgets import QSizePolicy, QToolButton
 
-from PyQt5.QtWidgets import QToolButton, QSizePolicy
-from PyQt5.QtCore import Qt, QSize
 from .. import variables
 
 class ntToggleVisibleButton(QToolButton):
-    def __init__(self, parent = None):
-        super(ntToggleVisibleButton, self).__init__(parent)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
-        self.setIconSize(QSize(11, 11))
-        self.setStyleSheet(variables.nu_toggle_button_style)
-        
-    def setArrow(self, alignment):
-        if alignment == "right":
-            self.setArrowType(Qt.ArrowType.RightArrow)
-        else:
-            self.setArrowType(Qt.ArrowType.LeftArrow)
-        
+  def __init__(self, parent=None):
+    super(ntToggleVisibleButton, self).__init__(parent)
+    self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+    self.setIconSize(QSize(11, 11))
+    self.setStyleSheet(variables.nu_toggle_button_style)
+
+  def setArrow(self, alignment):
+    if alignment == "right":
+      self.setArrowType(Qt.ArrowType.RightArrow)
+    else:
+      self.setArrowType(Qt.ArrowType.LeftArrow)
+

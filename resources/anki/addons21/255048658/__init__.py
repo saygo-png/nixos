@@ -1,7 +1,8 @@
 import os
+
 from aqt import mw
-from . import settings_window
-from . import answer_buttons
+
+from . import answer_buttons, settings_window
 from .answer_effects import *
 
 addon_path = os.path.dirname(__file__)
@@ -15,6 +16,6 @@ is_buttons = config["buttons"]
 is_audio = config["audio"]
 
 if is_buttons:
-    answer_buttons.enable_bottom_buttons()
+  answer_buttons.enable_bottom_buttons()
 else:
-    answer_buttons.disable_bottom_buttons()
+  answer_buttons.disable_bottom_buttons()

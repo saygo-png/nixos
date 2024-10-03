@@ -1,10 +1,10 @@
-from typing import Callable, List, Tuple, TYPE_CHECKING, Optional
 from pathlib import Path
+from typing import TYPE_CHECKING, Callable, List, Optional, Tuple
 
 import aqt.addons
 from aqt import mw
 from aqt.qt import *
-from aqt.utils import tooltip, showText, saveGeom, restoreGeom
+from aqt.utils import restoreGeom, saveGeom, showText, tooltip
 
 from .errors import InvalidConfigValueError
 

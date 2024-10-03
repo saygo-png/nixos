@@ -15,64 +15,65 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QMdiArea, QDockWidget
+from PyQt5.QtWidgets import QDockWidget, QMdiArea
+
+from .. import variables
 from .ntadjusttosubwindowfilter import ntAdjustToSubwindowFilter
 from .ntwidgetpad import ntWidgetPad
-from .. import variables
 
 class ntToolBox():
+  def __init__(self, window):
+    qWin = window.qwindow()
+    mdiArea = qWin.findChild(QMdiArea)
+    toolbox = qWin.findChild(QDockWidget, 'ToolBox')
 
-    def __init__(self, window):
-        qWin = window.qwindow()
-        mdiArea = qWin.findChild(QMdiArea)
-        toolbox = qWin.findChild(QDockWidget, 'ToolBox')
+    # Create "pad"
+    self.pad = ntWidgetPad(mdiArea)
+    self.pad.setObjectName("toolBoxPad")
+    self.pad.borrowDocker(toolbox)
+    self.pad.setViewAlignment('left')
 
-        # Create "pad"
-        self.pad = ntWidgetPad(mdiArea)
-        self.pad.setObjectName("toolBoxPad")
-        self.pad.borrowDocker(toolbox)
-        self.pad.setViewAlignment('left')
-        
-        # Create and install event filter
-        self.adjustFilter = ntAdjustToSubwindowFilter(mdiArea)
-        self.adjustFilter.setTargetWidget(self.pad)
-        mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
-        qWin.installEventFilter(self.adjustFilter)
+    # Create and install event filter
+    self.adjustFilter = ntAdjustToSubwindowFilter(mdiArea)
+    self.adjustFilter.setTargetWidget(self.pad)
+    mdiArea.subWindowActivated.connect(self.ensureFilterIsInstalled)
+    qWin.installEventFilter(self.adjustFilter)
 
-        # Create visibility toggle action
-        action = window.createAction("showToolbox", "Show Toolbox", "settings")
-        action.toggled.connect(self.pad.toggleWidgetVisible)
-        action.setCheckable(True)
-        action.setChecked(True)
+    # Create visibility toggle action
+    action = window.createAction("showToolbox", "Show Toolbox", "settings")
+    action.toggled.connect(self.pad.toggleWidgetVisible)
+    action.setCheckable(True)
+    action.setChecked(True)
 
-        # Disable the related QDockWidget
-        self.dockerAction = window.qwindow().findChild(QDockWidget, "ToolBox").toggleViewAction()
-        self.dockerAction.setEnabled(False)
+    # Disable the related QDockWidget
+    self.dockerAction = window.qwindow().findChild(QDockWidget, "ToolBox").toggleViewAction()
+    self.dockerAction.setEnabled(False)
 
-    def ensureFilterIsInstalled(self, subWin):
-        """Ensure that the current SubWindow has the filter installed,
+  def ensureFilterIsInstalled(self, subWin):
+    """Ensure that the current SubWindow has the filter installed,
         and immediately move the Toolbox to current View."""
-        if subWin:
-            subWin.installEventFilter(self.adjustFilter)
-            self.pad.adjustToView()
-            self.updateStyleSheet()
+    if subWin:
+      subWin.installEventFilter(self.adjustFilter)
+      self.pad.adjustToView()
+      self.updateStyleSheet()
 
-    def findDockerAction(self, window, text):
-        dockerMenu = None
-        
-        for m in window.qwindow().actions():
-            if m.objectName() == "settings_dockers_menu":
-                dockerMenu = m
+  def findDockerAction(self, window, text):
+    dockerMenu = None
 
-                for a in dockerMenu.menu().actions():
-                    if a.text().replace('&', '') == text:
-                        return a
-                
-        return False
+    for m in window.qwindow().actions():
+      if m.objectName() == "settings_dockers_menu":
+        dockerMenu = m
 
-    def updateStyleSheet(self):
-        self.pad.setStyleSheet(variables.nu_toolbox_style)
+        for a in dockerMenu.menu().actions():
+          if a.text().replace('&', '') == text:
+            return a
 
-    def close(self):
-        self.dockerAction.setEnabled(True)
-        return self.pad.close()
+    return False
+
+  def updateStyleSheet(self):
+    self.pad.setStyleSheet(variables.nu_toolbox_style)
+
+  def close(self):
+    self.dockerAction.setEnabled(True)
+    return self.pad.close()
+

@@ -1,2 +1,2 @@
 from .manager import ConfigManager
-from .window import ConfigWindow, ConfigLayout
+from .window import ConfigLayout, ConfigWindow

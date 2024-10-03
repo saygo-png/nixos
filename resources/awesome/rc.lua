@@ -390,14 +390,14 @@ awful.rules.rules = {
 	},
 	{ -- always on top
 		-- rule_any = {
-		-- 	class = {
-		-- 		"mpv",
-		-- 	},
+		--  class = {
+		--    "mpv",
+		--  },
 		-- },
 		-- properties = {
-		-- 	floating = true,
-		-- 	ontop = true,
-		-- 	sticky = true,
+		--  floating = true,
+		--  ontop = true,
+		--  sticky = true,
 		-- },
 		callback = function(c)
 			c:connect_signal("property::fullscreen", function()
