@@ -1,16 +1,15 @@
 {
   lib,
-  # host,
   pkgs,
   config,
-  # inputs,
-  # conHome,
   conUsername,
-  # conFlakePath,
-  # pkgs-unstable,
-  # conAccentColor,
+  conFlakePathRel,
   ...
 }: {
+  imports = [
+    "${conFlakePathRel}/modules/myPulseaudio.nix"
+  ];
+
   specialisation.class.configuration = {
     home-manager.users.${conUsername} = {
       home.sessionVariables.BROWSER = lib.mkForce "firefox";
@@ -42,21 +41,6 @@
 
   # Wifi
   networking.networkmanager.enable = true;
-
-  # Audio needs pulse due to old hardware ig
-  services.pipewire = {
-    enable = lib.mkForce false;
-    alsa.enable = lib.mkForce false;
-    jack.enable = lib.mkForce false;
-    pulse.enable = lib.mkForce false;
-    alsa.support32Bit = lib.mkForce false;
-  };
-
-  hardware.pulseaudio.enable = lib.mkForce true;
-  hardware.pulseaudio.support32Bit = true;
-  hardware.pulseaudio.extraConfig = "load-module module-combine-sink";
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-  sound.enable = lib.mkForce true;
 
   # Function keys
   programs.light.enable = true;

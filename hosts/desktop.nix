@@ -1,19 +1,20 @@
 {
   lib,
   pkgs,
-  # host,
   config,
   conHome,
-  # inputs,
   conUsername,
   pkgs-unstable,
-  # conFlakePath,
+  conFlakePathRel,
   conRefresh-rate,
   conScreen-width,
-  # conAccentColor,
   conScreen-height,
   ...
 }: {
+  imports = [
+    "${conFlakePathRel}/modules/myPipewire.nix"
+  ];
+
   services.libinput.mouse.accelSpeed = "-0.9";
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
 

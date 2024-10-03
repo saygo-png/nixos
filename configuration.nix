@@ -16,13 +16,13 @@
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
+    "${conFlakePathRel}/modules/myZSH.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
     "${conFlakePathRel}/modules/myRawQT.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
     "${conFlakePathRel}/modules/myAwesome.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
-    "${conFlakePathRel}/modules/myZSH.nix"
   ];
 
   # }}}
@@ -269,25 +269,6 @@
     };
   };
 
-  # Audio
-  # RealtimeKit service, which hands out realtime scheduling priority to user processes on demand. For example, the PulseAudio server uses this to acquire realtime priority.
-  security.rtkit.enable = true;
-
-  # Pulseaudio.
-  hardware.pulseaudio.enable = false;
-  # Disable system-wide ALSA setup, since we're using PipeWire's ALSA emulation. Enabling this can
-  # let us use media keys in TTY, for example.
-  sound.enable = false;
-
-  # Pipewire
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    jack.enable = true;
-    pulse.enable = true;
-    alsa.support32Bit = true;
-    wireplumber.enable = true;
-  };
   # }}}
 
   # Envvar, envars. User ones go into home manager.
