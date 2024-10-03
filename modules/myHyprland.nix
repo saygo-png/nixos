@@ -6,7 +6,6 @@
   conUsername,
   conBorderSize,
   conAccentColor,
-  conFlakePathRel,
   ...
 }: {
   programs.hyprland.enable = true;
@@ -15,10 +14,73 @@
     xdg-desktop-portal-hyprland
     hyprland-protocols
     hyprpicker # Color picker
+    (pkgs.writers.writeHaskellBin "hyprfullscreenfix" {
+        libraries = with pkgs; [
+          haskellPackages.process_1_6_20_0
+          haskellPackages.process-extras
+          haskellPackages.vector
+          haskellPackages.aeson
+          haskellPackages.bytestring_0_12_1_0
+        ];
+      }
+      ''
+        {-# LANGUAGE OverloadedStrings #-}
+
+        import Control.Monad (mzero)
+        import Data.Aeson
+        import Data.Aeson.Types (parseMaybe)
+        import Data.Vector (toList)
+        import GHC.Generics
+        import System.Process
+        import System.Process.ByteString.Lazy qualified as BS
+
+        data Window = Window
+          { pinned :: Bool,
+            focusHistoryID :: Int,
+            tags :: [String]
+          }
+          deriving (Show, Generic)
+
+        instance FromJSON Window
+
+        instance ToJSON Window
+
+        filterJson :: Value -> Maybe Window
+        filterJson = parseMaybe $ withArray "windows" $ \arr ->
+          case filter (\v -> parseMaybe (withObject "Window" (.: "focusHistoryID")) v == Just (0 :: Int)) (toList arr) of
+            [x] -> parseJSON x
+            _ -> mzero
+
+        main :: IO ()
+        main = do
+          let stdin' = ""
+          (_, stdout', _) <- BS.readProcessWithExitCode "hyprctl" ["clients", "-j"] stdin'
+          let jsonData = stdout'
+          let decoded = decode jsonData :: Maybe Value
+          case decoded of
+            Just val -> case filterJson val of
+              Just window ->
+                if pinned window
+                  then do
+                    putStrLn "pin full pin"
+                    _ <- callProcess "hyprctl" ["dispatch", "pin"]
+                    _ <- callProcess "hyprctl" ["dispatch", "fullscreen"]
+                    pure ()
+                  else do
+                    if "69PINNED69" `elem` tags window
+                      then do
+                        _ <- callProcess "hyprctl" ["dispatch", "fullscreen"]
+                        _ <- callProcess "hyprctl" ["dispatch", "pin"]
+                        pure ()
+                      else do
+                        _ <- callProcess "hyprctl" ["dispatch", "fullscreen"]
+                        pure ()
+              Nothing -> putStrLn "No matching window found"
+            Nothing -> putStrLn "Failed to parse JSON"
+      '')
   ];
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
-    home.file."bin/hyprfullscreenfix".source = "${conFlakePathRel}/resources/static/hyprfullscreenfix";
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
     services.dunst = {
       enable = true;
