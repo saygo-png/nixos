@@ -175,6 +175,11 @@
     "d /media 0755 root root"
   ];
 
+  # Envvar, envars. User ones go into home manager.
+  environment.sessionVariables = {
+    FLAKE = "${conFlakePath}"; # For nix helper.
+  };
+
   systemd.user.services."wait-for-full-path-gtk" = {
     description = "wait for systemd units to have full PATH";
     wantedBy = ["xdg-desktop-portal-gtk.service"];
@@ -270,11 +275,6 @@
   };
 
   # }}}
-
-  # Envvar, envars. User ones go into home manager.
-  environment.sessionVariables = {
-    FLAKE = "${conFlakePath}"; # For nix helper.
-  };
 
   ###### Visuals ###### {{{
 
