@@ -16,7 +16,7 @@
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
-    "${conFlakePathRel}/modules/myZSH.nix"
+    "${conFlakePathRel}/modules/myZSHexperimental.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
     "${conFlakePathRel}/modules/myRawQT.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"

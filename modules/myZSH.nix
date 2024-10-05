@@ -22,10 +22,10 @@
       history.save = 50;
       history.size = 50;
       defaultKeymap = "viins";
-      enableCompletion = false;
+      enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      historySubstringSearch.enable = true;
+      historySubstringSearch.enable = false;
       syntaxHighlighting.highlighters = ["brackets"];
       initExtra = builtins.readFile "${conFlakePathRel}/resources/zsh-extraConfig";
       plugins = [
