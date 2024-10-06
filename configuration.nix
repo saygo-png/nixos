@@ -18,7 +18,7 @@
     inputs.home-manager.nixosModules.default
     "${conFlakePathRel}/modules/myZSHexperimental.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
-    "${conFlakePathRel}/modules/myRawQT.nix"
+    "${conFlakePathRel}/modules/myUnthemedQT.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
     "${conFlakePathRel}/modules/myAwesome.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
@@ -61,6 +61,9 @@
       LC_IDENTIFICATION = "pl_PL.UTF-8";
     };
   };
+
+  # Remove screentearing
+  services.xserver.deviceSection = ''Option "TearFree" "true"'';
 
   time.timeZone = "Europe/Warsaw";
 
@@ -257,7 +260,7 @@
     overrideFolders = false;
     settings.options.relaysEnabled = false;
     settings.devices = {
-      nixos= {
+      nixos = {
         addresses = [
           "tcp://192.168.1.11:22000"
         ];

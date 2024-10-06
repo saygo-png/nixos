@@ -195,6 +195,9 @@
       '';
 
       extraConfigLua = ''
+        -- Hide end of line tildes
+        vim.opt.fillchars:append({ eob = " " })
+
         -- Vim as terminal
         vim.cmd[[
           augroup neovim_terminal
