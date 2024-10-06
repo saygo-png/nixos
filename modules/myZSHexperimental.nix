@@ -20,11 +20,28 @@
       enable = true;
       history.save = 50;
       history.size = 50;
-      enableCompletion = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
-      syntaxHighlighting.highlighters = ["brackets"];
       initExtra = ''
+        function zcompile-many() {
+          local f
+          for f; do zcompile -R -- "$f".zwc "$f"; done
+        }
+
+        # Clone and compile to wordcode missing plugins.
+        if [[ ! -e ~/.local/zsh-syntax-highlighting ]]; then
+          git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.local/zsh-syntax-highlighting
+          zcompile-many ~/.local/zsh-syntax-highlighting/{zsh-syntax-highlighting.zsh,highlighters/*/*.zsh}
+        fi
+        if [[ ! -e ~/.local/zsh-autosuggestions ]]; then
+          git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ~/.local/zsh-autosuggestions
+          zcompile-many ~/.local/zsh-autosuggestions/{zsh-autosuggestions.zsh,src/**/*.zsh}
+        fi
+        if [[ ! -e ~/.local/powerlevel10k ]]; then
+          git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.local/powerlevel10k
+          make -C ~/.local/powerlevel10k pkg
+        fi
+
+        unfunction zcompile-many
+
         # Activate Powerlevel10k Instant Prompt.
         if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
           source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
@@ -127,7 +144,9 @@
         bindkey -v '^?' backward-delete-char
 
         cd ~/Desktop/
-        source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+        source ~/.local/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        source ~/.local/zsh-autosuggestions/zsh-autosuggestions.zsh
+        source ~/.local/powerlevel10k/powerlevel10k.zsh-theme
         source ~/.p10k.zsh
         source ${pkgs.zsh-system-clipboard}/share/zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
       '';
