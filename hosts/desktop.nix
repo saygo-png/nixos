@@ -147,6 +147,13 @@
         exclude_patterns:
         - '*/.cache'
         - '*/.npm'
+        - '*/.direnv'
+        - '*/.devenv'
+        - '*/.devenv*'
+        - '*/clj-kondo'
+        - '*/__pycache__
+        - '*/venv.bak
+        - '*/env.bak
         - '*/node_modules'
         - '*/.local/share/Steam'
         - '*/Games/battlenet'
