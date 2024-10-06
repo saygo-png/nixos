@@ -10,6 +10,9 @@
 
   # Declare zsh as an available shell.
   environment.shells = [pkgs.zsh];
+  environment.systemPackages = [
+    pkgs.gitstatus
+  ];
 
   # Provides autocompletion for system programs for zsh.
   environment.pathsToLink = ["/share/zsh"];
