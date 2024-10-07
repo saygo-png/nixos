@@ -26,6 +26,37 @@
       text = builtins.readFile "${conFlakePathRel}/resources/scripts/format-udf.sh";
     })
 
+    (writeShellApplication {
+      name = "airplane-mode";
+      runtimeInputs = [util-linux];
+      text = ''
+        [ "$#" -ne 1 ] && { echo "Usage: $0 {on|off}"; exit 1; }
+        case "$1" in
+          on)
+            # block all wireless devices.
+            if rfkill block all; then
+              echo "Airplane mode enabled successfully."
+              else
+              echo "Failed to enable airplane mode."
+            fi
+            ;;
+          off)
+            # unblock all wireless devices.
+            if rfkill unblock all; then
+              echo "Airplane mode disabled successfully."
+              else
+              echo "Failed to disable airplane mode."
+            fi
+            ;;
+          *)
+            echo "Invalid argument: $1"
+            echo "Usage: $0 {on|off}"
+            exit 1
+            ;;
+        esac
+      '';
+    })
+
     (pkgs.writers.writeHaskellBin "convertlink" {
         libraries = with pkgs; [
           haskellPackages.directory_1_3_8_5
