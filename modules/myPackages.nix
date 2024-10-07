@@ -285,13 +285,7 @@
       '')
 
     (writeShellApplication {
-      name = "pizzatimer";
-      bashOptions = ["pipefail"];
-      runtimeInputs = with pkgs; [termdown libnotify sox];
       text = ''
-        termdown 15m
-        notify-send "Pizza is done."
-        play ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/bell.oga
       '';
     })
 
