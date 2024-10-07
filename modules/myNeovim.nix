@@ -563,11 +563,9 @@
 
         -- Cutlass (Delete copy registers) {{{
         require("cutlass").setup({
-          cut_key = "x",
           override_del = true,
-          exclude = { "ns", "nS" }, -- Motion plugins rebind this
+          exclude = { "ns", "nS", "nx", "nX", "nxx", "nX", "vx", "vX", "xx", "xX" }, -- Motion plugins rebind this
         })
-        vim.keymap.set("n", "x", "xl", { desc = "Command mode with or without shift", silent = true})
         -- }}}
 
         -- LSP {{{
