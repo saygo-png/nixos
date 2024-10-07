@@ -231,11 +231,99 @@
           vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
         end
 
+        -- Statusline {{{
+        -- Statusline components
+        local cmp = {}
+
+        -- Helper function to call statusline components by name
+        function _G._statusline_component(name)
+          return cmp[name]()
+        end
+
+        -- Diagnostic status component
+        function cmp.diagnostic_status()
+          local ok = '''
+
+          local ignore = {
+            ['c'] = true, -- command mode
+            ['t'] = true  -- terminal mode
+          }
+
+          local mode = vim.api.nvim_get_mode().mode
+
+          if ignore[mode] then
+            return ok
+          end
+
+          local levels = vim.diagnostic.severity
+          local errors = #vim.diagnostic.get(0, { severity = levels.ERROR })
+          if errors > 0 then
+            return 'ERROR '
+          end
+
+          local warnings = #vim.diagnostic.get(0, { severity = levels.WARN })
+          if warnings > 0 then
+            return 'WARN '
+          end
+
+          return ok
+        end
+
+        -- Git status component using gitsigns
+        function cmp.git_status()
+          local git_info = vim.b.gitsigns_status_dict
+          if not git_info or git_info.head == "" then
+            return ""
+          end
+
+          local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
+          local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
+          local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
+
+          -- Clean up display if values are 0
+          if git_info.added == 0 then
+            added = ""
+          end
+          if git_info.changed == 0 then
+            changed = ""
+          end
+          if git_info.removed == 0 then
+            removed = ""
+          end
+
+          return table.concat({
+            " ",
+            added,
+            changed,
+            removed,
+            "%#GitSignsAdd#branch ",
+            git_info.head,
+            " %#Normal#",
+          })
+        end
+
+        -- Define the statusline
+        local statusline = {
+          '%{%v:lua._statusline_component("diagnostic_status")%}',  -- Diagnostic status
+          '%t',                                                    -- File name
+          '%r',                                                    -- Read-only flag
+          '%m',                                                    -- Modified flag
+          '%{%v:lua._statusline_component("git_status")%}',         -- Git status
+          '%=',                                                    -- Right align
+          '%{&filetype} ',                                         -- Filetype
+          '%2p%%',                                                 -- File position in percentage
+        }
+
+        -- Set the statusline
+        vim.o.statusline = table.concat(statusline, ''')
+        -- }}}
+
+        -- Keymaps {{{
+        -- Better open
         local open_command = "xdg-open"
         if vim.fn.has("mac") == 1 then
           open_command = 'open'
         end
-
         local function url_repo()
           local cursorword = vim.fn.expand('<cfile>')
           if string.find(cursorword, '^[a-zA-Z0-9-_.]*/[a-zA-Z0-9-_.]*$') then
@@ -243,18 +331,34 @@
           end
           return cursorword or ""
         end
-
         vim.keymap.set('n', 'gx', function()
           vim.fn.jobstart({ open_command, url_repo() }, { detach = true })
         end, { silent = true })
 
-        -- Keymaps
-        -- Keep selection when indenting.
-        vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
-        vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
-
-        -- Infinite paste
-        vim.keymap.set('v', 'p', 'pgvy', { expr = true, noremap = true })
+        vim.keymap.set("n", "<leader>rn", function()
+          -- when rename opens the prompt, this autocommand will trigger
+          -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
+          -- in this window I can use normal mode keybindings
+          local cmdId
+          cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+            callback = function()
+              local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
+              vim.api.nvim_feedkeys(key, "c", false)
+              vim.api.nvim_feedkeys("0", "n", false)
+              -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
+              cmdId = nil
+              return true
+            end,
+          })
+          vim.lsp.buf.rename()
+          -- if LPS couldn't trigger rename on the symbol, clear the autocmd
+          vim.defer_fn(function()
+            -- the cmdId is not nil only if the LSP failed to rename
+            if cmdId then
+              vim.api.nvim_del_autocmd(cmdId)
+            end
+          end, 500)
+        end)
 
         -- Open/close quickfix on toggle
         local function toggle_quickfix()
@@ -271,7 +375,14 @@
             vim.cmd('copen')
           end
         end
-        vim.keymap.set('n', '<C-f>', toggle_quickfix, { silent = true, noremap = true, desc = "Toggle quickfix" })
+        vim.keymap.set('n', '<C-f>', toggle_quickfix, { silent = true, desc = "Toggle quickfix" })
+
+        -- Keep selection when indenting.
+        vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
+        vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
+
+        -- Infinite paste
+        vim.keymap.set('v', 'p', '"_dP')
 
         -- Keep cursor position after yank
         vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
@@ -284,9 +395,6 @@
 
         -- Previous buffer
         vim.keymap.set('n', '<S-B>', '<C-6>')
-
-        -- Conflicts with lsp hover
-        vim.g["conjure#mapping#doc_word"] = false
 
         -- Split movement
         vim.keymap.set("n", "<S-M-h>", "<cmd>wincmd h<CR>", { desc = "Move to the split on the left side" })
@@ -302,7 +410,58 @@
         vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
         vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
 
+        -- Clipboard
+        vim.keymap.set("n", "<c-v>", '"+p', { desc = "proper paste" })
+        vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
+
+        -- Basic
+        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+        vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
+        vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
+        vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
+        vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
+        vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
+        vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+        vim.keymap.set("v", "gj", "J", { desc = "join lines" })
+        vim.keymap.set("v", "J", ":m '>+1<CR>gv==kgvo<esc>=kgvo", { desc = "move highlighted text down" })
+        vim.keymap.set("v", "K", ":m '<-2<CR>gv==jgvo<esc>=jgvo", { desc = "move highlighted text up" })
+        vim.keymap.set( "i", "<C-r>", "<C-r><C-o>", { desc = "Insert contents of named register. Inserts text literally, not as if you typed it." })
+
+        -- Tabs
+        vim.keymap.set('n', 'tk', ':tabnext<CR>', {silent = true, desc = "Go to next tab" })
+        vim.keymap.set('n', 'tj', ':tabprev<CR>', {silent = true, desc = "Go to previous tab" })
+        vim.keymap.set('n', 'td', ':tabclose<CR>', {silent = true, desc = "Close current tab" })
+        vim.keymap.set('n', '<leader>1', '1gt', {silent = true, desc = "Go to tab 1" })
+        vim.keymap.set('n', '<leader>2', '2gt', {silent = true, desc = "Go to tab 2" })
+        vim.keymap.set('n', '<leader>3', '3gt', {silent = true, desc = "Go to tab 3" })
+        vim.keymap.set('n', '<leader>4', '4gt', {silent = true, desc = "Go to tab 4" })
+        vim.keymap.set('n', '<leader>5', '5gt', {silent = true, desc = "Go to tab 5" })
+        vim.keymap.set('n', '<leader>6', '6gt', {silent = true, desc = "Go to tab 6" })
+        vim.keymap.set('n', '<leader>7', '7gt', {silent = true, desc = "Go to tab 7" })
+        vim.keymap.set('n', '<leader>8', '8gt', {silent = true, desc = "Go to tab 8" })
+        vim.keymap.set('n', '<leader>9', '9gt', {silent = true, desc = "Go to tab 9" })
+
+        -- Makes ctrl+s increment to not conflict with tmux
+        vim.keymap.set('n', '<C-s>', '<C-a>', {silent = true, desc = "Increment number under cursor" })
+
+        -- Center search and substitution
+        vim.keymap.set('n', 'n', 'nzz', {silent = true, desc = "Next search result and center" })
+        vim.keymap.set('n', 'N', 'Nzz', {silent = true, desc = "Previous search result and center" })
+        vim.keymap.set('n', '*', '*zz', {silent = true, desc = "Search word under cursor and center" })
+        vim.keymap.set('n', '#', '#zz', {silent = true, desc = "Search word under cursor (reverse) and center" })
+        vim.keymap.set('n', 'g*', 'g*zz', {silent = true, desc = "Search partial word under cursor and center" })
+        vim.keymap.set('n', 'g#', 'g#zz', {silent = true, desc = "Search partial word under cursor (reverse) and center" })
+
+        -- Autocomplete
+        vim.keymap.set("i", "<C-x>", "<C-x><C-o>", { desc = "Autocomplete" })
+
+        vim.keymap.set('n', '<leader>q', vim.cmd.quit)
+        vim.keymap.set('n', '<leader>Q', vim.cmd.only)
+
         -- Plugins
+        -- Telescope {{{
         local utils = require "telescope.utils"
         local builtin = require "telescope.builtin"
 
@@ -310,6 +469,12 @@
         vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", {desc = "hover"})
         vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
         vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
+        vim.keymap.set("n", "<leader>tcf", function()
+          builtin.find_files({ cwd = utils.buffer_dir() })
+        end, { silent = true, desc = "[t]elescope find [f]iles in [c]urrent buffer" })
+        vim.keymap.set("n", "<leader>tcg", function()
+          builtin.live_grep({ cwd = utils.buffer_dir() })
+        end, { silent = true, desc = "[t]elescope grep in [c]urrent buffer" })
         vim.keymap.set("n", "<leader>tb", builtin.current_buffer_fuzzy_find, { desc = "[t]elescope [b]uffer" })
         vim.keymap.set("n", "<leader>tn", builtin.help_tags, { desc = "[t]elescope [n]oob" })
         vim.keymap.set("n", "<leader>tk", builtin.keymaps, { desc = "[t]elescope [k]eymaps" })
@@ -321,8 +486,18 @@
         vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
         vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
         vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+        -- }}}
 
-        -- Leap
+        vim.keymap.set("n", "<Leader>c", function()
+        require("conform").format({ timeout_ms = 500 })
+        end, { desc = "[c]onform" })
+
+        -- Conflicts with lsp hover
+        vim.g["conjure#mapping#doc_word"] = false
+
+        -- }}}
+
+        -- Leap {{{
         -- Gray out leap
         vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
         vim.api.nvim_set_hl(0, 'LeapMatch', {
@@ -345,8 +520,9 @@
             end,
           }
         )
+        -- }}}
 
-        -- dial.nvim
+        -- dial.nvim {{{
         local augend = require("dial.augend")
         require("dial.config").augends:register_group{
           default = {
@@ -383,102 +559,20 @@
         vim.keymap.set("v", "<C-x>",  function() require("dial.map").manipulate("decrement", "visual")  end)
         vim.keymap.set("v", "g<C-a>", function() require("dial.map").manipulate("increment", "gvisual") end)
         vim.keymap.set("v", "g<C-x>", function() require("dial.map").manipulate("decrement", "gvisual") end)
+        -- }}}
 
-        vim.keymap.set("n", "<leader>rn", function()
-          -- when rename opens the prompt, this autocommand will trigger
-          -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
-          -- in this window I can use normal mode keybindings
-          local cmdId
-          cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-            callback = function()
-              local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
-              vim.api.nvim_feedkeys(key, "c", false)
-              vim.api.nvim_feedkeys("0", "n", false)
-              -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
-              cmdId = nil
-              return true
-            end,
-          })
-          vim.lsp.buf.rename()
-          -- if LPS couldn't trigger rename on the symbol, clear the autocmd
-          vim.defer_fn(function()
-            -- the cmdId is not nil only if the LSP failed to rename
-            if cmdId then
-              vim.api.nvim_del_autocmd(cmdId)
-            end
-          end, 500)
-        end)
-
-        vim.keymap.set("n", "<Leader>c", function()
-        require("conform").format({ timeout_ms = 500 })
-        end, { desc = "[c]onform" })
-
-        vim.keymap.set("n", "<leader>tcf", function()
-          builtin.find_files({ cwd = utils.buffer_dir() })
-        end, { silent = true, desc = "[t]elescope find [f]iles in [c]urrent buffer" })
-
-        vim.keymap.set("n", "<leader>tcg", function()
-          builtin.live_grep({ cwd = utils.buffer_dir() })
-        end, { silent = true, desc = "[t]elescope grep in [c]urrent buffer" })
-
-        -- Clipboard
-        vim.keymap.set("n", "<c-v>", '"+p', { desc = "proper paste" })
-        vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
-
-        -- Basic
-        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-        vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
-        vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
-        vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
-        vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
-        vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
-        vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-        vim.keymap.set("v", "gj", "J", { desc = "join lines" })
-        vim.keymap.set("v", "J", ":m '>+1<CR>gv==kgvo<esc>=kgvo", { desc = "move highlighted text down" })
-        vim.keymap.set("v", "K", ":m '<-2<CR>gv==jgvo<esc>=jgvo", { desc = "move highlighted text up" })
-        vim.keymap.set( "i", "<C-r>", "<C-r><C-o>", { desc = "Insert contents of named register. Inserts text literally, not as if you typed it." })
-
-        -- Tabs
-        vim.keymap.set('n', 'tk', ':tabnext<CR>', { noremap = true, silent = true, desc = "Go to next tab" })
-        vim.keymap.set('n', 'tj', ':tabprev<CR>', { noremap = true, silent = true, desc = "Go to previous tab" })
-        vim.keymap.set('n', 'td', ':tabclose<CR>', { noremap = true, silent = true, desc = "Close current tab" })
-        vim.keymap.set('n', '<leader>1', '1gt', { noremap = true, silent = true, desc = "Go to tab 1" })
-        vim.keymap.set('n', '<leader>2', '2gt', { noremap = true, silent = true, desc = "Go to tab 2" })
-        vim.keymap.set('n', '<leader>3', '3gt', { noremap = true, silent = true, desc = "Go to tab 3" })
-        vim.keymap.set('n', '<leader>4', '4gt', { noremap = true, silent = true, desc = "Go to tab 4" })
-        vim.keymap.set('n', '<leader>5', '5gt', { noremap = true, silent = true, desc = "Go to tab 5" })
-        vim.keymap.set('n', '<leader>6', '6gt', { noremap = true, silent = true, desc = "Go to tab 6" })
-        vim.keymap.set('n', '<leader>7', '7gt', { noremap = true, silent = true, desc = "Go to tab 7" })
-        vim.keymap.set('n', '<leader>8', '8gt', { noremap = true, silent = true, desc = "Go to tab 8" })
-        vim.keymap.set('n', '<leader>9', '9gt', { noremap = true, silent = true, desc = "Go to tab 9" })
-
-        -- Makes ctrl+s increment to not conflict with tmux
-        vim.keymap.set('n', '<C-s>', '<C-a>', { noremap = true, silent = true, desc = "Increment number under cursor" })
-
-        -- Center search and substitution
-        vim.keymap.set('n', 'n', 'nzz', { noremap = true, silent = true, desc = "Next search result and center" })
-        vim.keymap.set('n', 'N', 'Nzz', { noremap = true, silent = true, desc = "Previous search result and center" })
-        vim.keymap.set('n', '*', '*zz', { noremap = true, silent = true, desc = "Search word under cursor and center" })
-        vim.keymap.set('n', '#', '#zz', { noremap = true, silent = true, desc = "Search word under cursor (reverse) and center" })
-        vim.keymap.set('n', 'g*', 'g*zz', { noremap = true, silent = true, desc = "Search partial word under cursor and center" })
-        vim.keymap.set('n', 'g#', 'g#zz', { noremap = true, silent = true, desc = "Search partial word under cursor (reverse) and center" })
-
-        -- Autocomplete
-        vim.keymap.set("i", "<C-x>", "<C-x><C-o>", { desc = "Autocomplete" })
-
-        vim.keymap.set('n', '<leader>q', vim.cmd.quit)
-        vim.keymap.set('n', '<leader>Q', vim.cmd.only)
-
-        -- Transparent hover
-        vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
-
+        -- Cutlass (Delete copy registers) {{{
         require("cutlass").setup({
           cut_key = "x",
           override_del = true,
           exclude = { "ns", "nS" }, -- Motion plugins rebind this
         })
+        vim.keymap.set("n", "x", "xl", { desc = "Command mode with or without shift", silent = true})
+        -- }}}
+
+        -- LSP {{{
+        -- Transparent hover
+        vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
 
         -- Make lsp popups pretty.
         local border = {
@@ -509,6 +603,7 @@
             border = border,
           }
         })
+        -- }}}
       '';
       package = pkgs.neovim-unwrapped;
       clipboard.register = "unnamedplus";
