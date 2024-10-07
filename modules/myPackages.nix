@@ -285,7 +285,10 @@
       '')
 
     (writeShellApplication {
+      name = "mynix-list-packages";
+      runtimeInputs = with pkgs; [coreutils fzf];
       text = ''
+        nix-store --query --requisites /run/current-system | cut -d- -f2- | sort | uniq
       '';
     })
 
