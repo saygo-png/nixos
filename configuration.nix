@@ -512,25 +512,26 @@
 
         shellAliases = {
           "f" = "fzfcd";
-          "countlines" = "tokei";
-          "cbonsai" = "cbonsai --screensaver";
-          "backup" = "sudo borgmatic --verbosity 1 --list --stats";
-          "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
-          "plan" = ''nsxiv ${conHome}/Sync/notes/plan.png'';
-          "cp" = ''cp -v'';
-          "more" = "${lib.getExe pkgs.moar}";
-          "shutdown" = "poweroff";
+          "cp" = "cp -v";
+          "rm" = "rm -I";
           "pkill" = "pkill -f";
+          "countlines" = "tokei";
+          "shutdown" = "poweroff";
           "ls" = "${lib.getExe pkgs.eza}";
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
+          "more" = "${lib.getExe pkgs.moar}";
           "rt" = "${lib.getExe pkgs.trashy}";
+          "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
+          "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
+          "plan" = "nsxiv ${conHome}/Sync/notes/plan.png";
           "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
+          "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch ${conFlakePath} -- --option substitute false";
-          "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
+          "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${conHome}/screencaptures/recording.wav";
         };
 
@@ -877,6 +878,8 @@
           aa = "add -A"; # [A]dd [A]ll
           amend = "commit -a --amend";
           undo = "reset HEAD~1 --mixed";
+          dlog = "-c diff.external=difft log --ext-diff";
+          dshow = "-c diff.external=difft show --ext-diff";
           deleteGitignored = "rm --cached `git ls-files -i -c --exclude-from=.gitignore`";
         };
         extraConfig = {
