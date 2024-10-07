@@ -22,6 +22,8 @@
     enable = true; # enables support for Bluetooth
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
   };
+
+  # If you desire to compile kernel for better bluetooth support.
   # boot.kernelModules = ["btqca"];
   # boot.kernelPatches = [
   #   {
@@ -120,11 +122,15 @@
 
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
+
   hardware.opengl = {
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    extraPackages = with pkgs; [intel-vaapi-driver libvdpau-va-gl];
+    extraPackages = with pkgs; [
+      # intel-vaapi-driver # I think this is added by nixos-hardware
+      libvdpau-va-gl
+    ];
   };
 
   environment.systemPackages = with pkgs; [
