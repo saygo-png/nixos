@@ -195,10 +195,18 @@
       '';
 
       extraConfigLua = ''
-        -- Hide end of line tildes
+        -- 24 bit color.
+        if vim.fn.has('termguicolors') == 1 then
+          vim.opt.termguicolors = true
+        end
+
+        -- Faster syntax highlighting.
+        vim.cmd("syntax sync minlines=256")
+
+        -- Hide end of line tildes.
         vim.opt.fillchars:append({ eob = " " })
 
-        -- Vim as terminal
+        -- Vim as terminal.
         vim.cmd[[
           augroup neovim_terminal
               autocmd!
@@ -244,6 +252,26 @@
         -- Keep selection when indenting.
         vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
         vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
+
+        -- Infinite paste
+        vim.keymap.set('v', 'p', 'pgvy', { expr = true, noremap = true })
+
+        -- Open/close quickfix on toggle
+        local function toggle_quickfix()
+          local quickfix_open = false
+          for _, win in ipairs(vim.fn.getwininfo()) do
+            if win.quickfix == 1 then
+              quickfix_open = true
+              break
+            end
+          end
+          if quickfix_open then
+            vim.cmd('cclose')
+          else
+            vim.cmd('copen')
+          end
+        end
+        vim.keymap.set('n', '<C-f>', toggle_quickfix, { silent = true, noremap = true, desc = "Toggle quickfix" })
 
         -- Keep cursor position after yank
         vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
@@ -293,6 +321,31 @@
         vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
         vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
         vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
+        -- Leap
+        -- Gray out leap
+        vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
+        vim.api.nvim_set_hl(0, 'LeapMatch', {
+          fg = 'white', bold = true, nocombine = true,
+        })
+
+        -- Hide the (real) cursor when leaping, and restore it afterwards.
+        vim.api.nvim_create_autocmd('User', { pattern = 'LeapEnter',
+            callback = function()
+              vim.cmd.hi('Cursor', 'blend=100')
+              vim.opt.guicursor:append { 'a:Cursor/lCursor' }
+            end,
+          }
+        )
+
+        vim.api.nvim_create_autocmd('User', { pattern = 'LeapLeave',
+            callback = function()
+              vim.cmd.hi('Cursor', 'blend=0')
+              vim.opt.guicursor:remove { 'a:Cursor/lCursor' }
+            end,
+          }
+        )
+
         -- dial.nvim
         local augend = require("dial.augend")
         require("dial.config").augends:register_group{
@@ -381,12 +434,36 @@
         vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
         vim.keymap.set("n", "G", "Gzz", { desc = "Center bottom" })
         vim.keymap.set("n", "gg", "ggzz", { desc = "Center top" })
-        vim.keymap.set("n", "gm", "m", { desc = "Set mark" })
         vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
         vim.keymap.set("v", "gj", "J", { desc = "join lines" })
         vim.keymap.set("v", "J", ":m '>+1<CR>gv==kgvo<esc>=kgvo", { desc = "move highlighted text down" })
         vim.keymap.set("v", "K", ":m '<-2<CR>gv==jgvo<esc>=jgvo", { desc = "move highlighted text up" })
         vim.keymap.set( "i", "<C-r>", "<C-r><C-o>", { desc = "Insert contents of named register. Inserts text literally, not as if you typed it." })
+
+        -- Tabs
+        vim.keymap.set('n', 'tk', ':tabnext<CR>', { noremap = true, silent = true, desc = "Go to next tab" })
+        vim.keymap.set('n', 'tj', ':tabprev<CR>', { noremap = true, silent = true, desc = "Go to previous tab" })
+        vim.keymap.set('n', 'td', ':tabclose<CR>', { noremap = true, silent = true, desc = "Close current tab" })
+        vim.keymap.set('n', '<leader>1', '1gt', { noremap = true, silent = true, desc = "Go to tab 1" })
+        vim.keymap.set('n', '<leader>2', '2gt', { noremap = true, silent = true, desc = "Go to tab 2" })
+        vim.keymap.set('n', '<leader>3', '3gt', { noremap = true, silent = true, desc = "Go to tab 3" })
+        vim.keymap.set('n', '<leader>4', '4gt', { noremap = true, silent = true, desc = "Go to tab 4" })
+        vim.keymap.set('n', '<leader>5', '5gt', { noremap = true, silent = true, desc = "Go to tab 5" })
+        vim.keymap.set('n', '<leader>6', '6gt', { noremap = true, silent = true, desc = "Go to tab 6" })
+        vim.keymap.set('n', '<leader>7', '7gt', { noremap = true, silent = true, desc = "Go to tab 7" })
+        vim.keymap.set('n', '<leader>8', '8gt', { noremap = true, silent = true, desc = "Go to tab 8" })
+        vim.keymap.set('n', '<leader>9', '9gt', { noremap = true, silent = true, desc = "Go to tab 9" })
+
+        -- Makes ctrl+s increment to not conflict with tmux
+        vim.keymap.set('n', '<C-s>', '<C-a>', { noremap = true, silent = true, desc = "Increment number under cursor" })
+
+        -- Center search and substitution
+        vim.keymap.set('n', 'n', 'nzz', { noremap = true, silent = true, desc = "Next search result and center" })
+        vim.keymap.set('n', 'N', 'Nzz', { noremap = true, silent = true, desc = "Previous search result and center" })
+        vim.keymap.set('n', '*', '*zz', { noremap = true, silent = true, desc = "Search word under cursor and center" })
+        vim.keymap.set('n', '#', '#zz', { noremap = true, silent = true, desc = "Search word under cursor (reverse) and center" })
+        vim.keymap.set('n', 'g*', 'g*zz', { noremap = true, silent = true, desc = "Search partial word under cursor and center" })
+        vim.keymap.set('n', 'g#', 'g#zz', { noremap = true, silent = true, desc = "Search partial word under cursor (reverse) and center" })
 
         -- Autocomplete
         vim.keymap.set("i", "<C-x>", "<C-x><C-o>", { desc = "Autocomplete" })
@@ -398,7 +475,7 @@
         vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
 
         require("cutlass").setup({
-          cut_key = "m",
+          cut_key = "x",
           override_del = true,
           exclude = { "ns", "nS" }, -- Motion plugins rebind this
         })

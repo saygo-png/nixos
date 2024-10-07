@@ -1,33 +1,5 @@
 " TODO put this shit in configuration.nix
-
-" Colorscheme.
-if has('termguicolors')
-  set termguicolors
-endif
-
 lua << EOF
-
--- Gray out leap
-vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
-vim.api.nvim_set_hl(0, 'LeapMatch', {
-  fg = 'white', bold = true, nocombine = true,
-})
-
--- Hide the (real) cursor when leaping, and restore it afterwards.
-vim.api.nvim_create_autocmd('User', { pattern = 'LeapEnter',
-    callback = function()
-      vim.cmd.hi('Cursor', 'blend=100')
-      vim.opt.guicursor:append { 'a:Cursor/lCursor' }
-    end,
-  }
-)
-vim.api.nvim_create_autocmd('User', { pattern = 'LeapLeave',
-    callback = function()
-      vim.cmd.hi('Cursor', 'blend=0')
-      vim.opt.guicursor:remove { 'a:Cursor/lCursor' }
-    end,
-  }
-)
 
 -- Statusline
 local cmp = {} -- statusline components
@@ -154,48 +126,6 @@ function! GetVisualSelection()
   endfunction
 vnoremap gx :<BS><BS><BS><BS><BS>execute '!openlisturl' shellescape(GetVisualSelection())<CR>
 
-" Infinite paste
-vnoremap <expr> p 'pgvy'
-
 " Blank or empty line jump
 noremap { <Cmd>call search('^\s*\S', 'Wbc') \| call search('^\s*$\\|\%^', 'Wb')<CR>
 noremap } <Cmd>call search('^\s*\S', 'Wc') \| call search('^\s*$\\|\%$', 'W')<CR>
-
-" Tabs.
-nnoremap tk :tabnext<CR>
-nnoremap tj :tabprev<CR>
-nnoremap td :tabclose<CR>
-nnoremap <leader>1 1gt
-nnoremap <leader>2 2gt
-nnoremap <leader>3 3gt
-nnoremap <leader>4 4gt
-nnoremap <leader>5 5gt
-nnoremap <leader>6 6gt
-nnoremap <leader>7 7gt
-nnoremap <leader>8 8gt
-nnoremap <leader>9 9gt
-
-" Makes ctrl+s increment to not conflict with tmux.
-nnoremap <C-s> <C-a>
-
-" Center search and substitution.
-nnoremap n nzz
-nnoremap N Nzz
-nnoremap * *zz
-nnoremap # #zz
-nnoremap g* g*zz
-nnoremap g# g#zzo
-
-" Open/close quickfix on toggle
-function! ToggleQuickFix()
-    if empty(filter(getwininfo(), 'v:val.quickfix'))
-        copen
-    else
-        cclose
-    endif
-endfunction
-
-nnoremap <silent> <C-f> :call ToggleQuickFix()<cr>
-
-" Faster syntax highlight.
-syntax sync minlines=256
