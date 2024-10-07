@@ -871,9 +871,8 @@
 
       programs.git = {
         enable = true;
-        userName = "saygo-png";
+        difftastic.enable = true;
         package = pkgs.gitAndTools.gitFull;
-        userEmail = "saygo.mail@proton.me";
         aliases = {
           aa = "add -A"; # [A]dd [A]ll
           amend = "commit -a --amend";
@@ -881,13 +880,23 @@
           deleteGitignored = "rm --cached `git ls-files -i -c --exclude-from=.gitignore`";
         };
         extraConfig = {
-          pull = {rebase = true;};
-          color = {ui = "auto";};
-          merge = {tool = "splice";};
-          rerere = {enabled = true;};
-          push = {default = "simple";};
-          branch = {autosetupmerge = true;};
-          core = {excludesfile = "~/.gitignore_global";};
+        user = {
+          signingKey = "86B6FCCC3563C00B";
+          name = "saygo-png";
+          email = "saygo.mail@proton.me";
+        };
+          color.ui = "auto";
+          pull.rebase = true;
+          merge.tool = "${lib.getExe pkgs.meld}";
+          rerere.enabled = true;
+          pull.autoSquash = true;
+          push.autoSetupRemote = true;
+          branch.autosetupmerge = true;
+          core.excludesfile = "~/.gitignore_global";
+          push = {
+            default = "upstream";
+            useForceIfIncludes = true;
+          };
           diff = {
             tool = "vimdiff";
             mnemonicprefix = true;
