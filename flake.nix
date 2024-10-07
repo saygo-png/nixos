@@ -68,6 +68,10 @@
         conBorderSize = 1;
       };
       modules = [
+        inputs.nixos-hardware.nixosModules.common-pc
+        inputs.nixos-hardware.nixosModules.common-pc-ssd
+        inputs.nixos-hardware.nixosModules.common-gpu-amd
+        inputs.nixos-hardware.nixosModules.common-cpu-amd
         ./hosts/desktop.nix
         ./configuration.nix
         ./resources/static/hardware-configuration.nix
@@ -93,6 +97,7 @@
 
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
+        inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
         ./hosts/thinkpad.nix
         ./configuration.nix
         ./resources/static/hardware-configuration-thinkpad.nix
