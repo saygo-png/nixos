@@ -890,11 +890,12 @@
         };
           color.ui = "auto";
           pull.rebase = true;
-          merge.tool = "${lib.getExe pkgs.meld}";
+          commit.gpgsign = true;
           rerere.enabled = true;
           pull.autoSquash = true;
           push.autoSetupRemote = true;
           branch.autosetupmerge = true;
+          merge.tool = "${lib.getExe pkgs.meld}";
           core.excludesfile = "~/.gitignore_global";
           push = {
             default = "upstream";
