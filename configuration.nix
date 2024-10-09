@@ -1085,7 +1085,7 @@
               # Interrupt (ctrl + c)
               key = "Q";
               mods = "Control";
-              chars = "\u0003";
+              chars = "\\u0003";
             }
           ];
         };
