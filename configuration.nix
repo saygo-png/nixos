@@ -1078,8 +1078,8 @@
             }
             {
               # Interrupt (ctrl + c)
-              key = "Q";
-              mods = "Control";
+              key = "C";
+              mods = "Control|Shift";
               chars = "\\u0003";
             }
           ];
