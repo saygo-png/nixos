@@ -18,6 +18,7 @@
     inputs.home-manager.nixosModules.default
     "${conFlakePathRel}/modules/myZSH.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
+    "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
     "${conFlakePathRel}/modules/myAwesome.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
