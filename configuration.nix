@@ -441,65 +441,120 @@
       xdg.mimeApps = {
         enable = true;
         associations.added = config.xdg.mimeApps.defaultApplications;
-        defaultApplications = {
-          # Text
-          "text/plain" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/rhtml" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-tex" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-java" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "inode/x-empty" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-python" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-readme" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "text/x-markdown" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "application/x-ruby" = ["${config.home.sessionVariables.EDITOR}.desktop"];
-          "application/x-shellscript" = ["${config.home.sessionVariables.EDITOR}.desktop"];
+        defaultApplications = let
+          EDITOR = config.home.sessionVariables.EDITOR;
+          BROWSER = config.home.sessionVariables.BROWSER;
+        in {
+          "text/plain" = "${EDITOR}.desktop";
+          "text/rhtml" = "${EDITOR}.desktop";
+          "text/x-tex" = "${EDITOR}.desktop";
+          "text/x-java" = "${EDITOR}.desktop";
+          "text/x-ruby" = "${EDITOR}.desktop";
+          "text/x-cmake" = "${EDITOR}.desktop";
+          "inode/x-empty" = "${EDITOR}.desktop";
+          "text/markdown" = "${EDITOR}.desktop";
+          "text/x-python" = "${EDITOR}.desktop";
+          "text/x-readme" = "${EDITOR}.desktop";
+          "text/x-markdown" = "${EDITOR}.desktop";
+          "application/json" = "${EDITOR}.desktop";
+          "application/x-ruby" = "${EDITOR}.desktop";
+          "application/x-yaml" = "${EDITOR}.desktop";
+          "application/x-docbook+xml" = "${EDITOR}.desktop";
+          "application/x-shellscript" = "${EDITOR}.desktop";
 
-          # Documents
-          "image/svg+xml" = ["nsxiv.desktop"];
-          "application/vnd.oasis.opendocument.text" = ["writer.desktop"];
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["writer.desktop"];
+          "inode/directory" = "dolphin.desktop";
 
-          # PDF
-          "image/vnd.djvu" = ["org.pwmt.zathura.desktop"];
-          "application/pdf" = ["org.pwmt.zathura.desktop"];
+          "image/bmp" = "nsxiv.desktop";
+          "image/gif" = "nsxiv.desktop";
+          "image/jpg" = "nsxiv.desktop";
+          "image/jxl" = "nsxiv.desktop";
+          "image/png" = "nsxiv.desktop";
+          "image/avif" = "nsxiv.desktop";
+          "image/heif" = "nsxiv.desktop";
+          "image/jpeg" = "nsxiv.desktop";
+          "image/tiff" = "nsxiv.desktop";
+          "image/webp" = "nsxiv.desktop";
+          "image/x-eps" = "nsxiv.desktop";
+          "image/x-ico" = "nsxiv.desktop";
+          "image/x-psd" = "nsxiv.desktop";
+          "image/x-tga" = "nsxiv.desktop";
+          "image/x-icns" = "nsxiv.desktop";
+          "image/x-webp" = "nsxiv.desktop";
+          "image/svg+xml" = "nsxiv.desktop";
+          "image/x-xbitmap" = "nsxiv.desktop";
+          "image/x-xpixmap" = "nsxiv.desktop";
+          "image/x-portable-bitmap" = "nsxiv.desktop";
+          "image/x-portable-pixmap" = "nsxiv.desktop";
+          "image/x-portable-graymap" = "nsxiv.desktop";
 
-          # Web
-          "text/html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/ftp" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/xhtml+xml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/http" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/https" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "x-scheme-handler/chrome" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-htm" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-xht" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-html" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-shtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
-          "application/x-extension-xhtml" = ["${config.home.sessionVariables.BROWSER}.desktop"];
+          "image/vnd.djvu" = "org.pwmt.zathura.desktop";
+          "application/pdf" = "org.pwmt.zathura.desktop";
 
-          # Image
-          "image/*" = ["nsxiv.desktop"];
-          "image/png" = ["nsxiv.desktop"];
-          "image/jpeg" = ["nsxiv.desktop"];
-          "application/octet-stream" = ["nsxiv.desktop"]; #bmp
+          "video/dv" = "mpv.desktop";
+          "video/3gp" = "mpv.desktop";
+          "video/avi" = "mpv.desktop";
+          "video/fli" = "mpv.desktop";
+          "video/flv" = "mpv.desktop";
+          "video/mp4" = "mpv.desktop";
+          "video/ogg" = "mpv.desktop";
+          "video/3gpp" = "mpv.desktop";
+          "video/divx" = "mpv.desktop";
+          "video/mp2t" = "mpv.desktop";
+          "video/mpeg" = "mpv.desktop";
+          "video/webm" = "mpv.desktop";
+          "video/3gpp2" = "mpv.desktop";
+          "video/x-avi" = "mpv.desktop";
+          "video/x-flv" = "mpv.desktop";
+          "video/x-m4v" = "mpv.desktop";
+          "video/x-ogm" = "mpv.desktop";
+          "video/mp4v-es" = "mpv.desktop";
+          "video/msvideo" = "mpv.desktop";
+          "video/x-mpeg2" = "mpv.desktop";
+          "video/vnd.divx" = "mpv.desktop";
+          "video/x-ms-asf" = "mpv.desktop";
+          "video/x-ms-wmv" = "mpv.desktop";
+          "video/x-ms-wmx" = "mpv.desktop";
+          "video/x-theora" = "mpv.desktop";
+          "video/quicktime" = "mpv.desktop";
+          "video/x-msvideo" = "mpv.desktop";
+          "video/x-ogm+ogg" = "mpv.desktop";
+          "video/x-matroska" = "mpv.desktop";
+          "video/vnd.mpegurl" = "mpv.desktop";
+          "video/x-theora+ogg" = "mpv.desktop";
+          "application/x-matroska" = "mpv.desktop";
+          "video/vnd.rn-realvideo" = "mpv.desktop";
 
-          # Video
-          "video/ogg" = ["mpv.desktop"];
-          "video/x-msvideo" = ["mpv.desktop"];
-          "video/quicktime" = ["mpv.desktop"];
-          "video/webm" = ["mpv.desktop"];
-          "video/x-flv" = ["mpv.desktop"];
-          "video/mp4" = ["mpv.desktop"];
-          "application/x-flash-video" = ["mpv.desktop"];
-          "video/MP2T" = ["mpv.desktop"];
-          "image/x-tga" = ["mpv.desktop"];
+          "audio/aac" = "mpv.desktop";
+          "audio/mp4" = "mpv.desktop";
+          "audio/ogg" = "mpv.desktop";
+          "audio/mpeg" = "mpv.desktop";
+          "audio/x-mp3" = "mpv.desktop";
+          "audio/x-wav" = "mpv.desktop";
+          "audio/vorbis" = "mpv.desktop";
+          "audio/x-flac" = "mpv.desktop";
+          "audio/mpegurl" = "mpv.desktop";
+          "audio/x-scpls" = "mpv.desktop";
+          "audio/x-speex" = "mpv.desktop";
+          "audio/x-ms-wma" = "mpv.desktop";
+          "audio/x-vorbis" = "mpv.desktop";
+          "audio/x-mpegurl" = "mpv.desktop";
+          "audio/x-oggflac" = "mpv.desktop";
+          "audio/x-musepack" = "mpv.desktop";
+          "audio/x-vorbis+ogg" = "mpv.desktop";
+          "audio/x-pn-realaudio" = "mpv.desktop";
+          "audio/vnd.rn-realaudio" = "mpv.desktop";
 
-          # Audio
-          "audio/mpeg" = ["mpv.desktop"];
-          "audio/x-flac" = ["mpv.desktop"];
-          "audio/mp4" = ["mpv.desktop"];
-          "application/ogg" = ["mpv.desktop"];
-          "audio/x-mod" = ["mpv.desktop"];
+          "text/html" = "${BROWSER}.desktop";
+          "x-scheme-handler/ftp" = "${BROWSER}.desktop";
+          "application/xhtml+xml" = "${BROWSER}.desktop";
+          "x-scheme-handler/http" = "${BROWSER}.desktop";
+          "x-scheme-handler/https" = "${BROWSER}.desktop";
+          "x-scheme-handler/chrome" = "${BROWSER}.desktop";
+          "application/x-extension-htm" = "${BROWSER}.desktop";
+          "application/x-extension-xht" = "${BROWSER}.desktop";
+          "application/x-extension-html" = "${BROWSER}.desktop";
+          "application/x-extension-shtml" = "${BROWSER}.desktop";
+          "application/x-extension-xhtml" = "${BROWSER}.desktop";
         };
       };
 
