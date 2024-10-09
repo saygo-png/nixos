@@ -614,6 +614,7 @@
           jetbrains.pycharm-community-src # python IDE
           libreoffice # office
           anki # Flashcards
+          prismlauncher # Minecraft launcher
           xdragon # drag items from terminal
           foliate # Ebook reader
           sayonara # Music player
