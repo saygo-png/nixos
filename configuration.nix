@@ -817,11 +817,6 @@
           gui.border = "single";
           git = {
             commit.signOff = true;
-            paging = {
-              colorArg = "always";
-              # pager = "diff-so-fancy";
-              pager = "${lib.getExe pkgs.delta} --dark --paging=never --tabs 2";
-            };
             branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
           };
           customCommands = [
