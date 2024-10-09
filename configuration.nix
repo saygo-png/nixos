@@ -38,6 +38,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+
+  # Use dbus-broker, a better/faster dbus daemon (default in Arch)
+  # https://archlinux.org/news/making-dbus-broker-our-default-d-bus-daemon/
+  services.dbus.implementation = "broker";
+
   # Faster boot
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
