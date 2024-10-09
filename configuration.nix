@@ -74,7 +74,7 @@
     };
   };
 
-  # Remove screentearing
+  # Remove screentearing on x11
   services.xserver.deviceSection = ''Option "TearFree" "true"'';
 
   time.timeZone = "Europe/Warsaw";
@@ -222,12 +222,16 @@
   ##### NixOS ###### {{{
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
   nixpkgs.config.allowUnfree = false;
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.settings.auto-optimise-store = true;
-  nix.gc = {
-    automatic = true;
-    dates = "2day";
-    options = "--delete-older-than 15d";
+  nix = {
+    nix.channel.enable = false;
+    settings.warn-dirty = false;
+    settings.auto-optimise-store = true;
+    settings.experimental-features = ["nix-command" "flakes"];
+    gc = {
+      automatic = true;
+      dates = "2day";
+      options = "--delete-older-than 15d";
+    };
   };
   programs.nix-ld.enable = true;
   ## If needed, you can add missing libraries here. nix-index-database is your friend to
