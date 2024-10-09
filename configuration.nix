@@ -38,6 +38,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Remap CAPS lock to ESC
+  services.udev.extraHwdb = ''
+    evdev:atkbd:*
+      KEYBOARD_KEY_3a=esc
+  '';
 
   # Use dbus-broker, a better/faster dbus daemon (default in Arch)
   # https://archlinux.org/news/making-dbus-broker-our-default-d-bus-daemon/
@@ -83,7 +88,8 @@
       };
     };
     layout = "pl,plfi";
-    options = "caps:escape,grp:sclk_toggle";
+    # options = "caps:escape,grp:sclk_toggle";
+    options = "grp:sclk_toggle";
   };
 
   console = {
