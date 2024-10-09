@@ -95,9 +95,15 @@
   };
 
   # Battery saving.
+  boot.kernelParams = ["rcu_nocbs=all" "rcutree.enable_rcu_lazy=1"];
   networking.networkmanager.wifi.powersave = true;
   powerManagement.enable = true;
-  services.tlp.enable = true;
+  services.tlp = {
+    enable = true;
+    settings = {
+      NMI_WATCHDOG = "0";
+    };
+  };
 
   # Fixes pipewire bug causing the camera to always be on
   # draining battery for no reason.
