@@ -46,6 +46,7 @@
 
   # Function keys
   programs.light.enable = true;
+  hardware.acpilight.enable = true;
   services.actkbd = {
     enable = true;
     bindings = [
