@@ -18,11 +18,12 @@
     inputs.home-manager.nixosModules.default
     "${conFlakePathRel}/modules/myZSH.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
-    "${conFlakePathRel}/modules/myUnthemedQT.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
     "${conFlakePathRel}/modules/myAwesome.nix"
+    "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
+    "${conFlakePathRel}/modules/myUnthemedQT.nix"
   ];
 
   # }}}
@@ -577,7 +578,7 @@
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "more" = "${lib.getExe pkgs.moar}";
-          "rt" = "${lib.getExe pkgs.trashy}";
+          "rt" = "${lib.getExe pkgs.gtrash}";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
@@ -613,8 +614,41 @@
           # GUI.
           jetbrains.pycharm-community-src # python IDE
           libreoffice # office
+          mandelbulber
           anki # Flashcards
-          prismlauncher # Minecraft launcher
+
+          # my-prismlauncher = (symlinkJoin {
+          #   name = "my-myprismlauncher";
+          #   paths = [ pkgs.prismlauncher ];
+          #   buildInputs = [ makeWrapper ];
+          #   postBuild = ''
+          #     wrapProgram $out/bin/prismlauncher \
+          #       --run echo "hello"
+          #   '';
+          # });
+
+          (pkgs.prismlauncher.overrideAttrs (old: {
+            jdks = [
+              temurin-bin-21
+              temurin-bin-8
+              temurin-bin-17
+            ];
+            postBuild =
+              (old.postBuild or "")
+              + ''
+                wrapProgram $out/bin/prismlauncher \
+                  --run notify-send "hello"
+              '';
+          }))
+
+          # my-prismlauncher = (prismlauncher.override {
+          #   withWaylandGLFW = true;
+          # jdks = [
+          #   temurin-bin-21
+          #   temurin-bin-8
+          #   temurin-bin-17
+          # ];
+          # });
           xdragon # drag items from terminal
           foliate # Ebook reader
           sayonara # Music player
@@ -763,7 +797,26 @@
       programs.git-credential-oauth.enable = true;
       programs.lazygit = {
         enable = true;
-        settings.gui.border = "single";
+        settings = {
+          gui.border = "single";
+          git = {
+            commit.signOff = true;
+            paging = {
+              colorArg = "always";
+              # pager = "diff-so-fancy";
+              pager = "${lib.getExe pkgs.delta} --dark --paging=never --tabs 2";
+            };
+            branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
+          };
+          customCommands = [
+            {
+              key = "f";
+              command = "git difftool -y {{.SelectedLocalCommit.Sha}} -- {{.SelectedCommitFile.Name}}";
+              context = "commitFiles";
+              description = "Compare (difftool) with local copy";
+            }
+          ];
+        };
       };
 
       programs.tealdeer = {
@@ -1013,9 +1066,10 @@
               action = "Copy";
             }
             {
-              key = "C";
-              mods = "Control|Shift";
-              chars = "\x03";
+              # Interrupt (ctrl + c)
+              key = "Q";
+              mods = "Control";
+              chars = "^C";
             }
           ];
         };

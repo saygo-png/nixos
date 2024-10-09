@@ -113,9 +113,6 @@
 
         zstyle ':completion:*:*:-command-:*:*' group-order aliases builtins functions commands
 
-        # change Ctrl+C to Ctrl+Q
-        # stty intr '^q'
-
         # Vi mode.
         export KEYTIMEOUT=1
         bindkey -v
