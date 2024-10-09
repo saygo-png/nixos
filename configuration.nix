@@ -941,11 +941,11 @@
           deleteGitignored = "rm --cached `git ls-files -i -c --exclude-from=.gitignore`";
         };
         extraConfig = {
-        user = {
-          signingKey = "86B6FCCC3563C00B";
-          name = "saygo-png";
-          email = "saygo.mail@proton.me";
-        };
+          user = {
+            signingKey = "86B6FCCC3563C00B";
+            name = "saygo-png";
+            email = "saygo.mail@proton.me";
+          };
           color.ui = "auto";
           pull.rebase = true;
           commit.gpgsign = true;
