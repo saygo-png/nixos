@@ -566,6 +566,7 @@
         pointerCursor.gtk.enable = true;
 
         shellAliases = {
+          "archive" = "patool";
           "f" = "fzfcd";
           "cp" = "cp -v";
           "rm" = "rm -I";
@@ -640,6 +641,7 @@
           socat
 
           # Command line.
+          p7zip # 7zip archiver
           cbonsai # pretty tree
           bc # Gnu calculator, needed for vmrss
           tokei # Line counter
