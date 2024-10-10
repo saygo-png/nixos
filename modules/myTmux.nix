@@ -4,6 +4,8 @@
   ...
 }: {
   home-manager.users.${conUsername} = {
+    programs.fzf.tmux.enableShellIntegration = true;
+    home.file."bin/tmux-mem-cpp".source = "${conFlakePathRel}/resources/static/tmux-mem-cpp";
     programs.tmux = {
       baseIndex = 1;
       enable = true;
@@ -72,7 +74,5 @@
         bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
       '';
     };
-    programs.fzf.tmux.enableShellIntegration = true;
-    home.file."bin/tmux-mem-cpp".source = "${conFlakePathRel}/resources/static/tmux-mem-cpp";
   };
 }

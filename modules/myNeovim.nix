@@ -18,8 +18,8 @@
     programs.nixvim = {
       enable = true;
       extraPackages = with pkgs; [
-        typos-lsp
         vale
+        typos-lsp
         jq # Json formatter
         vim-language-server
         deadnix # Nix linter

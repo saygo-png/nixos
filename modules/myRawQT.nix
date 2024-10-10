@@ -6,32 +6,29 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
-    kdePackages.qtsvg # Icons for dolphin
-    kdePackages.qtwayland # qt6
     libsForQt5.qt5.qtwayland
+    kdePackages.qtwayland # qt6
+    kdePackages.qtsvg # Icons for dolphin
 
     # fix kirigami apps look
     # for example in filelight, without it the app looks weird
     # https://github.com/NixOS/nixpkgs/pull/202990#issuecomment-1328068486
-    kdePackages.qqc2-desktop-style # qt6
     libsForQt5.qqc2-desktop-style
+    kdePackages.qqc2-desktop-style # qt6
   ];
   home-manager.users.${conUsername} = {config, ...}: {
     qt = {
       enable = true;
       platformTheme.name = "qtct";
-      style.package = with pkgs; [
-        adwaita-qt
-        adwaita-qt6
-      ];
+      style.package = with pkgs; [adwaita-qt adwaita-qt6];
     };
 
     home.sessionVariables = {
-      QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
       # Fake running KDE
       # https://wiki.archlinux.org/title/qt#Configuration_of_Qt_5_applications_under_environments_other_than_KDE_Plasma
       # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#The_KDE_Plasma_XDG_Desktop_Portal_is_not_being_used
       DESKTOP_SESSION = "KDE";
+      QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
     };
     home.file = let
       # Qt config
@@ -115,12 +112,11 @@
 
       baseConfig = {
         Appearance = {
-          color_scheme_path = "${conHome}/.config/qt5ct/colors/${colorSchemeName}.conf";
           custom_palette = true;
-          icon_theme = config.gtk.iconTheme.name;
-          standard_dialogs = "default";
-          # style = "Fusion";
           style = "Adwaita-Dark";
+          standard_dialogs = "default";
+          icon_theme = config.gtk.iconTheme.name;
+          color_scheme_path = "${conHome}/.config/qt5ct/colors/${colorSchemeName}.conf";
         };
 
         Troubleshooting = {
@@ -129,19 +125,19 @@
         };
 
         Interface = {
-          cursor_flash_time = 1200;
-          double_click_interval = 400;
+          wheel_scroll_lines = 3;
           menus_have_icons = true;
-          show_shortcuts_in_context_menus = true;
+          cursor_flash_time = 1200;
+          keyboard_scheme = 2; # X11
           gui_effects = "@Invalid()";
           stylesheets = "@Invalid()";
+          double_click_interval = 400;
+          underline_shortcut = 1; # ...
+          dialog_buttons_have_icons = 1; # ...
+          show_shortcuts_in_context_menus = true;
           buttonbox_layout = 3; # GNOME dialog button layout
           toolbutton_style = 4; # Follow the application style
           activate_item_on_single_click = 1; # ... - i think that means let the application decide
-          dialog_buttons_have_icons = 1; # ...
-          underline_shortcut = 1; # ...
-          wheel_scroll_lines = 3;
-          keyboard_scheme = 2; # X11
         };
       };
     in {

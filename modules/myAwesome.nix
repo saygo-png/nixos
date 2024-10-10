@@ -19,19 +19,19 @@
   # NixOS is retarded and turns on lightdm by default.
   services.displayManager.defaultSession = lib.mkDefault "none+awesome";
   services.xserver.displayManager = lib.mkDefault {
-    lightdm.enable = false;
     startx.enable = true;
+    lightdm.enable = false;
   };
 
   # X11 window manager for games
   services.xserver.windowManager.awesome = {
-    package = pkgs.awesome;
     enable = true;
+    package = pkgs.awesome;
   };
 
   environment.systemPackages = with pkgs; [
-    flameshot # X11 screenshot tool
     xclip # Xorg wl-clipboard
+    flameshot # X11 screenshot tool
   ];
 
   home-manager.users.${conUsername} = {config, ...}: {
@@ -76,8 +76,8 @@
     };
 
     xdg.configFile."awesome/" = {
-      source = "${conFlakePathRel}/resources/awesome";
       recursive = true;
+      source = "${conFlakePathRel}/resources/awesome";
     };
 
     xdg.configFile."awesome/theme.lua" = {

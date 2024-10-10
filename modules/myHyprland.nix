@@ -11,19 +11,18 @@
   programs.hyprland.enable = true;
 
   environment.systemPackages = with pkgs; [
-    xdg-desktop-portal-hyprland
     hyprland-protocols
     hyprpicker # Color picker
+    xdg-desktop-portal-hyprland
     (pkgs.writers.writeHaskellBin "hyprfullscreenfix" {
         libraries = with pkgs; [
-          haskellPackages.process_1_6_20_0
-          haskellPackages.process-extras
-          haskellPackages.vector
           haskellPackages.aeson
+          haskellPackages.vector
+          haskellPackages.process-extras
+          haskellPackages.process_1_6_20_0
           haskellPackages.bytestring_0_12_1_0
         ];
-      }
-      ''
+      } ''
         {-# LANGUAGE OverloadedStrings #-}
 
         import Control.Monad (mzero)
@@ -137,13 +136,13 @@
         ];
 
         input = {
+          follow_mouse = 2;
+          numlock_by_default = false;
           kb_layout = osConfig.services.xserver.xkb.layout;
           kb_options = osConfig.services.xserver.xkb.options;
           repeat_delay = osConfig.services.xserver.autoRepeatDelay;
           repeat_rate = osConfig.services.xserver.autoRepeatInterval;
           accel_profile = osConfig.services.libinput.mouse.accelProfile;
-          numlock_by_default = false;
-          follow_mouse = 2;
         };
 
         cursor = {
@@ -178,47 +177,46 @@
         };
 
         misc = {
-          # Hides text on bottom of the screen.
-          disable_splash_rendering = true;
-          disable_hyprland_logo = true;
-
-          disable_autoreload = true;
-          animate_manual_resizes = true;
           enable_swallow = false;
+          disable_autoreload = true;
+          # Hides text on bottom of the screen.
+          disable_hyprland_logo = true;
+          animate_manual_resizes = true;
+          disable_splash_rendering = true;
           swallow_regex = "^(Alacritty)$";
         };
 
         dwindle = {
           force_split = 2;
+          pseudotile = "yes";
+          preserve_split = "yes";
           special_scale_factor = 1.0;
           split_width_multiplier = 1.0;
           use_active_for_splits = true;
-          pseudotile = "yes";
-          preserve_split = "yes";
         };
 
         master = {
-          no_gaps_when_only = false;
+          new_on_top = false;
           new_status = "slave";
           new_on_active = "after";
-          new_on_top = false;
+          no_gaps_when_only = false;
         };
 
         decoration = {
           rounding = 0;
+          dim_around = 0.8;
+          shadow_range = 10;
+          drop_shadow = true;
+          shadow_render_power = 2;
+          shadow_ignore_window = true;
+          "col.shadow" = lib.mkForce "rgba(0000007F)";
           blur = {
             enabled = false;
             size = 8;
             passes = 2;
-            new_optimizations = true;
             special = true;
+            new_optimizations = true;
           };
-          drop_shadow = true;
-          dim_around = 0.8;
-          shadow_ignore_window = true;
-          shadow_range = 10;
-          shadow_render_power = 2;
-          "col.shadow" = lib.mkForce "rgba(0000007F)";
         };
 
         animations = {
