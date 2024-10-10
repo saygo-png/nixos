@@ -76,4 +76,3 @@ class ntToolBox():
   def close(self):
     self.dockerAction.setEnabled(True)
     return self.pad.close()
-

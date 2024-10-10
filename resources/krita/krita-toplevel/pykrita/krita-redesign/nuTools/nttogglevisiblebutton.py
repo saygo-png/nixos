@@ -32,4 +32,3 @@ class ntToggleVisibleButton(QToolButton):
       self.setArrowType(Qt.ArrowType.RightArrow)
     else:
       self.setArrowType(Qt.ArrowType.LeftArrow)
-

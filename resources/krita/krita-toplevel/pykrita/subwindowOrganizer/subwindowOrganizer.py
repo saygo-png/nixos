@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from .resizer import resizer
 
+
 class SubwindowOrganizer(Extension):
   # organizerToggleChecked = False
   isToggled = False

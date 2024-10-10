@@ -12,6 +12,7 @@ from .subWindowFilterAll import subWindowFilterAll
 from .subWindowFilterBackground import subWindowFilterBackground
 from .subWindowFilterFloater import subWindowFilterFloater
 
+
 class resizer:
   #user customization
 

@@ -26,7 +26,7 @@ from .nttogglevisiblebutton import ntToggleVisibleButton
 
 class ntWidgetPad(QWidget):
   """
-    An on-canvas toolbox widget. I'm dubbing widgets that 'float' 
+    An on-canvas toolbox widget. I'm dubbing widgets that 'float'
     on top of the canvas '(lily) pads' for the time being :) """
   def __init__(self, parent):
     super(ntWidgetPad, self).__init__(parent)
@@ -81,7 +81,7 @@ class ntWidgetPad(QWidget):
 
   def borrowDocker(self, docker):
     """
-        Borrow a docker widget from Krita's existing list of dockers and 
+        Borrow a docker widget from Krita's existing list of dockers and
         returns True. Returns False if invalid widget was passed."""
 
     # Does requested widget exist?
@@ -106,14 +106,14 @@ class ntWidgetPad(QWidget):
 
   def closeEvent(self, e):
     """
-        Since the plugins works by borrowing the actual docker 
+        Since the plugins works by borrowing the actual docker
         widget we need to ensure its returned upon closing the pad"""
     self.returnDocker()
     return super().closeEvent(e)
 
   def paintEvent(self, e):
     """
-        Needed to resize the Pad if the user decides to 
+        Needed to resize the Pad if the user decides to
         change the icon size of the toolbox"""
     self.adjustToView()
     return super().paintEvent(e)
@@ -176,7 +176,7 @@ class ntWidgetPad(QWidget):
 
   def setViewAlignment(self, newAlignment):
     """
-        Set the Pad's alignment to the view to either 'left' or 'right'. 
+        Set the Pad's alignment to the view to either 'left' or 'right'.
         Returns False if the argument is an invalid value."""
     if isinstance(newAlignment, str):
       if (newAlignment.lower() == 'left' or newAlignment.lower() == 'right'):

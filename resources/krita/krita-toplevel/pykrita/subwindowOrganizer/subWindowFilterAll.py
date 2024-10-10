@@ -2,6 +2,7 @@ from krita import *
 
 from .config import *
 
+
 #event catcher for every window - both floaters and back ones
 class subWindowFilterAll(QMdiSubWindow):
   def __init__(self, resizer, parent=None):

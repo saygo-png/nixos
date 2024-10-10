@@ -61,4 +61,3 @@ class ntScrollAreaContainer(QWidget):
 
   def scrollArea(self):
     return self.sa
-

@@ -58,4 +58,3 @@ class subWindowFilterFloater(QMdiSubWindow):
         self.resizer.snapToBorder(obj) #snap to border when floater moves
 
     return False
-

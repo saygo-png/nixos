@@ -79,4 +79,3 @@ class ntToolOptions():
   def close(self):
     self.dockerAction.setEnabled(True)
     return self.pad.close()
-

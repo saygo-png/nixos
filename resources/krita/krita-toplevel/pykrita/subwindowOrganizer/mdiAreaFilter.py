@@ -3,6 +3,7 @@ from krita import *
 
 from .config import *
 
+
 #event catcher for the workspace - changes in size, and subwindows added and removed
 class mdiAreaFilter(QMdiArea):
   def __init__(self, resizer, parent=None):

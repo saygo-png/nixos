@@ -21,4 +21,3 @@ SPLITBYDEFAULT = False #when True, every time a second window is open, it will a
 REFPOSITION = "left" #side on which this window will appear (can be changed by manually placing window on other side)
 
 SOFTPROOFING = True #automatically set softproofing on, when opening the overview
-

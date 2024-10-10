@@ -39,4 +39,3 @@ class ntAdjustToSubwindowFilter(QObject):
   def setTargetWidget(self, wdgt):
     """Set which QWidget to adjust the position of."""
     self.target = wdgt
-
