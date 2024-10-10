@@ -1,11 +1,82 @@
 {
+  pkgs,
   conUsername,
-  conFlakePathRel,
   ...
 }: {
+  environment.systemPackages = [
+    (pkgs.callPackage
+      ({stdenv}:
+        stdenv.mkDerivation {
+          pname = "tmux-mem-cpp";
+          version = "1.0";
+          nativeBuildInputs = [stdenv.cc];
+          dontUnpack = true;
+
+          buildPhase = let
+            main-cpp =
+              builtins.toFile "main.cpp"
+              # cpp
+              ''
+                #include <cstdint>
+                #include <fstream>
+                #include <iomanip>
+                #include <iostream>
+                #include <string>
+
+                using i32 = int32_t;
+                using u64 = uint64_t;
+                using f32 = float;
+
+                int main(void)
+                {
+                  std::fstream meminfo("/proc/meminfo", std::ios::in);
+
+                  std::string name;
+                  u64 value;
+                  std::string unit;
+
+                  u64 total_free{};
+
+                  // Read in the amount of available memory and swap
+                  while (meminfo >> name >> value >> unit)
+                  {
+                    if (name == "MemAvailable:" || name == "SwapAvailable:")
+                      total_free += value;
+                  }
+
+                  // Convert the free memory from kilobytes to gigabytes
+                  constexpr f32 divisor = 1.0f / 1024.0f / 1024.0f;
+                  f32 total_free_gb = total_free * divisor;
+
+                  i32 precision = 2;
+
+                  // Increase precision if the amount of free memory is more than 10 gigabytes
+                  if (total_free_gb > 10)
+                    precision = 3;
+
+                  std::cout << "MemF " << std::setprecision(precision) << total_free_gb << "G\n";
+                }
+              '';
+          in ''
+            g++ ${main-cpp} -o tmux-mem-cpp
+          '';
+
+          installPhase = ''
+            mkdir -p $out/bin
+            cp tmux-mem-cpp $out/bin/
+            chmod +x $out/bin/tmux-mem-cpp
+          '';
+
+          meta = {
+            mainProgram = "tmux-mem-cpp";
+            description = "Prints free RAM for use in a tmux statusline";
+          };
+        })
+      {})
+  ];
+
   home-manager.users.${conUsername} = {
     programs.fzf.tmux.enableShellIntegration = true;
-    home.file."bin/tmux-mem-cpp".source = "${conFlakePathRel}/resources/static/tmux-mem-cpp";
     programs.tmux = {
       baseIndex = 1;
       enable = true;
@@ -39,8 +110,7 @@
         bind h select-pane -L
         bind j select-pane -D
         bind k select-pane -U
-        bind l select-pane -R
-        # moving between windows with vim movement keys.
+        bind l select-pane -R # moving between windows with vim movement keys.
         bind -r C-h select-window -t :-
         bind -r C-l select-window -t :+
         # Resize panes with vim movement keys.
