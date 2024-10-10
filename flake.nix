@@ -72,9 +72,9 @@
         inputs.nixos-hardware.nixosModules.common-pc-ssd
         inputs.nixos-hardware.nixosModules.common-gpu-amd
         inputs.nixos-hardware.nixosModules.common-cpu-amd
-        ./hosts/desktop.nix
         ./configuration.nix
-        ./resources/static/hardware-configuration.nix
+        ./hosts/desktop/desktop.nix
+        ./hosts/desktop/hardware-configuration-desktop.nix
       ];
     };
 
@@ -98,9 +98,9 @@
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
         inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-        ./hosts/thinkpad.nix
         ./configuration.nix
-        ./resources/static/hardware-configuration-thinkpad.nix
+        ./hosts/thinkpad/thinkpad.nix
+        ./hosts/thinkpad/hardware-configuration-thinkpad.nix
       ];
     };
   };
