@@ -212,6 +212,21 @@
               autocmd TermOpen * :setlocal nonumber norelativenumber laststatus=0
           augroup END
 
+          augroup remember_folds
+            autocmd!
+            au BufWinLeave ?* mkview 1
+            au BufWinEnter ?* silent! loadview 1
+          augroup END
+
+          " Hide cursorline when unfocused.
+          let my_cursor_style = &guicursor
+          augroup cursorline
+            autocmd!
+            autocmd FocusGained,WinEnter * let &guicursor = my_cursor_style
+            autocmd FocusGained,WinEnter * setlocal cursorline
+            autocmd FocusLost,WinLeave * setlocal nocursorline guicursor=a:noCursor/lCursor
+          augroup END
+
           " Vim visual multi binds
           let g:VM_leader = '\'
           let g:VM_maps = {}
@@ -372,6 +387,10 @@
           end
         end
         vim.keymap.set('n', '<C-f>', toggle_quickfix, { silent = true, desc = "Toggle quickfix" })
+
+        -- Jump whitespace
+        vim.keymap.set("n", "{", "<Cmd>call search('^\\s*\\S', 'Wbc') | call search('^\\s*$\\|\\%^', 'Wb')<CR>", { desc = "jump whitespace forward"})
+        vim.keymap.set("n", "}", "<Cmd>call search('^\\s*\\S', 'Wc') | call search('^\\s*$\\|\\%$', 'W')<CR>", { desc = "jump whitespae backward"})
 
         -- Keep selection when indenting.
         vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
