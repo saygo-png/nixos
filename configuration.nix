@@ -100,7 +100,8 @@
   # Define a user account. Don't forget to set a password with ‘passwd $USERNAME’.
   users.users.${conUsername} = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "networkmanager" "video"]; # Enable ‘sudo’ for the user.
+    # Video allows to set brightness.
   };
 
   # Keep sudo password cached infinitely
