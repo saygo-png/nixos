@@ -841,7 +841,7 @@
 
                 1. **Format:** Each commit message must follow the conventional commits format, which is \`<type>(<scope>): <description>\`.
                 2. **Relevance:** Avoid mentioning a module name unless it's directly relevant to the change.
-                3. **Enumeration:** List the commit messages from 1 to 10.
+                3. **Enumeration:** List the commit messages from 1 to 10, but don't add the number itself.
                 4. **Clarity and Conciseness:** Each message should clearly and concisely convey the change made.
 
                 **Commit Message Examples:**
@@ -878,7 +878,7 @@
                 Keep in mind you will suggest 10 commit messages. Only 1 will be used. It's better to push yourself (esp to synthesize to a higher level) and maybe wrong about some of the 10 commits because only one needs to be good. I'm looking for your best commit, not the best average commit. It's better to cover more scenarios than include a lot of overlap.
 
                 Write your 10 commit messages below in the format shown in Output Template section above." \
-                  | fzf --height 40% --border --ansi --preview "echo {}" --preview-window=up:wrap \
+                  | fzf --height 70% --ansi --preview "echo {}" --preview-window=up:wrap \
                   | xargs -I {} bash -c '
                       COMMIT_MSG_FILE=$(mktemp)
                       echo "{}" > "$COMMIT_MSG_FILE"
