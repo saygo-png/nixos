@@ -270,7 +270,6 @@
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
   nixpkgs.config.allowUnfree = false;
   nix = {
-    channel.enable = false;
     settings.warn-dirty = false;
     settings.auto-optimise-store = true;
     settings.experimental-features = ["nix-command" "flakes"];
