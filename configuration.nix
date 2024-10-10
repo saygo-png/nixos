@@ -1116,6 +1116,7 @@
           dlog = "-c diff.external=difft log --ext-diff";
           dshow = "-c diff.external=difft show --ext-diff";
           deleteGitignored = "rm --cached `git ls-files -i -c --exclude-from=.gitignore`";
+          prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
         };
         extraConfig = {
           user = {
