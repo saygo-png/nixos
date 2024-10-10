@@ -8,12 +8,7 @@
   conFlakePathRel,
   ...
 }: {
-  # imports = [
-  #   inputs.stylix.nixosModules.stylix
-  #   inputs.home-manager.nixosModules.default
-  # ];
   environment.systemPackages = with pkgs; [
-    # Shellscripts.
     (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
 
     (writeShellScriptBin "vmrss" (builtins.readFile "${conFlakePathRel}/resources/scripts/vmrss.sh"))

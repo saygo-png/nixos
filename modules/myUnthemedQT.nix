@@ -1,7 +1,5 @@
 {
-  lib,
   pkgs,
-  conHome,
   conUsername,
   ...
 }: {
@@ -16,7 +14,7 @@
     kdePackages.qqc2-desktop-style # qt6
     libsForQt5.qqc2-desktop-style
   ];
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = {
     qt = {
       enable = true;
       style.package = with pkgs; [

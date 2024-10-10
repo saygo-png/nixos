@@ -164,12 +164,8 @@
       };
 
       extraFiles = {
-        "ftplugin/json.vim" = ''
-          setlocal foldmethod=manual
-        '';
-        "ftplugin/markdown.vim" = ''
-          setlocal wrap
-        '';
+        "ftplugin/json.vim" = ''setlocal foldmethod=manual'';
+        "ftplugin/markdown.vim" = ''setlocal wrap'';
       };
 
       extraConfigVim = builtins.readFile "${conFlakePathRel}/resources/nvim-extraConfig.vim";
@@ -610,6 +606,10 @@
       colorscheme = "gruvbox-material";
 
       extraPlugins = [
+        pkgs.vimPlugins.gruvbox-material
+        pkgs.vimPlugins.dial-nvim
+        pkgs.vimPlugins.vim-dispatch
+        pkgs.vimPlugins.vim-jack-in
         (pkgs.vimUtils.buildVimPlugin {
           name = "cutlass.nvim";
           src = inputs.nvim-plugin-cutlass;
@@ -622,10 +622,6 @@
           name = "rainbow";
           src = inputs.nvim-plugin-rainbow;
         })
-        pkgs.vimPlugins.gruvbox-material
-        pkgs.vimPlugins.dial-nvim
-        pkgs.vimPlugins.vim-dispatch
-        pkgs.vimPlugins.vim-jack-in
       ];
 
       keymaps = [
@@ -707,14 +703,8 @@
             ({language = "scss";} // css)
             ({language = "stylus";} // css)
           ];
-          bufTypes = [
-            "*"
-            "!prompt"
-            "!popup"
-          ];
-          userDefaultOptions = {
-            names = false;
-          };
+          bufTypes = ["*" "!prompt" "!popup"];
+          userDefaultOptions.names = false;
         };
 
         telescope = {
@@ -724,58 +714,48 @@
 
         lspsaga = {
           enable = true;
+          symbolInWinbar.enable = false;
           lightbulb = {
-            enable = false;
             sign = false;
+            enable = false;
             virtualText = false;
           };
-          symbolInWinbar.enable = false;
         };
 
         mini = {
           enable = true;
           modules = {
-            indentscope = {
-              draw = {
-                delay = 0;
-                priority = 2;
-              };
-              symbol = "│";
-              options = {
-                border = "top";
-                indent_at_cursor = true;
-                try_as_border = true;
-              };
-            };
             align = {};
+            indentscope = {
+              symbol = "│";
+              draw.delay = 0;
+              draw.priority = 2;
+              options.border = "top";
+              options.try_as_border = true;
+              options.indent_at_cursor = true;
+            };
           };
         };
 
         trouble = {
           enable = true;
-          settings = {
-            auto_close = true;
-          };
+          settings.auto_close = true;
         };
 
         treesitter = {
           enable = true;
           nixvimInjections = true;
-          nixGrammars = true; # Install grammars with Nix
           ensureInstalled = ["all"];
           ignoreInstall = ["comment"];
+          moduleConfig.highlight.enable = true;
+          nixGrammars = true; # Install grammars with Nix
           incrementalSelection = {
             enable = true;
             keymaps = {
+              nodeDecremental = "<BS>";
+              scopeIncremental = "grc";
               initSelection = "<Enter>";
               nodeIncremental = "<Enter>";
-              scopeIncremental = "grc";
-              nodeDecremental = "<BS>";
-            };
-          };
-          moduleConfig = {
-            highlight = {
-              enable = true;
             };
           };
         };
@@ -844,26 +824,24 @@
 
         conform-nvim = {
           enable = true;
-          extraOptions = {
-            lsp_fallback = false;
-          };
+          extraOptions.lsp_fallback = false;
           formattersByFt = {
             # Conform will run multiple formatters sequentially.
             json = ["jq"];
             sh = ["shfmt"];
             lua = ["stylua"];
+            css = ["prettierd"];
             nix = ["alejandra"];
             clojure = ["zprint"];
+            html = ["prettierd"];
             haskell = ["fourmolu"];
+            graphql = ["prettierd"];
+            markdown = ["prettierd"];
             python = ["isort" "yapf"];
             javascript = ["prettierd"];
             typescript = ["prettierd"];
             javascriptreact = ["prettierd"];
             typescriptreact = ["prettierd"];
-            css = ["prettierd"];
-            html = ["prettierd"];
-            graphql = ["prettierd"];
-            markdown = ["prettierd"];
             # Use the "*" filetype to run formatters on all filetypes.
             "*" = ["trim_whitespace"];
           };
@@ -886,12 +864,12 @@
             cpp = ["clangtidy"];
             haskell = ["hlint"];
             json = ["jsonlint"];
-            markdown = ["markdownlint"];
             bash = ["shellcheck"];
             shell = ["shellcheck"];
             clojure = ["clj-kondo"];
             nix = ["nix" "deadnix"];
             dockerfile = ["hadolint"];
+            markdown = ["markdownlint"];
           };
         };
 
@@ -930,15 +908,11 @@
 
         luasnip = {
           enable = true;
+          fromVscode = [{lazyLoad = true;}];
           extraConfig = {
             enable_autosnippets = true;
             store_selection_keys = "<Tab>";
           };
-          fromVscode = [
-            {
-              lazyLoad = true;
-            }
-          ];
         };
 
         cmp = {
@@ -946,6 +920,7 @@
           autoEnableSources = true;
           settings = {
             autocomplete = true;
+            sources = [{name = "nvim_lsp";}];
             performance = {
               debounce = 200;
               throttle = 200;
@@ -957,9 +932,6 @@
                 require('luasnip').lsp_expand(args.body)
               end
             '';
-            sources = [
-              {name = "nvim_lsp";}
-            ];
             mapping = {
               "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
               "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
