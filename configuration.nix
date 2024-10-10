@@ -38,12 +38,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Remap CAPS lock to ESC
-  services.udev.extraHwdb = ''
-    evdev:atkbd:*
-      KEYBOARD_KEY_3a=esc
-  '';
-
   # Use dbus-broker, a better/faster dbus daemon (default in Arch)
   # https://archlinux.org/news/making-dbus-broker-our-default-d-bus-daemon/
   services.dbus.implementation = "broker";
@@ -56,6 +50,8 @@
 
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
+
+  time.timeZone = "Europe/Warsaw";
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
@@ -77,20 +73,21 @@
   # Remove screentearing on x11
   services.xserver.deviceSection = ''Option "TearFree" "true"'';
 
-  time.timeZone = "Europe/Warsaw";
-
   services.xserver.xkb = {
-    extraLayouts = {
-      plfi = {
-        description = "Polish finnish layout";
-        languages = ["pol"];
-        symbolsFile = ./resources/static/symbols/plfi;
-      };
-    };
     layout = "pl,plfi";
-    # options = "caps:escape,grp:sclk_toggle";
     options = "grp:sclk_toggle";
+    extraLayouts.plfi = {
+      languages = ["pol"];
+      symbolsFile = ./resources/plfi;
+      description = "Polish finnish layout";
+    };
   };
+
+  # Remap CAPS lock to ESC
+  services.udev.extraHwdb = ''
+    evdev:atkbd:*
+      KEYBOARD_KEY_3a=esc
+  '';
 
   console = {
     useXkbConfig = true;
@@ -349,7 +346,7 @@
   stylix.autoEnable = true;
   stylix.polarity = "dark";
   stylix.targets.grub.useImage = true;
-  stylix.image = ./resources/static/wallpaper.png;
+  stylix.image = ./resources/wallpaper.png;
   stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
   stylix.cursor.package = pkgs.capitaine-cursors-themed;
   stylix.base16Scheme = {
@@ -1374,6 +1371,8 @@
       # Extra Configs {{{
       xdg.enable = true;
 
+      xdg.configFile."wallpaper.png".source = config.stylix.image;
+
       # InterSubs plugin install
       xdg.configFile."mpv/scripts/" = {
         source = ./resources/mpv;
@@ -1441,10 +1440,6 @@
           set scroll-page-aware "true"
           set selection-clipboard clipboard
         '';
-      };
-
-      xdg.configFile."wallpaper.png" = {
-        source = ./resources/static/wallpaper.png;
       };
 
       xdg.configFile."yapf/style" = {
