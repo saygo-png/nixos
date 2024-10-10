@@ -46,13 +46,10 @@
 
                   // Convert the free memory from kilobytes to gigabytes
                   constexpr f32 divisor = 1.0f / 1024.0f / 1024.0f;
-                  f32 total_free_gb = total_free * divisor;
-
-                  i32 precision = 2;
+                  const f32 total_free_gb = total_free * divisor;
 
                   // Increase precision if the amount of free memory is more than 10 gigabytes
-                  if (total_free_gb > 10)
-                    precision = 3;
+                  const i32 precision = total_free_gb > 10 ? 3 : 2;
 
                   std::cout << "MemF " << std::setprecision(precision) << total_free_gb << "G\n";
                 }
