@@ -177,54 +177,55 @@
   # System packages.
   environment.systemPackages = with pkgs; [
     # Nix.
-    nh # Nix helper
     nil # Nix LSP
+    nh # Nix helper
+    alejandra # Nix formatter
     nix-tree # Reverse dependency search
     nix-output-monitor # Pretty nix build output
-    alejandra # Nix formatter
 
-    # Other.
-    firefox
-    ncdu
-    exiftool
-    rclone
-    ntfs3g # ntfs filesystem interop (windows fs)
-    udftools # Udf filesystem
-    wl-clipboard # Wayland xclip
-    jq # Json parser
-    nsxiv # Image viewer
-
-    kdePackages.dolphin # File manager
-
-    hydrus # Image collection
-    patool # Universal archiver
-    libqalculate # Calculator
+    # Printing.
     cups
     cups-bjnp
     # cups-brother-hl1110
-    # cups-brother-hl2260d
     # cups-brother-hl1210w
+    # cups-brother-hl2260d
     # cups-brother-hl3140cw
-    # cups-brother-hll2375dw
     # cups-brother-hll2340dw
-    # cups-brother-mfcl2750dw
+    # cups-brother-hll2375dw
     # cups-brother-hll3230cdw
-    qalculate-gtk # ^
+    # cups-brother-mfcl2750dw
+
+    # GUI.
+    firefox
+    nsxiv # Image viewer
+    qalculate-gtk # Gui calculator
+    kdePackages.dolphin # File manager
+
+    # CLI.
+    ncdu
+    rclone
+    exiftool
+    jq # Json parser
+    gcc # C compiling
     vim # Text editor
     wget # Downloader
-    trashy # Cli trashcan
-    udiskie # Auto mount
-    git # Source control
     fzf # Fuzzy finder
-    file # File identifier
-    imagemagick_light # Image identifier
-    ripgrep # Multithreaded grep
+    git # Source control
+    udiskie # Auto mount
     gnumake # C compiling
+    gtrash # Cli trashcan
+    file # File identifier
+    libqalculate # Calculator
+    udftools # Udf filesystem
+    patool # Universal archiver
+    ripgrep # Multithreaded grep
+    wl-clipboard # Wayland xclip
     xdg-utils # Includes xdg-open
-    gcc # C compiling
+    imagemagick_light # Image identifier
     libnotify # Notifications (notify-send)
+    ntfs3g # ntfs filesystem interop (windows fs)
 
-    # These are filepickers and whatnot
+    # Portals (filepickers etc.).
     xdg-desktop-portal-gtk
   ];
 
@@ -270,6 +271,7 @@
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
   nixpkgs.config.allowUnfree = false;
   nix = {
+    channel.enable = false;
     settings.warn-dirty = false;
     settings.auto-optimise-store = true;
     settings.experimental-features = ["nix-command" "flakes"];
@@ -674,44 +676,11 @@
         # Home packages, home manager packages, user packages, home programs
         packages = with pkgs; [
           # GUI.
-          jetbrains.pycharm-community-src # python IDE
-          libreoffice # office
+          scribus
           mandelbulber
           anki # Flashcards
-
-          # my-prismlauncher = (symlinkJoin {
-          #   name = "my-myprismlauncher";
-          #   paths = [ pkgs.prismlauncher ];
-          #   buildInputs = [ makeWrapper ];
-          #   postBuild = ''
-          #     wrapProgram $out/bin/prismlauncher \
-          #       --run echo "hello"
-          #   '';
-          # });
-
-          (pkgs.prismlauncher.overrideAttrs (old: {
-            jdks = [
-              temurin-bin-21
-              temurin-bin-8
-              temurin-bin-17
-            ];
-            postBuild =
-              (old.postBuild or "")
-              + ''
-                wrapProgram $out/bin/prismlauncher \
-                  --run notify-send "hello"
-              '';
-          }))
-
-          # my-prismlauncher = (prismlauncher.override {
-          #   withWaylandGLFW = true;
-          # jdks = [
-          #   temurin-bin-21
-          #   temurin-bin-8
-          #   temurin-bin-17
-          # ];
-          # });
-          xdragon # drag items from terminal
+          librewolf # Browser
+          libreoffice # office
           foliate # Ebook reader
           sayonara # Music player
           zathura # Better for pdfs
@@ -721,34 +690,61 @@
           swappy # Quick drawing on images
           mission-center # GUI task manager
           localsend # Send via local network
-          librewolf # Browser
-          scribus
+          xdragon # drag items from terminal
+          jetbrains.pycharm-community-src # python IDE
+
+          (writeShellApplication {
+            name = "enable-prismlauncher";
+            runtimeInputs = [fzf coreutils];
+            text = ''
+              ACCOUNTS_FILE="${config.xdg.dataHome}/PrismLauncher/accounts.json"
+              if [ ! -f "$ACCOUNTS_FILE" ]; then
+                echo '{"accounts": [{"entitlement": {"canPlayMinecraft": true,"ownsMinecraft": true},"type": "Offline"}],"formatVersion": 3}' > "$ACCOUNTS_FILE"
+              fi
+            '';
+          })
+
+          ((pkgs.prismlauncher.overrideAttrs (old: {
+              # qtWrapperArgs =
+              #   (old.qtWrapperArgs or [])
+              #   ++ [
+              #     "--run enable-prismlauncher"
+              #   ];
+            }))
+            .override
+            {
+              jdks = [
+                temurin-bin-8
+                temurin-bin-17
+                temurin-bin-21
+              ];
+            })
 
           # Dependencies for intersubs for mpv
           (pkgs.python3.withPackages (python312Packages: [
-            python312Packages.pyqt5
-            python312Packages.numpy
             python312Packages.six
-            python312Packages.thttp
-            python312Packages.beautifulsoup4
-            python312Packages.requests
             python312Packages.lxml
             python312Packages.httpx
+            python312Packages.numpy
+            python312Packages.pyqt5
+            python312Packages.thttp
+            python312Packages.requests
+            python312Packages.beautifulsoup4
           ]))
           socat
 
           # Command line.
-          p7zip # 7zip archiver
-          cbonsai # pretty tree
-          bc # Gnu calculator, needed for vmrss
-          tokei # Line counter
-          gmic # Image processing language
           moar # Pager
           termdown # Timer
-          htop-vim # TUI task manager
+          tokei # Line counter
+          cbonsai # pretty tree
+          p7zip # 7zip archiver
           zoxide # Cd alternative
+          htop-vim # TUI task manager
           pulsemixer # Volume control
           ffmpeg # Video and magic editor
+          gmic # Image processing language
+          bc # Gnu calculator, needed for vmrss
 
           # Haskell
           haskell-language-server # Haskell LSP
