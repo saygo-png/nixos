@@ -639,7 +639,7 @@
           "la" = "${lib.getExe pkgs.eza} -a";
           "ll" = "${lib.getExe pkgs.eza} -l";
           "more" = "${lib.getExe pkgs.moar}";
-          "rt" = "${lib.getExe pkgs.gtrash}";
+          "rt" = "${lib.getExe pkgs.gtrash} put";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
