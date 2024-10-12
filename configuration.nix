@@ -648,13 +648,13 @@
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "qcalc" = "${lib.getExe pkgs.libqalculate}";
-          "plan" = "nsxiv ${conHome}/Sync/notes/plan.png";
+          "plan" = "nsxiv ${config.home.homeDirectory}/Sync/notes/plan.png";
           "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch ${conFlakePath} -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
-          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${conHome}/screencaptures/recording.wav";
+          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
         };
 
         sessionVariables = {
@@ -759,51 +759,51 @@
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.xdg.configHome}"
 
-          run mkdir -p "${conHome}/.local/share/krita"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
+          run mkdir -p "${config.home.homeDirectory}/.local/share/krita"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
           run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${conHome}/.local/share/krita"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/krita"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${config.home.homeDirectory}/.local/share/krita"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
 
-          run mkdir -p "${conHome}/.local/share/Anki2"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/Anki2"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${conHome}/.local/share/Anki2"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${conHome}/.local/share/Anki2"
+          run mkdir -p "${config.home.homeDirectory}/.local/share/Anki2"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
+          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${config.home.homeDirectory}/.local/share/Anki2"
+          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
         '';
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          run mkdir -p "${conHome}/Pictures/screenshots"
-          run mkdir -p "${conHome}/backups"
+          run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
+          run mkdir -p "${config.home.homeDirectory}/backups"
 
-          run mkdir -p "${conHome}/Desktop"
-          run rm -f "${conHome}/Desktop/Desktop" || true
+          run mkdir -p "${config.home.homeDirectory}/Desktop"
+          run rm -f "${config.home.homeDirectory}/Desktop/Desktop" || true
 
-          run mkdir -p "${conHome}/screencaptures"
-          run ln -s "${conHome}/screencaptures" "${conHome}/Desktop/screencaptures" || true
-          run rm -f "${conHome}/screencaptures/screencaptures" || true
+          run mkdir -p "${config.home.homeDirectory}/screencaptures"
+          run ln -s "${config.home.homeDirectory}/screencaptures" "${config.home.homeDirectory}/Desktop/screencaptures" || true
+          run rm -f "${config.home.homeDirectory}/screencaptures/screencaptures" || true
 
-          run mkdir -p "${conHome}/Downloads"
-          run ln -s "${conHome}/Downloads" "${conHome}/Desktop/Downloads" || true
-          run rm -f "${conHome}/Downloads/Downloads" || true
+          run mkdir -p "${config.home.homeDirectory}/Downloads"
+          run ln -s "${config.home.homeDirectory}/Downloads" "${config.home.homeDirectory}/Desktop/Downloads" || true
+          run rm -f "${config.home.homeDirectory}/Downloads/Downloads" || true
 
-          run mkdir -p "${conHome}/Videos"
-          run ln -s "${conHome}/Videos" "${conHome}/Desktop/Videos" || true
-          run rm -f "${conHome}/Videos/Videos" || true
+          run mkdir -p "${config.home.homeDirectory}/Videos"
+          run ln -s "${config.home.homeDirectory}/Videos" "${config.home.homeDirectory}/Desktop/Videos" || true
+          run rm -f "${config.home.homeDirectory}/Videos/Videos" || true
 
-          run mkdir -p "${conHome}/Sync"
-          run ln -s "${conHome}/Sync" "${conHome}/Desktop/Sync" || true
-          run rm -f "${conHome}/Sync/Sync" || true
+          run mkdir -p "${config.home.homeDirectory}/Sync"
+          run ln -s "${config.home.homeDirectory}/Sync" "${config.home.homeDirectory}/Desktop/Sync" || true
+          run rm -f "${config.home.homeDirectory}/Sync/Sync" || true
 
           run mkdir -p "${config.xdg.configHome}"
-          run ln -s "${config.xdg.configHome}" "${conHome}/Desktop/.config" || true
-          run rm -f "${conHome}/Desktop/.config/.config" || true
-          run rm -f "${conHome}/.config/.config" || true
+          run ln -s "${config.xdg.configHome}" "${config.home.homeDirectory}/Desktop/.config" || true
+          run rm -f "${config.home.homeDirectory}/Desktop/.config/.config" || true
+          run rm -f "${config.home.homeDirectory}/.config/.config" || true
 
           run mkdir -p "${config.xdg.dataHome}"
-          run ln -s "${config.xdg.dataHome}" "${conHome}/Desktop/.local" || true
-          run rm -f "${conHome}/Desktop/.local/.local" || true
-          run rm -f "${conHome}/.local/.local" || true
+          run ln -s "${config.xdg.dataHome}" "${config.home.homeDirectory}/Desktop/.local" || true
+          run rm -f "${config.home.homeDirectory}/Desktop/.local/.local" || true
+          run rm -f "${config.home.homeDirectory}/.local/.local" || true
         '';
       };
 
