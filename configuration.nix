@@ -25,6 +25,7 @@
     "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
     "${conFlakePathRel}/modules/myUnthemedQT.nix"
+    "${conFlakePathRel}/modules/myPrismlauncher.nix"
   ];
 
   # }}}
@@ -693,33 +694,6 @@
           xdragon # drag items from terminal
           jetbrains.pycharm-community-src # python IDE
 
-          (writeShellApplication {
-            name = "enable-prismlauncher";
-            runtimeInputs = [fzf coreutils];
-            text = ''
-              ACCOUNTS_FILE="${config.xdg.dataHome}/PrismLauncher/accounts.json"
-              if [ ! -f "$ACCOUNTS_FILE" ]; then
-                echo '{"accounts": [{"entitlement": {"canPlayMinecraft": true,"ownsMinecraft": true},"type": "Offline"}],"formatVersion": 3}' > "$ACCOUNTS_FILE"
-              fi
-            '';
-          })
-
-          ((pkgs.prismlauncher.overrideAttrs (old: {
-              # qtWrapperArgs =
-              #   (old.qtWrapperArgs or [])
-              #   ++ [
-              #     "--run enable-prismlauncher"
-              #   ];
-            }))
-            .override
-            {
-              jdks = [
-                temurin-bin-8
-                temurin-bin-17
-                temurin-bin-21
-              ];
-            })
-
           # Dependencies for intersubs for mpv
           (pkgs.python3.withPackages (python312Packages: [
             python312Packages.six
@@ -747,8 +721,8 @@
           bc # Gnu calculator, needed for vmrss
 
           # Haskell
-          haskell-language-server # Haskell LSP
           ghc # Haskell LSP
+          haskell-language-server # Haskell LSP
 
           # Unstable
           pkgs-unstable.krita # Painting
@@ -1102,7 +1076,6 @@
 
       programs.git = {
         enable = true;
-        difftastic.enable = true;
         package = pkgs.gitAndTools.gitFull;
         aliases = {
           aa = "add -A"; # [A]dd [A]ll
