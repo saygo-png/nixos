@@ -717,6 +717,7 @@
           htop-vim # TUI task manager
           pulsemixer # Volume control
           ffmpeg # Video and magic editor
+          cookiecutter # Project templates
           gmic # Image processing language
           bc # Gnu calculator, needed for vmrss
 
