@@ -6,6 +6,7 @@
   conUsername,
   conFlakePath,
   conFlakePathRel,
+  conRefresh-rate,
   ...
 }: {
   environment.systemPackages = with pkgs; [
@@ -121,6 +122,20 @@
          exit 1
         fi
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+      '';
+    })
+
+    (writeShellApplication {
+      name = "myAutostartAwesome.sh";
+      runtimeInputs = [xorg.xrandr polkit-kde-agent xmousepasteblock xssproxy];
+      text = ''
+        xrandr -r ${builtins.toString conRefresh-rate}
+        polkit-kde-authentication-agent-1 &
+        xmousepasteblock &
+        xssproxy &
+        udiskie &
+        remaps &
+        $TERMINAL &
       '';
     })
 

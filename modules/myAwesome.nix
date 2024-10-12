@@ -58,13 +58,10 @@
             hash dbus-update-activation-environment 2>/dev/null &
 
             export XDG_SESSION_TYPE=x11
-            xrandr -r ${builtins.toString conRefresh-rate}
-            ${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &
-            ${lib.getExe pkgs.xmousepasteblock} &
-            ${lib.getExe pkgs.xssproxy} &
-            udiskie &
-            $TERMINAL &
-            exec dbus-run-session awesome
+            exec awesome
+            # while true; do
+            #   dbus-launch --sh-syntax --exit-with-session awesome
+            # done
           '';
         };
       };
