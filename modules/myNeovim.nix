@@ -583,6 +583,30 @@
         })
         -- }}}
 
+        -- Faster.nvim (Speed up big files) {{{
+        local opts = {
+          behaviours = {
+            bigfile = {
+              on = true,
+              -- Table which contains names of features that will be disabled when
+              -- bigfile is opened. Feature names can be seen in features table below.
+              -- features_disabled can also be set to "all" and then all features that
+              -- are on (on=true) are going to be disabled for this behaviour
+              features_disabled = {
+                "illuminate", "matchparen", "lsp", "treesitter",
+                "indent_blankline", "vimopts", "syntax", "filetype"
+              },
+              -- Files larger than `filesize` are considered big files. Value is in MB.
+              filesize = 0.3,
+              -- Autocmd pattern that controls on which files behaviour will be applied.
+              -- `*` means any file.
+              pattern = "*",
+            }
+          }
+        }
+        require("faster").setup(opts)
+        --- }}}
+
         -- LSP {{{
         -- Transparent hover
         vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
@@ -627,8 +651,8 @@
       extraPlugins = [
         pkgs.vimPlugins.gruvbox-material
         pkgs.vimPlugins.dial-nvim
-        pkgs.vimPlugins.vim-dispatch
-        pkgs.vimPlugins.vim-jack-in
+        # pkgs.vimPlugins.vim-dispatch
+        # pkgs.vimPlugins.vim-jack-in
         (pkgs.vimUtils.buildVimPlugin {
           name = "cutlass.nvim";
           src = inputs.nvim-plugin-cutlass;
@@ -640,6 +664,10 @@
         (pkgs.vimUtils.buildVimPlugin {
           name = "rainbow";
           src = inputs.nvim-plugin-rainbow;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "faster.nvim";
+          src = inputs.nvim-plugin-faster;
         })
       ];
 
@@ -669,7 +697,7 @@
 
       # Plugins {{{
       plugins = {
-        nix.enable = false;
+        # nix.enable = true;
         flash.enable = true;
         comment.enable = true;
         fugitive.enable = true;
@@ -677,8 +705,8 @@
         friendly-snippets.enable = true;
 
         # Lisps
-        conjure.enable = false;
-        parinfer-rust.enable = false;
+        # conjure.enable = true;
+        # parinfer-rust.enable = true;
 
         spider = {
           enable = true;
@@ -765,7 +793,7 @@
           enable = true;
           nixvimInjections = true;
           ensureInstalled = ["all"];
-          ignoreInstall = ["comment"];
+          ignoreInstall = ["comment" "nix"];
           moduleConfig.highlight.enable = true;
           nixGrammars = true; # Install grammars with Nix
           incrementalSelection = {
@@ -833,13 +861,13 @@
           };
         };
 
-        gitsigns = {
-          enable = true;
-          settings = {
-            current_line_blame = false;
-            signcolumn = false;
-          };
-        };
+        # enable = true;
+        # gitsigns = {
+        #   settings = {
+        #     current_line_blame = false;
+        #     signcolumn = false;
+        #   };
+        # };
 
         conform-nvim = {
           enable = true;
@@ -944,7 +972,7 @@
               debounce = 200;
               throttle = 200;
               maxViewEntries = 5;
-              fetchingTimeout = 50;
+              # fetchingTimeout = 50;
             };
             snippet.expand = ''
               function(args)

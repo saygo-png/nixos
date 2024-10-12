@@ -419,6 +419,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-faster": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1712830479,
+        "narHash": "sha256-oruxdxoMq46F9lf1JxkbrqdzR0JwDE1y/cVCaTD4SBg=",
+        "owner": "pteroctopus",
+        "repo": "faster.nvim",
+        "rev": "e85c5bdff0cd1e17cbee855ae23c25e7b8e597cb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pteroctopus",
+        "repo": "faster.nvim",
+        "type": "github"
+      }
+    },
     "nvim-plugin-rainbow": {
       "flake": false,
       "locked": {
@@ -460,6 +476,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "nvim-plugin-cutlass": "nvim-plugin-cutlass",
+        "nvim-plugin-faster": "nvim-plugin-faster",
         "nvim-plugin-rainbow": "nvim-plugin-rainbow",
         "nvim-plugin-vim-visual-multi": "nvim-plugin-vim-visual-multi",
         "stylix": "stylix"
