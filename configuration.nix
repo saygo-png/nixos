@@ -67,9 +67,6 @@
     };
   };
 
-  # Remove screentearing on x11
-  # services.xserver.deviceSection = ''Option "TearFree" "true"'';
-
   services.xserver.xkb = {
     layout = "pl,plfi";
     options = "grp:sclk_toggle";
@@ -1538,4 +1535,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-
