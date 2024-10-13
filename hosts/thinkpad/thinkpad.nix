@@ -66,32 +66,32 @@
         # Mute
         keys = [113];
         events = ["key"];
-        command = "${lib.getExe pkgs.pamixer} -t && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+        command = "pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 500 'mute toggled'";
       }
       {
         # Volume down
         keys = [114];
         events = ["key"];
-        command = "${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+        command = "pactl set-sink-volume @DEFAULT_SINK@ -2% && notify-send -t 500 'lowered volume'";
       }
       {
         # Volume up
         keys = [115];
         events = ["key"];
-        command = "${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
+        command = "pactl set-sink-volume @DEFAULT_SINK@ +2% && notify-send -t 500 'increased volume'";
       }
-      {
-        # Wifi toggle
-        keys = [238];
-        events = ["key"];
-        command = "notify-send 'toggled wifi'";
-      }
-      {
-        # Bluetooth toggle
-        keys = [237];
-        events = ["key"];
-        command = "notify-send 'toggled bluetoth'";
-      }
+      # {
+      #   # Wifi toggle
+      #   keys = [238];
+      #   events = ["key"];
+      #   command = "notify-send 'toggled wifi'";
+      # }
+      # {
+      #   # Bluetooth toggle
+      #   keys = [237];
+      #   events = ["key"];
+      #   command = "notify-send 'toggled bluetoth'";
+      # }
     ];
   };
 
