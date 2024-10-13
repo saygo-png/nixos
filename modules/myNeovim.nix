@@ -433,7 +433,7 @@
         vim.keymap.set('v', 'p', '"_dP')
 
         -- Keep cursor position after yank
-        vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
+        -- vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
 
         -- Window switching.
         vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
