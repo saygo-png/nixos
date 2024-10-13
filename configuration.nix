@@ -747,10 +747,6 @@
           # };
         ];
 
-        activation.load-xresources =
-          lib.hm.dag.entryAfter ["installPackages"] ''
-          '';
-
         # This allows for semi-declarative configuration.
         # However it makes you lag when rebuilding.
         activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
