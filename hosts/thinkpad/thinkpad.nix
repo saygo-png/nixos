@@ -24,18 +24,18 @@
   };
 
   # If you desire to compile kernel for better bluetooth support.
-  boot.kernelModules = ["btqca"];
-  boot.kernelPatches = [
-    {
-      name = "enable-qca6390-bluetooth";
-      patch = null;
-      extraConfig = ''
-        BT_QCA m
-        BT_HCIUART m
-        BT_HCIUART_QCA y
-      '';
-    }
-  ];
+  # boot.kernelModules = ["btqca"];
+  # boot.kernelPatches = [
+  #   {
+  #     name = "enable-qca6390-bluetooth";
+  #     patch = null;
+  #     extraConfig = ''
+  #       BT_QCA m
+  #       BT_HCIUART m
+  #       BT_HCIUART_QCA y
+  #     '';
+  #   }
+  # ];
 
   # Optimization for ssds
   services.fstrim.enable = true;
