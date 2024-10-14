@@ -10,34 +10,30 @@
 }: let
   nvim-plugin-cutlass = pkgs.fetchFromGitHub {
     owner = "gbprod";
-    repo = "cutlass";
+    repo = "cutlass.nvim";
     rev = "1ac7e4b53d79410be52a9e464d44c60556282b3e";
-    sha256 = "";
-    url = "https://github.com/gbprod/cutlass/archive/refs/heads/main.tar.gz";
+    sha256 = "zmS/JlcGW8hLWla01F2z9QMfnIYvWr5BkPCoZqzsAFw=";
   };
 
-  # nvim-plugin-vim-visual-multi = pkgs.fetchFromGitHub {
-  #   owner = "mg979";
-  #   repo = "vim-visual-multi";
-  #   rev = "a6975e7c1ee157615bbc80fc25e4392f71c344d4";
-  #   sha256 = "";
-  #   url = "https://github.com/mg979/vim-visual-multi/archive/refs/heads/main.tar.gz";
-  # };
-  #
-  # nvim-plugin-rainbow = pkgs.fetchFromGitHub {
-  #   owner = "luochen1990";
-  #   repo = "rainbow";
-  #   rev = "76ca1a20aa42edb5c65c19029968aad4625790dc";
-  #   sha256 = "";
-  #   url = "https://github.com/luochen1990/rainbow/archive/refs/heads/main.tar.gz";
-  # };
+  nvim-plugin-vim-visual-multi = pkgs.fetchFromGitHub {
+    owner = "mg979";
+    repo = "vim-visual-multi";
+    rev = "a6975e7c1ee157615bbc80fc25e4392f71c344d4";
+    sha256 = "KzBWkB/PYph6OfuF0GgNFYgqUAwMYbQQZbaaG9XuWZY=";
+  };
+
+  nvim-plugin-rainbow = pkgs.fetchFromGitHub {
+    owner = "luochen1990";
+    repo = "rainbow";
+    rev = "76ca1a20aa42edb5c65c19029968aad4625790dc";
+    sha256 = "dBHgAc3dOoeBI/lZzIJgYYTda8ZMvdThixUZebZXRHE=";
+  };
 
   nvim-plugin-faster = pkgs.fetchFromGitHub {
     owner = "pteroctopus";
     repo = "faster.nvim";
     rev = "e85c5bdff0cd1e17cbee855ae23c25e7b8e597cb";
     sha256 = "oruxdxoMq46F9lf1JxkbrqdzR0JwDE1y/cVCaTD4SBg=";
-    url = "https://github.com/pteroctopus/faster.nvim/archive/refs/heads/main.tar.gz";
   };
 in {
   environment.systemPackages = with pkgs; [

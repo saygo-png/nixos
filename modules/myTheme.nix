@@ -174,7 +174,7 @@
     };
     qt = {
       enable = true;
-      platformTheme = "gtk";
+      platformTheme.name = "gtk";
     };
     home.pointerCursor = {
       x11.enable = lib.mkForce true;
