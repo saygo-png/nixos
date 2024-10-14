@@ -44,7 +44,6 @@
   # Wifi
   networking.networkmanager.enable = true;
 
-
   # Remove screentearing on x11
   services.xserver.deviceSection = ''Option "TearFree" "true"'';
 

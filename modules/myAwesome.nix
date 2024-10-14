@@ -36,7 +36,6 @@
 
   home-manager.users.${conUsername} = {config, ...}: {
     home = {
-      pointerCursor.x11.enable = lib.mkDefault true;
       file = {
         # auto xrdb
         ${config.xresources.path}.onChange = ''
