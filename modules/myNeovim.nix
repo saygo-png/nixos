@@ -465,10 +465,11 @@ in {
         -- vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
 
         -- Window switching.
-        vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
-        vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
-        vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
-        vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
+        -- Conflict with harpoon
+        -- vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
+        -- vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
+        -- vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
+        -- vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
 
         -- Previous buffer
         vim.keymap.set('n', '<S-B>', '<C-6>')
