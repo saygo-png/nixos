@@ -590,6 +590,7 @@
           # Unstable
           pkgs-unstable.krita # Painting
           pkgs-unstable.inkscape # Vector graphics
+          pkgs-unstable.deno
 
           # DO THIS ONCE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
           # programs = {

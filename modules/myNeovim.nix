@@ -3,6 +3,7 @@
   pkgs,
   config,
   conUsername,
+  pkgs-unstable,
   conAccentColor,
   conFlakePathRel,
   conRefresh-rate,
@@ -899,9 +900,38 @@ in {
             # Clojure
             clojure-lsp.enable = true;
 
-            # Typescript
-            tsserver.enable = true;
-            eslint.enable = true; # Linter as lsp
+            # Web
+            html.enable = true;
+            jsonls.enable = true;
+            terraformls.enable = true;
+            cssls.enable = true;
+            eslint.enable = true;
+            tsserver = {
+              enable = true;
+              rootDir = ''
+                function (filename, bufnr)
+                  local util = require 'lspconfig.util'
+                  local denoRootDir = util.root_pattern("deno.json", "deno.jsonc")(filename);
+                  if denoRootDir then
+                    return nil;
+                  end
+                  return util.root_pattern("package.json")(filename);
+                end
+              '';
+              extraOptions = {
+                single_file_support = false;
+              };
+            };
+            denols = {
+              enable = true;
+              package = pkgs-unstable.deno;
+              rootDir = ''
+                function (filename, bufnr)
+                  local util = require 'lspconfig.util'
+                  return util.root_pattern("deno.json", "deno.jsonc")(filename);
+                end
+              '';
+            };
 
             # Markdown
             marksman.enable = true;
@@ -936,22 +966,28 @@ in {
           formattersByFt = {
             # Conform will run multiple formatters sequentially.
             json = ["jq"];
+            jsonc = ["prettierd"];
             sh = ["shfmt"];
             lua = ["stylua"];
-            css = ["prettierd"];
             nix = ["alejandra"];
             clojure = ["zprint"];
-            html = ["prettierd"];
             haskell = ["fourmolu"];
             graphql = ["prettierd"];
             markdown = ["prettierd"];
             python = ["isort" "yapf"];
+            css = ["prettierd"];
+            html = ["prettierd"];
+            scss = ["prettierd"];
             javascript = ["prettierd"];
-            typescript = ["prettierd"];
             javascriptreact = ["prettierd"];
+            typescript = ["prettierd"];
             typescriptreact = ["prettierd"];
             # Use the "*" filetype to run formatters on all filetypes.
-            "*" = ["trim_whitespace"];
+            "*" = [
+              "squeeze_blanks"
+              "trim_whitespace"
+              "trim_newlines"
+            ];
           };
           formatters = {
             cljfmt = {
@@ -960,6 +996,9 @@ in {
               stdin = true;
             };
             shfmt.args = lib.mkOptionDefault ["-i" "2"];
+            squeeze_blanks = {
+              command = pkgs.lib.getExe' pkgs.coreutils "cat";
+            };
           };
         };
 
