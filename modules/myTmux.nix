@@ -73,8 +73,23 @@
       {})
   ];
 
-  home-manager.users.${conUsername} = {
+  home-manager.users.${conUsername} = {config, ...}: {
     programs.fzf.tmux.enableShellIntegration = true;
+    xdg.configFile."tms/config.toml".text =
+      # toml
+      ''
+        [[search_dirs]]
+        path = "${config.home.homeDirectory}/Sync/art/diploma"
+        depth = 10
+
+        [[search_dirs]]
+        path = "${config.home.homeDirectory}/Sync/art/generative-art"
+        depth = 10
+
+        [[search_dirs]]
+        path = "${config.home.homeDirectory}/Sync/builds"
+        depth = 10
+      '';
     programs.tmux = {
       baseIndex = 1;
       enable = true;
