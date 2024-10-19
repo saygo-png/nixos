@@ -11,6 +11,7 @@
   conFlakePath,
   pkgs-unstable,
   conFlakePathRel,
+  nixpkgs-unstable-working-krita,
   ...
 }: {
   imports = [
@@ -589,7 +590,7 @@
           haskell-language-server # Haskell LSP
 
           # Unstable
-          pkgs-unstable.krita # Painting
+          nixpkgs-unstable-working-krita.krita # Painting
           pkgs-unstable.inkscape # Vector graphics
           pkgs-unstable.deno
 
@@ -730,7 +731,6 @@
                 test(unit): add new test cases
                 style: remove unused imports
                 refactor(pages): extract common code to \`utils/wait.ts\`
-
 
                 **Instructions:**
 

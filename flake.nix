@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable-working-krita.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     home-manager = {
@@ -35,11 +36,12 @@
     ...
   } @ inputs: let
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
+    nixpkgs-unstable-working-krita = import inputs.nixpkgs-unstable-working-krita {system = "x86_64-linux";};
   in {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit inputs self pkgs-unstable;
+        inherit inputs self pkgs-unstable nixpkgs-unstable-working-krita;
         host = "nixos";
         conUsername = "samsepi0l";
         conHome = "/home/samsepi0l";
@@ -66,7 +68,7 @@
     nixosConfigurations.thinkpad = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit inputs self pkgs-unstable;
+        inherit inputs self pkgs-unstable nixpkgs-unstable-working-krita;
         host = "thinkpad";
         conUsername = "samsepi0l";
         conHome = "/home/samsepi0l";

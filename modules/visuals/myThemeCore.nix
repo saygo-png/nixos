@@ -9,6 +9,7 @@
     kdePackages.qtsvg # Icons for dolphin
     kdePackages.qtwayland # qt6
     libsForQt5.qt5.qtwayland
+    gtk-engine-murrine
 
     # fix kirigami apps look
     # for example in filelight, without it the app looks weird
