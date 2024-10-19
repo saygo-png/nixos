@@ -173,6 +173,7 @@
   environment.systemPackages = with pkgs; [
     # Nix.
     nil # Nix LSP
+    nixd # Another nix LSP (For Zed)
     nh # Nix helper
     alejandra # Nix formatter
     nix-tree # Reverse dependency search
@@ -294,6 +295,9 @@
   # Printing
   services.printing.enable = true;
   services.printing.cups-pdf.enable = true;
+
+  # Needed for secrets
+  services.gnome.gnome-keyring.enable = true;
 
   # Thumbnails for thunar
   services.tumbler.enable = true;

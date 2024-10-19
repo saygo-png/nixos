@@ -84,38 +84,89 @@
 
       xdg.configFile."zed/settings.json".text = builtins.toJSON {
         tab_size = 2;
+        ensure_final_newline_on_save = false;
         vim_mode = true;
         ui_font_size = 16;
         auto_update = false;
+        use_autoclose = false;
         buffer_font_size = 16;
+        show_call_status_icon = false;
+        preferred_line_length = 90;
         base_keymap = "VSCode";
         theme = "Gruvbox Dark";
         vim.use_system_clipboard = "always";
+        load_direnv = "shell_hook";
         buffer_font_family = "JetBrains Mono";
-        inlay_hints = {
+        git.inline_blame.enabled = false;
+        indent_guides = {
           enabled = true;
-          edit_debounce_ms = 700;
-          show_type_hints = true;
-          scroll_debounce_ms = 50;
-          show_other_hints = true;
-          show_parameter_hints = true;
+          line_width = 2;
+          active_line_width = 3;
+          coloring = "static";
+          background_coloring = "disabled";
         };
-        journal = {
-          hour_format = "hour24";
-        };
+        inlay_hints.enabled = true;
+        journal.hour_format = "hour24";
         telemetry = {
           metrics = false;
           diagnostics = false;
         };
         BINDZ = [
           {
-            context = "Editor && !VimWaiting && !menu";
+            context = "VimControl && !menu";
             bindings = {
-              ctrl-y = "editor::Undo"; # vim default: line up
-              ctrl-o = "workspace::Open"; # vim default: go back
-              ctrl-a = "editor::SelectAll"; # vim default: increment
+              shift-k = "editor::Hover";
+            };
+          }
+          {
+            context = "Workspace";
+            bindings = {
+              ctrl-b = "workspace::ToggleLeftDock";
+            };
+          }
+          {
+            context = "Editor && vim_mode == normal && !VimWaiting && !menu";
+            bindings = {
+              shift-q = "pane::CloseActiveItem";
+              "space c" = "editor::Format";
+            };
+          }
+          {
+            context = "Editor && vim_mode == insert && !VimWaiting && !menu";
+            bindings = {
+              enter = "editor::SelectLargerSyntaxNode";
               ctrl-v = "editor::Paste"; # vim default: visual block mode
               ctrl-c = "editor::Copy"; # vim default: return to normal mode
+            };
+          }
+          {
+            context = "Editor && !VimWaiting && !menu";
+            bindings = {
+              "cmd-[" = "pane::GoBack";
+              "cmd-]" = "pane::GoForward";
+            };
+          }
+          {
+            # Vim File Tree ("ProjectPanel") actions
+            context = "ProjectPanel && not_editing";
+            bindings = {
+              "h" = "project_panel::CollapseSelectedEntry";
+              "l" = "project_panel::ExpandSelectedEntry";
+              "j" = "menu::SelectNext";
+              "k" = "menu::SelectPrev";
+              "o" = "menu::Confirm";
+              "r" = "project_panel::Rename";
+              "z c" = "project_panel::CollapseSelectedEntry";
+              "z o" = "project_panel::ExpandSelectedEntry";
+              "shift-o" = "project_panel::RevealInFinder";
+              "x" = "project_panel::Cut";
+              "c" = "project_panel::Copy";
+              "p" = "project_panel::Paste";
+              "d" = "project_panel::Delete";
+              "a" = "project_panel::NewFile";
+              "shift-a" = "project_panel::NewDirectory";
+              "shift-y" = "project_panel::CopyRelativePath";
+              "g y" = "project_panel::CopyPath";
             };
           }
         ];
