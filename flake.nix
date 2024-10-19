@@ -28,20 +28,6 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # nvim-plugin-cutlass = {
-    #   url = "github:gbprod/cutlass.nvim";
-    #   flake = false;
-    # };
-    #
-    # nvim-plugin-vim-visual-multi = {
-    #   url = "github:mg979/vim-visual-multi";
-    #   flake = false;
-    # };
-
-    # nvim-plugin-rainbow = {
-    #   url = "github:luochen1990/rainbow";
-    #   flake = false;
-    # };
   };
   outputs = {
     self,

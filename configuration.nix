@@ -7,6 +7,7 @@
   conHome,
   options,
   conUsername,
+  conAccentColor,
   conFlakePath,
   pkgs-unstable,
   conFlakePathRel,
@@ -23,8 +24,8 @@
     "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
-    # "${conFlakePathRel}/modules/myUnthemedQT.nix"
-    "${conFlakePathRel}/modules/myTheme.nix"
+    "${conFlakePathRel}/modules/visuals/myTheme.nix"
+    "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
     "${conFlakePathRel}/modules/myPrismlauncher.nix"
   ];
   # }}}
@@ -867,9 +868,9 @@
         fileWidgetOptions = ["--preview 'head {}'"];
         changeDirWidgetOptions = ["--preview 'tree -C {} | head -200'"];
         colors = {
-          "bg" = "-1";
-          "bg+" = "-1";
-          "gutter" = "-1";
+          "bg" = lib.mkForce "-1";
+          "bg+" = lib.mkForce "-1";
+          "gutter" = lib.mkForce "-1";
         }; # Transparent fzf.
       };
 
@@ -1060,49 +1061,50 @@
         };
         theme = let
           inherit (config.lib.formats.rasi) mkLiteral;
-        in {
+          inherit (config.lib.stylix.colors.withHashtag) base07 base06 base04 base09 base08 base0A base0C;
+        in lib.mkForce {
           "*" = {
             highlight = "bold";
-            border-color = lib.mkForce (mkLiteral "#7d8618");
-            gruvbox-dark-fg0 = lib.mkForce (mkLiteral "#fbf1c7");
-            gruvbox-dark-fg1 = lib.mkForce (mkLiteral "#ebdbb2");
-            gruvbox-dark-gray = lib.mkForce (mkLiteral "#bdae93");
-            gruvbox-dark-red-dark = lib.mkForce (mkLiteral "#fe8019");
-            gruvbox-dark-red-light = lib.mkForce (mkLiteral "#fb4934");
-            gruvbox-dark-yellow-dark = lib.mkForce (mkLiteral "#fabd2f");
-            gruvbox-dark-yellow-light = lib.mkForce (mkLiteral "#8ec07c");
-            gruvbox-dark-bg0 = lib.mkForce (mkLiteral "rgba (40, 40, 40, 0%)");
-            gruvbox-dark-bg3 = lib.mkForce (mkLiteral "rgba (125, 134, 24, 0%)");
-            selected-normal-background = lib.mkForce (mkLiteral "#7d8618");
+            border-color = mkLiteral "#${conAccentColor}";
+            gruvbox-dark-fg0 = mkLiteral "${base07}";
+            gruvbox-dark-fg1 = mkLiteral "${base06}";
+            gruvbox-dark-gray = mkLiteral "${base04}";
+            gruvbox-dark-red-dark = mkLiteral "${base09}";
+            gruvbox-dark-red-light = mkLiteral "${base08}";
+            gruvbox-dark-yellow-dark = mkLiteral "${base0A}";
+            gruvbox-dark-yellow-light = mkLiteral "${base0C}";
+            gruvbox-dark-bg0 = mkLiteral "rgba (40, 40, 40, 0%)";
+            gruvbox-dark-bg3 = mkLiteral "rgba (125, 134, 24, 0%)";
+            selected-normal-background = mkLiteral "#${conAccentColor}";
 
-            normal-background = lib.mkForce (mkLiteral "@background");
-            gruvbox-dark-bg0-soft = lib.mkForce (mkLiteral "@background");
-            alternate-normal-background = lib.mkForce (mkLiteral "@background");
-            background-color = lib.mkForce (mkLiteral "@background");
-            background = lib.mkForce (mkLiteral "@gruvbox-dark-bg0");
-            foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            separatorcolor = lib.mkForce (mkLiteral "@border-color");
-            active-foreground = lib.mkForce (mkLiteral "@foreground");
-            normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            scrollbar-handle = lib.mkForce (mkLiteral "@border-color");
-            urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            alternate-normal-foreground = lib.mkForce (mkLiteral "@foreground");
-            urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-dark");
-            active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-dark");
-            selected-normal-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg0");
-            alternate-urgent-foreground = lib.mkForce (mkLiteral "@gruvbox-dark-fg1");
-            selected-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
-            selected-urgent-foreground = lib.mkForce (mkLiteral "@urgent-foreground");
-            alternate-active-background = lib.mkForce (mkLiteral "@active-background");
-            alternate-active-foreground = lib.mkForce (mkLiteral "@active-foreground");
-            alternate-urgent-background = lib.mkForce (mkLiteral "@urgent-background");
-            selected-urgent-background = lib.mkForce (mkLiteral "@gruvbox-dark-red-light");
-            selected-active-background = lib.mkForce (mkLiteral "@gruvbox-dark-yellow-light");
+            normal-background = mkLiteral "@background";
+            gruvbox-dark-bg0-soft = mkLiteral "@background";
+            alternate-normal-background = mkLiteral "@background";
+            background-color = mkLiteral "@background";
+            background = mkLiteral "@gruvbox-dark-bg0";
+            foreground = mkLiteral "@gruvbox-dark-fg1";
+            separatorcolor = mkLiteral "@border-color";
+            active-foreground = mkLiteral "@foreground";
+            normal-foreground = mkLiteral "@foreground";
+            scrollbar-handle = mkLiteral "@border-color";
+            urgent-foreground = mkLiteral "@gruvbox-dark-fg1";
+            alternate-normal-foreground = mkLiteral "@foreground";
+            urgent-background = mkLiteral "@gruvbox-dark-red-dark";
+            active-background = mkLiteral "@gruvbox-dark-yellow-dark";
+            selected-normal-foreground = mkLiteral "@gruvbox-dark-fg0";
+            alternate-urgent-foreground = mkLiteral "@gruvbox-dark-fg1";
+            selected-active-foreground = mkLiteral "@active-foreground";
+            selected-urgent-foreground = mkLiteral "@urgent-foreground";
+            alternate-active-background = mkLiteral "@active-background";
+            alternate-active-foreground = mkLiteral "@active-foreground";
+            alternate-urgent-background = mkLiteral "@urgent-background";
+            selected-urgent-background = mkLiteral "@gruvbox-dark-red-light";
+            selected-active-background = mkLiteral "@gruvbox-dark-yellow-light";
           };
           "window" = {
             padding = 5;
             border = 0;
-            background-color = lib.mkForce (mkLiteral "@background");
+            background-color = mkLiteral "@background";
           };
           "mainbox" = {
             border = 0;
@@ -1111,17 +1113,17 @@
           "message" = {
             padding = mkLiteral "1px";
             border = mkLiteral "2px 0 0";
-            border-color = lib.mkForce (mkLiteral "@background");
+            border-color = mkLiteral "@background";
           };
           "textbox" = {
             highlight = mkLiteral "@highlight";
-            text-color = lib.mkForce (mkLiteral "@foreground");
+            text-color = mkLiteral "@foreground";
           };
           "listview" = {
             spacing = mkLiteral "0px";
             padding = mkLiteral "0px 0 0";
             border = mkLiteral "0px solid 0 0";
-            border-color = lib.mkForce (mkLiteral "@background");
+            border-color = mkLiteral "@background";
           };
           "element" = {
             border = 0;
@@ -1130,106 +1132,106 @@
           "inputbar" = {
             spacing = 2;
             padding = mkLiteral "2px";
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
             children = mkLiteral "[prompt, textbox-prompt-sep, entry, case-indicator]";
           };
           "case-indicator, entry, prompt, button" = {
             spacing = 0;
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
           };
           "case-indicator" = {
             spacing = 0;
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
           };
           "entry" = {
             spacing = 0;
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
           };
           "prompt" = {
             spacing = 0;
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
           };
           "button" = {
             spacing = 0;
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
           };
           "textbox-prompt-sep" = {
             str = ":";
             expand = false;
             margin = mkLiteral "0 0.2em 0.3em 0";
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
+            text-color = mkLiteral "@normal-foreground";
           };
           "element.normal.normal" = {
-            text-color = lib.mkForce (mkLiteral "@normal-foreground");
-            background-color = lib.mkForce (mkLiteral "@normal-background");
+            text-color = mkLiteral "@normal-foreground";
+            background-color = mkLiteral "@normal-background";
           };
 
           "element.normal.urgent" = {
-            text-color = lib.mkForce (mkLiteral "@urgent-foreground");
-            background-color = lib.mkForce (mkLiteral "@urgent-background");
+            text-color = mkLiteral "@urgent-foreground";
+            background-color = mkLiteral "@urgent-background";
           };
 
           "element.normal.active" = {
-            text-color = lib.mkForce (mkLiteral "@active-foreground");
-            background-color = lib.mkForce (mkLiteral "@active-background");
+            text-color = mkLiteral "@active-foreground";
+            background-color = mkLiteral "@active-background";
           };
 
           "element.selected.normal" = {
-            text-color = lib.mkForce (mkLiteral "@selected-normal-foreground");
-            background-color = lib.mkForce (mkLiteral "@selected-normal-background");
+            text-color = mkLiteral "@selected-normal-foreground";
+            background-color = mkLiteral "@selected-normal-background";
           };
 
           "element.selected.urgent" = {
-            text-color = lib.mkForce (mkLiteral "@selected-urgent-foreground");
-            background-color = lib.mkForce (mkLiteral "@selected-urgent-background");
+            text-color = mkLiteral "@selected-urgent-foreground";
+            background-color = mkLiteral "@selected-urgent-background";
           };
 
           "element.selected.active" = {
-            text-color = lib.mkForce (mkLiteral "@selected-active-foreground");
-            background-color = lib.mkForce (mkLiteral "@selected-active-background");
+            text-color = mkLiteral "@selected-active-foreground";
+            background-color = mkLiteral "@selected-active-background";
           };
 
           "element.alternate.normal" = {
-            text-color = lib.mkForce (mkLiteral "@alternate-normal-foreground");
-            background-color = lib.mkForce (mkLiteral "@alternate-normal-background");
+            text-color = mkLiteral "@alternate-normal-foreground";
+            background-color = mkLiteral "@alternate-normal-background";
           };
 
           "element.alternate.urgent" = {
-            text-color = lib.mkForce (mkLiteral "@alternate-urgent-foreground");
-            background-color = lib.mkForce (mkLiteral "@alternate-urgent-background");
+            text-color = mkLiteral "@alternate-urgent-foreground";
+            background-color = mkLiteral "@alternate-urgent-background";
           };
 
           "element.alternate.active" = {
-            text-color = lib.mkForce (mkLiteral "@alternate-active-foreground");
-            background-color = lib.mkForce (mkLiteral "@alternate-active-background");
+            text-color = mkLiteral "@alternate-active-foreground";
+            background-color = mkLiteral "@alternate-active-background";
           };
 
           "scrollbar" = {
             border = 0;
             padding = 0;
             handle-width = mkLiteral "8px";
-            width = lib.mkForce (mkLiteral "4px");
-            handle-color = lib.mkForce (mkLiteral "@normal-background");
+            width = mkLiteral "4px";
+            handle-color = mkLiteral "@normal-background";
           };
 
           "mode-switcher" = {
             border = mkLiteral "2px 0 0";
-            border-color = lib.mkForce (mkLiteral "@normal-background");
+            border-color = mkLiteral "@normal-background";
           };
 
           "button.selected" = {
-            text-color = lib.mkForce (mkLiteral "@selected-normal-foreground");
-            background-color = lib.mkForce (mkLiteral "@selected-normal-background");
+            text-color = mkLiteral "@selected-normal-foreground";
+            background-color = mkLiteral "@selected-normal-background";
           };
 
           "element-icon" = {
-            text-color = lib.mkForce (mkLiteral "inherit");
-            background-color = lib.mkForce (mkLiteral "inherit");
+            text-color = mkLiteral "inherit";
+            background-color = mkLiteral "inherit";
           };
 
           "element-text" = {
-            text-color = lib.mkForce (mkLiteral "inherit");
-            background-color = lib.mkForce (mkLiteral "inherit");
+            text-color = mkLiteral "inherit";
+            background-color = mkLiteral "inherit";
           };
         };
       };
