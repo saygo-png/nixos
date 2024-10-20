@@ -61,7 +61,13 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  hardware.opentabletdriver = {
+    enable = true;
+    daemon.enable = true;
+  };
+
   environment.binsh = lib.getExe pkgs.dash;
+
   # Faster boot
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
