@@ -41,6 +41,7 @@ in {
     MYSQL_HISTFILE = "${homeConfig.xdg.stateHome}/mysql/history";
     NUGET_PACKAGES = "${homeConfig.xdg.cacheHome}/NuGetPackages";
     PYTHONSTARTUP = "${homeConfig.xdg.configHome}/python/pythonrc";
+    COOKIECUTTER_CONFIG = "${homeConfig.xdg.configHome}/cookiecutter/config.yaml";
     NPM_CONFIG_USERCONFIG = "${homeConfig.xdg.configHome}/npm/npmrc";
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${homeConfig.xdg.configHome}/java";
   };
@@ -54,6 +55,11 @@ in {
     };
     xdg = {
       configFile = {
+        "cookiecutter/config.yaml".text = ''
+          cookiecutters_dir: ${homeConfig.xdg.cacheHome}/cookiecutter/
+          replay_dir: ${homeConfig.xdg.cacheHome}/cookiecutter/
+        '';
+
         "npm/npmrc".text = ''
           prefix=${homeConfig.xdg.dataHome}/npm
           cache=${homeConfig.xdg.cacheHome}/npm
