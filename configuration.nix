@@ -55,6 +55,9 @@
 
   time.timeZone = "Europe/Warsaw";
 
+  # Remove screentearing on x11
+  services.xserver.deviceSection = ''Option "TearFree" "true"'';
+
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -601,27 +604,6 @@
           nixpkgs-unstable-working-krita.krita # Painting
           pkgs-unstable.inkscape # Vector graphics
           pkgs-unstable.deno
-
-          # DO THIS ONCE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
-          # programs = {
-          #   # use firefox dev edition
-          #   firefox = rec {
-          #     enable = true;
-          #     package = pkgs.firefox-devedition-bin.overrideAttrs (o: {
-          #       # launch firefox with user profile
-          #       buildCommand =
-          #         o.buildCommand
-          #         + ''
-          #           wrapProgram "$executablePath" \
-          #             --set 'HOME' '${config.xdg.configHome}' \
-          #             --append-flags "--name firefox -P ${user}"
-          #         '';
-          #     });
-          #
-          #     vendorPath = ".config/.mozilla";
-          #     configPath = "${vendorPath}/firefox";
-          #   };
-          # };
         ];
 
         # This allows for semi-declarative configuration.
