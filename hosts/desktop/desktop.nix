@@ -205,9 +205,9 @@
         - '*/.devenv'
         - '*/.devenv*'
         - '*/clj-kondo'
-        - '*/__pycache__
-        - '*/venv.bak
-        - '*/env.bak
+        - '*/__pycache__'
+        - '*/venv.bak'
+        - '*/env.bak'
         - '*/node_modules'
         - '*/.local/share/Steam'
         - '*/Games/battlenet'
