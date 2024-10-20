@@ -86,6 +86,7 @@
         tab_size = 2;
         ensure_final_newline_on_save = false;
         vim_mode = true;
+        relative_line_numbers = true;
         ui_font_size = 16;
         auto_update = false;
         use_autoclose = false;
@@ -113,15 +114,15 @@
         };
         BINDZ = [
           {
-            context = "VimControl && !menu";
+            context = "Workspace";
             bindings = {
-              shift-k = "editor::Hover";
+              "space f" = "workspace::ToggleLeftDock";
             };
           }
           {
-            context = "Workspace";
+            context = "VimControl && !menu";
             bindings = {
-              ctrl-b = "workspace::ToggleLeftDock";
+              "space e" = "editor::Hover";
             };
           }
           {
@@ -129,6 +130,8 @@
             bindings = {
               shift-q = "pane::CloseActiveItem";
               "space c" = "editor::Format";
+              "space c a" = "editor::ToggleCodeActions";
+              "shift-b" = "pane::ActivatePrevItem";
             };
           }
           {
