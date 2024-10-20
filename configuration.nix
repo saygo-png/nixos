@@ -49,6 +49,9 @@
   # DNS
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
 
+  networking.firewall.enable = true;
+  services.fail2ban.enable = true;
+
   time.timeZone = "Europe/Warsaw";
 
   i18n = {
