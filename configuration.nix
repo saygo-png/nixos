@@ -4,6 +4,7 @@
   pkgs,
   self,
   inputs,
+  lib,
   conHome,
   options,
   conUsername,
@@ -41,6 +42,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  environment.binsh = lib.getExe pkgs.dash;
   # Faster boot
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
