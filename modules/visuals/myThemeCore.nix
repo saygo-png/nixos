@@ -16,6 +16,12 @@
     # https://github.com/NixOS/nixpkgs/pull/202990#issuecomment-1328068486
     kdePackages.qqc2-desktop-style # qt6
     libsForQt5.qqc2-desktop-style
+
+    # Some KDE applications such as Dolphin try to fall back to Breeze
+    # theme icons. Lets make sure they're also found.
+    libsForQt5.breeze-qt5
+    kdePackages.breeze-icons
+    qt6.qtsvg # needed to load breeze icons
   ];
 
   # Fonts. {{{
@@ -68,6 +74,7 @@
       # https://wiki.archlinux.org/title/qt#Configuration_of_Qt_5_applications_under_environments_other_than_KDE_Plasma
       # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#The_KDE_Plasma_XDG_Desktop_Portal_is_not_being_used
       DESKTOP_SESSION = "KDE";
+      CALIBRE_USE_DARK_PALETTE = "1";
     };
 
     xdg.configFile."wallpaper.png".source = config.stylix.image;
