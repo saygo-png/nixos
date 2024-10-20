@@ -35,6 +35,10 @@
 
   ###### Essential or basic. ###### {{{
 
+  services.dbus = {
+    enable = true;
+    implementation = "broker";
+  };
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
