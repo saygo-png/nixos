@@ -305,9 +305,12 @@
   nixpkgs.config.allowUnfree = false;
   nix = {
     channel.enable = false;
-    settings.warn-dirty = false;
-    settings.auto-optimise-store = true;
-    settings.experimental-features = ["nix-command" "flakes"];
+    settings = {
+      warn-dirty = false;
+      connect-timeout = 5;
+      auto-optimise-store = true;
+      experimental-features = ["nix-command" "flakes"];
+    };
     gc = {
       automatic = true;
       dates = "2day";
