@@ -39,6 +39,21 @@
     enable = true;
     implementation = "broker";
   };
+
+  documentation = {
+    enable = true;
+    dev.enable = true;
+    doc.enable = false;
+    info.enable = false;
+    # nixos.includeAllModules = true;
+    man = {
+      enable = true;
+      generateCaches = false;
+      man-db.enable = false;
+      mandoc.enable = true;
+    };
+  };
+
   # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
@@ -184,6 +199,9 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
+    man-pages
+    man-pages-posix
+
     # Nix.
     nil # Nix LSP
     nixd # Another nix LSP (For Zed)
