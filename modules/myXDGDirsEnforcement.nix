@@ -47,6 +47,11 @@ in {
   };
 
   home-manager.users.${conUsername} = {
+    # Doesnt work for some reason?
+    programs.zsh = {
+      history.path = "${homeConfig.xdg.dataHome}/zsh/zsh_history";
+      dotDir = ".config/zsh";
+    };
     home.shellAliases = {
       gdb = "gdb -n -x ${homeConfig.xdg.configHome}/gdb/init";
       pidgin = "pidgin --config=${homeConfig.xdg.dataHome}/purple";

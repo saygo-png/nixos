@@ -29,7 +29,7 @@
     "${conFlakePathRel}/modules/myPrismlauncher.nix"
     "${conFlakePathRel}/modules/visuals/myTheme.nix"
     "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
-    # "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
+    "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
   ];
   # }}}
 
