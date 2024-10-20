@@ -45,17 +45,32 @@
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      vaapiVdpau
-      libvdpau-va-gl
-      rocm-opencl-icd
-      rocm-opencl-runtime
-    ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [libva];
+  hardware = {
+    amdgpu = {
+      initrd.enable = true;
+      opencl.enable = true;
+    };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        mesa
+        libdrm
+        libva
+        # libva-vdpau-driver
+
+        vaapiVdpau
+        libvdpau-va-gl
+        rocm-opencl-icd
+        rocm-opencl-runtime
+      ];
+      extraPackages32 = with pkgs.pkgsi686Linux; [
+        libva
+        mesa
+        libvdpau-va-gl
+      ];
+    };
   };
   services.xserver.videoDrivers = ["amdgpu"];
 
