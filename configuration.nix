@@ -25,9 +25,10 @@
     "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
+    "${conFlakePathRel}/modules/myPrismlauncher.nix"
     "${conFlakePathRel}/modules/visuals/myTheme.nix"
     "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
-    "${conFlakePathRel}/modules/myPrismlauncher.nix"
+    # "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
   ];
   # }}}
 
