@@ -109,6 +109,9 @@
         set -g default-terminal 'tmux-256color'
         set -as terminal-overrides ",alacritty*:Tc"
 
+        # Open tmux inside current dir
+        bind c new-window -c "#{pane_current_path}"
+
         # Easy-to-remember split pane commands.
         bind | split-window -h
         bind - split-window -v
