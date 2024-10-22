@@ -57,6 +57,7 @@
             hash dbus-update-activation-environment 2>/dev/null &
 
             export XDG_SESSION_TYPE=x11
+            ${lib.getExe pkgs.picom} --transparent-clipping &
             exec awesome
             # while true; do
             #   dbus-launch --sh-syntax --exit-with-session awesome

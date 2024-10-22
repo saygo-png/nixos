@@ -73,19 +73,19 @@
     applications = lib.mkDefault 11;
   };
 
-  # stylix.opacity = {
-  #   popups = 0.7;
-  #   desktop = 0.7;
-  #   terminal = 0.7;
-  #   applications = 0.5;
-  # };
-
   stylix.opacity = {
-    popups = 1.0;
-    desktop = 1.0;
-    terminal = 1.0;
-    applications = 1.0;
-  }; # }}}
+    popups = 0.5;
+    desktop = 0.5;
+    terminal = 0.5;
+    applications = 0.5;
+  };
+
+  # stylix.opacity = {
+  #   popups = 1.0;
+  #   desktop = 1.0;
+  #   terminal = 1.0;
+  #   applications = 1.0;
+  # }; # }}}
 
   home-manager.users.${conUsername} = {
     home.pointerCursor = {
