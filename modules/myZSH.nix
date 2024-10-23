@@ -142,7 +142,6 @@
         # Backspace delete.
         bindkey -v '^?' backward-delete-char
 
-        cd ~/Desktop/
         source ~/.local/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         source ~/.local/zsh-autosuggestions/zsh-autosuggestions.zsh
         source ~/.local/powerlevel10k/powerlevel10k.zsh-theme
