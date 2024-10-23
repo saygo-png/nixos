@@ -52,6 +52,7 @@ in {
         jq # Json formatter
         vim-language-server
         deadnix # Nix linter
+        statix # Another linter
         pyright # python lsp
         nodePackages.jsonlint
         hlint # Haskell linter
@@ -1003,8 +1004,11 @@ in {
           };
         };
 
-        lint = {
+        lint = let
+          statixConfig = builtins.toFile "statix.toml" ''disabled = [repeated_keys]'';
+        in {
           enable = true;
+          linters.statix.args = ["--config=${statixConfig}"];
           lintersByFt = {
             rst = ["vale"];
             text = ["vale"];
@@ -1015,7 +1019,7 @@ in {
             bash = ["shellcheck"];
             shell = ["shellcheck"];
             clojure = ["clj-kondo"];
-            nix = ["nix" "deadnix"];
+            nix = ["nix" "deadnix" "statix"];
             dockerfile = ["hadolint"];
             markdown = ["markdownlint"];
           };
