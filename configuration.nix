@@ -406,9 +406,7 @@
     backupFileExtension = "backup"; # h-m breaks without it.
     users.${conUsername} = {
       lib,
-      rasi,
       config,
-      formats,
       # osConfig,
       ...
     }: {
