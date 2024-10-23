@@ -7,7 +7,6 @@
   conBorderSize,
   conAccentColor,
   conFlakePathRel,
-  conRefresh-rate,
   ...
 }: {
   # Enable the X11 windowing system.
