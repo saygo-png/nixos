@@ -200,6 +200,9 @@
   # File manager.
   programs.thunar.enable = true;
 
+  # Camera support
+  programs.gphoto2.enable = true;
+
   # Fixes dolphin not having mime types.
   environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
@@ -227,6 +230,9 @@
     # cups-brother-hll2375dw
     # cups-brother-hll3230cdw
     # cups-brother-mfcl2750dw
+
+    # Camera.
+    gphoto2fs
 
     # GUI.
     firefox
