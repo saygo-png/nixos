@@ -697,6 +697,7 @@ in {
         update_in_insert = false,
         virtual_text = false,
         signs = true,
+          source = true,
           float = {
             win_options = {
               winblend = 100
