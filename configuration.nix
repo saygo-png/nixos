@@ -45,7 +45,6 @@
     dev.enable = true;
     doc.enable = false;
     info.enable = false;
-    # nixos.includeAllModules = true;
     man = {
       enable = true;
       generateCaches = false;
@@ -54,7 +53,11 @@
     };
   };
 
-  # This is needed for building, by default its set to 10% of ram, but that might not be enough for low ram systems and u will get an "out of space" error when trying to build. This will still happen with this option, since you need the resize first to even apply this config. So put this line in the vanilla config, rebuild, and then build my config.
+  # Needed for building, by default its set to 10% of ram, which might
+  # not be enough for low ram systems causing an "out of space" error when
+  # trying to build. This will still happen with this option, since you need
+  # the resize first to apply this config. Put this line in the vanilla config,
+  # rebuild, and then build my config.
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
 
   # Use the systemd-boot EFI boot loader.
@@ -179,7 +182,7 @@
     # Video allows to set brightness.
   };
 
-  # Keep sudo password cached infinitely
+  # Keep sudo password cached infinitely.
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=-1
   '';
@@ -200,7 +203,7 @@
   # File manager.
   programs.thunar.enable = true;
 
-  # Camera support
+  # Camera support.
   programs.gphoto2.enable = true;
 
   # Fixes dolphin not having mime types.
@@ -338,17 +341,17 @@
 
   ###### Services ###### {{{
 
-  # Printing
+  # Printing.
   services.printing.enable = true;
   services.printing.cups-pdf.enable = true;
 
-  # Needed for secrets
+  # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
 
-  # Thumbnails for thunar
+  # Thumbnails for Thunar.
   services.tumbler.enable = true;
 
-  # Automount
+  # Automount.
   services.udisks2.enable = true;
   services.udev.extraRules = ''
     ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"
@@ -403,7 +406,7 @@
   ##### Home Manager ###### {{{
   home-manager = {
     extraSpecialArgs = {inherit inputs pkgs-unstable;};
-    backupFileExtension = "backup"; # h-m breaks without it.
+    backupFileExtension = "backup"; # home-manager breaks without it.
     users.${conUsername} = {
       lib,
       config,
@@ -415,14 +418,14 @@
         inputs.nixvim.homeManagerModules.nixvim
       ];
 
-      # # Prevent default apps from being changed
+      # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
         enable = true;
         associations.added = config.xdg.mimeApps.defaultApplications;
         defaultApplications = let
-          EDITOR = config.home.sessionVariables.EDITOR;
-          BROWSER = config.home.sessionVariables.BROWSER;
+          inherit (config.home.sessionVariables) EDITOR;
+          inherit (config.home.sessionVariables) BROWSER;
         in {
           "text/plain" = "${EDITOR}.desktop";
           "text/rhtml" = "${EDITOR}.desktop";
@@ -586,7 +589,7 @@
           TERMINAL_PROG = config.home.sessionVariables.TERMINAL;
         };
 
-        # Home packages, home manager packages, user packages, home programs
+        # Home packages, home manager packages, user packages, home programs.
         packages = with pkgs; [
           # GUI.
           scribus
@@ -606,8 +609,8 @@
           xdragon # drag items from terminal
           jetbrains.pycharm-community-src # python IDE
 
-          # Dependencies for intersubs for mpv
-          (pkgs.python3.withPackages (python312Packages: [
+          # Dependencies for intersubs for mpv.
+          (python3.withPackages (python312Packages: [
             python312Packages.six
             python312Packages.lxml
             python312Packages.httpx
@@ -696,7 +699,7 @@
         '';
       };
 
-      # Wayland, X, etc. support for session vars
+      # Wayland, X, etc. support for session variables.
       systemd.user.sessionVariables = config.home.sessionVariables;
 
       # Development, internal.
@@ -880,8 +883,6 @@
           ".local/share/Trash"
         ];
         extraOptions = [
-          # "color=always"
-          # "--follow"
           "--glob"
         ];
       };
@@ -1193,42 +1194,34 @@
               text-color = mkLiteral "@normal-foreground";
               background-color = mkLiteral "@normal-background";
             };
-
             "element.normal.urgent" = {
               text-color = mkLiteral "@urgent-foreground";
               background-color = mkLiteral "@urgent-background";
             };
-
             "element.normal.active" = {
               text-color = mkLiteral "@active-foreground";
               background-color = mkLiteral "@active-background";
             };
-
             "element.selected.normal" = {
               text-color = mkLiteral "@selected-normal-foreground";
               background-color = mkLiteral "@selected-normal-background";
             };
-
             "element.selected.urgent" = {
               text-color = mkLiteral "@selected-urgent-foreground";
               background-color = mkLiteral "@selected-urgent-background";
             };
-
             "element.selected.active" = {
               text-color = mkLiteral "@selected-active-foreground";
               background-color = mkLiteral "@selected-active-background";
             };
-
             "element.alternate.normal" = {
               text-color = mkLiteral "@alternate-normal-foreground";
               background-color = mkLiteral "@alternate-normal-background";
             };
-
             "element.alternate.urgent" = {
               text-color = mkLiteral "@alternate-urgent-foreground";
               background-color = mkLiteral "@alternate-urgent-background";
             };
-
             "element.alternate.active" = {
               text-color = mkLiteral "@alternate-active-foreground";
               background-color = mkLiteral "@alternate-active-background";
@@ -1263,57 +1256,60 @@
       # Extra Configs {{{
       xdg.enable = true;
 
-      # InterSubs plugin install
+      # InterSubs plugin install.
       xdg.configFile."mpv/scripts/" = {
         source = ./resources/mpv;
         recursive = true;
       };
 
       xdg.configFile."zathura/" = {
-        text = ''
-          set notification-error-bg       "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set notification-error-fg       "${config.lib.stylix.colors.withHashtag.base08}" # bright:red
-          set notification-warning-bg     "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set notification-warning-fg     "${config.lib.stylix.colors.withHashtag.base0A}" # bright:yellow
-          set notification-bg             "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set notification-fg             "${config.lib.stylix.colors.withHashtag.base0B}" # bright:green
+        text = let
+          color = config.lib.stylix.colors.withHashtag;
+          inherit (config.stylix) fonts;
+        in ''
+          set notification-error-bg       "${color.base00}" # bg
+          set notification-error-fg       "${color.base08}" # bright:red
+          set notification-warning-bg     "${color.base00}" # bg
+          set notification-warning-fg     "${color.base0A}" # bright:yellow
+          set notification-bg             "${color.base00}" # bg
+          set notification-fg             "${color.base0B}" # bright:green
 
-          set completion-bg               "${config.lib.stylix.colors.withHashtag.base02}" # bg2
-          set completion-fg               "${config.lib.stylix.colors.withHashtag.base06}" # fg
-          set completion-group-bg         "${config.lib.stylix.colors.withHashtag.base01}" # bg1
-          set completion-group-fg         "${config.lib.stylix.colors.withHashtag.base03}" # gray
-          set completion-highlight-bg     "${config.lib.stylix.colors.withHashtag.base0B}" # bright:blue
-          set completion-highlight-fg     "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+          set completion-bg               "${color.base02}" # bg2
+          set completion-fg               "${color.base06}" # fg
+          set completion-group-bg         "${color.base01}" # bg1
+          set completion-group-fg         "${color.base03}" # gray
+          set completion-highlight-bg     "${color.base0B}" # bright:blue
+          set completion-highlight-fg     "${color.base02}" # bg2
 
           # Define the color in index mode
-          set index-bg                    "${config.lib.stylix.colors.withHashtag.base02}" # bg2
-          set index-fg                    "${config.lib.stylix.colors.withHashtag.base06}" # fg
-          set index-active-bg             "${config.lib.stylix.colors.withHashtag.base0B}" # bright:blue
-          set index-active-fg             "${config.lib.stylix.colors.withHashtag.base02}" # bg2
+          set index-bg                    "${color.base02}" # bg2
+          set index-fg                    "${color.base06}" # fg
+          set index-active-bg             "${color.base0B}" # bright:blue
+          set index-active-fg             "${color.base02}" # bg2
 
-          set inputbar-bg                 "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set inputbar-fg                 "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set inputbar-bg                 "${color.base00}" # bg
+          set inputbar-fg                 "${color.base06}" # fg
 
-          set statusbar-bg                "${config.lib.stylix.colors.withHashtag.base02}" # bg2
-          set statusbar-fg                "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set statusbar-bg                "${color.base02}" # bg2
+          set statusbar-fg                "${color.base06}" # fg
 
-          set highlight-color             "${config.lib.stylix.colors.withHashtag.base0A}" # bright:yellow
-          set highlight-active-color      "${config.lib.stylix.colors.withHashtag.base09}" # bright:orange
+          set highlight-color             "${color.base0A}" # bright:yellow
+          set highlight-active-color      "${color.base09}" # bright:orange
 
-          set default-bg                  "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set default-fg                  "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set default-bg                  "${color.base00}" # bg
+          set default-fg                  "${color.base06}" # fg
           set render-loading              true
-          set render-loading-bg           "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set render-loading-fg           "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set render-loading-bg           "${color.base00}" # bg
+          set render-loading-fg           "${color.base06}" # fg
 
           # Recolor book content's color
-          set recolor-lightcolor          "${config.lib.stylix.colors.withHashtag.base00}" # bg
-          set recolor-darkcolor           "${config.lib.stylix.colors.withHashtag.base06}" # fg
+          set recolor-lightcolor          "${color.base00}" # bg
+          set recolor-darkcolor           "${color.base06}" # fg
 
           set recolor "true"
           set recolor-keephue false"
 
-          set font "${config.stylix.fonts.serif.name} ${builtins.toString config.stylix.fonts.sizes.terminal}"
+          set font "${fonts.serif.name} ${builtins.toString fonts.sizes.terminal}"
 
           map <C-r> reload
           map <C-j> zoom in
@@ -1357,16 +1353,6 @@
             spaces_before_comment = 1
             space_between_ending_comma_and_closing_bracket = False
             split_before_bitwise_operator = True
-            # Indent the dictionary value if it cannot fit on the same line as the
-            # dictionary key. For example:
-            #
-            #   config = {
-            #       'key1':
-            #           'value1',
-            #       'key2': value1 +
-            #               value2,
-            #   }
-            #indent_dictionary_value = False
         '';
       };
 
