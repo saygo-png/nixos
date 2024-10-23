@@ -1061,7 +1061,7 @@
           disable-history = false;
           matching = "fuzzy";
           sort = true;
-          scrollbar = false;
+          scrollbar = true;
           sorting-method = "fzf";
           auto-select = false;
           separator-style = "dash";
@@ -1233,34 +1233,29 @@
               text-color = mkLiteral "@alternate-active-foreground";
               background-color = mkLiteral "@alternate-active-background";
             };
-
-            # "scrollbar" = {
-            #   border = 0;
-            #   padding = 0;
-            #   handle-width = mkLiteral "8px";
-            #   width = mkLiteral "4px";
-            #   handle-color = mkLiteral "@normal-background";
-            # };
-
+            "scrollbar" = {
+              border = 0;
+              padding = 0;
+              handle-width = mkLiteral "8px";
+              width = mkLiteral "4px";
+              handle-color = mkLiteral "@normal-background";
+            };
             "mode-switcher" = {
               border = mkLiteral "2px 0 0";
               border-color = mkLiteral "@normal-background";
             };
-
-            # "button.selected" = {
-            #   text-color = mkLiteral "@selected-normal-foreground";
-            #   background-color = mkLiteral "@selected-normal-background";
-            # };
-            #
-            # "element-icon" = {
-            #   text-color = mkLiteral "inherit";
-            #   background-color = mkLiteral "inherit";
-            # };
-            #
-            # "element-text" = {
-            #   text-color = mkLiteral "inherit";
-            #   background-color = mkLiteral "inherit";
-            # };
+            "button.selected" = {
+              text-color = mkLiteral "@selected-normal-foreground";
+              background-color = mkLiteral "@selected-normal-background";
+            };
+            "element-icon" = {
+              text-color = mkLiteral "inherit";
+              background-color = mkLiteral "inherit";
+            };
+            "element-text" = {
+              text-color = mkLiteral "inherit";
+              background-color = mkLiteral "inherit";
+            };
           };
       };
       # }}}
