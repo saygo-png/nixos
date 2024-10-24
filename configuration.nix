@@ -64,6 +64,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  services.xserver.wacom.enable = true;
   hardware.opentabletdriver = {
     enable = true;
     daemon.enable = true;
