@@ -19,8 +19,11 @@
     (writeShellScriptBin "monitor-toggle"
       (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
 
-    (writePython3 "keepfilelist"
-      {libraries = [pkgs.python3Packages.send2trash];}
+    (writers.writePython3Bin "keepfilelist"
+      {
+        libraries = [pkgs.python3Packages.send2trash];
+        flakeIgnore = ["E265" "E225" "E111" "E305" "E501" "E121" "E302" "E114" "F541"];
+      }
       (builtins.readFile "${conFlakePathRel}/resources/scripts/keepfilelist.py"))
 
     (writeShellApplication {
