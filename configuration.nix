@@ -853,10 +853,29 @@
 
       programs.yazi = {
         enable = true;
-        settings.manager = {
-          show_hidden = true;
-          sort_dir_first = true;
-          sort_by = "natural";
+        settings = {
+          preview.tab_size = 2;
+          manager = {
+            show_hidden = true;
+            show_symlink = true;
+            sort_by = "natural";
+            sort_dir_first = true;
+          };
+          plugin = {
+            preloaders = [
+              {
+                mime = "*";
+                run = "noop";
+              }
+            ];
+            # Disable image previews
+            prepend_previewers = [
+              {
+                mime = "image/*";
+                run = "noop";
+              }
+            ];
+          };
         };
       };
 
