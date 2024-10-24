@@ -10,11 +10,18 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
-    (writeShellScriptBin "hyprland-next-visible-client.sh" (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
+    (writeShellScriptBin "hyprland-next-visible-client.sh"
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
 
-    (writeShellScriptBin "vmrss" (builtins.readFile "${conFlakePathRel}/resources/scripts/vmrss.sh"))
+    (writeShellScriptBin "vmrss"
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/vmrss.sh"))
 
-    (writeShellScriptBin "monitor-toggle" (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
+    (writeShellScriptBin "monitor-toggle"
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
+
+    (writePython3 "keepfilelist"
+      {libraries = [pkgs.python3Packages.send2trash];}
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/keepfilelist.py"))
 
     (writeShellApplication {
       name = "format-udf";
