@@ -1056,7 +1056,10 @@ in {
 
         oil = {
           enable = true;
-          settings.defaultFileExplorer = true;
+          settings = {
+            defaultFileExplorer = true;
+            delete_to_trash = true;
+          };
         };
 
         luasnip = {
