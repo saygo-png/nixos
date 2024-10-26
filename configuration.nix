@@ -30,6 +30,7 @@
     "${conFlakePathRel}/modules/visuals/myTheme.nix"
     "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
     "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
+    "${conFlakePathRel}/modules/visuals/myKvantumBasedQT.nix"
   ];
   # }}}
 
