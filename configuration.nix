@@ -278,8 +278,17 @@
   ###### Miscellaneous ###### {{{
 
   # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
-  systemd.tmpfiles.rules = [
-    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+  systemd.tmpfiles.rules = let
+    rocmEnv = pkgs.symlinkJoin {
+      name = "rocm-combined";
+      paths = with pkgs.rocmPackages; [
+        rocblas
+        hipblas
+        clr
+      ];
+    };
+  in [
+    "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
     "d /media 0755 root root"
   ];
 
