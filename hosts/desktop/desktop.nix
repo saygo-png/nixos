@@ -250,7 +250,7 @@
 
   environment.systemPackages = with pkgs; [
     borgbackup
-    pkgs-unstable.zed-editor # Another text editor
+    pkgs-unstable.zed-editor.fhs # Another text editor
     # Game launcher
     lutris
     winetricks
