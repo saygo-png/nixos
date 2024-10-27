@@ -107,8 +107,8 @@
         package = pkgs.gruvbox-plus-icons;
       };
     };
-    qt = lib.mkDefault {
-      style.package = with pkgs; [adwaita-qt adwaita-qt6];
-    };
+    # qt = lib.mkDefault {
+    #   style.package = with pkgs; [adwaita-qt adwaita-qt6];
+    # };
   };
 }
