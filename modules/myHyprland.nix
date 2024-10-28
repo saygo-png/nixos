@@ -119,10 +119,7 @@
 
       settings = {
         debug.disable_logs = true;
-        xwayland = {
-          enabled = true;
-          force_zero_scaling = true;
-        };
+        xwayland.force_zero_scaling = true;
         # Autostart.
         exec-once = [
           "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
