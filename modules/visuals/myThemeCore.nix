@@ -22,6 +22,9 @@
     libsForQt5.breeze-qt5
     kdePackages.breeze-icons
     qt6.qtsvg # needed to load breeze icons
+
+    # Needed for some icon packs
+    gnome.adwaita-icon-theme
   ];
 
   # Fonts. {{{
