@@ -81,11 +81,9 @@
         [[search_dirs]]
         path = "${config.home.homeDirectory}/Sync/art/diploma"
         depth = 10
-
         [[search_dirs]]
         path = "${config.home.homeDirectory}/Sync/art/generative-art"
         depth = 10
-
         [[search_dirs]]
         path = "${config.home.homeDirectory}/Sync/builds"
         depth = 10
@@ -95,6 +93,7 @@
       enable = true;
       keyMode = "vi";
       prefix = "C-a";
+      tmuxinator.enable = true;
       escapeTime = 0; # Delay after pressing escape
       mouse = true; # Allows you to scroll a terminal
       historyLimit = 1000; # Alacritty already holds history
