@@ -80,15 +80,16 @@
   networking.hostName = "${host}";
 
   # DNS
+  services.resolved.enable = false;
+  networking.networkmanager.dns = "none";
+  networking.resolvconf.enable = lib.mkForce false;
+  networking.dhcpcd.extraConfig = "nohook resolv.conf";
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
 
   networking.firewall.enable = true;
   services.fail2ban.enable = true;
 
   time.timeZone = "Europe/Warsaw";
-
-  # Remove screentearing on x11
-  services.xserver.deviceSection = ''Option "TearFree" "true"'';
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
