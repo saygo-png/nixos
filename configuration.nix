@@ -337,6 +337,12 @@
       dates = "2day";
       options = "--delete-older-than 15d";
     };
+    registry.nixpkgs-unstable.to = {
+      type = "github";
+      owner = "nixos";
+      repo = "nixpkgs";
+      ref = "nixpkgs-unstable";
+    };
   };
   programs.nix-ld.enable = true;
   ## If needed, you can add missing libraries here. nix-index-database is your friend to
