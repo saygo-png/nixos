@@ -266,7 +266,7 @@
     ripgrep # Multithreaded grep
     wl-clipboard # Wayland xclip
     xdg-utils # Includes xdg-open
-    imagemagick_light # Image identifier
+    imagemagick # Image identifier
     libnotify # Notifications (notify-send)
     ntfs3g # ntfs filesystem interop (windows fs)
 
