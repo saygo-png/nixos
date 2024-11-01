@@ -44,6 +44,10 @@
   };
 
   # Gaming.
+  services.xserver.deviceSection = ''
+    Option "TearFree" "False"
+    Option "VariableRefresh" "True"
+  '';
   powerManagement.cpuFreqGovernor = "performance";
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   # Taken from https://github.com/fufexan/nix-gaming
