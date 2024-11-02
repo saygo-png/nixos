@@ -147,13 +147,12 @@
       '';
     };
     xdg.configFile."flameshot/flameshot.ini" = {
-      # executable = true;
+      # buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\b\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\x16\0\0\0\n)
       text = ''
         [General]
         allowMultipleGuiInstances=false
         antialiasingPinZoom=false
         autoCloseIdleDaemon=false
-        buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\b\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\x16\0\0\0\n)
         contrastOpacity=188
         contrastUiColor=${config.lib.stylix.colors.withHashtag.base0A}
         copyAndCloseAfterUpload=true
