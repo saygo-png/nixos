@@ -143,10 +143,10 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    extraPackages = with pkgs; [
+    # extraPackages = with pkgs; [
       # intel-vaapi-driver # I think this is added by nixos-hardware
-      libvdpau-va-gl
-    ];
+      # libvdpau-va-gl
+    # ];
   };
 
   environment.systemPackages = with pkgs; [
