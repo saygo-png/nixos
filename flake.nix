@@ -32,13 +32,12 @@
   };
   outputs = {
     self,
-    nixpkgs,
     ...
   } @ inputs: let
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
     nixpkgs-unstable-working-krita = import inputs.nixpkgs-unstable-working-krita {system = "x86_64-linux";};
   in {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs self pkgs-unstable nixpkgs-unstable-working-krita;
@@ -65,7 +64,7 @@
       ];
     };
 
-    nixosConfigurations.thinkpad = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs self pkgs-unstable nixpkgs-unstable-working-krita;
