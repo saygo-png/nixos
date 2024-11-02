@@ -76,6 +76,7 @@
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
+        amdvlk
         # libdrm
         # libva
         # vaapiVdpau
@@ -88,6 +89,7 @@
       extraPackages32 = with pkgs; [
         # libva
         # libvdpau-va-gl
+        driversi686Linux.amdvlk
       ];
     };
   };
