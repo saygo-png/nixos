@@ -76,19 +76,18 @@
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-        libdrm
-        libva
-
-        vaapiVdpau
-        libvdpau-va-gl
+        # libdrm
+        # libva
+        # vaapiVdpau
+        # libvdpau-va-gl
 
         rocmPackages.clr.icd
         rocm-opencl-icd
         rocm-opencl-runtime
       ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [
-        libva
-        libvdpau-va-gl
+      extraPackages32 = with pkgs; [
+        # libva
+        # libvdpau-va-gl
       ];
     };
   };
