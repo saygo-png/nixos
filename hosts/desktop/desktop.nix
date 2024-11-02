@@ -44,6 +44,7 @@
   };
 
   # Gaming.
+  services.xserver.videoDrivers = ["amdgpu"];
   services.xserver.deviceSection = ''
     Option "TearFree" "False"
     Option "VariableRefresh" "True"
