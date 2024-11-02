@@ -261,7 +261,7 @@
     winetricks
     jdk8 # Java 8 for minecraft
     wineWowPackages.waylandFull
-    blender
+    blender-hip
 
     (writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
