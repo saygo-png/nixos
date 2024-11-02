@@ -44,11 +44,12 @@
   };
 
   # Gaming.
-  services.xserver.videoDrivers = ["amdgpu"];
-  services.xserver.deviceSection = ''
-    Option "TearFree" "False"
-    Option "VariableRefresh" "True"
-  '';
+  # services.xserver.videoDrivers = ["amdgpu"];
+  # services.xserver.deviceSection = ''
+  #   Option "TearFree" "False"
+  #   Option "VariableRefresh" "True"
+  #   Option "vrr_capable" "1"
+  # '';
   powerManagement.cpuFreqGovernor = "performance";
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   # Taken from https://github.com/fufexan/nix-gaming
