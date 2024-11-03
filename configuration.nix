@@ -269,9 +269,6 @@
     imagemagick # Image identifier
     libnotify # Notifications (notify-send)
     ntfs3g # ntfs filesystem interop (windows fs)
-
-    # Portals (filepickers etc.).
-    xdg-desktop-portal-gtk
   ];
 
   # }}}
