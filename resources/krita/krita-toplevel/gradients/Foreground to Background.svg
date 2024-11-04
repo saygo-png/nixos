@@ -1,0 +1,9 @@
+<svg xmlns:krita="http://krita.org/namespaces/svg/krita" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <color-profile name="Rec2020-elle-V4-g10.icc" xlink:href="/nix/store/86xdn5nh592fn9ikpnwyhamhkfh1kjaq-krita-unwrapped-5.2.3/share/color/icc/krita/Rec2020-elle-V4-g10.icc" local="89d84d7b50235ba3e08bb85dd94d79ed"/>
+ </defs>
+ <linearGradient id="0. Foreground to Background" gradientUnits="objectBoundingBox" spreadMethod="pad">
+  <stop stop-color="#000000 icc-color(Rec2020-elle-V4-g10.icc, 0, 0, 0)" stop-opacity="1" krita:stop-type="color-stop" offset="0"/>
+  <stop stop-color="#ffffff icc-color(Rec2020-elle-V4-g10.icc, 1, 1, 1)" stop-opacity="1" krita:stop-type="color-stop" offset="1"/>
+ </linearGradient>
+</svg>
