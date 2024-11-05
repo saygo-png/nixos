@@ -877,7 +877,7 @@ in {
           folding = true;
           nixvimInjections = true;
           ensureInstalled = ["all"];
-          ignoreInstall = ["comment" "nix"];
+          ignoreInstall = ["comment"];
           moduleConfig.highlight.enable = true;
           nixGrammars = true; # Install grammars with Nix
           incrementalSelection = {
