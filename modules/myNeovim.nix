@@ -891,6 +891,43 @@ in {
           };
         };
 
+        treesitter-textobjects = {
+          enable = true;
+
+          lspInterop = {
+            enable = true;
+            peekDefinitionCode = {
+              "gpf" = "@function.outer";
+              "gpc" = "@class.outer";
+            };
+          };
+
+          select = {
+            enable = true;
+            lookahead = false; # (don't) automatically jump forward to next target
+            keymaps = {
+              "af" = "@function.outer";
+              "if" = "@function.inner";
+              "ac" = "@call.outer";
+              "ic" = "@call.inner";
+              "al" = "@loop.outer";
+              "il" = "@loop.inner";
+            };
+          };
+
+          move = {
+            enable = true;
+            gotoNext = {
+              "]f" = "@function.outer";
+              "]c" = "@conditional.outer";
+            };
+            gotoPrevious = {
+              "[f" = "@function.outer";
+              "[c" = "@conditional.outer";
+            };
+          };
+        };
+
         lsp = {
           enable = true;
           # Disable highlights from LSP
