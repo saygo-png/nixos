@@ -883,10 +883,10 @@ in {
           incrementalSelection = {
             enable = true;
             keymaps = {
+              scopeIncremental = "gsi";
               nodeDecremental = "<BS>";
-              scopeIncremental = "grc";
-              initSelection = "<Enter>";
               nodeIncremental = "<Enter>";
+              initSelection = "<Enter>";
             };
           };
         };
