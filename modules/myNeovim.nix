@@ -141,7 +141,9 @@ in {
 
         # Folds.
         foldenable = false;
-        foldmethod = "marker";
+        foldmethod = "expr";
+        # foldexpr = "v:lua.vim.treesitter.foldexpr()";
+        # foldtext = "v:lua.vim.treesitter.foldtext()";
 
         # More space.
         cmdheight = 0;
@@ -866,6 +868,7 @@ in {
 
         treesitter = {
           enable = true;
+          folding = true;
           nixvimInjections = true;
           ensureInstalled = ["all"];
           ignoreInstall = ["comment" "nix"];
