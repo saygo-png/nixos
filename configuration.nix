@@ -561,7 +561,7 @@
 
         shellAliases = {
           "archive" = "patool";
-          "f" = "fzfcd";
+          "f" = ''cd "$(fzfcd)"'';
           "cp" = "cp -v";
           "rm" = "rm -I";
           "pkill" = "pkill -f";

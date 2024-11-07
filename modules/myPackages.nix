@@ -127,11 +127,11 @@
       name = "fzfcd";
       runtimeInputs = [fzf coreutils];
       text = ''
-        dir=$(find ~/Sync ~/Documents ~/Downloads ~/nixos -mindepth 1 -maxdepth 3 | fzf)
+        dir=$(fd --type directory --maxdepth 3 . ~/Sync ~/Documents ~/Downloads ~/nixos | fzf)
         if [ -z "$dir" ]; then
          exit 1
         fi
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && echo "$dir"
       '';
     })
 
