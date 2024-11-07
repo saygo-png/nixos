@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#
 # Define the expected remote URL.
 EXPECTED_REMOTE_URL="https://github.com/saygo-png/nixos.git"
 EXPECTED_REMOTE_URL_SSH="git@github.com:saygo-png/nixos.git"
