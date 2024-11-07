@@ -254,7 +254,6 @@
     gcc # C compiling
     vim # Text editor
     wget # Downloader
-    fzf # Fuzzy finder
     git # Source control
     udiskie # Auto mount
     gnumake # C compiling
