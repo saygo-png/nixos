@@ -233,7 +233,7 @@ in {
 
         -- Hide end of line tildes.
         vim.opt.fillchars:append({ eob = " " })
-        
+
         -- Stops treesitter node increment in command window (q:)
         vim.api.nvim_create_augroup("_cmd_win", { clear = true })
         vim.api.nvim_create_autocmd("CmdWinEnter", {
@@ -267,7 +267,6 @@ in {
             autocmd FocusGained,WinEnter * setlocal cursorline
             autocmd FocusLost,WinLeave * setlocal nocursorline guicursor=a:noCursor/lCursor
           augroup END
-
 
           " Vim visual multi binds
           let g:VM_leader = '\'

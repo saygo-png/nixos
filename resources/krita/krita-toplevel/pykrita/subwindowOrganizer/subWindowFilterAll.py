@@ -2,7 +2,6 @@ from krita import *
 
 from .config import *
 
-
 #event catcher for every window - both floaters and back ones
 class subWindowFilterAll(QMdiSubWindow):
   def __init__(self, resizer, parent=None):
@@ -52,4 +51,3 @@ class subWindowFilterAll(QMdiSubWindow):
     if resizer.activeSubwin != None:
       resizer.activeSubwin.setMinimumWidth(MINIMALCOLUMNWIDTH) #getting minimal width again
     if resizer.otherSubwin != None: resizer.otherSubwin.setMinimumWidth(MINIMALCOLUMNWIDTH)
-

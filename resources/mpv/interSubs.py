@@ -144,7 +144,7 @@ class TokenAcquirer_DISABLED:
         """python port for '>>>'(right shift with padding)
         """
         return (val % 0x100000000) >> n
-    
+
     RE_TKK = re.compile(r'tkk:\'(.+?)\'', re.DOTALL)
     RE_RAWTKK = re.compile(r'tkk:\'(.+?)\'', re.DOTALL)
 
@@ -160,7 +160,7 @@ class TokenAcquirer_DISABLED:
         now = math.floor(int(time.time() * 1000) / 3600000.0)
         if self.tkk and int(self.tkk.split('.')[0]) == now:
             return
-        
+
         r = self.client.get(self.host)
 
         raw_tkk = self.RE_TKK.search(r.text)
@@ -347,7 +347,7 @@ class TokenAcquirer:
         r = requests.get(tkk_url, proxies=self.proxies)
 
         if r.status_code == 200:
-            re_tkk = re.search("(?<=tkk=\\')[0-9.]{0,}", str(r.content.decode("utf-8")))            
+            re_tkk = re.search("(?<=tkk=\\')[0-9.]{0,}", str(r.content.decode("utf-8")))
             if re_tkk:
                 self.tkk = re_tkk.group(0)
             else:
@@ -427,7 +427,7 @@ class TokenAcquirer:
         tk = self.acquire(text)
         return tk
 
-    
+
     def rshift(self, val, n):
         """python port for '>>>'(right shift with padding)
         """
@@ -443,7 +443,7 @@ def google(word):
     try:
         if ' ' in word:
             raise Exception('skip saving')
-        
+
         p = open(fname).read().split('=====/////-----')
         try:
             word_descr = p[1].strip()
@@ -1154,7 +1154,7 @@ def r2l(l):
         l2 += re.findall('^\W+', l)[0][::-1]
     except:
         pass
-    
+
     return l2
 
 def split_long_lines(line, chunks = 2, max_symbols_per_line = False):
@@ -1216,7 +1216,7 @@ class thread_subtitles(QObject):
                 tmp_file_subs = open(sub_file).read()
             except:
                 continue
-            
+
             # tmp hack
             # if config.R2L_from_B:
             #   tmp_file_subs = r2l(tmp_file_subs.strip())
@@ -1526,7 +1526,7 @@ class events_class(QLabel):
     @pyqtSlot()
     def f_deepl_translation(self, event):
         self.mouseHover.emit(self.subs , event.globalX(), True)
-    
+
     @pyqtSlot()
     def f_translation_full_sentence(self, event):
         self.mouseHover.emit(self.subs , event.globalX(), True)
@@ -1735,14 +1735,14 @@ class main_class(QWidget):
 
         if is_line:
             QApplication.setOverrideCursor(Qt.WaitCursor)
-            
+
             line = globals()[config.translation_function_name_full_sentence](text)
             if config.translation_function_name_full_sentence == 'google':
                 try:
                     line = line[0][0][0].strip()
                 except:
                     line = 'Google translation failed.'
-            
+
             if config.split_long_lines_B and len(line.split('\n')) == 1 and len(line.split(' ')) > config.split_long_lines_words_min - 1:
                 line = split_long_lines(line)
 

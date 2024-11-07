@@ -13,10 +13,10 @@
 
 import time
 
-from aqt import editor, mw
-from aqt.utils import tooltip
-from aqt.qt import *
 from anki import notes
+from aqt import editor, mw
+from aqt.qt import *
+from aqt.utils import tooltip
 
 try:
     from PyQt6 import QtCore

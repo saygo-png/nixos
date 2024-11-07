@@ -145,7 +145,6 @@ def prepare(html, card, context):
     transform: scale(0.95)  translateX(-50%) translateY(0%);
   }}
 
-
   60% {{
     opacity: 1;
     transform: scale(0.95)  translateX(-50%) translateY(0%);
