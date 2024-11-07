@@ -7,6 +7,11 @@
     nixpkgs-unstable-working-krita.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
+    devenv = {
+      url = "github:cachix/devenv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,10 +35,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = {
-    self,
-    ...
-  } @ inputs: let
+  outputs = {self, ...} @ inputs: let
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
     nixpkgs-unstable-working-krita = import inputs.nixpkgs-unstable-working-krita {system = "x86_64-linux";};
   in {
@@ -89,5 +91,42 @@
         ./hosts/thinkpad/hardware-configuration-thinkpad.nix
       ];
     };
+
+    devShells = inputs.nixpkgs.lib.genAttrs ["x86_64-linux"] (system: {
+      default = let
+        pkgs = inputs.nixpkgs.legacyPackages.${system};
+      in
+        inputs.devenv.lib.mkShell {
+          inherit inputs pkgs;
+          modules = [
+            (_: {
+              packages = [
+                pkgs.cargo
+              ];
+
+              languages = {
+                nix.enable = true;
+                shell.enable = true;
+              };
+
+              pre-commit.hooks = {
+                commitlint-rs = {
+                  enable = true;
+                  entry = "commitlint --edit";
+                  language = "rust";
+                  package = pkgs-unstable.commitlint-rs;
+                  pass_filenames = false;
+                  stages = ["commit-msg"];
+                };
+                deadnix.enable = true;
+                shellcheck.enable = true;
+                shfmt.enable = true;
+                # statix.enable = true;
+                alejandra.enable = true;
+              };
+            })
+          ];
+        };
+    });
   };
 }
