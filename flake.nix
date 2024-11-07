@@ -93,40 +93,44 @@
     };
 
     devShells = inputs.nixpkgs.lib.genAttrs ["x86_64-linux"] (system: {
-      default = let
-        pkgs = inputs.nixpkgs.legacyPackages.${system};
-      in
-        inputs.devenv.lib.mkShell {
-          inherit inputs pkgs;
-          modules = [
-            (_: {
-              packages = [
-                pkgs.cargo
-              ];
-
-              languages = {
-                nix.enable = true;
-                shell.enable = true;
-              };
-
-              pre-commit.hooks = {
-                commitlint-rs = {
-                  enable = true;
-                  entry = "commitlint --edit";
-                  language = "rust";
-                  package = pkgs-unstable.commitlint-rs;
-                  pass_filenames = false;
-                  stages = ["commit-msg"];
-                };
-                deadnix.enable = true;
-                shellcheck.enable = true;
-                shfmt.enable = true;
-                # statix.enable = true;
-                alejandra.enable = true;
-              };
-            })
-          ];
-        };
+      default = import ./shell.nix {inherit system;};
+      # let
+      #   pkgs = inputs.nixpkgs.legacyPackages.${system};
+      # in
+      #   inputs.devenv.lib.mkShell {
+      #     inherit inputs pkgs;
+      #     modules = [
+      #       (_: {
+      #         # packages = [
+      #         #   pkgs.cargo
+      #         # ];
+      #
+      #         languages = {
+      #           nix.enable = true;
+      #           shell.enable = true;
+      #         };
+      #
+      #         pre-commit.hooks = {
+      #           commitlint-rs = {
+      #             enable = true;
+      #             entry = "commitlint --edit";
+      #             language = "rust";
+      #             package = pkgs-unstable.commitlint-rs;
+      #             pass_filenames = false;
+      #             fail_fast = true;
+      #             stages = ["commit-msg"];
+      #             extraPackages = [pkgs.cargo];
+      #           };
+      #           deadnix.enable = true;
+      #           shellcheck.enable = true;
+      #           # statix.enable = true;
+      #           treefmt.settings.formatters = [
+      #             pkgs.alejandra
+      #           ];
+      #         };
+      # })
+      # ];
+      # };
     });
   };
 }

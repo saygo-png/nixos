@@ -1,0 +1,14 @@
+{
+  "nixpkgs": {
+    "rev": "9201b5ff357e781bf014d0330d18555695df7ba8",
+    "sha256": "sha256-x9Opq06rIiwdwGeK2Ykj69dNc2IvUH1fY55Wm7atwrE="
+  },
+  "nixpkgs-unstable": {
+    "rev": "4c2fcb090b1f3e5b47eaa7bd33913b574a11e0a0",
+    "sha256": "sha256-/uilDXvCIEs3C9l73JTACm4quuHUsIHcns1c+cHUJwA="
+  },
+  "devenv": {
+    "rev": "c5353d1a0483b8f0dc15933de91c6b1b9a892831",
+    "sha256": "sha256-ogmpmsPOlX4qeWVW4NZkTd0Lx8V4rvnjwlgOX7WnTZo="
+  }
+}
