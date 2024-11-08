@@ -42,41 +42,38 @@ in {
       enable = true;
       extraPackages = with pkgs; [
         vale
-        typos-lsp
-        jq # Json formatter
+        # typos-lsp
+        # jq # Json formatter
         vim-language-server
         deadnix # Nix linter
         statix # Another linter
-        pyright # python lsp
         nodePackages.jsonlint
-        hlint # Haskell linter
+        # hlint # Haskell linter
         stylua # Lua formatter
-        marksman # Markdown LSP
+        # marksman # Markdown LSP
         shfmt # Shell formatter
-        yapf # Python formatter
         black # Python formatter
-        hadolint # Docker linter
-        rust-analyzer # Rust LSP
-        shellcheck # Bash linter
-        clojure-lsp # Clojure lsp
-        cljfmt # Clojure formatter
-        clj-kondo # Clojure linter
-        zprint # Clojure formatter
-        sumneko-lua-language-server
+        # hadolint # Docker linter
+        # rust-analyzer # Rust LSP
+        # shellcheck # Bash linter
+        # sumneko-lua-language-server
         isort # Python import sorter
         prettierd # Javascript formatter
-        nodePackages.bash-language-server
-        markdownlint-cli # Markdown linter
-        stylish-haskell # Haskell formatter
-        haskell-language-server # Haskell lsp
+        # nodePackages.bash-language-server
+        # markdownlint-cli # Markdown linter
+        # haskell-language-server # Haskell lsp
         vscode-langservers-extracted # Web LSPs
-        python312Packages.mccabe # Flake8 plugin
-        python312Packages.pyflakes # Python linter
-        haskellPackages.fourmolu # Haskell formatter
+        # python312Packages.mccabe # Flake8 plugin
+        # python312Packages.pyflakes # Python linter
         luajitPackages.jsregexp # Needed for luasnip
         nodePackages.prettier # Javascript formatter
-        python312Packages.jedi # Autocomplete plugin
-        python312Packages.pyls-isort # Python import sort
+        # python312Packages.jedi # Autocomplete plugin
+        # python312Packages.pyls-isort # Python import sort
+
+        # zprint # Clojure formatter
+        # clojure-lsp # Clojure lsp
+        # cljfmt # Clojure formatter
+        # clj-kondo # Clojure linter
       ];
 
       highlightOverride = {
