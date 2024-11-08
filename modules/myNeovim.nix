@@ -769,7 +769,7 @@ in {
         }
         {
           action = '':!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
-          key = "<Leader>s";
+          key = "<Leader>S";
           options.silent = true;
           options.desc = "[s]ort lines by length";
         }
@@ -891,37 +891,162 @@ in {
 
         treesitter-textobjects = {
           enable = true;
-
           lspInterop = {
             enable = true;
             peekDefinitionCode = {
-              "gpf" = "@function.outer";
-              "gpc" = "@class.outer";
+              "<leader>df" = {
+                desc = "fn definition";
+                query = "@function.outer";
+              };
             };
           };
-
-          select = {
-            enable = true;
-            lookahead = false; # (don't) automatically jump forward to next target
-            keymaps = {
-              "af" = "@function.outer";
-              "if" = "@function.inner";
-              "ac" = "@call.outer";
-              "ic" = "@call.inner";
-              "al" = "@loop.outer";
-              "il" = "@loop.inner";
-            };
-          };
-
           move = {
             enable = true;
-            gotoNext = {
-              "]f" = "@function.outer";
-              "]c" = "@conditional.outer";
+            setJumps = true; # whether to set jumps in the jumplist
+            gotoNextStart = {
+              "]c" = {
+                query = "@conditional.outer";
+                desc = "Next conditional start";
+              };
+              "]f" = {
+                query = "@function.outer";
+                desc = "Next function start";
+              };
+              "]p" = {
+                query = "@parameter.inner";
+                desc = "Next parameter start";
+              };
+              "]]" = {
+                query = "@class.outer";
+                desc = "Next class start";
+              };
+              # You can use regex matching (i.e. lua pattern) and/or pass a list in a "query" key to group multiple queries.
+              "]l" = {
+                query = "@loop.*";
+                desc = "Next loop start";
+              };
+              "]s" = {
+                query = "@scope";
+                queryGroup = "locals";
+                desc = "Next scope";
+              };
+              "]z" = {
+                query = "@fold";
+                queryGroup = "folds";
+                desc = "Next fold";
+              };
             };
-            gotoPrevious = {
-              "[f" = "@function.outer";
-              "[c" = "@conditional.outer";
+            gotoNextEnd = {
+              "]C" = {
+                query = "@conditional.outer";
+                desc = "Next conditional end";
+              };
+              "]F" = {
+                query = "@function.outer";
+                desc = "Next function end";
+              };
+              "][" = {
+                query = "@class.outer";
+                desc = "Next class end";
+              };
+            };
+            gotoPreviousStart = {
+              "[c" = {
+                query = "@conditional.outer";
+                desc = "Prev conditional start";
+              };
+              "[f" = {
+                query = "@function.outer";
+                desc = "Prev function start";
+              };
+              "[p" = {
+                query = "@parameter.inner";
+                desc = "Prev parameter start";
+              };
+              "[[" = {
+                query = "@class.outer";
+                desc = "Prev class start";
+              };
+            };
+            gotoPreviousEnd = {
+              "[C" = {
+                query = "@conditional.outer";
+                desc = "Prev conditional end";
+              };
+              "[F" = {
+                query = "@function.outer";
+                desc = "Prev function end";
+              };
+              "[]" = {
+                query = "@class.outer";
+                desc = "Prev class end";
+              };
+            };
+          };
+          select = {
+            enable = true;
+            lookahead = true;
+            keymaps = {
+              "ai".query = "@assignment.inner";
+              "ao".query = "@assignment.outer";
+              "agi".query = "@assignment.rhs";
+              "ago".query = "@assignment.lhs";
+              "af" = {
+                query = "@function.outer";
+                desc = "Select outer function";
+              };
+              "if" = {
+                query = "@function.inner";
+                desc = "Select inner function";
+              };
+              "aa" = {
+                query = "@parameter.outer";
+                desc = "Select outer parameter";
+              };
+              "ia" = {
+                query = "@parameter.inner";
+                desc = "Select inner parameter";
+              };
+              "ac" = {
+                query = "@class.outer";
+                desc = "Select outer class";
+              };
+              "ic" = {
+                query = "@class.inner";
+                desc = "Select inner class";
+              };
+              "as" = {
+                query = "@scope";
+                queryGroup = "locals";
+                desc = "Select language scope";
+              };
+            };
+            selectionModes = {
+              "@parameter.outer" = "v"; # charwise
+              "@function.outer" = "v"; # linewise
+              "@class.outer" = "<c-v>"; # blockwise
+            };
+            includeSurroundingWhitespace = true;
+          };
+          swap = {
+            enable = true;
+            swapNext = {
+              "<leader>sf" = {
+                query = "@function.outer";
+                desc = "Swap function with the next";
+              };
+            };
+            swapNext = {
+              "<leader>spn" = {
+                query = "@parameter.inner";
+                desc = "Swap parameter with the next";
+              };
+            };
+            swapPrevious = {
+              "<leader>spp" = {
+                query = "@parameter.inner";
+                desc = "Swap parameter with the prev";
+              };
             };
           };
         };

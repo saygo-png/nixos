@@ -928,6 +928,38 @@
         "type": "github"
       }
     },
+    "nvim-plugin-faster": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1712830479,
+        "narHash": "sha256-oruxdxoMq46F9lf1JxkbrqdzR0JwDE1y/cVCaTD4SBg=",
+        "owner": "pteroctopus",
+        "repo": "faster.nvim",
+        "rev": "e85c5bdff0cd1e17cbee855ae23c25e7b8e597cb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pteroctopus",
+        "repo": "faster.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-tshjkl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1716415597,
+        "narHash": "sha256-8W6iYQk0x6RSJi+cY9F6YUD4Z5rwMOjgq5YmmXgf6mk=",
+        "owner": "gsuuon",
+        "repo": "tshjkl.nvim",
+        "rev": "3fe81ab2c15f014a78b752062238d6c110a08fc8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gsuuon",
+        "repo": "tshjkl.nvim",
+        "type": "github"
+      }
+    },
     "poetry2nix": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -1028,6 +1060,8 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixpkgs-unstable-working-krita": "nixpkgs-unstable-working-krita",
         "nixvim": "nixvim",
+        "nvim-plugin-faster": "nvim-plugin-faster",
+        "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
         "stylix": "stylix"
       }
     },
