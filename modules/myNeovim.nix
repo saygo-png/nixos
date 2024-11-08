@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   conUsername,
   pkgs-unstable,
   conAccentColor,
@@ -28,13 +29,6 @@
     repo = "rainbow";
     rev = "76ca1a20aa42edb5c65c19029968aad4625790dc";
     sha256 = "dBHgAc3dOoeBI/lZzIJgYYTda8ZMvdThixUZebZXRHE=";
-  };
-
-  nvim-plugin-faster = pkgs.fetchFromGitHub {
-    owner = "pteroctopus";
-    repo = "faster.nvim";
-    rev = "e85c5bdff0cd1e17cbee855ae23c25e7b8e597cb";
-    sha256 = "oruxdxoMq46F9lf1JxkbrqdzR0JwDE1y/cVCaTD4SBg=";
   };
 in {
   environment.systemPackages = with pkgs; [
@@ -658,8 +652,12 @@ in {
         })
         -- }}}
 
+        -- tshjkl {{{
+        require('tshjkl').setup()
+        -- }}}
+
         -- Faster.nvim (Speed up big files) {{{
-        local opts = {
+        require("faster").setup({
           behaviours = {
             bigfile = {
               on = true,
@@ -678,8 +676,7 @@ in {
               pattern = "*",
             }
           }
-        }
-        require("faster").setup(opts)
+        })
         --- }}}
 
         -- Gitsigns {{{
@@ -748,7 +745,12 @@ in {
         })
         (pkgs.vimUtils.buildVimPlugin {
           name = "faster.nvim";
-          src = nvim-plugin-faster;
+          src = inputs.nvim-plugin-faster;
+        })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "tshjkl.nvim";
+          src = inputs.nvim-plugin-tshjkl;
         })
       ];
 

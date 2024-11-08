@@ -34,6 +34,16 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nvim-plugin-tshjkl = {
+      url = "github:gsuuon/tshjkl.nvim";
+      flake = false;
+    };
+
+    nvim-plugin-faster = {
+      url = "github:pteroctopus/faster.nvim";
+      flake = false;
+    };
   };
   outputs = {self, ...} @ inputs: let
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
