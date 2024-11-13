@@ -119,7 +119,7 @@ globalkeys = gears.table.join(
     end
   end, { description = "Hard kill focused client", group = "client" }),
 
-  awful.key({ modkey }, "z", function()
+  awful.key({ modkey }, "c", function()
     quake:toggle()
   end, { description = "dropdown terminal", group = "launcher" }),
 
@@ -169,11 +169,11 @@ globalkeys = gears.table.join(
     lain.util.tag_view_nonempty(1)
   end, { description = "view next non empty", group = "tag" }),
 
-  awful.key({ modkey }, ",", function()
+  awful.key({ modkey }, "z", function()
     lain.util.tag_view_nonempty(-1)
   end, { description = "view previous non empty", group = "tag" }),
 
-  awful.key({ modkey }, ".", function()
+  awful.key({ modkey }, "x", function()
     lain.util.tag_view_nonempty(1)
   end, { description = "view next non empty", group = "tag" }),
 
