@@ -676,6 +676,10 @@ in {
         })
         --- }}}
 
+        -- Telescope extensions {{{
+            require("telescope").load_extension("git_file_history")
+        -- }}}
+
         -- Gitsigns {{{
         vim.keymap.set("n", "<leader>gsc", "<cmd>Gitsigns toggle_signs<CR>", {desc = "[g]it[s]igns [c]olumn"})
         vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line<CR>", {desc = "[g]it[s]igns [b]lame"})
@@ -749,6 +753,11 @@ in {
           name = "tshjkl.nvim";
           src = inputs.nvim-plugin-tshjkl;
         })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "telescope-git-file-history.nvim";
+          src = inputs.nvim-plugin-telescope-git-file-history;
+        })
       ];
 
       keymaps = [
@@ -759,6 +768,11 @@ in {
         }
         {
           key = "S";
+          action.__raw = ''require("flash").treesitter_search'';
+          options.desc = "Flash treesitter";
+        }
+        {
+          key = "gs";
           action.__raw = ''require("flash").treesitter'';
           options.desc = "Flash treesitter";
         }

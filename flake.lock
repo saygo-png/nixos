@@ -944,6 +944,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-telescope-git-file-history": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1727128584,
+        "narHash": "sha256-rf5orEKvsS7gRcUb3+USmCK2SD84xusGU1xIIW8Ntyw=",
+        "owner": "isak102",
+        "repo": "telescope-git-file-history.nvim",
+        "rev": "c27d99ba88ec5f0b6d2b9f9bc67dd3d14c610b25",
+        "type": "github"
+      },
+      "original": {
+        "owner": "isak102",
+        "repo": "telescope-git-file-history.nvim",
+        "type": "github"
+      }
+    },
     "nvim-plugin-tshjkl": {
       "flake": false,
       "locked": {
@@ -1061,6 +1077,7 @@
         "nixpkgs-unstable-working-krita": "nixpkgs-unstable-working-krita",
         "nixvim": "nixvim",
         "nvim-plugin-faster": "nvim-plugin-faster",
+        "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
         "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
         "stylix": "stylix"
       }

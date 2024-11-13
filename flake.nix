@@ -44,6 +44,11 @@
       url = "github:pteroctopus/faster.nvim";
       flake = false;
     };
+
+    nvim-plugin-telescope-git-file-history = {
+      url = "github:isak102/telescope-git-file-history.nvim";
+      flake = false;
+    };
   };
   outputs = {self, ...} @ inputs: let
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
