@@ -78,20 +78,20 @@
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-        amdvlk
+        # amdvlk
         # libdrm
-        # libva
-        # vaapiVdpau
-        # libvdpau-va-gl
+        libva
+        vaapiVdpau
+        libvdpau-va-gl
 
         rocmPackages.clr.icd
         rocm-opencl-icd
         rocm-opencl-runtime
       ];
       extraPackages32 = with pkgs; [
-        # libva
-        # libvdpau-va-gl
-        driversi686Linux.amdvlk
+        libva
+        libvdpau-va-gl
+        # driversi686Linux.amdvlk
       ];
     };
   };
