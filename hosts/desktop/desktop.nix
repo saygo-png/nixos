@@ -280,7 +280,7 @@
     gamescopeSession.enable = true;
     # Load the extest library into Steam, to translate X11 input events to uinput events (for using Steam Input on Wayland).
     # extest.enable = true;
-    extraCompatPackages = [pkgs.proton-ge-bin];
+    extraCompatPackages = [pkgs-unstable.proton-ge-bin];
     extraPackages = [
       pkgs.libpng
       pkgs.libkrb5
