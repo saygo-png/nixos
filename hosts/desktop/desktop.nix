@@ -50,6 +50,8 @@
   #   Option "VariableRefresh" "True"
   #   Option "vrr_capable" "1"
   # '';
+
+  # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   # Taken from https://github.com/fufexan/nix-gaming
@@ -66,7 +68,6 @@
     "vm.max_map_count" = 2147483642;
   };
 
-  # Change cpu governor to performance for increased performance.
   hardware = {
     amdgpu = {
       initrd.enable = true;
