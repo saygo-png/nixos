@@ -265,13 +265,6 @@
         echo "snr lshw -json | nvim -c 'set filetype=json'"
       '')
 
-    (writeShellScriptBin "flakeTEST"
-      ''
-        echo "conFlakePath: ${conFlakePath}"
-        echo "conFlakePathRel: ${conFlakePathRel}"
-        echo "rel path: ${builtins.toPath ./.}"
-      '')
-
     (writeShellScriptBin "clean-nix-hard"
       ''
         nix-env --delete-generations 3d
