@@ -5,7 +5,6 @@
   conHome,
   conUsername,
   conBorderSize,
-  conAccentColor,
   conFlakePathRel,
   ...
 }: {
@@ -53,7 +52,7 @@
     flameshot # X11 screenshot tool
   ];
 
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = {config, osConfig, ...}: {
     home = {
       file = {
         # auto xrdb
@@ -108,7 +107,7 @@
         theme.font = "${config.stylix.fonts.sansSerif.name} ${builtins.toString config.stylix.fonts.sizes.terminal}"
 
         theme.bg_normal = "${config.lib.stylix.colors.withHashtag.base00}66"
-        theme.bg_focus = "#${conAccentColor}"
+        theme.bg_focus = "#${osConfig.const.accentColor}"
         theme.bg_urgent = "${config.lib.stylix.colors.withHashtag.base08}"
         theme.bg_minimize = "${config.lib.stylix.colors.withHashtag.base0B}"
         theme.bg_systray = theme.bg_normal

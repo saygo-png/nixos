@@ -15,7 +15,7 @@
     "${conFlakePathRel}/modules/myPipewire.nix"
   ];
 
-  services.libinput.mouse.accelSpeed = "-0.9";
+  services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
 
   # Optimization for ssds
@@ -99,118 +99,117 @@
   # autologin
   services.getty.autologinUser = "${conUsername}";
 
-  home-manager = {
-    users.${conUsername} = {
-      home = {};
+  home-manager.users.${conUsername} = {
+    osConfig,
+    ...
+  }: {
+    # This requires imperative action
+    services.easyeffects.enable = true;
+    services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
-      # THis requires imperative action
-      services.easyeffects.enable = true;
-      services.easyeffects.preset = "Audio-Technica ATH-M30x";
+    wayland.windowManager.hyprland.settings = {
+      input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
+      monitor = [
+        ", highres@highrr, auto, 1"
+      ];
+    };
 
-      wayland.windowManager.hyprland.settings = {
-        input.sensitivity = config.services.libinput.mouse.accelSpeed;
-        monitor = [
-          ", highres@highrr, auto, 1"
-        ];
+    programs.mangohud = {
+      enable = true;
+      enableSessionWide = false;
+    };
+
+    xdg.configFile."zed/settings.json".text = builtins.toJSON {
+      tab_size = 2;
+      ensure_final_newline_on_save = false;
+      vim_mode = true;
+      relative_line_numbers = true;
+      ui_font_size = 16;
+      auto_update = false;
+      use_autoclose = false;
+      buffer_font_size = 16;
+      show_call_status_icon = false;
+      preferred_line_length = 90;
+      base_keymap = "VSCode";
+      theme = "Gruvbox Dark";
+      vim.use_system_clipboard = "always";
+      load_direnv = "shell_hook";
+      buffer_font_family = "JetBrains Mono";
+      git.inline_blame.enabled = false;
+      indent_guides = {
+        enabled = true;
+        line_width = 2;
+        active_line_width = 3;
+        coloring = "static";
+        background_coloring = "disabled";
       };
-
-      programs.mangohud = {
-        enable = true;
-        enableSessionWide = false;
+      inlay_hints.enabled = true;
+      journal.hour_format = "hour24";
+      telemetry = {
+        metrics = false;
+        diagnostics = false;
       };
-
-      xdg.configFile."zed/settings.json".text = builtins.toJSON {
-        tab_size = 2;
-        ensure_final_newline_on_save = false;
-        vim_mode = true;
-        relative_line_numbers = true;
-        ui_font_size = 16;
-        auto_update = false;
-        use_autoclose = false;
-        buffer_font_size = 16;
-        show_call_status_icon = false;
-        preferred_line_length = 90;
-        base_keymap = "VSCode";
-        theme = "Gruvbox Dark";
-        vim.use_system_clipboard = "always";
-        load_direnv = "shell_hook";
-        buffer_font_family = "JetBrains Mono";
-        git.inline_blame.enabled = false;
-        indent_guides = {
-          enabled = true;
-          line_width = 2;
-          active_line_width = 3;
-          coloring = "static";
-          background_coloring = "disabled";
-        };
-        inlay_hints.enabled = true;
-        journal.hour_format = "hour24";
-        telemetry = {
-          metrics = false;
-          diagnostics = false;
-        };
-        BINDZ = [
-          {
-            context = "Workspace";
-            bindings = {
-              "space f" = "workspace::ToggleLeftDock";
-            };
-          }
-          {
-            context = "VimControl && !menu";
-            bindings = {
-              "space e" = "editor::Hover";
-            };
-          }
-          {
-            context = "Editor && vim_mode == normal && !VimWaiting && !menu";
-            bindings = {
-              shift-q = "pane::CloseActiveItem";
-              "space c" = "editor::Format";
-              "space c a" = "editor::ToggleCodeActions";
-              "shift-b" = "pane::ActivatePrevItem";
-            };
-          }
-          {
-            context = "Editor && vim_mode == insert && !VimWaiting && !menu";
-            bindings = {
-              enter = "editor::SelectLargerSyntaxNode";
-              ctrl-v = "editor::Paste"; # vim default: visual block mode
-              ctrl-c = "editor::Copy"; # vim default: return to normal mode
-            };
-          }
-          {
-            context = "Editor && !VimWaiting && !menu";
-            bindings = {
-              "cmd-[" = "pane::GoBack";
-              "cmd-]" = "pane::GoForward";
-            };
-          }
-          {
-            # Vim File Tree ("ProjectPanel") actions
-            context = "ProjectPanel && not_editing";
-            bindings = {
-              "h" = "project_panel::CollapseSelectedEntry";
-              "l" = "project_panel::ExpandSelectedEntry";
-              "j" = "menu::SelectNext";
-              "k" = "menu::SelectPrev";
-              "o" = "menu::Confirm";
-              "r" = "project_panel::Rename";
-              "z c" = "project_panel::CollapseSelectedEntry";
-              "z o" = "project_panel::ExpandSelectedEntry";
-              "shift-o" = "project_panel::RevealInFinder";
-              "x" = "project_panel::Cut";
-              "c" = "project_panel::Copy";
-              "p" = "project_panel::Paste";
-              "d" = "project_panel::Delete";
-              "a" = "project_panel::NewFile";
-              "shift-a" = "project_panel::NewDirectory";
-              "shift-y" = "project_panel::CopyRelativePath";
-              "g y" = "project_panel::CopyPath";
-            };
-          }
-        ];
-      };
+      BINDZ = [
+        {
+          context = "Workspace";
+          bindings = {
+            "space f" = "workspace::ToggleLeftDock";
+          };
+        }
+        {
+          context = "VimControl && !menu";
+          bindings = {
+            "space e" = "editor::Hover";
+          };
+        }
+        {
+          context = "Editor && vim_mode == normal && !VimWaiting && !menu";
+          bindings = {
+            shift-q = "pane::CloseActiveItem";
+            "space c" = "editor::Format";
+            "space c a" = "editor::ToggleCodeActions";
+            "shift-b" = "pane::ActivatePrevItem";
+          };
+        }
+        {
+          context = "Editor && vim_mode == insert && !VimWaiting && !menu";
+          bindings = {
+            enter = "editor::SelectLargerSyntaxNode";
+            ctrl-v = "editor::Paste"; # vim default: visual block mode
+            ctrl-c = "editor::Copy"; # vim default: return to normal mode
+          };
+        }
+        {
+          context = "Editor && !VimWaiting && !menu";
+          bindings = {
+            "cmd-[" = "pane::GoBack";
+            "cmd-]" = "pane::GoForward";
+          };
+        }
+        {
+          # Vim File Tree ("ProjectPanel") actions
+          context = "ProjectPanel && not_editing";
+          bindings = {
+            "h" = "project_panel::CollapseSelectedEntry";
+            "l" = "project_panel::ExpandSelectedEntry";
+            "j" = "menu::SelectNext";
+            "k" = "menu::SelectPrev";
+            "o" = "menu::Confirm";
+            "r" = "project_panel::Rename";
+            "z c" = "project_panel::CollapseSelectedEntry";
+            "z o" = "project_panel::ExpandSelectedEntry";
+            "shift-o" = "project_panel::RevealInFinder";
+            "x" = "project_panel::Cut";
+            "c" = "project_panel::Copy";
+            "p" = "project_panel::Paste";
+            "d" = "project_panel::Delete";
+            "a" = "project_panel::NewFile";
+            "shift-a" = "project_panel::NewDirectory";
+            "shift-y" = "project_panel::CopyRelativePath";
+            "g y" = "project_panel::CopyPath";
+          };
+        }
+      ];
     };
   };
 

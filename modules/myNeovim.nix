@@ -5,7 +5,6 @@
   inputs,
   conUsername,
   pkgs-unstable,
-  conAccentColor,
   conFlakePathRel,
   conRefresh-rate,
   ...
@@ -35,7 +34,7 @@ in {
     neovide # Neovim gui
   ];
 
-  home-manager.users.${conUsername} = {
+  home-manager.users.${conUsername} = {osConfig, ...}: {
     home.shellAliases = {"neov" = "neovide";};
     home.sessionVariables = {EDITOR = "nvim";};
     programs.nixvim = {
@@ -80,11 +79,11 @@ in {
         # hi noCursor blend=100 cterm=strikethrough
         noCursor.blend = 100;
         statusline.bg = "NONE";
-        ModeMsg.fg = "#${conAccentColor}";
-        MsgArea.fg = "#${conAccentColor}";
-        statusline.fg = "#${conAccentColor}";
-        FloatBorder.fg = "#${conAccentColor}";
-        CursorLineNr.fg = "#${conAccentColor}";
+        ModeMsg.fg = "#${osConfig.const.accentColor}";
+        MsgArea.fg = "#${osConfig.const.accentColor}";
+        statusline.fg = "#${osConfig.const.accentColor}";
+        FloatBorder.fg = "#${osConfig.const.accentColor}";
+        CursorLineNr.fg = "#${osConfig.const.accentColor}";
         CursorLineNr.bg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray numberline
         MiniIndentscopeSymbol.fg = "${config.lib.stylix.colors.withHashtag.base01}"; # Gray indentline
       };

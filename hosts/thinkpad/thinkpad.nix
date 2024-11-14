@@ -186,7 +186,7 @@
       wayland.windowManager.hyprland.settings = {
         general.border_size = lib.mkForce 2;
         animations.enabled = false;
-        input.sensitivity = config.services.libinput.mouse.accelSpeed;
+        input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
         input.accel_profile = lib.mkForce config.services.libinput.mouse.accelProfile;
 
         device = [

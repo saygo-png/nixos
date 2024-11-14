@@ -8,7 +8,6 @@
   conHome,
   options,
   conUsername,
-  conAccentColor,
   conFlakePath,
   pkgs-unstable,
   conFlakePathRel,
@@ -16,9 +15,12 @@
   ...
 }: {
   imports = [
+    "${conFlakePathRel}/modules/myConstants.nix"
+
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
     "${conFlakePathRel}/modules/myZSH.nix"
+    "${conFlakePathRel}/modules/mySway.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
     "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
@@ -110,7 +112,7 @@
 
   services.xserver.xkb = {
     layout = "pl,plfi";
-    options = "grp:sclk_toggle";
+    options = "caps:escape,grp:sclk_toggle";
     extraLayouts.plfi = {
       languages = ["pol"];
       symbolsFile = builtins.toFile "plfi" ''
@@ -424,7 +426,7 @@
     users.${conUsername} = {
       lib,
       config,
-      # osConfig,
+      osConfig,
       ...
     }: {
       imports = [
@@ -1127,7 +1129,7 @@
           lib.mkForce {
             "*" = {
               highlight = "bold";
-              border-color = mkLiteral "#${conAccentColor}";
+              border-color = mkLiteral "#${osConfig.const.accentColor}";
               gruvbox-dark-fg0 = mkLiteral "${color.base07}";
               gruvbox-dark-fg1 = mkLiteral "${color.base06}";
               gruvbox-dark-gray = mkLiteral "${color.base04}";
@@ -1137,7 +1139,7 @@
               gruvbox-dark-yellow-light = mkLiteral "${color.base0C}";
               gruvbox-dark-bg0 = mkLiteral "rgba (40, 40, 40, 0%)";
               gruvbox-dark-bg3 = mkLiteral "rgba (125, 134, 24, 0%)";
-              selected-normal-background = mkLiteral "#${conAccentColor}";
+              selected-normal-background = mkLiteral "#${osConfig.const.accentColor}";
 
               normal-background = mkLiteral "@background";
               gruvbox-dark-bg0-soft = mkLiteral "@background";

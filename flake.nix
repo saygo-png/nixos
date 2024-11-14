@@ -63,7 +63,6 @@
         conHome = "/home/samsepi0l";
         conFlakePath = "/home/samsepi0l/nixos";
         conFlakePathRel = builtins.toString ./.;
-        conAccentColor = "7d8618";
         conRefresh-rate = 144;
         conScreen-width = 1920;
         conScreen-height = 1080;
@@ -90,7 +89,6 @@
         conHome = "/home/samsepi0l";
         conFlakePath = "/home/samsepi0l/nixos";
         conFlakePathRel = builtins.toString ./.;
-        conAccentColor = "7d8618"; #7d8618 Hacky!!! Add extra color to stylix.
         conRefresh-rate = 60;
         conScreen-width = 1366;
         conScreen-height = 768;

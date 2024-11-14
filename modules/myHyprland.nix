@@ -5,7 +5,6 @@
   conGaps,
   conUsername,
   conBorderSize,
-  conAccentColor,
   ...
 }: {
   programs.hyprland.enable = true;
@@ -155,19 +154,19 @@
           border_size = conBorderSize;
           border_part_of_window = false;
           no_border_on_floating = false;
-          "col.active_border" = lib.mkForce "rgba(${conAccentColor}FF)";
+          "col.active_border" = lib.mkForce "rgba(${osConfig.const.accentColor}FF)";
           "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
         };
 
         group = {
-          "col.border_active" = lib.mkForce "rgba(${conAccentColor}FF)";
-          "col.border_inactive" = lib.mkForce "rgba(${conAccentColor}00)";
+          "col.border_active" = lib.mkForce "rgba(${osConfig.const.accentColor}FF)";
+          "col.border_inactive" = lib.mkForce "rgba(${osConfig.const.accentColor}00)";
           "col.border_locked_active" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}FF)";
           "col.border_locked_inactive" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}00)";
           groupbar = {
             gradients = false;
-            "col.active" = lib.mkForce "rgba(${conAccentColor}FF)";
-            "col.inactive" = lib.mkForce "rgba(${conAccentColor}00)";
+            "col.active" = lib.mkForce "rgba(${osConfig.const.accentColor}FF)";
+            "col.inactive" = lib.mkForce "rgba(${osConfig.const.accentColor}00)";
             "col.locked_active" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}FF)";
             "col.locked_inactive" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0C}00)";
           };
