@@ -6,7 +6,6 @@
   conUsername,
   pkgs-unstable,
   conFlakePathRel,
-  conRefresh-rate,
   ...
 }: let
   nvim-plugin-cutlass = pkgs.fetchFromGitHub {
@@ -176,7 +175,7 @@ in {
         neovide_floating_blur_amount_x = 20.0;
         neovide_floating_blur_amount_y = 20.0;
         neovide_hide_mouse_when_typing = true;
-        neovide_refresh_rate = conRefresh-rate;
+        neovide_refresh_rate = osConfig.const.refreshRate;
         neovide_cursor_vfx_mode = "ripple";
         neovide_cursor_animation_length = 0.08;
         neovide_cursor_smooth_blink = true;

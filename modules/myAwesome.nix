@@ -1,10 +1,8 @@
 {
   lib,
   pkgs,
-  conGaps,
   conHome,
   conUsername,
-  conBorderSize,
   conFlakePathRel,
   ...
 }: {
@@ -118,8 +116,8 @@
         theme.fg_minimize = theme.fg_normal
 
         theme.gap_single_client = true
-        theme.useless_gap = dpi(${builtins.toString conGaps})
-        theme.border_width = dpi(${builtins.toString conBorderSize})
+        theme.useless_gap = dpi(${builtins.toString osConfig.const.gaps})
+        theme.border_width = dpi(${builtins.toString osConfig.const.borderSize})
         theme.border_normal = "#00000000"
         theme.border_marked = theme.bg_focus
         theme.border_focus = theme.bg_focus

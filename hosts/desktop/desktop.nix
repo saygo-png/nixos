@@ -6,13 +6,28 @@
   conUsername,
   pkgs-unstable,
   conFlakePathRel,
-  conRefresh-rate,
-  conScreen-width,
-  conScreen-height,
   ...
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPipewire.nix"
+    (builtins.toFile "importantConstants.inline.nix"
+      # nix
+      ''
+        {
+          config,
+          ...
+        }: {
+          options = {
+            const = config.constLib.mkConstsFromSet {
+              refreshRate = 144;
+              screenWidth = 1920;
+              screenHeight = 1080;
+              gaps = 6;
+              borderSize = 1;
+            };
+          };
+        }
+      '')
   ];
 
   services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);
@@ -99,10 +114,7 @@
   # autologin
   services.getty.autologinUser = "${conUsername}";
 
-  home-manager.users.${conUsername} = {
-    osConfig,
-    ...
-  }: {
+  home-manager.users.${conUsername} = {osConfig, ...}: {
     # This requires imperative action
     services.easyeffects.enable = true;
     services.easyeffects.preset = "Audio-Technica ATH-M30x";
@@ -265,12 +277,19 @@
     wineWowPackages.waylandFull
     blender-hip
 
-    (writeShellScriptBin
+    (
+      writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
 
       ''
-        gamescope -w ${builtins.toString conScreen-width} -W ${builtins.toString conScreen-width} -h ${builtins.toString conScreen-height} -H ${builtins.toString conScreen-height} -r ${builtins.toString conRefresh-rate} -f steam
-      '')
+        gamescope \
+          -w ${builtins.toString config.const.screenWidth} \
+          -W ${builtins.toString config.const.screenWidth} \
+          -h ${builtins.toString config.const.screenHeight} \
+          -H ${builtins.toString config.const.screenHeight} \
+          -r ${builtins.toString config.const.refreshRate} -f steam
+      ''
+    )
   ];
 
   # # This is the command for running all 3 programs at once that u put into steam

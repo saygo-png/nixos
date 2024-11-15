@@ -2,9 +2,7 @@
   lib,
   pkgs,
   config,
-  conGaps,
   conUsername,
-  conBorderSize,
   ...
 }: {
   programs.hyprland.enable = true;
@@ -90,8 +88,8 @@
       };
     };
     wayland.windowManager.hyprland = let
-      gaps_in = conGaps;
-      gaps_out = conGaps * 2;
+      gaps_in = osConfig.const.gaps;
+      gaps_out = osConfig.const.gaps * 2;
     in {
       systemd.enable = true;
       xwayland.enable = true;
@@ -151,7 +149,7 @@
           layout = "dwindle";
           gaps_in = gaps_in;
           gaps_out = gaps_out;
-          border_size = conBorderSize;
+          border_size = osConfig.const.borderSize;
           border_part_of_window = false;
           no_border_on_floating = false;
           "col.active_border" = lib.mkForce "rgba(${osConfig.const.accentColor}FF)";

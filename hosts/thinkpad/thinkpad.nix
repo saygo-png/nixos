@@ -8,6 +8,24 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPulseaudio.nix"
+    (builtins.toFile "importantConstants.inline.nix"
+      # nix
+      ''
+        {
+          config,
+          ...
+        }: {
+          options = {
+            const = config.constLib.mkConstsFromSet {
+              refreshRate = 60;
+              screenWidth = 1366;
+              screenHeight = 768;
+              gaps = 0;
+              borderSize = 2;
+            };
+          };
+        }
+      '')
   ];
 
   specialisation.class.configuration = {
@@ -172,48 +190,46 @@
     applications = 14;
   };
 
-  home-manager = {
-    users.${conUsername} = {
-      # Media controls for bluetooth headphones
-      services.mpris-proxy.enable = true;
+  home-manager.users.${conUsername} = {osConfig, ...}: {
+    # Media controls for bluetooth headphones
+    services.mpris-proxy.enable = true;
 
-      programs.foot.settings.main.pad = lib.mkForce "0x0center";
-      programs.alacritty.settings.window.padding = lib.mkForce {
-        x = 0;
-        y = 0;
-      };
+    programs.foot.settings.main.pad = lib.mkForce "0x0center";
+    programs.alacritty.settings.window.padding = lib.mkForce {
+      x = 0;
+      y = 0;
+    };
 
-      wayland.windowManager.hyprland.settings = {
-        general.border_size = lib.mkForce 2;
-        animations.enabled = false;
-        input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
-        input.accel_profile = lib.mkForce config.services.libinput.mouse.accelProfile;
+    wayland.windowManager.hyprland.settings = {
+      general.border_size = lib.mkForce 2;
+      animations.enabled = false;
+      input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
+      input.accel_profile = lib.mkForce config.services.libinput.mouse.accelProfile;
 
-        device = [
-          {
-            name = "synps/2-synaptics-touchpad";
-            enabled = false;
-            accel_profile = "adaptive";
-            natural_scroll = true;
-            disable_while_typing = true;
-          }
-          {
-            name = "tpps/2-elan-trackpoint";
-            accel_profile = "adaptive";
-          }
-        ];
-        monitor = [
-          ", preferred, auto, 1"
-        ];
-      };
+      device = [
+        {
+          name = "synps/2-synaptics-touchpad";
+          enabled = false;
+          accel_profile = "adaptive";
+          natural_scroll = true;
+          disable_while_typing = true;
+        }
+        {
+          name = "tpps/2-elan-trackpoint";
+          accel_profile = "adaptive";
+        }
+      ];
+      monitor = [
+        ", preferred, auto, 1"
+      ];
+    };
 
-      programs.nixvim = {
-        globals = {
-          neovide_padding_top = 0;
-          neovide_padding_bottom = 0;
-          neovide_padding_right = 0;
-          neovide_padding_left = 0;
-        };
+    programs.nixvim = {
+      globals = {
+        neovide_padding_top = 0;
+        neovide_padding_bottom = 0;
+        neovide_padding_right = 0;
+        neovide_padding_left = 0;
       };
     };
   };

@@ -6,7 +6,6 @@
   conUsername,
   conFlakePath,
   conFlakePathRel,
-  conRefresh-rate,
   ...
 }: {
   environment.systemPackages = with pkgs; [
@@ -139,7 +138,7 @@
       name = "myAutostartAwesome.sh";
       runtimeInputs = [xorg.xrandr polkit-kde-agent xmousepasteblock xssproxy];
       text = ''
-        xrandr -r ${builtins.toString conRefresh-rate}
+        xrandr -r ${builtins.toString config.const.refreshRate}
         polkit-kde-authentication-agent-1 &
         xmousepasteblock &
         xssproxy &
