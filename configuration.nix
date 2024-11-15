@@ -19,19 +19,24 @@
 
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
-    "${conFlakePathRel}/modules/myZSH.nix"
+
+    "${conFlakePathRel}/modules/myEmacs.nix"
+    "${conFlakePathRel}/modules/myNeovim.nix"
+
     "${conFlakePathRel}/modules/mySway.nix"
+    "${conFlakePathRel}/modules/myAwesome.nix"
+    "${conFlakePathRel}/modules/myHyprland.nix"
+
+    "${conFlakePathRel}/modules/myZSH.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
     "${conFlakePathRel}/modules/myAichat.nix"
-    "${conFlakePathRel}/modules/myNeovim.nix"
-    "${conFlakePathRel}/modules/myAwesome.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
-    "${conFlakePathRel}/modules/myHyprland.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
     "${conFlakePathRel}/modules/myPrismlauncher.nix"
+    "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
+
     "${conFlakePathRel}/modules/visuals/myTheme.nix"
     "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
-    "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
     "${conFlakePathRel}/modules/visuals/myKvantumBasedQT.nix"
   ];
   # }}}
