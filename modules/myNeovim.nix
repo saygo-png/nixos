@@ -540,6 +540,10 @@ in {
         vim.keymap.set('n', '<leader>Q', vim.cmd.only)
 
         -- Plugins
+
+        -- Nvim-tree {{{
+        vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
+        -- }}}
         -- Telescope {{{
         local utils = require "telescope.utils"
         local builtin = require "telescope.builtin"
@@ -680,7 +684,7 @@ in {
 
         -- Gitsigns {{{
         vim.keymap.set("n", "<leader>gsc", "<cmd>Gitsigns toggle_signs<CR>", {desc = "[g]it[s]igns [c]olumn"})
-        vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line<CR>", {desc = "[g]it[s]igns [b]lame"})
+        vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line_blame<CR>", {desc = "[g]it[s]igns [b]lame"})
         -- }}}
 
         -- LSP {{{
@@ -799,6 +803,8 @@ in {
         # Lisps
         # conjure.enable = true;
         # parinfer-rust.enable = true;
+
+        nvim-tree.enable = true;
 
         spider = {
           enable = true;
