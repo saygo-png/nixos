@@ -61,7 +61,7 @@ in {
     xdg = {
       configFile = {
         "cookiecutter/config.yaml".text = ''
-          cookiecutters_dir: ${homeConfig.xdg.cacheHome}/cookiecutter/
+          cookiecutters_dir: ${homeConfig.xdg.configHome}/cookiecutters/
           replay_dir: ${homeConfig.xdg.cacheHome}/cookiecutter/
         '';
 

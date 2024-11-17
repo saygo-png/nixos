@@ -1,0 +1,2 @@
+# {{cookiecutter.binaryName}}
+{{cookiecutter.projectDescription}}

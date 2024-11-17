@@ -32,6 +32,7 @@
     "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
+    "${conFlakePathRel}/modules/myTemplates.nix"
     "${conFlakePathRel}/modules/myPrismlauncher.nix"
     "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
 
@@ -653,7 +654,6 @@
           htop-vim # TUI task manager
           pulsemixer # Volume control
           ffmpeg # Video and magic editor
-          cookiecutter # Project templates
           gmic # Image processing language
           bc # Gnu calculator, needed for vmrss
 
