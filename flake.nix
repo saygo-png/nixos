@@ -30,6 +30,11 @@
       inputs.nix-darwin.follows = ""; # no apple here
     };
 
+    awesome-git = {
+      url = "github:awesomeWM/awesome";
+      flake = false;
+    };
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";

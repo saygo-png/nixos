@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   conHome,
   conUsername,
   conFlakePathRel,
@@ -19,30 +20,45 @@
     lightdm.enable = false;
   };
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      awesome = prev.awesome.overrideAttrs (oldAttrs: {
+        version = "0.0.0";
+        src = inputs.awesome-git;
+
+        patches = [];
+
+        postPatch = ''
+          patchShebangs tests/examples/_postprocess.lua
+        '';
+      });
+    })
+  ];
+
   # X11 window manager for games
   services.xserver.windowManager.awesome = {
     enable = true;
-    package = pkgs.awesome.overrideAttrs (previousAttrs: {
-      patches =
-        previousAttrs.patches
-        ++ [
-          (builtins.toFile "fixwmctrl.patch" ''
-            diff --git i/ewmh.c w/ewmh.c
-            index eea5a95..7e1354d 100644
-            --- i/ewmh.c
-            +++ w/ewmh.c
-            @@ -461,7 +461,7 @@ ewmh_process_client_message(xcb_client_message_event_t *ev)
-                         lua_State *L = globalconf_get_lua_State();
-                         luaA_object_push(L, globalconf.tags.tab[idx]);
-                         lua_pushstring(L, "ewmh");
-            -            luaA_object_emit_signal(L, -1, "request::select", 1);
-            +            luaA_object_emit_signal(L, -2, "request::select", 1);
-                         lua_pop(L, 1);
-                     }
-                 }
-          '')
-        ];
-    });
+    # package = pkgs.awesome.overrideAttrs (previousAttrs: {
+    #   patches =
+    #     previousAttrs.patches
+    #     ++ [
+    #       (builtins.toFile "fixwmctrl.patch" ''
+    #         diff --git i/ewmh.c w/ewmh.c
+    #         index eea5a95..7e1354d 100644
+    #         --- i/ewmh.c
+    #         +++ w/ewmh.c
+    #         @@ -461,7 +461,7 @@ ewmh_process_client_message(xcb_client_message_event_t *ev)
+    #                      lua_State *L = globalconf_get_lua_State();
+    #                      luaA_object_push(L, globalconf.tags.tab[idx]);
+    #                      lua_pushstring(L, "ewmh");
+    #         -            luaA_object_emit_signal(L, -1, "request::select", 1);
+    #         +            luaA_object_emit_signal(L, -2, "request::select", 1);
+    #                      lua_pop(L, 1);
+    #                  }
+    #              }
+    #       '')
+    #     ];
+    # });
   };
 
   environment.systemPackages = with pkgs; [
@@ -50,7 +66,11 @@
     flameshot # X11 screenshot tool
   ];
 
-  home-manager.users.${conUsername} = {config, osConfig, ...}: {
+  home-manager.users.${conUsername} = {
+    config,
+    osConfig,
+    ...
+  }: {
     home = {
       file = {
         # auto xrdb
