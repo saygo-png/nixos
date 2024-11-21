@@ -130,6 +130,18 @@
     enable = true;
     settings = {
       NMI_WATCHDOG = "0";
+
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+
+      PLATFORM_PROFILE_ON_AC = "performance";
+      PLATFORM_PROFILE_ON_BAT = "balanced";
+
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
     };
   };
 
@@ -152,7 +164,7 @@
   # On battery ur cpu will go down to 400 freq if this is off
   # Still does after plugin in cable and unplugging :(
   # TODO fix
-  services.throttled.enable = true;
+  # services.throttled.enable = true;
 
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
