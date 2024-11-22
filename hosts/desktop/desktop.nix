@@ -68,7 +68,7 @@
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
-  # boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   # Taken from https://github.com/fufexan/nix-gaming
   boot.kernel.sysctl = {
     # 20-shed.conf
