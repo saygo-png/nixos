@@ -6,6 +6,7 @@
   inputs,
   lib,
   conHome,
+  config,
   options,
   conUsername,
   conFlakePath,
@@ -417,6 +418,50 @@
         autoAcceptFolders = true;
       };
     };
+    settings.folders = let
+      allDevices = builtins.attrNames config.services.syncthing.settings.devices;
+    in {
+      Games = {
+        path = "~/Games";
+        id = "5mfmg-kwfkf";
+        type = "sendreceive";
+        versioning = null;
+        devices = [
+          "thinkpad"
+          "nixos"
+        ];
+      };
+
+      Music = {
+        path = "~/Music";
+        id = "Music";
+        type = "sendreceive";
+        versioning = null;
+        devices = allDevices;
+      };
+
+      gnupg = {
+        path = "~/.local/share/gnupg";
+        id = "fxmdx-ymklb";
+        type = "sendreceive";
+        versioning = null;
+        devices = [
+          "nixos"
+          "thinkpad"
+        ];
+      };
+
+      "mc instances" = {
+        path = "~/.local/share/PrismLauncher";
+        id = "ahybq-dbssj";
+        type = "sendreceive";
+        versioning = null;
+        devices = [
+          "nixos"
+          "thinkpad"
+        ];
+      };
+    };
   };
 
   # }}}
@@ -624,7 +669,7 @@
           zathura # Better for pdfs
           fontforge-gtk # Font editor
           keepassxc # Password manager
-          qbittorrent # Torrent client
+          pkgs-unstable.qbittorrent # Torrent client
           swappy # Quick drawing on images
           mission-center # GUI task manager
           localsend # Send via local network
