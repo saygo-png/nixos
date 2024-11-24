@@ -25,6 +25,19 @@
       }
       (builtins.readFile "${conFlakePathRel}/resources/scripts/keepfilelist.py"))
 
+    xdotool
+    (writers.writePython3Bin "d3-autocast"
+      {
+        libraries = [];
+        flakeIgnore = ["E265" "E225" "E111" "E305" "E501" "E121" "E302" "E114" "F541"];
+      }
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast.py"))
+    (writeShellApplication {
+      name = "d3-autocast-menu";
+      runtimeInputs = [coreutils udftools];
+      text = builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast-menu.sh";
+    })
+
     (writeShellApplication {
       name = "format-udf";
       runtimeInputs = [coreutils udftools];
