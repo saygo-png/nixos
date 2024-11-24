@@ -19,7 +19,13 @@
     attrSet;
 
   # Create dummy option for easy referencing in the config with the type of the value
-  mkConst = name: value: mkConstWithType (lib.types.${builtins.typeOf value}) name value;
+  mkConst = name: value: let
+    type =
+      if builtins.typeOf value == "string"
+      then "str"
+      else builtins.typeOf value;
+  in
+    mkConstWithType (lib.types.${type}) name value;
 
   # Take attribute set of values, apply mkConst to each value in the set
   mkConstsFromSet = setMap mkConst;
