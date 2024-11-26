@@ -259,6 +259,7 @@
     ncdu
     rclone
     exiftool
+    texliveBasic
     jq # Json parser
     gcc # C compiling
     vim # Text editor

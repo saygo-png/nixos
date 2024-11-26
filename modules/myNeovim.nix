@@ -798,6 +798,7 @@ in {
         comment.enable = true;
         fugitive.enable = true;
         surround.enable = true;
+        vimtex.enable = true;
         friendly-snippets.enable = true;
 
         # Lisps
@@ -1081,6 +1082,10 @@ in {
               enable = true;
               settings.nix.flake.autoArchive = true;
             };
+
+            # Latex
+            # ltex.enable = true;
+            digestif.enable = true;
 
             # Python.
             pyright.enable = true;
