@@ -22,6 +22,7 @@
               screenHeight = 768;
               gaps = 0;
               borderSize = 2;
+              accelSpeed = -0.5;
             };
           };
         }
@@ -189,7 +190,7 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = "-0.5";
+  services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   # If using hypralnd uncomment

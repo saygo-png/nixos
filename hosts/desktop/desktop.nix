@@ -24,6 +24,7 @@
               screenHeight = 1080;
               gaps = 6;
               borderSize = 1;
+              accelSpeed = -0.9;
             };
           };
         }

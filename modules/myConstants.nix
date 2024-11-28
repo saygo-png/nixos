@@ -42,7 +42,6 @@ in {
       mkConstsFromSet = mkConstsFromSet;
     };
     const = mkConstsFromSet {
-      accelSpeed = -0.9;
       accentColor = "7d8618";
     };
   };
