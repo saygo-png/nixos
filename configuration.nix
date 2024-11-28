@@ -25,6 +25,7 @@
     "${conFlakePathRel}/modules/myNeovim.nix"
 
     "${conFlakePathRel}/modules/mySway.nix"
+    "${conFlakePathRel}/modules/myXMonad.nix"
     "${conFlakePathRel}/modules/myAwesome.nix"
     "${conFlakePathRel}/modules/myHyprland.nix"
 
