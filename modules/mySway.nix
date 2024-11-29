@@ -43,10 +43,15 @@
 
       wrapperFeatures.gtk = true;
       systemd.enable = true;
+      extraConfig = ''
+        titlebar_padding 1
+        titlebar_border_thickness 0
+      '';
       config = {
         colors = {};
         modifier = "Mod4";
         terminal = "${config.home.sessionVariables.TERMINAL}";
+        window.titlebar = false;
         startup = [
           {command = "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image}";}
           # {command = ''${lib.getExe pkgs.persway} daemon -w -e '[tiling] opacity 1' -f '[tiling] opacity 0.95; opacity 1' -l 'mark --add _prev' --default-layout spiral'';}
