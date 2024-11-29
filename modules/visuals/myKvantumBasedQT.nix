@@ -12,9 +12,13 @@
     };
 
     xdg.configFile = {
+      # "Kvantum/kvantum.kvconfig".text = ''
+      #   [General]
+      #   theme=gruvbox-fallnn
+      # '';
       "Kvantum/kvantum.kvconfig".text = ''
         [General]
-        theme=gruvbox-fallnn
+        theme=KvGnomeDark
       '';
 
       "Kvantum/gruvbox-fallnn".source = "${conFlakePathRel}/resources/qt/gruvbox-fallnn";
@@ -24,29 +28,7 @@
         Appearance = {
           custom_palette = false;
           style = "kvantum-Dark";
-          standard_dialogs = "default";
           icon_theme = config.gtk.iconTheme.name;
-        };
-        #
-        # Troubleshooting = {
-        #   force_raster_widgets = 1;
-        #   ignored_applications = "@Invalid()";
-        # };
-
-        Interface = {
-          wheel_scroll_lines = 3;
-          menus_have_icons = true;
-          cursor_flash_time = 1200;
-          keyboard_scheme = 2; # X11
-          gui_effects = "@Invalid()";
-          stylesheets = "@Invalid()";
-          double_click_interval = 400;
-          underline_shortcut = 1; # ...
-          dialog_buttons_have_icons = 1; # ...
-          show_shortcuts_in_context_menus = true;
-          buttonbox_layout = 3; # GNOME dialog button layout
-          toolbutton_style = 4; # Follow the application style
-          activate_item_on_single_click = 1; # ... - i think that means let the application decide
         };
       };
     in {

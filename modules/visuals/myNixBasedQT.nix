@@ -3,6 +3,7 @@
   pkgs,
   conHome,
   conUsername,
+  conFlakePathRel,
   ...
 }: {
   home-manager.users.${conUsername} = {config, ...}: {
@@ -10,6 +11,10 @@
       enable = true;
       platformTheme.name = "qtct";
       style.package = with pkgs; [adwaita-qt adwaita-qt6];
+    };
+
+    home.sessionVariables = {
+      QT_QPA_PLATFORMTHEME = "qt5ct";
     };
 
     home.file = let
@@ -28,8 +33,8 @@
             base06 # Normal text
             base07 # Bright text
             base06 # Button text
-            base00 # Normal background
-            base00 # Window
+            base01 # Normal background
+            base02 # Window
             base00 # Shadow
             base02 # Highlight
             base05 # Highlighted text
@@ -52,8 +57,8 @@
             base04 # Normal text
             base05 # Bright text
             base04 # Button text
-            base00 # Normal background
-            base00 # Window
+            base01 # Normal background
+            base02 # Window
             base00 # Shadow
             base02 # Highlight
             base05 # Highlighted text
@@ -76,8 +81,8 @@
             base04 # Normal text
             base05 # Bright text
             base04 # Button text
-            base00 # Normal background
-            base00 # Window
+            base01 # Normal background
+            base02 # Window
             base00 # Shadow
             base02 # Highlight
             base05 # Highlighted text

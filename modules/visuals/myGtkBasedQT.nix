@@ -11,10 +11,10 @@
         package = lib.mkForce pkgs.gruvbox-dark-gtk;
         name = lib.mkForce "gruvbox-dark";
       };
-      iconTheme = {
-        package = pkgs.papirus-icon-theme;
-        name = "Papirus-Dark";
-      };
+      # iconTheme = {
+      #   package = pkgs.papirus-icon-theme;
+      #   name = "Papirus-Dark";
+      # };
       font = {
         name = lib.mkForce "Courier Prime";
         package = lib.mkForce pkgs.courier-prime;
@@ -27,6 +27,7 @@
     qt = {
       enable = true;
       platformTheme.name = "gtk";
+      style.package = with pkgs; [adwaita-qt adwaita-qt6];
     };
   };
 }

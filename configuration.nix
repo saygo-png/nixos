@@ -40,7 +40,12 @@
 
     "${conFlakePathRel}/modules/visuals/myTheme.nix"
     "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
+    # "${conFlakePathRel}/modules/visuals/myGtkBasedQT.nix"
+    # "${conFlakePathRel}/modules/visuals/myNixBasedQT.nix"
+    # "${conFlakePathRel}/modules/visuals/myGnomeBasedQT.nix"
     "${conFlakePathRel}/modules/visuals/myKvantumBasedQT.nix"
+    # "${conFlakePathRel}/modules/visuals/myAdwaitaDarkQT.nix"
+    # "${conFlakePathRel}/modules/visuals/myImperativeKvantumBasedQT.nix"
   ];
   # }}}
 
@@ -502,7 +507,6 @@
           "text/x-java" = "${EDITOR}.desktop";
           "text/x-ruby" = "${EDITOR}.desktop";
           "text/x-cmake" = "${EDITOR}.desktop";
-          "inode/x-empty" = "${EDITOR}.desktop";
           "text/markdown" = "${EDITOR}.desktop";
           "text/x-python" = "${EDITOR}.desktop";
           "text/x-readme" = "${EDITOR}.desktop";
@@ -514,7 +518,6 @@
           "application/x-shellscript" = "${EDITOR}.desktop";
 
           "inode/directory" = "dolphin.desktop";
-
           "image/bmp" = "nsxiv.desktop";
           "image/gif" = "nsxiv.desktop";
           "image/jpg" = "nsxiv.desktop";
@@ -606,6 +609,9 @@
           "application/x-extension-html" = "${BROWSER}.desktop";
           "application/x-extension-shtml" = "${BROWSER}.desktop";
           "application/x-extension-xhtml" = "${BROWSER}.desktop";
+
+          "inode/directory" = "thunar.desktop";
+          "inode/x-empty" = "thunar.desktop";
         };
       };
 

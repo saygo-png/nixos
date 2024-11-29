@@ -87,11 +87,6 @@
   # }; # }}}
 
   home-manager.users.${conUsername} = {
-    home.pointerCursor = {
-      package = lib.mkForce pkgs.capitaine-cursors-themed;
-      name = lib.mkForce "Capitaine Cursors (Gruvbox)";
-    };
-
     dconf.settings = {
       # Remove min and max buttons
       "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
@@ -107,8 +102,5 @@
         package = pkgs.gruvbox-plus-icons;
       };
     };
-    # qt = lib.mkDefault {
-    #   style.package = with pkgs; [adwaita-qt adwaita-qt6];
-    # };
   };
 }

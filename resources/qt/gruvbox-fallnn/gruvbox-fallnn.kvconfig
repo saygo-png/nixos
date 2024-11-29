@@ -10,7 +10,7 @@ group_toolbar_buttons=false
 toolbar_item_spacing=1
 toolbar_interior_spacing=3
 spread_progressbar=true
-composite=true
+composite=false
 menu_shadow_depth=5
 menu_separator_height=6
 tooltip_shadow_depth=6
@@ -77,7 +77,7 @@ alt.base.color=#161616
 button.color=#fbf1c7
 light.color=#504945
 mid.light.color=#3c3836
-dark.color=#282828
+dark.color=#202020
 mid.color=#282828
 highlight.color=#a89984
 inactive.highlight.color=#282828
@@ -92,9 +92,9 @@ link.visited.color=#d3869b
 progress.indicator.text.color=#fbf1c7
 
 [Hacks]
-transparent_ktitle_label=true
-transparent_dolphin_view=true
-transparent_pcmanfm_sidepane=true
+transparent_ktitle_label=false
+transparent_dolphin_view=false
+transparent_pcmanfm_sidepane=false
 blur_translucent=false
 transparent_menutitle=false
 respect_darkness=true
@@ -107,10 +107,10 @@ lxqtmainmenu_iconsize=22
 normal_default_pushbutton=true
 single_top_toolbar=true
 tint_on_mouseover=0
-transparent_pcmanfm_view=true
+transparent_pcmanfm_view=false
 middle_click_scroll=false
 no_selection_tint=false
-opaque_colors=false
+opaque_colors=true
 scroll_jump_workaround=false
 
 [PanelButtonCommand]
