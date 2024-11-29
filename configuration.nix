@@ -517,7 +517,6 @@
           "application/x-docbook+xml" = "${EDITOR}.desktop";
           "application/x-shellscript" = "${EDITOR}.desktop";
 
-          "inode/directory" = "dolphin.desktop";
           "image/bmp" = "nsxiv.desktop";
           "image/gif" = "nsxiv.desktop";
           "image/jpg" = "nsxiv.desktop";
