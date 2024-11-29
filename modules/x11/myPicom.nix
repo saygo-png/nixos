@@ -36,48 +36,48 @@
             #################################
 
             # Parameters for background blurring, see the *BLUR* section for more information.
-            blur-method = "dual_kawase"
+            # blur-method = "dual_kawase"
             # blur-size = 12 # kernel and box blur only
             #
-            blur-deviation = false # only for gaussian blur
+            # blur-deviation = false # only for gaussian blur
             #
-            blur-strength = 4
+            # blur-strength = 4
 
             # Blur background of semi-transparent / ARGB windows.
             # Bad in performance, with driver-dependent behavior.
             # The name of the switch may change without prior notifications.
             #
-            blur-background = false
+            # blur-background = false
 
             # Blur background of windows when the window frame is not opaque.
             # Implies:
             #    blur-background
             # Bad in performance, with driver-dependent behavior. The name may change.
             #
-            blur-background-frame = false
+            # blur-background-frame = false
 
             # Use fixed blur strength rather than adjusting according to window opacity.
-            blur-background-fixed = true
+            # blur-background-fixed = true
 
             # Specify the blur convolution kernel, with the following format:
             # example:
             #   blur-kern = "5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
             #
             # blur-kern = ""
-            blur-kern = "3x3box"
+            # blur-kern = "3x3box"
 
             # Exclude conditions for background blur.
             # blur-background-exclude = []
-            blur-background-exclude = [
-              "window_type = 'dock'",
-              "window_type = 'desktop'",
-              "class_g = 'slop'",
-              "class_g = 'argb'",
-              "class_g = 'Flameshot'",
-              "name = 'Smite'",
-              "name = 'Flameshot'",
-              "_GTK_FRAME_EXTENTS@:c"
-            ];
+            # blur-background-exclude = [
+            #   "window_type = 'dock'",
+            #   "window_type = 'desktop'",
+            #   "class_g = 'slop'",
+            #   "class_g = 'argb'",
+            #   "class_g = 'Flameshot'",
+            #   "name = 'Smite'",
+            #   "name = 'Flameshot'",
+            #   "_GTK_FRAME_EXTENTS@:c"
+            # ];
 
             #################################
             #       General Settings        #
