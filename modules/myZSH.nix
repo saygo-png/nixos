@@ -142,6 +142,12 @@
         # Backspace delete.
         bindkey -v '^?' backward-delete-char
 
+        detach() {
+          prog=$1
+          shift
+          nohup setsid $prog $@ > /dev/null 2>&1
+        }
+
         source ~/.local/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         source ~/.local/zsh-autosuggestions/zsh-autosuggestions.zsh
         source ~/.local/powerlevel10k/powerlevel10k.zsh-theme
