@@ -99,7 +99,7 @@
 
             # Enable/disable VSync.
             # vsync = false
-            vsync = false
+            vsync = ${builtins.toString osConfig.const.vsync}
 
             # Try to detect windows with rounded corners and don't consider them
             # shaped windows. The accuracy is not very high, unfortunately.

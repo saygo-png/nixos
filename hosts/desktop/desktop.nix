@@ -10,25 +10,19 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPipewire.nix"
-    (builtins.toFile "importantConstants.inline.nix"
-      # nix
-      ''
-        {
-          config,
-          ...
-        }: {
-          options = {
-            const = config.constLib.mkConstsFromSet {
-              refreshRate = 144;
-              screenWidth = 1920;
-              screenHeight = 1080;
-              gaps = 6;
-              borderSize = 1;
-              accelSpeed = -0.9;
-            };
-          };
-        }
-      '')
+    ({config, ...}: {
+      options = {
+        const = config.constLib.mkConstsFromSet {
+          refreshRate = 144;
+          screenWidth = 1920;
+          screenHeight = 1080;
+          gaps = 6;
+          borderSize = 1;
+          accelSpeed = -0.9;
+          vsync = false;
+        };
+      };
+    })
   ];
 
   services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);

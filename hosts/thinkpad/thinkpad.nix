@@ -8,25 +8,21 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPulseaudio.nix"
-    (builtins.toFile "importantConstants.inline.nix"
-      # nix
-      ''
-        {
-          config,
-          ...
-        }: {
-          options = {
-            const = config.constLib.mkConstsFromSet {
-              refreshRate = 60;
-              screenWidth = 1366;
-              screenHeight = 768;
-              gaps = 0;
-              borderSize = 2;
-              accelSpeed = -0.5;
-            };
+    (
+      {config, ...}: {
+        options = {
+          const = config.constLib.mkConstsFromSet {
+            refreshRate = 60;
+            screenWidth = 1366;
+            screenHeight = 768;
+            gaps = 0;
+            borderSize = 2;
+            accelSpeed = -0.5;
+            vsync = true;
           };
-        }
-      '')
+        };
+      }
+    )
   ];
 
   specialisation.class.configuration = {
