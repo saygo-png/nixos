@@ -111,8 +111,8 @@
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
     # This requires imperative action
-    services.easyeffects.enable = true;
-    services.easyeffects.preset = "Audio-Technica ATH-M30x";
+    # services.easyeffects.enable = true;
+    # services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
     wayland.windowManager.hyprland.settings = {
       input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
