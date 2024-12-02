@@ -227,7 +227,10 @@ in {
         vim.api.nvim_create_augroup("_cmd_win", { clear = true })
         vim.api.nvim_create_autocmd("CmdWinEnter", {
             callback = function()
-                vim.keymap.del("n", "<CR>", { buffer = true })
+                local ok, _ = pcall(vim.keymap.del, "n", "<CR>", { buffer = true })
+                if not ok then
+                    -- Silently ignore error when node increment isnt set, like in q/
+                end
             end,
             group = "_cmd_win",
         })
@@ -494,9 +497,8 @@ in {
         vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
 
         -- Basic
-        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
-        vim.keymap.set("n", ";", ":", { desc = "Command mode with or without shift"})
+        vim.keymap.set('n', ';', ':', { desc = "Command mode with or without shift" })
+        vim.keymap.set('n', 'q;', 'q:', { desc = "Command mode with or without shift" })
         vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
         vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
         vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
