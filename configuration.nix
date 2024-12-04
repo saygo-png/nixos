@@ -81,10 +81,10 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.xserver.wacom.enable = true;
-  hardware.opentabletdriver = {
-    enable = true;
-    daemon.enable = true;
-  };
+  # hardware.opentabletdriver = {
+  #   enable = true;
+  #   daemon.enable = true;
+  # };
 
   environment.binsh = lib.getExe pkgs.dash;
 
@@ -290,18 +290,8 @@
 
   ###### Miscellaneous ###### {{{
 
-  # Most software has the HIP libraries hard-coded. You can work around it on NixOS by using:
-  systemd.tmpfiles.rules = let
-    rocmEnv = pkgs.symlinkJoin {
-      name = "rocm-combined";
-      paths = with pkgs.rocmPackages; [
-        rocblas
-        hipblas
-        clr
-      ];
-    };
-  in [
-    "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
+  # Create media folder in root
+  systemd.tmpfiles.rules = [
     "d /media 0755 root root"
   ];
 

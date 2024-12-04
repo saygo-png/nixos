@@ -81,7 +81,6 @@
         autoCloseIdleDaemon=false
         contrastOpacity=188
         contrastUiColor=${config.lib.stylix.colors.withHashtag.base0A}
-        copyAndCloseAfterUpload=true
         copyOnDoubleClick=true
         copyPathAfterSave=true
         disabledTrayIcon=true

@@ -38,10 +38,26 @@ in {
     home.sessionVariables = {EDITOR = "nvim";};
     programs.nixvim = {
       enable = true;
+
+      performance = {
+        byteCompileLua.enable = true;
+        byteCompileLua.configs = true;
+        byteCompileLua.initLua = true;
+        byteCompileLua.nvimRuntime = true;
+        byteCompileLua.plugins = true;
+
+        combinePlugins = {
+          enable = true;
+          standalonePlugins = [
+            "nvim-treesitter"
+            "conform-nvim"
+            "oil"
+          ];
+        };
+      };
+
       extraPackages = with pkgs; [
-        vale
-        # typos-lsp
-        # jq # Json formatter
+        # vale
         vim-language-server
         deadnix # Nix linter
         statix # Another linter
@@ -53,23 +69,19 @@ in {
         black # Python formatter
         # hadolint # Docker linter
         # rust-analyzer # Rust LSP
-        # shellcheck # Bash linter
         # sumneko-lua-language-server
         isort # Python import sorter
         prettierd # Javascript formatter
         # nodePackages.bash-language-server
         # markdownlint-cli # Markdown linter
-        # haskell-language-server # Haskell lsp
         vscode-langservers-extracted # Web LSPs
         # python312Packages.mccabe # Flake8 plugin
         # python312Packages.pyflakes # Python linter
-        luajitPackages.jsregexp # Needed for luasnip
+        # luajitPackages.jsregexp # Needed for luasnip
         nodePackages.prettier # Javascript formatter
         # python312Packages.jedi # Autocomplete plugin
-        # python312Packages.pyls-isort # Python import sort
 
         # zprint # Clojure formatter
-        # clojure-lsp # Clojure lsp
         # cljfmt # Clojure formatter
         # clj-kondo # Clojure linter
       ];
@@ -185,8 +197,8 @@ in {
       };
 
       extraFiles = {
-        "ftplugin/json.vim" = ''setlocal foldmethod=manual'';
-        "ftplugin/markdown.vim" = ''setlocal wrap'';
+        "ftplugin/json.vim".text = ''setlocal foldmethod=manual'';
+        "ftplugin/markdown.vim".text = ''setlocal wrap'';
       };
 
       extraConfigVim = builtins.readFile "${conFlakePathRel}/resources/nvim-extraConfig.vim";
@@ -216,6 +228,8 @@ in {
         if vim.fn.has('termguicolors') == 1 then
           vim.opt.termguicolors = true
         end
+
+        vim.cmd[[colorscheme gruvbox-material]]
 
         -- Faster syntax highlighting.
         vim.cmd("syntax sync minlines=256")
@@ -725,11 +739,8 @@ in {
         })
         -- }}}
       '';
-      package = pkgs.neovim-unwrapped;
       clipboard.register = "unnamedplus";
-
       colorschemes.base16.enable = lib.mkForce false;
-      colorscheme = "gruvbox-material";
 
       extraPlugins = [
         pkgs.vimPlugins.gruvbox-material
@@ -799,9 +810,10 @@ in {
         flash.enable = true;
         comment.enable = true;
         fugitive.enable = true;
-        surround.enable = true;
+        vim-surround.enable = true;
         vimtex.enable = true;
         friendly-snippets.enable = true;
+        web-devicons.enable = true;
 
         # Lisps
         # conjure.enable = true;
@@ -857,7 +869,15 @@ in {
 
         telescope = {
           enable = true;
-          extensions.fzf-native.enable = true;
+          extensions.fzf-native = {
+            enable = true;
+            settings = {
+              fuzzy = true;
+              case_mode = "ignore_case";
+              override_file_sorter = true;
+              override_generic_sorter = true;
+            };
+          };
         };
 
         lspsaga = {
@@ -890,22 +910,37 @@ in {
           settings.auto_close = true;
         };
 
-        treesitter = {
+        treesitter = let
+          boolMatch = let
+            checkPassed =
+              lib.assertMsg
+              (builtins.match "abc" "abc" == [] && builtins.match "foo" "abc" == null)
+              "builtins.match must have changed";
+          in
+            regex: str: (builtins.match regex str) != null && checkPassed;
+
+          allGrammars = pkgs.vimPlugins.nvim-treesitter.passthru.allGrammars;
+          matchCommentGrammar = str: boolMatch ".*comment-grammar.*" str;
+          filteredGrammars = builtins.filter (set: !matchCommentGrammar set.name) allGrammars;
+        in {
           enable = true;
-          indent = true;
           folding = true;
           nixvimInjections = true;
-          ensureInstalled = ["all"];
-          ignoreInstall = ["comment"];
-          moduleConfig.highlight.enable = true;
           nixGrammars = true; # Install grammars with Nix
-          incrementalSelection = {
-            enable = true;
-            keymaps = {
-              scopeIncremental = "gsi";
-              nodeDecremental = "<BS>";
-              nodeIncremental = "<Enter>";
-              initSelection = "<Enter>";
+          grammarPackages = filteredGrammars;
+          settings = {
+            indent.enable = true;
+            ignore_install = ["comment"]; # Comment parser is very slow
+            auto_install = false;
+            highlight.enable = true;
+            incremental_selection = {
+              enable = true;
+              keymaps = {
+                scope_incremental = "gsi";
+                node_decremental = "<BS>";
+                node_incremental = "<Enter>";
+                init_selection = "<Enter>";
+              };
             };
           };
         };
@@ -1080,7 +1115,7 @@ in {
           # '';
           servers = {
             # Nix.
-            nil-ls = {
+            nil_ls = {
               enable = true;
               settings.nix.flake.autoArchive = true;
             };
@@ -1096,16 +1131,16 @@ in {
             bashls.enable = true;
 
             # Typos.
-            typos-lsp = {
+            typos_lsp = {
               enable = true;
               extraOptions.init_options.diagnosticSeverity = "Hint";
             };
 
             # Lua.
-            lua-ls.enable = true;
+            lua_ls.enable = true;
 
             # Clojure
-            clojure-lsp.enable = true;
+            clojure_lsp.enable = true;
 
             # Web
             html.enable = true;
@@ -1113,7 +1148,7 @@ in {
             terraformls.enable = true;
             cssls.enable = true;
             eslint.enable = true;
-            tsserver = {
+            ts_ls = {
               enable = true;
               rootDir = ''
                 function (filename, bufnr)
@@ -1144,9 +1179,12 @@ in {
             marksman.enable = true;
 
             # Haskell.
-            hls.enable = true;
+            hls = {
+              installGhc = false;
+              enable = true;
+            };
 
-            rust-analyzer = {
+            rust_analyzer = {
               enable = true;
               installCargo = false;
               installRustc = false;
@@ -1169,42 +1207,44 @@ in {
 
         conform-nvim = {
           enable = true;
-          extraOptions.lsp_fallback = false;
-          formattersByFt = {
-            # Conform will run multiple formatters sequentially.
-            json = ["jq"];
-            jsonc = ["prettierd"];
-            sh = ["shfmt"];
-            lua = ["stylua"];
-            nix = ["alejandra"];
-            clojure = ["zprint"];
-            haskell = ["fourmolu"];
-            graphql = ["prettierd"];
-            markdown = ["prettierd"];
-            python = ["isort" "yapf"];
-            css = ["prettierd"];
-            html = ["prettierd"];
-            scss = ["prettierd"];
-            javascript = ["prettierd"];
-            javascriptreact = ["prettierd"];
-            typescript = ["prettierd"];
-            typescriptreact = ["prettierd"];
-            # Use the "*" filetype to run formatters on all filetypes.
-            "*" = [
-              "squeeze_blanks"
-              "trim_whitespace"
-              "trim_newlines"
-            ];
-          };
-          formatters = {
-            cljfmt = {
-              command = "${lib.getExe pkgs.cljfmt}";
-              args = ["fix" "-"];
-              stdin = true;
+          settings = {
+            lsp_fallback = false;
+            formatters_by_ft = {
+              # Conform will run multiple formatters sequentially.
+              json = ["jq"];
+              jsonc = ["prettierd"];
+              sh = ["shfmt"];
+              lua = ["stylua"];
+              nix = ["alejandra"];
+              clojure = ["zprint"];
+              haskell = ["fourmolu"];
+              graphql = ["prettierd"];
+              markdown = ["prettierd"];
+              python = ["isort" "yapf"];
+              css = ["prettierd"];
+              html = ["prettierd"];
+              scss = ["prettierd"];
+              javascript = ["prettierd"];
+              javascriptreact = ["prettierd"];
+              typescript = ["prettierd"];
+              typescriptreact = ["prettierd"];
+              # Use the "*" filetype to run formatters on all filetypes.
+              "*" = [
+                "squeeze_blanks"
+                "trim_whitespace"
+                "trim_newlines"
+              ];
             };
-            shfmt.args = lib.mkOptionDefault ["-i" "2"];
-            squeeze_blanks = {
-              command = pkgs.lib.getExe' pkgs.coreutils "cat";
+            formatters = {
+              cljfmt = {
+                command = "${lib.getExe pkgs.cljfmt}";
+                args = ["fix" "-"];
+                stdin = true;
+              };
+              shfmt.args = lib.mkOptionDefault ["-i" "2"];
+              squeeze_blanks = {
+                command = pkgs.lib.getExe' pkgs.coreutils "cat";
+              };
             };
           };
         };
@@ -1215,8 +1255,8 @@ in {
           enable = true;
           linters.statix.args = ["--config=${statixConfig}"];
           lintersByFt = {
-            rst = ["vale"];
-            text = ["vale"];
+            # rst = ["vale"];
+            # text = ["vale"];
             c = ["clangtidy"];
             cpp = ["clangtidy"];
             haskell = ["hlint"];
@@ -1230,33 +1270,36 @@ in {
           };
         };
 
-        which-key = {
-          enable = true;
-          ignoreMissing = false;
-          registrations = {
-            "gd" = "[g]o to [d]efinition";
-            "gD" = "[g]o to uses";
-            "gi" = "[g]o to [i]mplementation";
-            "K" = "[H]over info";
-            "<Leader>t" = "+[t]elescope";
-            "<Leader>h" = "+[h]arpoon";
-            "<leader>ha" = "[h]arpoon [a]dd file";
-            "<leader>hm" = "[h]arpoon [m]enu";
-            "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
-            "<leader>hn" = "[h]arpoon [n]ext";
-            "<leader>hp" = "[h]arpoon [p]revious";
-            "<C-h>" = "harpoon file 1";
-            "<C-j>" = "harpoon file 2";
-            "<C-k>" = "harpoon file 3";
-            "<C-l>" = "harpoon file 4";
-          };
-          plugins = {
-            presets = {
-              # Needs to be false for indent keybindings
-              operators = false; #adds help for operators like d, y, ...";
-            };
-          };
-        };
+        # TODO fix
+        # which-key = {
+        #   enable = true;
+        #   settings = {
+        #     ignore_missing = false;
+        #     plugins = {
+        #       presets = {
+        #         # Needs to be false for indent keybindings
+        #         operators = false; #adds help for operators like d, y, ...";
+        #       };
+        #     };
+        #   };
+        #   registrations = {
+        #     "gd" = "[g]o to [d]efinition";
+        #     "gD" = "[g]o to uses";
+        #     "gi" = "[g]o to [i]mplementation";
+        #     "K" = "[H]over info";
+        #     "<Leader>t" = "+[t]elescope";
+        #     "<Leader>h" = "+[h]arpoon";
+        #     "<leader>ha" = "[h]arpoon [a]dd file";
+        #     "<leader>hm" = "[h]arpoon [m]enu";
+        #     "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
+        #     "<leader>hn" = "[h]arpoon [n]ext";
+        #     "<leader>hp" = "[h]arpoon [p]revious";
+        #     "<C-h>" = "harpoon file 1";
+        #     "<C-j>" = "harpoon file 2";
+        #     "<C-k>" = "harpoon file 3";
+        #     "<C-l>" = "harpoon file 4";
+        #   };
+        # };
 
         oil = {
           enable = true;
@@ -1268,8 +1311,8 @@ in {
 
         luasnip = {
           enable = true;
-          fromVscode = [{lazyLoad = true;}];
-          extraConfig = {
+          # fromVscode = [{lazyLoad = true;}];
+          settings = {
             enable_autosnippets = true;
             store_selection_keys = "<Tab>";
           };

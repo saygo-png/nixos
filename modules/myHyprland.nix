@@ -16,7 +16,7 @@
           haskellPackages.aeson
           haskellPackages.vector
           haskellPackages.process-extras
-          haskellPackages.process_1_6_20_0
+          haskellPackages.process_1_6_25_0
           haskellPackages.bytestring_0_12_1_0
         ];
       } ''

@@ -77,9 +77,9 @@
 
     (pkgs.writers.writeHaskellBin "convertlink" {
         libraries = with pkgs; [
-          haskellPackages.directory_1_3_8_5
+          haskellPackages.directory_1_3_9_0
           haskellPackages.unix_2_8_5_1
-          haskellPackages.process_1_6_20_0
+          haskellPackages.process_1_6_25_0
           haskellPackages.optparse-applicative
         ];
       }

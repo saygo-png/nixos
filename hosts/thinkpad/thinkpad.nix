@@ -166,14 +166,14 @@
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    # extraPackages = with pkgs; [
-    # intel-vaapi-driver # I think this is added by nixos-hardware
-    # libvdpau-va-gl
-    # ];
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      # intel-vaapi-driver # I think this is added by nixos-hardware
+      # libvdpau-va-gl
+    ];
   };
 
   environment.systemPackages = with pkgs; [

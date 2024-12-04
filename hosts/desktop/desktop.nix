@@ -10,6 +10,7 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPipewire.nix"
+    "${conFlakePathRel}/modules/myRocm.nix"
     ({config, ...}: {
       options = {
         const = config.constLib.mkConstsFromSet {
@@ -83,20 +84,15 @@
       initrd.enable = true;
       opencl.enable = true;
     };
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [
         # amdvlk
         # libdrm
         libva
         vaapiVdpau
         libvdpau-va-gl
-
-        rocmPackages.clr.icd
-        rocm-opencl-icd
-        rocm-opencl-runtime
       ];
       extraPackages32 = with pkgs; [
         libva

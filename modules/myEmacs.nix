@@ -31,8 +31,6 @@
     # :email mu4e
     mu
     pkgs-unstable.isync
-    # :checkers spell
-    (aspellWithDicts (ds: with ds; [en en-computers en-science]))
     # :tools editorconfig
     editorconfig-core-c # per-project style config
     # :tools lookup & :lang org +roam

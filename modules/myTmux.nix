@@ -88,6 +88,8 @@
         path = "${config.home.homeDirectory}/Sync/builds"
         depth = 10
       '';
+
+    stylix.targets.tmux.enable = false;
     programs.tmux = {
       baseIndex = 1;
       enable = true;
@@ -119,7 +121,7 @@
 
         # I don't know, read the docs.
         setw -g monitor-activity on
-        set -g visual-activity on
+        set -g visual-activity false
 
         # Moving between panes with vim movement keys.
         bind h select-pane -L

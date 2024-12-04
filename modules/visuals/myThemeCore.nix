@@ -24,7 +24,7 @@
     qt6.qtsvg # needed to load breeze icons
 
     # Needed for some icon packs
-    gnome.adwaita-icon-theme
+    adwaita-icon-theme
   ];
 
   # Fonts. {{{
@@ -65,10 +65,10 @@
   programs.dconf.enable = lib.mkDefault true;
 
   home-manager.users.${conUsername} = {
-    home.pointerCursor = {
-      x11.enable = lib.mkForce true;
-      gtk.enable = lib.mkForce true;
-    };
+    # home.pointerCursor = {
+    #   x11.enable = lib.mkForce true;
+    #   gtk.enable = lib.mkForce true;
+    # };
 
     home.sessionVariables = {
       # This i think fixes some warns/slow launches on some qt apps
@@ -84,7 +84,7 @@
 
     # Hopefully will set dark mode properly
     # stylix.targets.gnome.enable = true;
-    # stylix.targets.kde.enable = true;
+    stylix.targets.kde.enable = true;
 
     gtk = {
       enable = true;
