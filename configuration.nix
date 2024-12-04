@@ -21,6 +21,8 @@
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
 
+    "${conFlakePathRel}/modules/myUtils.nix"
+
     "${conFlakePathRel}/modules/myEmacs.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
 
