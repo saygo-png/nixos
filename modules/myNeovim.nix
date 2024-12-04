@@ -49,9 +49,11 @@ in {
         combinePlugins = {
           enable = true;
           standalonePlugins = [
-            "nvim-treesitter"
-            "conform-nvim"
-            "oil"
+            # "nvim-treesitter"
+            # "conform.nvim"
+            "dial.nvim"
+            "oil.nvim"
+            "mini.nvim"
           ];
         };
       };
