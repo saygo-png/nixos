@@ -30,7 +30,7 @@
     ## Module dependencies
     # :email mu4e
     mu
-    pkgs-unstable.isync
+    isync
     # :tools editorconfig
     editorconfig-core-c # per-project style config
     # :tools lookup & :lang org +roam
