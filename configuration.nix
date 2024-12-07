@@ -664,7 +664,6 @@
           scribus
           mandelbulber
           anki # Flashcards
-          librewolf # Browser
           libreoffice # office
           foliate # Ebook reader
           sayonara # Music player
