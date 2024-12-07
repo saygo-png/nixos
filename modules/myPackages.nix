@@ -151,13 +151,19 @@
       name = "myAutostartAwesome.sh";
       runtimeInputs = [xorg.xrandr polkit-kde-agent xmousepasteblock xssproxy];
       text = ''
+        run() {
+          if ! pgrep -f "$1" ;
+          then
+            "$@"&
+          fi
+        }
         xrandr -r ${builtins.toString config.const.refreshRate}
-        polkit-kde-authentication-agent-1 &
-        xmousepasteblock &
-        xssproxy &
-        udiskie &
-        remaps &
-        $TERMINAL &
+        run "polkit-kde-authentication-agent-1" &
+        run "xmousepasteblock" &
+        run "xssproxy" &
+        run "udiskie" &
+        run "remaps" &
+        run "$TERMINAL" &
       '';
     })
 
