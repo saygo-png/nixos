@@ -10,7 +10,7 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPipewire.nix"
-    "${conFlakePathRel}/modules/myRocm.nix"
+    # "${conFlakePathRel}/modules/myRocm.nix"
     ({config, ...}: {
       options = {
         const = config.constLib.mkConstsFromSet {
