@@ -6,10 +6,17 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
+
+    # Gtk fixes
+    gnome-themes-extra
+    gtk-engine-murrine
+
+    # Sass thing for themes
+    sassc
+
     kdePackages.qtsvg # Icons for dolphin
     kdePackages.qtwayland # qt6
     libsForQt5.qt5.qtwayland
-    gtk-engine-murrine
 
     # fix kirigami apps look
     # for example in filelight, without it the app looks weird
