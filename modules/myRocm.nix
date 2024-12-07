@@ -23,8 +23,7 @@
     graphics = {
       extraPackages = with pkgs; [
         rocmPackages.clr.icd
-        rocm-opencl-icd
-        rocm-opencl-runtime
+        rocmPackages.clr
       ];
     };
   };
