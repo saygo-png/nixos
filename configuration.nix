@@ -650,6 +650,9 @@
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
 
+          # Without this, games that use SDL will minimize when focus is lost
+          SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0;
+
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
           TERMINAL_PROG = config.home.sessionVariables.TERMINAL;
