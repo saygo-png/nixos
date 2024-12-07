@@ -452,6 +452,7 @@ awful.rules.rules = {
   { rule = { class = "KeePassXC" }, properties = { screen = 1, tag = "9" } },
   { rule = { class = "LibreWolf" }, properties = { screen = 1, tag = "2" } },
   { rule = { name = "MarkdownPreview — LibreWolf" }, properties = { screen = 1, tag = "1" } },
+  { rule = { name = "Wine System Tray" }, properties = { screen = 9, tag = "1", minimized = true } },
   { rule = { class = "qBittorrent" }, properties = { screen = 1, tag = "9" } },
   { rule = { class = "leagueclientux.exe" }, properties = { screen = 1, tag = "7" } },
   { rule = { class = "Anki" }, properties = { screen = 1, tag = "6" } },
