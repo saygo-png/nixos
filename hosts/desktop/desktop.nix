@@ -222,6 +222,7 @@
       "steam"
       "steam-run"
       "steam-original"
+      "steam-unwrapped"
     ];
 
   # There is a module for this but i find nix -> yaml weird
