@@ -18,10 +18,11 @@
       # '';
       "Kvantum/kvantum.kvconfig".text = ''
         [General]
-        theme=KvGnomeDark
+        theme=KvGnomeDark#
       '';
 
       "Kvantum/gruvbox-fallnn".source = "${conFlakePathRel}/resources/qt/gruvbox-fallnn";
+      "Kvantum/KvGnomeDark#".source = "${conFlakePathRel}/resources/qt/KvGnomeDark#";
     };
     home.file = let
       baseConfig = {
