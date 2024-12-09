@@ -273,7 +273,6 @@
     gcc # C compiling
     vim # Text editor
     wget # Downloader
-    git # Source control
     udiskie # Auto mount
     gnumake # C compiling
     gtrash # Cli trashcan
@@ -677,6 +676,7 @@
           mission-center # GUI task manager
           localsend # Send via local network
           xdragon # drag items from terminal
+
           jetbrains.pycharm-community-src # python IDE
           python312Packages.ptpython # Python repl
 
