@@ -109,7 +109,7 @@ in {
         shiftwidth = 2;
         softtabstop = 2;
         expandtab = true;
-        autoindent = true;
+        smartindent = true;
         breakindent = true; # Indent when wrapping
 
         # Wrapping.
@@ -179,6 +179,9 @@ in {
         gruvbox_material_foreground = "original";
         gruvbox_material_enable_bold = 0;
         gruvbox_material_transparent_background = 2;
+
+        # Otherwise python sets itself to indent 4
+        python_recommended_style = 0;
 
         # Neovide neovim gui client.
         neovide_transparency = config.stylix.opacity.terminal;
