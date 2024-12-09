@@ -1054,6 +1054,9 @@
           prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
         };
         extraConfig = {
+          init = {
+            defaultBranch = "origin";
+          };
           user = {
             signingKey = "86B6FCCC3563C00B";
             name = "saygo-png";
