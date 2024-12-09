@@ -73,9 +73,11 @@ in {
         # rust-analyzer # Rust LSP
         # sumneko-lua-language-server
         isort # Python import sorter
+        yapf # Python formatter
         prettierd # Javascript formatter
         # nodePackages.bash-language-server
         # markdownlint-cli # Markdown linter
+        haskellPackages.fourmolu # Haskell formatter
         vscode-langservers-extracted # Web LSPs
         # python312Packages.mccabe # Flake8 plugin
         # python312Packages.pyflakes # Python linter
