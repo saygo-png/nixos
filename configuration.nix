@@ -231,6 +231,7 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
+    vlock
     man-pages
     man-pages-posix
 
@@ -612,6 +613,7 @@
         stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
 
         shellAliases = {
+          "lock" = "sudo vlock -nas";
           "archive" = "patool";
           "f" = ''cd "$(fzfcd)"'';
           "cp" = "cp -v";
