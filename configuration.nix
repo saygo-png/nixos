@@ -672,7 +672,7 @@
           zathura # Better for pdfs
           fontforge-gtk # Font editor
           keepassxc # Password manager
-          pkgs-unstable.qbittorrent # Torrent client
+          qbittorrent # Torrent client
           swappy # Quick drawing on images
           mission-center # GUI task manager
           localsend # Send via local network
