@@ -873,14 +873,14 @@ in {
 
         telescope = {
           enable = true;
-          extensions.fzf-native = {
+          extensions.fzy-native = {
             enable = true;
-            settings = {
-              fuzzy = true;
-              case_mode = "ignore_case";
-              override_file_sorter = true;
-              override_generic_sorter = true;
-            };
+            # settings = {
+            #   fuzzy = true;
+            #   case_mode = "ignore_case";
+            #   override_file_sorter = true;
+            #   override_generic_sorter = true;
+            # };
           };
         };
 
