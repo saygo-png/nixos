@@ -678,6 +678,7 @@
           localsend # Send via local network
           xdragon # drag items from terminal
           jetbrains.pycharm-community-src # python IDE
+          python312Packages.ptpython # Python repl
 
           # Dependencies for intersubs for mpv.
           (python3.withPackages (python312Packages: [
