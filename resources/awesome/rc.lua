@@ -135,6 +135,10 @@ globalkeys = gears.table.join(
     awful.util.spawn("d3-autocast-menu")
   end, { description = "start autocast", group = "launcher" }),
 
+  awful.key({ modkey }, "o", function()
+    awful.util.spawn("xkb-switch-rofi")
+  end, { description = "switch keyboard lay[o]ut", group = "launcher" }),
+
   awful.key({ modkey }, "Tab", function()
     awful.util.spawn("rofi -show run")
   end, { description = "start rofi in run", group = "launcher" }),
