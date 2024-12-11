@@ -121,7 +121,7 @@
 
         # I don't know, read the docs.
         setw -g monitor-activity on
-        set -g visual-activity false
+        set -g visual-activity off
 
         # Moving between panes with vim movement keys.
         bind h select-pane -L
