@@ -76,7 +76,7 @@ in {
         yapf # Python formatter
         prettierd # Javascript formatter
         # nodePackages.bash-language-server
-        # markdownlint-cli # Markdown linter
+        markdownlint-cli # Markdown linter
         haskellPackages.fourmolu # Haskell formatter
         vscode-langservers-extracted # Web LSPs
         # python312Packages.mccabe # Flake8 plugin
