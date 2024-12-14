@@ -65,6 +65,7 @@
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
   # Taken from https://github.com/fufexan/nix-gaming
   boot.kernel.sysctl = {
     # 20-shed.conf
@@ -78,6 +79,8 @@
     # see comment in include/linux/mm.h in the kernel tree.
     "vm.max_map_count" = 2147483642;
   };
+
+services.xserver.videoDrivers = [ "amdgpu" ];
 
   hardware = {
     amdgpu = {
