@@ -58,6 +58,9 @@ in {
         };
       };
 
+      # Needed for special characters in spider.nvim
+      extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
+
       extraPackages = with pkgs; [
         # vale
         vim-language-server
