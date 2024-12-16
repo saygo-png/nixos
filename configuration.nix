@@ -33,6 +33,7 @@
 
     "${conFlakePathRel}/modules/myZSH.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
+    "${conFlakePathRel}/modules/myMullvad.nix"
     "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
