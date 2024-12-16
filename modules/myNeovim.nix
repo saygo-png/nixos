@@ -486,9 +486,6 @@ in {
         vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
         vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
 
-        -- Infinite paste
-        vim.keymap.set('v', 'p', '"_dP')
-
         -- Keep cursor position after yank
         -- vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
 
@@ -516,9 +513,15 @@ in {
         vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
         vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
 
-        -- Clipboard
+        -- Copy and paste
         vim.keymap.set("n", "<c-v>", '"+p', { desc = "proper paste" })
         vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
+        vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
+        vim.keymap.set('n', 'Y', 'y$', { desc = "Copy till end of line without newline" })
+        vim.keymap.set('n', 'yy', '^y$', { desc = "Copy line without newline and whitespace" })
+
+        -- Infinite paste
+        vim.keymap.set('v', 'p', '"_dP')
 
         -- Basic
         vim.keymap.set('n', ';', ':', { desc = "Command mode with or without shift" })
@@ -834,6 +837,7 @@ in {
         spider = {
           enable = true;
           skipInsignificantPunctuation = false;
+          extraOptions.consistentOperatorPending = true;
           keymaps.motions = {
             b = "b";
             e = "e";
