@@ -979,6 +979,7 @@
 
       programs.fzf = {
         enable = true;
+        tmux.enableShellIntegration = true;
         defaultCommand = "fd --type f";
         defaultOptions = ["--no-height"];
         fileWidgetCommand = "fd --type f";
