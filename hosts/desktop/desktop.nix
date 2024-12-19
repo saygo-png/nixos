@@ -26,7 +26,7 @@
     })
   ];
 
-  services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);
+  services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
 
   # Optimization for ssds

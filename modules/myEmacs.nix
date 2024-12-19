@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  pkgs-unstable,
   conUsername,
   ...
 }: {
@@ -23,7 +22,7 @@
     ## Optional dependencies
     fd # faster projectile indexing
     imagemagick # for image-dired
-    (lib.mkIf (config.programs.gnupg.agent.enable)
+    (lib.mkIf config.programs.gnupg.agent.enable
       pinentry-emacs) # in-emacs gnupg prompts
     zstd # for undo-fu-session/undo-tree compression
 

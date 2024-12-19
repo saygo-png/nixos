@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   conUsername,
   conFlakePathRel,
   ...
@@ -22,11 +21,7 @@
 
   services.displayManager.defaultSession = "none+xmonad";
 
-  home-manager.users.${conUsername} = {
-    # osConfig,
-    # config,
-    ...
-  }: {
+  home-manager.users.${conUsername} = _: {
     home.packages = with pkgs; [
       xmobar
     ];

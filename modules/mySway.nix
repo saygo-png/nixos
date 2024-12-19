@@ -159,7 +159,7 @@
         input = {
           "type:pointer" = {
             accel_profile = osConfig.services.libinput.mouse.accelProfile;
-            pointer_accel = lib.strings.floatToString (osConfig.const.accelSpeed);
+            pointer_accel = lib.strings.floatToString osConfig.const.accelSpeed;
           };
           "type:keyboard" = {
             xkb_layout = "pl";

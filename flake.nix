@@ -30,14 +30,16 @@
       inputs.nix-darwin.follows = ""; # no apple here
     };
 
-    awesome-git = {
-      url = "github:awesomeWM/awesome";
-      flake = false;
-    };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+
+    awesome-git = {
+      url = "github:awesomeWM/awesome";
+      flake = false;
     };
 
     nvim-plugin-tshjkl = {
@@ -55,13 +57,31 @@
       flake = false;
     };
   };
-  outputs = {self, ...} @ inputs: let
+
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: let
+    allPossibleSystems = [
+      "aarch64-linux"
+      "i686-linux"
+      "x86_64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
+    ];
+    eachSystem = f: nixpkgs.lib.genAttrs allPossibleSystems (system: f nixpkgs.legacyPackages.${system});
+    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
     nixpkgs-unstable-working-krita = import inputs.nixpkgs-unstable-working-krita {system = "x86_64-linux";};
-    system = "x86_64-linux";
+
+    mySystem = "x86_64-linux";
   in {
+    formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+    checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
     nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
+      system = mySystem;
       specialArgs = {
         inherit inputs self pkgs-unstable nixpkgs-unstable-working-krita;
         host = "nixos";
@@ -82,7 +102,7 @@
     };
 
     nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
+      system = mySystem;
       specialArgs = {
         inherit inputs self pkgs-unstable nixpkgs-unstable-working-krita;
         host = "thinkpad";

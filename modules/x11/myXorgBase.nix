@@ -69,7 +69,7 @@
 
     xdg.configFile."sx/sxrc" = {
       executable = true;
-      text = config.home.file.".xinitrc".text;
+      inherit (config.home.file.".xinitrc") text;
     };
 
     xdg.configFile."flameshot/flameshot.ini" = {

@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   conFlakePathRel,
   conUsername,
@@ -9,7 +8,7 @@
     cookiecutter
   ];
 
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = _: {
     xdg.configFile."cookiecutters/" = {
       recursive = true;
       source = "${conFlakePathRel}/resources/cookiecutterTemplates";

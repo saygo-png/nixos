@@ -147,8 +147,8 @@
         general = {
           "$mainMod" = "SUPER";
           layout = "dwindle";
-          gaps_in = gaps_in;
-          gaps_out = gaps_out;
+          inherit gaps_in;
+          inherit gaps_out;
           border_size = osConfig.const.borderSize;
           border_part_of_window = false;
           no_border_on_floating = false;

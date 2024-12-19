@@ -186,7 +186,7 @@
     wineWowPackages.waylandFull
   ];
 
-  services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);
+  services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   # If using hypralnd uncomment
