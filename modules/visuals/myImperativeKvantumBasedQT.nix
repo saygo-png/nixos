@@ -1,5 +1,5 @@
 {conUsername, ...}: {
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = _: {
     qt = {
       enable = true;
       style.name = "kvantum";
