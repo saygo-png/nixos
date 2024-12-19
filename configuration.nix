@@ -695,6 +695,7 @@
           socat
 
           # Command line.
+          blightmud # MUD client
           moar # Pager
           termdown # Timer
           tokei # Line counter
