@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}: {
+{lib, ...}: {
   services.mullvad-vpn.enable = true;
   networking.firewall.checkReversePath = lib.mkForce "strict";
   # environment.systemPackages = with pkgs; [

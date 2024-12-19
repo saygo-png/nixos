@@ -41,7 +41,6 @@
       text = builtins.readFile "${conFlakePathRel}/resources/scripts/xkb-switch-rofi.sh";
     })
 
-
     (writeShellApplication {
       name = "d3-autocast-menu";
       runtimeInputs = [coreutils udftools];

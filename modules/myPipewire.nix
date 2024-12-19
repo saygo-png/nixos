@@ -1,5 +1,4 @@
-{lib, ...}:
-{
+{lib, ...}: {
   # Disable pulseaudio.
   hardware.pulseaudio.enable = lib.mkForce false;
 
