@@ -67,7 +67,7 @@ in {
         deadnix # Nix linter
         statix # Another linter
         nodePackages.jsonlint
-        # hlint # Haskell linter
+        hlint # Haskell linter
         stylua # Lua formatter
         # marksman # Markdown LSP
         shfmt # Shell formatter
