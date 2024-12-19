@@ -187,7 +187,7 @@
 
         KRITAHOME="${conHome}/.local/share/krita"
         KRITANIXHOME="${conFlakePath}/resources/krita"
-        rm -vrf "$KRITANIXHOME"/*
+        rm -vrf "''${KRITANIXHOME:?}/*"
         cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
         cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
         cp -vf "$HOME/.config/kritadisplayrc" "$KRITANIXHOME/kritadisplayrc"
@@ -196,7 +196,7 @@
 
         ANKIHOME="${conHome}/.local/share/Anki2"
         ANKINIXHOME="${conFlakePath}/resources/anki"
-        rm -vrf "$ANKINIXHOME"/*
+        rm -vrf "''${ANKINIXHOME:?}/*"
         cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
         find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
       '';
