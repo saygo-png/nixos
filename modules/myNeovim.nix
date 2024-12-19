@@ -934,7 +934,7 @@ in {
           in
             regex: str: (builtins.match regex str) != null && checkPassed;
 
-          allGrammars = pkgs.vimPlugins.nvim-treesitter.passthru.allGrammars;
+          inherit (pkgs.vimPlugins.nvim-treesitter.passthru) allGrammars;
           matchCommentGrammar = str: boolMatch ".*comment-grammar.*" str;
           filteredGrammars = builtins.filter (set: !matchCommentGrammar set.name) allGrammars;
         in {

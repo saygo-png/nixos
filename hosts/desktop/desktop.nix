@@ -26,7 +26,7 @@
     })
   ];
 
-  services.libinput.mouse.accelSpeed = lib.strings.floatToString (config.const.accelSpeed);
+  services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
 
   # Optimization for ssds
@@ -276,7 +276,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \

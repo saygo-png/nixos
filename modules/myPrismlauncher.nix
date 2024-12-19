@@ -30,14 +30,15 @@
                        OfflineLoginDialog::newAccount(this, tr("Please enter your desired username to add your offline account."));            '')
           ];
         };
-      in (pkgs.prismlauncher.override {
-        prismlauncher-unwrapped = prismlauncher-unwrapped-patched;
-        jdks = [
-          temurin-bin-8
-          temurin-bin-17
-          temurin-bin-21
-        ];
-      }))
+      in
+        pkgs.prismlauncher.override {
+          prismlauncher-unwrapped = prismlauncher-unwrapped-patched;
+          jdks = [
+            temurin-bin-8
+            temurin-bin-17
+            temurin-bin-21
+          ];
+        })
     ];
   };
 }

@@ -25,7 +25,7 @@
       then "str"
       else builtins.typeOf value;
   in
-    mkConstWithType (lib.types.${type}) name value;
+    mkConstWithType lib.types.${type} name value;
 
   # Take attribute set of values, apply mkConst to each value in the set
   mkConstsFromSet = setMap mkConst;
@@ -38,8 +38,8 @@
 in {
   options = {
     constLib = mkConstsFromSetInsanity {
-      mkConst = mkConst;
-      mkConstsFromSet = mkConstsFromSet;
+      inherit mkConst;
+      inherit mkConstsFromSet;
     };
     const = mkConstsFromSet {
       accentColor = "7d8618";

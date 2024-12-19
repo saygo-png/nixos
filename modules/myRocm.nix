@@ -1,10 +1,4 @@
-{
-  lib,
-  pkgs,
-  conUsername,
-  conFlakePathRel,
-  ...
-}: {
+{pkgs, ...}: {
   systemd.tmpfiles.rules = let
     rocmEnv = pkgs.symlinkJoin {
       name = "rocm-combined";

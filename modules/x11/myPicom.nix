@@ -1,14 +1,9 @@
 {
   lib,
-  pkgs,
   conUsername,
   ...
 }: {
-  home-manager.users.${conUsername} = {
-    osConfig,
-    config,
-    ...
-  }: {
+  home-manager.users.${conUsername} = {osConfig, ...}: {
     xdg = {
       configFile = {
         "picom.conf".text =

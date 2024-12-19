@@ -3,7 +3,6 @@
   pkgs,
   conHome,
   conUsername,
-  conFlakePathRel,
   ...
 }: {
   home-manager.users.${conUsername} = {config, ...}: {
