@@ -27,7 +27,6 @@
     # config,
     ...
   }: {
-
     home.packages = with pkgs; [
       xmobar
     ];

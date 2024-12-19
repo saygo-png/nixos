@@ -80,7 +80,7 @@
     "vm.max_map_count" = 2147483642;
   };
 
-services.xserver.videoDrivers = [ "amdgpu" ];
+  services.xserver.videoDrivers = ["amdgpu"];
 
   hardware = {
     amdgpu = {
@@ -276,7 +276,7 @@ services.xserver.videoDrivers = [ "amdgpu" ];
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-
+      
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \

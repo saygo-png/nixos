@@ -6,7 +6,6 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
-
     # Gtk fixes
     gnome-themes-extra
     gtk-engine-murrine
