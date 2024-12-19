@@ -724,14 +724,14 @@
 
           run mkdir -p "${config.home.homeDirectory}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${config.home.homeDirectory}/.local/share/krita"
+          run cp -rf $VERBOSE_ARG "${./. + "/resources/krita/kritarc"}" "${config.xdg.configHome}/kritarc"
+          run cp -rf $VERBOSE_ARG "${./. + "/resources/krita/kritadisplayrc"}" "${config.xdg.configHome}/kritadisplayrc"
+          run cp -rf $VERBOSE_ARG "${./. + "/resources/krita/krita-toplevel"}"/. "${config.home.homeDirectory}/.local/share/krita"
           run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
 
           run mkdir -p "${config.home.homeDirectory}/.local/share/Anki2"
           run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${config.home.homeDirectory}/.local/share/Anki2"
+          run cp -rf $VERBOSE_ARG "${./. + "./resources/anki"}"/. "${config.home.homeDirectory}/.local/share/Anki2"
           run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
         '';
 
