@@ -477,7 +477,7 @@ in {
             vim.cmd('copen')
           end
         end
-        vim.keymap.set('n', '<C-f>', toggle_quickfix, { silent = true, desc = "Toggle quickfix" })
+        vim.keymap.set('n', '<S-f>', toggle_quickfix, { silent = true, desc = "Toggle quickfix" })
 
         -- Jump whitespace
         vim.keymap.set("n", "{", "<Cmd>call search('^\\s*\\S', 'Wbc') | call search('^\\s*$\\|\\%^', 'Wb')<CR>", { desc = "jump whitespace forward"})
@@ -1286,17 +1286,17 @@ in {
         };
 
         # TODO fix
-        # which-key = {
-        #   enable = true;
-        #   settings = {
-        #     ignore_missing = false;
-        #     plugins = {
-        #       presets = {
-        #         # Needs to be false for indent keybindings
-        #         operators = false; #adds help for operators like d, y, ...";
-        #       };
-        #     };
-        #   };
+        which-key = {
+          enable = true;
+          settings = {
+            ignore_missing = false;
+            plugins = {
+              presets = {
+                # Needs to be false for indent keybindings
+                operators = false; #adds help for operators like d, y, ...";
+              };
+            };
+          };
         #   registrations = {
         #     "gd" = "[g]o to [d]efinition";
         #     "gD" = "[g]o to uses";
@@ -1314,7 +1314,7 @@ in {
         #     "<C-k>" = "harpoon file 3";
         #     "<C-l>" = "harpoon file 4";
         #   };
-        # };
+        };
 
         oil = {
           enable = true;
