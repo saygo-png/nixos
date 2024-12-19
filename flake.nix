@@ -58,7 +58,11 @@
     };
   };
 
-  outputs = {self, ...} @ inputs: let
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: let
     allPossibleSystems = [
       "aarch64-linux"
       "i686-linux"
@@ -66,24 +70,16 @@
       "aarch64-darwin"
       "x86_64-darwin"
     ];
-    # eachSystem = f: inputs.nixpkgs.lib.genAttrs (import allPossibleSystems) (system: f inputs.nixpkgs.legacyPackages.${system});
-    forAllSystems = fn:
-      inputs.nixpkgs.lib.genAttrs allPossibleSystems
-      (system:
-        fn {
-          pkgs = import inputs.nixpkgs {inherit system;};
-        });
-    treefmtEval = forAllSystems (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+    eachSystem = f: nixpkgs.lib.genAttrs allPossibleSystems (system: f nixpkgs.legacyPackages.${system});
+    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
 
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
     nixpkgs-unstable-working-krita = import inputs.nixpkgs-unstable-working-krita {system = "x86_64-linux";};
 
     mySystem = "x86_64-linux";
   in {
-    formatter = forAllSystems ({...}: treefmtEval.config.build.wrapper);
-    checks = forAllSystems ({...}: {
-      formatting = treefmtEval.config.build.check self;
-    });
+    formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+    checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
     nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
       system = mySystem;
       specialArgs = {
