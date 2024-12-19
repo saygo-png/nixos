@@ -1297,23 +1297,23 @@ in {
               };
             };
           };
-        #   registrations = {
-        #     "gd" = "[g]o to [d]efinition";
-        #     "gD" = "[g]o to uses";
-        #     "gi" = "[g]o to [i]mplementation";
-        #     "K" = "[H]over info";
-        #     "<Leader>t" = "+[t]elescope";
-        #     "<Leader>h" = "+[h]arpoon";
-        #     "<leader>ha" = "[h]arpoon [a]dd file";
-        #     "<leader>hm" = "[h]arpoon [m]enu";
-        #     "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
-        #     "<leader>hn" = "[h]arpoon [n]ext";
-        #     "<leader>hp" = "[h]arpoon [p]revious";
-        #     "<C-h>" = "harpoon file 1";
-        #     "<C-j>" = "harpoon file 2";
-        #     "<C-k>" = "harpoon file 3";
-        #     "<C-l>" = "harpoon file 4";
-        #   };
+          #   registrations = {
+          #     "gd" = "[g]o to [d]efinition";
+          #     "gD" = "[g]o to uses";
+          #     "gi" = "[g]o to [i]mplementation";
+          #     "K" = "[H]over info";
+          #     "<Leader>t" = "+[t]elescope";
+          #     "<Leader>h" = "+[h]arpoon";
+          #     "<leader>ha" = "[h]arpoon [a]dd file";
+          #     "<leader>hm" = "[h]arpoon [m]enu";
+          #     "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
+          #     "<leader>hn" = "[h]arpoon [n]ext";
+          #     "<leader>hp" = "[h]arpoon [p]revious";
+          #     "<C-h>" = "harpoon file 1";
+          #     "<C-j>" = "harpoon file 2";
+          #     "<C-k>" = "harpoon file 3";
+          #     "<C-l>" = "harpoon file 4";
+          #   };
         };
 
         oil = {
