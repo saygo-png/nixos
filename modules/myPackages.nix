@@ -9,7 +9,7 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
-    (pkgs.callPackage "${conFlakePathRel}/resources/librewolf-bin.nix" {}) # Browser, bin is from appimage and fixes discord crash
+    # (pkgs.callPackage "${conFlakePathRel}/resources/librewolf-bin.nix" {}) # Browser, bin is from appimage and fixes discord crash
 
     (writeShellScriptBin "hyprland-next-visible-client.sh"
       (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))

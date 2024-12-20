@@ -431,6 +431,7 @@
 
           "idleinhibit focus, class:^(mpv)$"
           "idleinhibit fullscreen, class:^(librewolf)$"
+          "idleinhibit fullscreen, class:^(firefox)$"
 
           "opacity 1.0 override 1.0 override, class:(Aseprite)"
           "opacity 1.0 override 1.0 override, class:(Unity)"

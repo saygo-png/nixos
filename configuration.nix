@@ -643,7 +643,7 @@
           # Default programs.
           PAGER = "moar";
           OPENER = "xdg-open";
-          BROWSER = "librewolf";
+          BROWSER = "firefox";
           TERMINAL = "alacritty";
           EDITOR = lib.mkDefault "vim";
           VISUAL = config.home.sessionVariables.EDITOR;
@@ -677,6 +677,8 @@
           mission-center # GUI task manager
           localsend # Send via local network
           xdragon # drag items from terminal
+
+          firefox-bin # Browser
 
           jetbrains.pycharm-community-src # python IDE
           python312Packages.ptpython # Python repl
