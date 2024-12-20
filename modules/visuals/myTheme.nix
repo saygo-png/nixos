@@ -11,8 +11,8 @@
       antialias = true;
       hinting = {
         enable = true;
-        style = "full";
-        autohint = false;
+        style = "slight";
+        autohint = true;
       };
       subpixel = {
         rgba = "none";
