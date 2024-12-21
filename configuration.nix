@@ -12,7 +12,6 @@
   conFlakePath,
   pkgs-unstable,
   conFlakePathRel,
-  nixpkgs-unstable-working-krita,
   ...
 }: {
   imports = [
@@ -730,7 +729,6 @@
           pkgs-unstable.inkscape # Vector graphics
           pkgs-unstable.deno
         ];
-
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
@@ -1494,3 +1492,4 @@
   # }}}
 }
 ## vim:foldmethod=marker
+
