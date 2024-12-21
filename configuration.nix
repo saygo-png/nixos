@@ -43,10 +43,10 @@
 
     "${conFlakePathRel}/modules/visuals/myTheme.nix"
     "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
+    "${conFlakePathRel}/modules/visuals/myKvantumBasedQT.nix"
     # "${conFlakePathRel}/modules/visuals/myGtkBasedQT.nix"
     # "${conFlakePathRel}/modules/visuals/myNixBasedQT.nix"
     # "${conFlakePathRel}/modules/visuals/myGnomeBasedQT.nix"
-    "${conFlakePathRel}/modules/visuals/myKvantumBasedQT.nix"
     # "${conFlakePathRel}/modules/visuals/myAdwaitaDarkQT.nix"
     # "${conFlakePathRel}/modules/visuals/myImperativeKvantumBasedQT.nix"
   ];
@@ -720,7 +720,7 @@
           bc # Gnu calculator, needed for vmrss
 
           # Haskell
-          ghc # Haskell LSP
+          ghc # Haskell compiler for the LSP
           haskell-language-server # Haskell LSP
 
           # Unstable
@@ -1509,4 +1509,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-
