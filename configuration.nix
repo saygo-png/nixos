@@ -37,7 +37,7 @@
     "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
-    "${conFlakePathRel}/modules/myStupid.nix"
+    # "${conFlakePathRel}/modules/myStupid.nix"
     "${conFlakePathRel}/modules/myTemplates.nix"
     "${conFlakePathRel}/modules/myPrismlauncher.nix"
     "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
