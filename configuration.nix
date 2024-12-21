@@ -37,6 +37,7 @@
     "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
+    "${conFlakePathRel}/modules/myStupid.nix"
     "${conFlakePathRel}/modules/myTemplates.nix"
     "${conFlakePathRel}/modules/myPrismlauncher.nix"
     "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
@@ -729,23 +730,6 @@
           pkgs-unstable.deno
         ];
 
-        # This allows for semi-declarative configuration.
-        # However it makes you lag when rebuilding.
-        activation.configure-krita = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          run mkdir -p "${config.xdg.configHome}"
-
-          run mkdir -p "${config.home.homeDirectory}/.local/share/krita"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${config.home.homeDirectory}/.local/share/krita"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
-
-          run mkdir -p "${config.home.homeDirectory}/.local/share/Anki2"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
-          run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${config.home.homeDirectory}/.local/share/Anki2"
-          run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
-        '';
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
