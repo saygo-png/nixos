@@ -584,22 +584,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-unstable-working-krita": {
-      "locked": {
-        "lastModified": 1727335715,
-        "narHash": "sha256-1uw3y94dA4l22LkqHRIsb7qr3rV5XdxQFqctINfx8Cc=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "28b5b8af91ffd2623e995e20aee56510db49001a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "28b5b8af91ffd2623e995e20aee56510db49001a",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1717432640,
@@ -759,7 +743,6 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "nixpkgs-unstable-working-krita": "nixpkgs-unstable-working-krita",
         "nixvim": "nixvim",
         "nvim-plugin-faster": "nvim-plugin-faster",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
