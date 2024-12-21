@@ -104,7 +104,11 @@
   networking.dhcpcd.extraConfig = "nohook resolv.conf";
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
 
-  networking.firewall.enable = true;
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [39578];
+    allowedUDPPorts = [39578];
+  };
   services.fail2ban.enable = true;
 
   time.timeZone = "Europe/Warsaw";
