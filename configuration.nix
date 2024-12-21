@@ -334,6 +334,10 @@
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
   nixpkgs.config.allowUnfree = false;
   nix = {
+    extraOptions = ''
+      extra-substituters = https://devenv.cachix.org
+      extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
+    '';
     channel.enable = false;
     settings = {
       warn-dirty = false;
@@ -701,6 +705,7 @@
           socat
 
           # Command line.
+          devenv # Dev environments
           blightmud # MUD client
           moar # Pager
           termdown # Timer
