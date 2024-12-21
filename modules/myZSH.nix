@@ -41,6 +41,7 @@
         if [[ ! -e ~/.local/powerlevel10k ]]; then
           git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.local/powerlevel10k
           make -C ~/.local/powerlevel10k pkg
+          zcompile-many ~/.local/zsh-autosuggestions/{powerlevel10k.zsh-theme,internal/**/*.zsh,config/**/*.zsh,gitstatus/**/*.zsh}
         fi
 
         unfunction zcompile-many
