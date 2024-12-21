@@ -725,7 +725,8 @@
           haskell-language-server # Haskell LSP
 
           # Unstable
-          nixpkgs-unstable-working-krita.krita # Painting
+          # nixpkgs-unstable-working-krita.krita # Painting
+          pkgs-unstable.krita # Painting
           pkgs-unstable.inkscape # Vector graphics
           pkgs-unstable.deno
         ];
