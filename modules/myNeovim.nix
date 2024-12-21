@@ -1289,7 +1289,7 @@ in {
         which-key = {
           enable = true;
           settings = {
-            ignore_missing = false;
+            # ignore_missing = false;
             plugins = {
               presets = {
                 # Needs to be false for indent keybindings
