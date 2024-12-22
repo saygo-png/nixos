@@ -888,14 +888,13 @@ in {
 
         telescope = {
           enable = true;
-          extensions.fzy-native = {
+          extensions.fzf-native = {
             enable = true;
-            # settings = {
-            #   fuzzy = true;
-            #   case_mode = "ignore_case";
-            #   override_file_sorter = true;
-            #   override_generic_sorter = true;
-            # };
+            settings = {
+              fuzzy = true;
+              override_file_sorter = true;
+              override_generic_sorter = true;
+            };
           };
         };
 
