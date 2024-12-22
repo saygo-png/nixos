@@ -383,6 +383,7 @@
   programs.nix-ld.libraries =
     options.programs.nix-ld.libraries.default
     ++ (with pkgs; [
+      libGL
       gcc
       libgcc
       e2fsprogs
