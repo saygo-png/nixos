@@ -1,8 +1,0 @@
-#avf-img-container {
-  display: flex;
-  justify-content: center;
-}
-#avf-img {
-  max-width: 30em;
-  margin: auto 0;
-}
