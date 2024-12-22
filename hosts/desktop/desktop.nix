@@ -13,7 +13,7 @@
     # "${conFlakePathRel}/modules/myRocm.nix"
     ({config, ...}: {
       options = {
-        const = config.constLib.mkConstsFromSet {
+        preConst = config.constLib.mkPreConstsFromSet {
           refreshRate = 144;
           screenWidth = 1920;
           screenHeight = 1080;
@@ -276,7 +276,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \

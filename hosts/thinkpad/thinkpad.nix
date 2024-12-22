@@ -11,7 +11,7 @@
     (
       {config, ...}: {
         options = {
-          const = config.constLib.mkConstsFromSet {
+          preConst = config.constLib.mkPreConstsFromSet {
             refreshRate = 60;
             screenWidth = 1366;
             screenHeight = 768;

@@ -8,9 +8,10 @@
 }: {
   imports = [
     ({config, ...}: {
-      options.const = config.constLib.mkConstsFromSet {
+      options.preConst = config.constLib.mkPreConstsFromSet {
         importedMyMPVModule = lib.mkForce true;
       };
+      options.stupid = {a = 5;};
     })
   ];
   home-manager.users.${conUsername} = {config, ...}: {

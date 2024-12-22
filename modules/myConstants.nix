@@ -18,31 +18,66 @@
     {}
     attrSet;
 
-  # Create dummy option for easy referencing in the config with the type of the value
-  mkConst = name: value: let
-    type =
-      if builtins.typeOf value == "string"
+  libTypeOf = value: let
+    stringToStr = x:
+      if x == "string"
       then "str"
-      else builtins.typeOf value;
+      else x;
+
+    # We can unwrap here, because these values should be already merged
+    typeName =
+      if (value._type or "") == "override"
+      then stringToStr (builtins.typeOf value.content)
+      else stringToStr (builtins.typeOf value);
   in
-    mkConstWithType lib.types.${type} name value;
+    lib.types.${typeName};
+
+  # Create dummy option for easy referencing in the config with the type of the value
+  mkConst = name: value:
+    mkConstWithType (libTypeOf value) name value;
 
   # Take attribute set of values, apply mkConst to each value in the set
   mkConstsFromSet = setMap mkConst;
+
+  # mkConstsFromSetManuallyTyped = let
+  #   takeSetOf2AndUseType = name: valueAndType:
+  #     mkConstWithType valueAndType.type name valueAndType.value;
+  # in
+  #   setMap takeSetOf2AndUseType;
 
   # Create dummy option for easy referencing in the config with the type "anything'
   mkConstInsanity = mkConstWithType lib.types.anything;
 
   # Take attribute set of values, apply mkConstInsanity to each value in the set
-  mkConstsFromSetInsanity = setMap mkConstInsanity;
+  mkConstsFromSetAny = setMap mkConstInsanity;
+
+  mkPreConstsFromSet = set: wrapListInSet (lib.mapAttrsToList (name: value: {${name} = value;}) set);
+  wrapListInSet = lst: {listWrapper = lst;};
+  # unwrapListInSet = set: set.list;
+  safeUnwrapListInSet = set:
+    if builtins.typeOf (set.listWrapper or "") == "list"
+    then set.listWrapper
+    else set;
+  mkConstsFromSetAnyFull = wrappedAttrsList: mkConstsFromSetAny (lib.mergeAttrsList (safeUnwrapListInSet wrappedAttrsList));
 in {
   options = {
-    constLib = mkConstsFromSetInsanity {
-      inherit mkConst;
+    constLib = mkConstsFromSetAny {
+      # inherit mkConst;
+      # inherit mkConstWithType;
+
       inherit mkConstsFromSet;
+      # inherit mkConstsFromSetManuallyTyped;
+      inherit mkConstsFromSetAnyFull;
+      inherit mkPreConstsFromSet;
+      inherit mkConstsFromSetAny;
     };
-    const = mkConstsFromSet {
-      accentColor = "7d8618";
-    };
+    # preConst = mkPreConstsFromSet {
+    #   accentColor = "7d8618";
+    #   accentColorOv = lib.mkForce "stronger";
+    # };
+    # preConst = [];
+    stupid = {};
+    # const = mkConstsFromSetAny (lib.mergeAttrsList preConst);
+    const = mkConstsFromSetAnyFull [{}];
   };
 }

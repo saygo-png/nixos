@@ -17,6 +17,13 @@
   imports = [
     "${conFlakePathRel}/modules/myConstants.nix"
 
+    ({config, ...}: {
+      options.preConst = config.constLib.mkPreConstsFromSet {
+        importedMyMPVModule = false;
+      };
+      options.const = config.constLib.mkConstsFromSetAnyFull options.preConst;
+    })
+
     inputs.stylix.nixosModules.stylix
     inputs.home-manager.nixosModules.default
 
@@ -690,53 +697,68 @@
         };
 
         # Home packages, home manager packages, user packages, home programs.
-        packages = with pkgs; [
-          # GUI.
-          scribus
-          mandelbulber
-          anki # Flashcards
-          libreoffice # office
-          foliate # Ebook reader
-          sayonara # Music player
-          zathura # Better for pdfs
-          fontforge-gtk # Font editor
-          keepassxc # Password manager
-          qbittorrent # Torrent client
-          swappy # Quick drawing on images
-          mission-center # GUI task manager
-          localsend # Send via local network
-          xdragon # drag items from terminal
 
-          firefox-bin # Browser
+        # if osConfig.const.importedMPVModule == false
+        # then python3
+        # else tokei;
+        packages = with pkgs; let
+          # packagesBase =
+          #   if config.const.importedMPVModule == false
+          #   then [abc]
+          #   else [abc] ++ [python];
+        in
+          [
+            # GUI.
+            scribus
+            mandelbulber
+            anki # Flashcards
+            libreoffice # office
+            foliate # Ebook reader
+            sayonara # Music player
+            zathura # Better for pdfs
+            fontforge-gtk # Font editor
+            keepassxc # Password manager
+            qbittorrent # Torrent client
+            swappy # Quick drawing on images
+            mission-center # GUI task manager
+            localsend # Send via local network
+            xdragon # drag items from terminal
 
-          jetbrains.pycharm-community-src # python IDE
-          python312Packages.ptpython # Python repl
+            firefox-bin # Browser
 
-          # Command line.
-          devenv # Dev environments
-          blightmud # MUD client
-          moar # Pager
-          termdown # Timer
-          tokei # Line counter
-          cbonsai # pretty tree
+            jetbrains.pycharm-community-src # python IDE
 
-          zoxide # Cd alternative
-          htop-vim # TUI task manager
-          pulsemixer # Volume control
-          ffmpeg # Video and magic editor
-          gmic # Image processing language
-          bc # Gnu calculator, needed for vmrss
+            # Command line.
+            python312Packages.ptpython # Python repl
+            devenv # Dev environments
+            blightmud # MUD client
+            moar # Pager
+            termdown # Timer
+            tokei # Line counter
+            cbonsai # pretty tree
 
-          # Haskell
-          ghc # Haskell compiler for the LSP
-          haskell-language-server # Haskell LSP
+            zoxide # Cd alternative
+            htop-vim # TUI task manager
+            pulsemixer # Volume control
+            ffmpeg # Video and magic editor
+            gmic # Image processing language
+            bc # Gnu calculator, needed for vmrss
 
-          # Unstable
-          # nixpkgs-unstable-working-krita.krita # Painting
-          pkgs-unstable.krita # Painting
-          pkgs-unstable.inkscape # Vector graphics
-          pkgs-unstable.deno
-        ];
+            # Haskell
+            ghc # Haskell compiler for the LSP
+            haskell-language-server # Haskell LSP
+
+            # Unstable
+            # nixpkgs-unstable-working-krita.krita # Painting
+            pkgs-unstable.krita # Painting
+            pkgs-unstable.inkscape # Vector graphics
+            pkgs-unstable.deno
+          ]
+          ++ (
+            if osConfig.const.importedMyMPVModule == false
+            then [python3]
+            else []
+          );
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"

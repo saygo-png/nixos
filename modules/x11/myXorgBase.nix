@@ -10,7 +10,7 @@
     "${conFlakePathRel}/modules/x11/myPicom.nix"
     ({config, ...}: {
       options = {
-        const = config.constLib.mkConstsFromSet {
+        preConst = config.constLib.mkPreConstsFromSet {
           xinitBase = ''
             if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
               eval $(dbus-launch --exit-with-session --sh-syntax)
