@@ -8,34 +8,27 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/x11/myPicom.nix"
-    (builtins.toFile "xorgConstants.inline.nix"
-      # nix
-      ''
-        {
-          config,
-          ...
-        }: {
-          options = {
-            const = config.constLib.mkConstsFromSet {
-              xinitBase = '''
-                if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-                  eval $(dbus-launch --exit-with-session --sh-syntax)
-                fi
-                systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-                if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-                  dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-                fi
-                systemctl --user import-environment PATH &
-                dbus-update-activation-environment --systemd PATH &
-                hash dbus-update-activation-environment 2>/dev/null &
+    ({config, ...}: {
+      options = {
+        const = config.constLib.mkConstsFromSet {
+          xinitBase = ''
+            if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+              eval $(dbus-launch --exit-with-session --sh-syntax)
+            fi
+            systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+            if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+              dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+            fi
+            systemctl --user import-environment PATH &
+            dbus-update-activation-environment --systemd PATH &
+            hash dbus-update-activation-environment 2>/dev/null &
 
-                export XDG_SESSION_TYPE=x11
-                picom &
-              ''';
-            };
-          };
-        }
-      '')
+            export XDG_SESSION_TYPE=x11
+            picom &
+          '';
+        };
+      };
+    })
   ];
 
   # Enable the X11 windowing system.
