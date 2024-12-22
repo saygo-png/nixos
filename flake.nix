@@ -7,6 +7,10 @@
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
 
+    extras-nixos = {
+      url = "github:saygo-png/extrasNixos";
+      flake = false;
+    };
     devenv = {
       url = "github:cachix/devenv";
       inputs.nixpkgs.follows = "nixpkgs";
