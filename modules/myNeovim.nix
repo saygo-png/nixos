@@ -602,8 +602,12 @@ in {
         -- }}}
 
         vim.keymap.set("n", "<Leader>c", function()
-        require("conform").format({ timeout_ms = 500 })
+          require("conform").format({ timeout_ms = 500 })
         end, { desc = "[c]onform" })
+
+        vim.api.nvim_create_user_command("Conform", function()
+            require("conform").format({ timeout_ms = 500 })
+        end, { desc = "Format using Conform with a 500ms timeout" })
 
         -- Conflicts with lsp hover
         vim.g["conjure#mapping#doc_word"] = false
