@@ -38,9 +38,13 @@
       osConfig.const.xinitBase
       + "\nexec awesome";
 
-    xdg.configFile."awesome/" = {
+    xdg.configFile."awesome/rc.lua" = {
+      source = "${conFlakePathRel}/resources/awesome/rc.lua";
+    };
+
+    xdg.configFile."awesome/lain" = {
       recursive = true;
-      source = "${conFlakePathRel}/resources/awesome";
+      source = "${inputs.awesome-lain}";
     };
 
     xdg.configFile."awesome/theme.lua" = {

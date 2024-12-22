@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "awesome-lain": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1673554968,
+        "narHash": "sha256-MH/aiYfcO3lrcuNbnIu4QHqPq25LwzTprOhEJUJBJ7I=",
+        "owner": "lcpz",
+        "repo": "lain",
+        "rev": "88f5a8abd2649b348ffec433a24a263b37f122c0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lcpz",
+        "repo": "lain",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -769,6 +785,7 @@
     "root": {
       "inputs": {
         "awesome-git": "awesome-git",
+        "awesome-lain": "awesome-lain",
         "devenv": "devenv",
         "extras-nixos": "extras-nixos",
         "home-manager": "home-manager",

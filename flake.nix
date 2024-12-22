@@ -52,6 +52,11 @@
       flake = false;
     };
 
+    awesome-lain = {
+      url = "github:lcpz/lain";
+      flake = false;
+    };
+
     nvim-plugin-tshjkl = {
       url = "github:gsuuon/tshjkl.nvim";
       flake = false;
