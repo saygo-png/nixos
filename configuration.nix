@@ -236,6 +236,8 @@
 
   # System packages.
   environment.systemPackages = with pkgs; [
+    busybox
+
     vlock
     man-pages
     man-pages-posix
@@ -259,6 +261,24 @@
     # cups-brother-hll2375dw
     # cups-brother-hll3230cdw
     # cups-brother-mfcl2750dw
+
+    # All the archive garbage
+    atool # Unified CLI for all of these:
+    unrar-free
+    zip
+    unzip
+    gnutar
+    gzip
+    bzip2
+    pbzip2
+    lzip
+    plzip
+    lzop
+    xz
+    lhasa
+    arj
+    cpio
+    p7zip
 
     # Camera.
     gphoto2fs
@@ -284,7 +304,6 @@
     file # File identifier
     libqalculate # Calculator
     udftools # Udf filesystem
-    patool # Universal archiver
     ripgrep # Multithreaded grep
     wl-clipboard # Wayland xclip
     xdg-utils # Includes xdg-open
@@ -711,7 +730,7 @@
           termdown # Timer
           tokei # Line counter
           cbonsai # pretty tree
-          p7zip # 7zip archiver
+
           zoxide # Cd alternative
           htop-vim # TUI task manager
           pulsemixer # Volume control
@@ -1492,4 +1511,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-
