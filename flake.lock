@@ -155,6 +155,22 @@
         "type": "github"
       }
     },
+    "extras-nixos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1734842509,
+        "narHash": "sha256-YTnzVkhGJUOktvypgmgUrxyNnRw4dcW/YTqR+s7SxmQ=",
+        "owner": "saygo-png",
+        "repo": "extrasNixos",
+        "rev": "9b74ca2545301af931768db3aab74e8f95f9e78f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saygo-png",
+        "repo": "extrasNixos",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -483,6 +499,22 @@
         "type": "github"
       }
     },
+    "mpv-intersubs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1727574054,
+        "narHash": "sha256-+1O8rRWt1RZZn2u0OIq1a7lJ75GHBD5zmBQ1ptnlOAI=",
+        "owner": "oltodosel",
+        "repo": "interSubs",
+        "rev": "7f0de483f5d5ce6420940d0d016f3024d7b9cf9a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oltodosel",
+        "repo": "interSubs",
+        "type": "github"
+      }
+    },
     "nix": {
       "inputs": {
         "flake-compat": [
@@ -738,7 +770,9 @@
       "inputs": {
         "awesome-git": "awesome-git",
         "devenv": "devenv",
+        "extras-nixos": "extras-nixos",
         "home-manager": "home-manager",
+        "mpv-intersubs": "mpv-intersubs",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",

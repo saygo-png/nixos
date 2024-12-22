@@ -31,6 +31,7 @@
     "${conFlakePathRel}/modules/myHyprland.nix"
 
     "${conFlakePathRel}/modules/myZSH.nix"
+    "${conFlakePathRel}/modules/myMPV.nix"
     "${conFlakePathRel}/modules/myTmux.nix"
     "${conFlakePathRel}/modules/myMullvad.nix"
     "${conFlakePathRel}/modules/myAichat.nix"
@@ -235,82 +236,92 @@
   environment.etc."/xdg/menus/applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
   # System packages.
-  environment.systemPackages = with pkgs; [
-    busybox
+  environment.systemPackages = with pkgs;
+    [
+      busybox
 
-    vlock
-    man-pages
-    man-pages-posix
+      vlock
+      man-pages
+      man-pages-posix
 
-    # Nix.
-    nil # Nix LSP
-    nixd # Another nix LSP (For Zed)
-    nh # Nix helper
-    alejandra # Nix formatter
-    nix-tree # Reverse dependency search
-    nix-output-monitor # Pretty nix build output
+      # Nix.
+      nil # Nix LSP
+      nixd # Another nix LSP (For Zed)
+      nh # Nix helper
+      alejandra # Nix formatter
+      nix-tree # Reverse dependency search
+      nix-output-monitor # Pretty nix build output
 
-    # Printing.
-    cups
-    cups-bjnp
-    # cups-brother-hl1110
-    # cups-brother-hl1210w
-    # cups-brother-hl2260d
-    # cups-brother-hl3140cw
-    # cups-brother-hll2340dw
-    # cups-brother-hll2375dw
-    # cups-brother-hll3230cdw
-    # cups-brother-mfcl2750dw
+      # Printing.
+      cups
+      cups-bjnp
+      # cups-brother-hl1110
+      # cups-brother-hl1210w
+      # cups-brother-hl2260d
+      # cups-brother-hl3140cw
+      # cups-brother-hll2340dw
+      # cups-brother-hll2375dw
+      # cups-brother-hll3230cdw
+      # cups-brother-mfcl2750dw
 
-    # All the archive garbage
-    atool # Unified CLI for all of these:
-    unrar-free
-    zip
-    unzip
-    gnutar
-    gzip
-    bzip2
-    pbzip2
-    lzip
-    plzip
-    lzop
-    xz
-    lhasa
-    arj
-    cpio
-    p7zip
+      # All the archive garbage
+      atool # Unified CLI for all of these:
+      unrar-free
+      zip
+      unzip
+      gnutar
+      gzip
+      bzip2
+      pbzip2
+      lzip
+      plzip
+      lzop
+      xz
+      lhasa
+      arj
+      cpio
+      p7zip
 
-    # Camera.
-    gphoto2fs
+      # Camera.
+      gphoto2fs
 
-    # GUI.
-    firefox
-    nsxiv # Image viewer
-    qalculate-gtk # Gui calculator
-    kdePackages.dolphin # File manager
+      # GUI.
+      firefox
+      nsxiv # Image viewer
+      qalculate-gtk # Gui calculator
+      kdePackages.dolphin # File manager
 
-    # CLI.
-    ncdu
-    rclone
-    exiftool
-    texliveBasic
-    jq # Json parser
-    gcc # C compiling
-    vim # Text editor
-    wget # Downloader
-    udiskie # Auto mount
-    gnumake # C compiling
-    gtrash # Cli trashcan
-    file # File identifier
-    libqalculate # Calculator
-    udftools # Udf filesystem
-    ripgrep # Multithreaded grep
-    wl-clipboard # Wayland xclip
-    xdg-utils # Includes xdg-open
-    imagemagick # Image identifier
-    libnotify # Notifications (notify-send)
-    ntfs3g # ntfs filesystem interop (windows fs)
-  ];
+      # CLI.
+      ncdu
+      rclone
+      exiftool
+      texliveBasic
+      jq # Json parser
+      gcc # C compiling
+      vim # Text editor
+      wget # Downloader
+      udiskie # Auto mount
+      gnumake # C compiling
+      gtrash # Cli trashcan
+      file # File identifier
+      libqalculate # Calculator
+      udftools # Udf filesystem
+      ripgrep # Multithreaded grep
+      wl-clipboard # Wayland xclip
+      xdg-utils # Includes xdg-open
+      imagemagick # Image identifier
+      libnotify # Notifications (notify-send)
+      ntfs3g # ntfs filesystem interop (windows fs)
+    ]
+    ++ (
+      if (config.const.importedMyMPVModule or "") == true
+      then [python3]
+      else []
+    );
+
+  #   if (config.const.importedMyMPVModule or "") == true
+  # then
+  #   [python3] else [];
 
   # }}}
 
@@ -711,19 +722,6 @@
           jetbrains.pycharm-community-src # python IDE
           python312Packages.ptpython # Python repl
 
-          # Dependencies for intersubs for mpv.
-          (python3.withPackages (python312Packages: [
-            python312Packages.six
-            python312Packages.lxml
-            python312Packages.httpx
-            python312Packages.numpy
-            python312Packages.pyqt5
-            python312Packages.thttp
-            python312Packages.requests
-            python312Packages.beautifulsoup4
-          ]))
-          socat
-
           # Command line.
           devenv # Dev environments
           blightmud # MUD client
@@ -887,54 +885,6 @@
             use_pager = true;
           };
         };
-      };
-
-      programs.mpv = {
-        enable = true;
-        bindings = {
-          l = "seek 20";
-          h = "seek -20";
-          "]" = "add speed 0.1";
-          "[" = "add speed -0.1";
-          j = "seek -4";
-          k = "seek 4";
-          K = "cycle sub";
-          J = "cycle sub down";
-          w = "add sub-pos -10"; # move subtitles up
-          W = "add sub-pos -1"; # move subtitles up
-          e = "add sub-pos +10"; # move subtitles down
-          E = "add sub-pos +1"; # move subtitles down
-          "=" = "add sub-scale +0.1";
-          "-" = "add sub-scale -0.1";
-        };
-
-        config = {
-          speed = 1;
-          hwdec = true;
-          sub-pos = 90;
-          keep-open = true;
-          sub-auto = "all";
-          sub-font-size = 40;
-          sub-border-size = 2;
-          sub-shadow-offset = 2;
-          sub-visibility = "yes";
-          sub-ass-line-spacing = 1;
-          sub-ass-hinting = "normal";
-          sub-ass-override = "force";
-          save-position-on-quit = true;
-          sub-auto-exts = "srt,ass,txt";
-          ytdl-format = "bestvideo+bestaudio/best";
-          slang = "fin,fi,fi-fi,eng,en,en-en,en-orig";
-          sub-font = "${config.stylix.fonts.serif.name}";
-          sub-ass-force-style = "${config.stylix.fonts.serif.name}";
-          sub-color = "${config.lib.stylix.colors.withHashtag.base07}";
-          sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
-          watch-later-options-clr = true; # Dont save settings like brightness
-        };
-        scripts = [
-          pkgs.mpvScripts.uosc
-          pkgs.mpvScripts.acompressor
-        ];
       };
 
       programs.yazi = {
@@ -1364,12 +1314,6 @@
 
       # Extra Configs {{{
       xdg.enable = true;
-
-      # InterSubs plugin install.
-      xdg.configFile."mpv/scripts/" = {
-        source = ./resources/mpv;
-        recursive = true;
-      };
 
       xdg.configFile."zathura/" = {
         text = let
