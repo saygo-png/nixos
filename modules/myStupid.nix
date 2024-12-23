@@ -1,28 +1,15 @@
 {
   pkgs,
-  conHome,
   conUsername,
+  inputs,
   ...
 }: {
-  environment.systemPackages = with pkgs; [
-    # (writeShellApplication {
-    #   name = "update-secrets.sh";
-    #   runtimeInputs = [coreutils];
-    #   text = ''
-    #     key=$(cat ${conHome}/Sync/secrets/openai.txt)
-    #     echo "$key"
-    #     export OPENAI_API_KEY="$key"
-    #     echo "$OPENAI_API_KEY"
-    #   '';
-    # })
-  ];
   home-manager.users.${conUsername} = {
     lib,
     config,
+    osConfig,
     ...
   }: {
-    # home.packages = with pkgs; [
-    # ];
     home = {
       packages = with pkgs; [
         (writeShellApplication {
@@ -34,20 +21,35 @@
             IFS= # don't split
             set +f # do glob
 
-            KRITAHOME="${conHome}/.local/share/krita"
-            KRITANIXHOME="${conFlakePath}/resources/krita"
+            KRITAHOME="${config.home.homeDirectory}/.local/share/krita"
+            KRITANIXHOME="${osConfig.const.extrasNixosPath}/krita"
+
+            ANKIHOME="${config.home.homeDirectory}/.local/share/Anki2"
+            ANKINIXHOME="${osConfig.const.extrasNixosPath}/anki"
+
+            # Krita
             rm -vrf "''${KRITANIXHOME:?}/*"
             cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
             cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
             cp -vf "$HOME/.config/kritadisplayrc" "$KRITANIXHOME/kritadisplayrc"
-            # Dont include the cache
+            # Don't include the cache
             rm -vf "$KRITANIXHOME/krita-toplevel/resourcecache.sqlite"
 
-            ANKIHOME="${conHome}/.local/share/Anki2"
-            ANKINIXHOME="${conFlakePath}/resources/anki"
+            cd "$KRITANIXHOME"/.. | exit
+            git add -A
+            git commit -m "chore: auto commit update"
+            git push
+
+            # Anki
             rm -vrf "''${ANKINIXHOME:?}/*"
             cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
+            # Don't include the cache
             find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
+
+            cd "$ANKINIXHOME"/.. | exit
+            git add -A
+            git commit -m "chore: auto commit update"
+            git push
           '';
         })
       ];
@@ -58,14 +60,14 @@
 
         run mkdir -p "${config.home.homeDirectory}/.local/share/krita"
         run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
-        run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritarc}" "${config.xdg.configHome}/kritarc"
-        run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/kritadisplayrc}" "${config.xdg.configHome}/kritadisplayrc"
-        run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/krita/krita-toplevel}"/. "${config.home.homeDirectory}/.local/share/krita"
+        run cp -rf $VERBOSE_ARG "${inputs.extras-nixos}/krita/kritarc" "${config.xdg.configHome}/kritarc"
+        run cp -rf $VERBOSE_ARG "${inputs.extras-nixos}/krita/kritadisplayrc" "${config.xdg.configHome}/kritadisplayrc"
+        run cp -rf $VERBOSE_ARG "${inputs.extras-nixos}/krita/krita-toplevel"/. "${config.home.homeDirectory}/.local/share/krita"
         run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/krita"
 
         run mkdir -p "${config.home.homeDirectory}/.local/share/Anki2"
         run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
-        run cp -rf $VERBOSE_ARG "${builtins.toPath ./resources/anki}"/. "${config.home.homeDirectory}/.local/share/Anki2"
+        run cp -rf $VERBOSE_ARG "${inputs.extras-nixos}/anki"/. "${config.home.homeDirectory}/.local/share/Anki2"
         run chmod -R $VERBOSE_ARG u+w,g+w "${config.home.homeDirectory}/.local/share/Anki2"
       '';
     };

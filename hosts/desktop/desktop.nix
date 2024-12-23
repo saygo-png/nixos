@@ -21,6 +21,7 @@
           borderSize = 1;
           accelSpeed = -0.9;
           vsync = false;
+          extrasNixosPath = "${conHome}/extrasNixos";
         };
       };
     })
@@ -276,7 +277,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
