@@ -725,6 +725,7 @@
           xdragon # drag items from terminal
 
           firefox-bin # Browser
+          ungoogled-chromium
 
           jetbrains.pycharm-community-src # python IDE
           python312Packages.ptpython # Python repl
