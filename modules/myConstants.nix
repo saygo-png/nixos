@@ -41,8 +41,6 @@ in {
       inherit mkConst;
       inherit mkConstsFromSet;
     };
-    const = mkConstsFromSet {
-      accentColor = "7d8618";
-    };
+    const = {};
   };
 }

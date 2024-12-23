@@ -15,6 +15,13 @@
   ...
 }: {
   imports = [
+    ({config, ...}: {
+      options = {
+        const = config.constLib.mkConstsFromSet {
+          accentColor = "7d8618";
+        };
+      };
+    })
     "${conFlakePathRel}/modules/myConstants.nix"
 
     inputs.stylix.nixosModules.stylix
