@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   cachix.enable = false;
   # https://devenv.sh/basics/
   env.GREET = "devenv";
