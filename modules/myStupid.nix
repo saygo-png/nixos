@@ -35,7 +35,7 @@
             # Don't include the cache
             rm -vf "$KRITANIXHOME/krita-toplevel/resourcecache.sqlite"
 
-            cd "$KRITANIXHOME"/.. | exit
+            cd "$KRITANIXHOME"/.. || exit
             git add -A
             git commit -m "chore: auto commit update"
             git push
@@ -46,7 +46,7 @@
             # Don't include the cache
             find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
 
-            cd "$ANKINIXHOME"/.. | exit
+            cd "$ANKINIXHOME"/.. || exit
             git add -A
             git commit -m "chore: auto commit update"
             git push
