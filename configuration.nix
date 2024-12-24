@@ -724,8 +724,10 @@
           localsend # Send via local network
           xdragon # drag items from terminal
 
-          firefox-bin # Browser
+          # Browsers
+          firefox-bin
           ungoogled-chromium
+          tor-browser
 
           jetbrains.pycharm-community-src # python IDE
           python312Packages.ptpython # Python repl
