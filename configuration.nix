@@ -43,6 +43,7 @@
     "${conFlakePathRel}/modules/myMullvad.nix"
     "${conFlakePathRel}/modules/myAichat.nix"
     "${conFlakePathRel}/modules/mySecrets.nix"
+    "${conFlakePathRel}/modules/myThunar.nix"
     "${conFlakePathRel}/modules/myPackages.nix"
     "${conFlakePathRel}/modules/myStupid.nix"
     "${conFlakePathRel}/modules/myTemplates.nix"
@@ -233,9 +234,6 @@
   programs.gnupg.agent.enable = true;
   programs.gnupg.agent.enableSSHSupport = true;
 
-  # File manager.
-  programs.thunar.enable = true;
-
   # Camera support.
   programs.gphoto2.enable = true;
 
@@ -416,9 +414,6 @@
 
   # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
-
-  # Thumbnails for Thunar.
-  services.tumbler.enable = true;
 
   # Automount.
   services.udisks2.enable = true;
@@ -647,9 +642,6 @@
           "application/x-extension-html" = "${BROWSER}.desktop";
           "application/x-extension-shtml" = "${BROWSER}.desktop";
           "application/x-extension-xhtml" = "${BROWSER}.desktop";
-
-          "inode/directory" = "thunar.desktop";
-          "inode/x-empty" = "thunar.desktop";
         };
       };
 
@@ -802,6 +794,7 @@
       programs.nix-index.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+
       programs.lazygit = {
         enable = true;
         settings = {
@@ -1466,4 +1459,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-
