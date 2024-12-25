@@ -21,6 +21,7 @@
     programs.tmux.shell = "zsh";
     programs.zsh = {
       enable = true;
+      enableVteIntegration = true;
       history.save = 50;
       history.size = 50;
       initExtra = ''
