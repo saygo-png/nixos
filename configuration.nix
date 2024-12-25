@@ -31,6 +31,7 @@
 
     "${conFlakePathRel}/modules/myEmacs.nix"
     "${conFlakePathRel}/modules/myNeovim.nix"
+    "${conFlakePathRel}/modules/myTerminal.nix"
 
     "${conFlakePathRel}/modules/mySway.nix"
     "${conFlakePathRel}/modules/myXMonad.nix"
@@ -59,6 +60,12 @@
     # "${conFlakePathRel}/modules/visuals/myAdwaitaDarkQT.nix"
     # "${conFlakePathRel}/modules/visuals/myImperativeKvantumBasedQT.nix"
   ];
+  # }}}
+
+  ###### Custom ###### {{{
+
+  custom.defaultTerminal = pkgs.alacritty;
+
   # }}}
 
   ###### Essential or basic. ###### {{{
@@ -682,7 +689,6 @@
           PAGER = "moar";
           OPENER = "xdg-open";
           BROWSER = "firefox";
-          TERMINAL = "alacritty";
           EDITOR = lib.mkDefault "vim";
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
@@ -695,7 +701,6 @@
 
           # Systemd is retarded and doesnt use normal pager variable :DDDDD
           SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
-          TERMINAL_PROG = config.home.sessionVariables.TERMINAL;
         };
 
         # Home packages, home manager packages, user packages, home programs.
@@ -1118,7 +1123,6 @@
           padding = 10;
           fixed-num-lines = true;
           show-icons = false;
-          terminal = "${config.home.sessionVariables.TERMINAL}";
           run-command = "{cmd}";
           drun-show-actions = false;
           disable-history = false;

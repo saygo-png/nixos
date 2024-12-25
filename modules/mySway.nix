@@ -50,7 +50,6 @@
       config = {
         colors = {};
         modifier = "Mod4";
-        terminal = "${config.home.sessionVariables.TERMINAL}";
         window.titlebar = false;
         startup = [
           {command = "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image}";}
