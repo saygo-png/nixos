@@ -45,6 +45,27 @@
         TerminalApplication=${termExe}
       '';
 
+      xdg.configFile."Thunar/uca.xml".text =
+        lib.mkIf (osConfig.programs.thunar.enable == true)
+        # XML
+        ''
+          <?xml version="1.0" encoding="UTF-8"?>
+          <actions>
+          <action>
+            <icon>utilities-terminal</icon>
+            <name>Open Terminal Here</name>
+            <submenu></submenu>
+            <unique-id>1734179588135391-1</unique-id>
+            <command>cd %f &amp;&amp; "$TERMINAL"</command>
+            <description>Example for a custom action</description>
+            <range></range>
+            <patterns>*</patterns>
+            <startup-notify/>
+            <directories/>
+          </action>
+          </actions>
+        '';
+
       programs.rofi.terminal = lib.mkIf (config.programs.rofi.enable == true) termExe;
       wayland.windowManager.sway.config.terminal = lib.mkIf (config.windowManager.sway.enable == true) termExe;
       xdg.desktopEntries = lib.mkIf (config.home.sessionVariables == "nvim") {
@@ -57,27 +78,6 @@
           terminal = false;
           icon = "terminal";
         };
-
-        xdg.configFile."Thunar/uca.xml".text =
-          lib.mkIf (osConfig.programs.thunar.enable == true)
-          # XML
-          ''
-            <?xml version="1.0" encoding="UTF-8"?>
-            <actions>
-            <action>
-            	<icon>utilities-terminal</icon>
-            	<name>Open Terminal Here</name>
-            	<submenu></submenu>
-            	<unique-id>1734179588135391-1</unique-id>
-            	<command>cd %f &amp;&amp; "$TERMINAL"</command>
-            	<description>Example for a custom action</description>
-            	<range></range>
-            	<patterns>*</patterns>
-            	<startup-notify/>
-            	<directories/>
-            </action>
-            </actions>
-          '';
       };
     };
   };
