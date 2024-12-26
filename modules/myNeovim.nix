@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  host,
   config,
   inputs,
   conUsername,
@@ -1133,9 +1134,23 @@ in {
           # '';
           servers = {
             # Nix.
-            nil_ls = {
+
+            nixd = {
+              # Nix LS
               enable = true;
-              settings.nix.flake.autoArchive = true;
+              settings = let
+                flake = ''(builtins.getFlake "${inputs.self}")'';
+              in {
+                nixpkgs.expr = "import ${flake}.inputs.nixpkgs { }";
+                options = rec {
+                  nixos.expr = "${flake}.nixosConfigurations.nixos.options";
+
+                  # https://kokada.dev/blog/make-nixd-module-completion-to-work-anywhere-with-flakes/
+                  # home-manager.expr = ''(let pkgs = import "${inputs.nixpkgs}" { }; lib = import "${inputs.home-manager}/modules/lib/stdlib-extended.nix" pkgs.lib; in (lib.evalModules { modules = (import "${inputs.home-manager}/modules/modules.nix") { inherit lib pkgs; check = false; }; })).options'';
+
+                  home-manager.expr = "${nixos.expr}.home-manager.users.type.getSubOptions []";
+                };
+              };
             };
 
             # Latex

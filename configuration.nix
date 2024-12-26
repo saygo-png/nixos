@@ -257,7 +257,6 @@
       man-pages-posix
 
       # Nix.
-      nil # Nix LSP
       nixd # Another nix LSP (For Zed)
       nh # Nix helper
       alejandra # Nix formatter
