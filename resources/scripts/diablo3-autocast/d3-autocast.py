@@ -3,11 +3,13 @@ import asyncio
 import os
 import subprocess
 import sys
+import signal
 from datetime import datetime
 from typing import List, Tuple
 
 # Configuration
 TOGGLE_FILE = "/tmp/keypress_toggle"
+PID_FILE = "/tmp/keypress_pid"
 
 def log(msg: str) -> None:
     """Print timestamped debug message."""
@@ -76,6 +78,8 @@ async def shutdown(tasks):
     log("Shutting down...")
     if os.path.exists(TOGGLE_FILE):
         os.remove(TOGGLE_FILE)
+    if os.path.exists(PID_FILE):
+        os.remove(PID_FILE)
     subprocess.run(["notify-send", "Key Press Script", "Stopped"])
 
     for task in tasks:
@@ -84,22 +88,67 @@ async def shutdown(tasks):
     await asyncio.gather(*tasks, return_exceptions=True)
     log("Shutdown complete")
 
-async def main():
-    # Handle toggle
-    if os.path.exists(TOGGLE_FILE):
-        log("Toggle file exists, stopping script")
-        os.remove(TOGGLE_FILE)
-        subprocess.run(["notify-send", "Key Press Script", "Stopped"])
-        sys.exit(0)
+def stop_running_instance() -> bool:
+    """Stop running instance if it exists by sending SIGTERM to the process."""
+    try:
+        if os.path.exists(PID_FILE):
+            with open(PID_FILE, 'r') as f:
+                pid = int(f.read().strip())
+            try:
+                os.kill(pid, signal.SIGTERM)
+                log(f"Sent SIGTERM to process {pid}")
+                # Give the process a moment to clean up
+                asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.5))
+                # If process still exists, force kill it
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                    log(f"Sent SIGKILL to process {pid}")
+                except ProcessLookupError:
+                    pass  # Process already terminated
+            except ProcessLookupError:
+                log("Process not found, cleaning up files")
 
+            # Clean up files
+            os.remove(PID_FILE)
+            if os.path.exists(TOGGLE_FILE):
+                os.remove(TOGGLE_FILE)
+            subprocess.run(["notify-send", "Key Press Script", "Stopped"])
+            return True
+        return False
+    except Exception as e:
+        log(f"Error stopping instance: {e}")
+        return False
+
+async def main():
     parser = argparse.ArgumentParser(description="Automate keypresses for a specific window.")
-    parser.add_argument("window_name", help="The name of the target window.")
+    parser.add_argument("--exit", action="store_true", help="Stop running instance")
+    parser.add_argument("window_name", nargs="?", help="The name of the target window.")
     parser.add_argument(
         "keys",
-        nargs="+",
+        nargs="*",
         help="List of key:interval pairs (e.g., q:0.2 r:9)."
     )
     args = parser.parse_args()
+
+    # Handle exit flag
+    if args.exit:
+        if stop_running_instance():
+            sys.exit(0)
+        log("No running instance found")
+        sys.exit(1)
+
+    # Validate required arguments for normal operation
+    if not args.window_name or not args.keys:
+        parser.error("Window name and key:interval pairs are required when not using --exit")
+
+    # Check if already running
+    if os.path.exists(PID_FILE):
+        log("Another instance is already running. Use --exit to stop it.")
+        sys.exit(1)
+
+    # Store PID
+    with open(PID_FILE, 'w') as f:
+        f.write(str(os.getpid()))
 
     # Parse key configurations
     try:
@@ -140,3 +189,5 @@ if __name__ == "__main__":
         log("Keyboard interrupt received at top level")
         if os.path.exists(TOGGLE_FILE):
             os.remove(TOGGLE_FILE)
+        if os.path.exists(PID_FILE):
+            os.remove(PID_FILE)

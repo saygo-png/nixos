@@ -6,7 +6,7 @@ choice=$(printf '%s\n' "${options[@]}" | rofi -dmenu -i -p "Build or disable:")
 
 case $choice in
 "Disable")
-  d3-autocast
+  d3-autocast --exit
   ;;
 "Tal Rasha speed")
   # Frozen nova
