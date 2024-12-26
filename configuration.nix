@@ -520,6 +520,8 @@
 
   ##### Home Manager ###### {{{
   home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
     extraSpecialArgs = {inherit inputs pkgs-unstable;};
     backupFileExtension = "backup"; # home-manager breaks without it.
     users.${conUsername} = {
