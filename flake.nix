@@ -95,6 +95,7 @@
       inherit inputs self pkgs-unstable;
       # inherit nixpkgs-unstable-frozen;
       conFlakePathRel = builtins.toString ./.;
+      lib = nixpkgs.lib.extend (_: _: {my = import ./modules/myLib.nix {inherit (nixpkgs) lib;};});
     };
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
