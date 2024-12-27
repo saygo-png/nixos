@@ -91,7 +91,7 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        amdvlk
+        # amdvlk # Black borders in popups bug
         # libdrm
         libva
         vaapiVdpau
@@ -100,7 +100,7 @@
       extraPackages32 = with pkgs; [
         libva
         libvdpau-va-gl
-        driversi686Linux.amdvlk
+        # driversi686Linux.amdvlk # Black borders in popups bug
       ];
     };
   };
