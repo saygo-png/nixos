@@ -87,6 +87,11 @@
   # }; # }}}
 
   home-manager.users.${conUsername} = {
+    stylix.iconTheme.enable = true;
+    stylix.iconTheme.package = pkgs.gruvbox-plus-icons;
+    stylix.iconTheme.dark = "Gruvbox-Plus-Dark";
+    stylix.iconTheme.light = "Gruvbox-Plus-Light";
+
     dconf.settings = {
       # Remove min and max buttons
       "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
@@ -97,10 +102,6 @@
     gtk = {
       gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
       gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
-      iconTheme = {
-        name = "Gruvbox-Plus-Dark";
-        package = pkgs.gruvbox-plus-icons;
-      };
     };
   };
 }
