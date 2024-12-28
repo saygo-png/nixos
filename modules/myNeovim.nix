@@ -461,7 +461,7 @@ in {
               vim.api.nvim_del_autocmd(cmdId)
             end
           end, 500)
-        end)
+        end, {desc = "rename node"})
 
         -- Open/close quickfix on toggle
         local function toggle_quickfix()
@@ -567,8 +567,10 @@ in {
         -- Autocomplete
         vim.keymap.set("i", "<C-x>", "<C-x><C-o>", { desc = "Autocomplete" })
 
-        vim.keymap.set('n', '<leader>q', vim.cmd.quit)
-        vim.keymap.set('n', '<leader>Q', vim.cmd.only)
+        vim.keymap.set('n', '<leader>q', vim.cmd.quit, { desc = "Quit"})
+        vim.keymap.set('n', '<leader>Q', vim.cmd.only, { desc = "Quit other windows"})
+
+        vim.keymap.set("n", "<leader>ob", "<cmd>!$BROWSER '%' &<CR>", {desc = "[o]pen in [b]rowser"})
 
         -- Plugins
 
@@ -599,7 +601,7 @@ in {
         vim.keymap.set("n", "<leader>td", builtin.diagnostics, { desc = "[t]elescope [d]iagnostics" })
         vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
         vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
-        vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+        vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Find existing buffers" })
         -- }}}
 
         vim.keymap.set("n", "<Leader>c", function()
@@ -819,7 +821,7 @@ in {
           action = '':!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
           key = "<Leader>S";
           options.silent = true;
-          options.desc = "[s]ort lines by length";
+          options.desc = "[S]ort lines by length";
         }
       ];
 
@@ -867,7 +869,7 @@ in {
             navNext = "<leader>hn";
             navPrev = "<leader>hp";
             toggleQuickMenu = "<leader>hm";
-            cmdToggleQuickMenu = "<leader>hcm";
+            cmdToggleQuickMenu = "<leader>hc";
           };
         };
 
@@ -970,7 +972,7 @@ in {
             enable = true;
             peekDefinitionCode = {
               "<leader>df" = {
-                desc = "fn definition";
+                desc = "peek fn definition";
                 query = "@function.outer";
               };
             };
@@ -1224,9 +1226,9 @@ in {
             };
           };
           keymaps.lspBuf = {
-            "gd" = "definition";
-            "gD" = "references";
-            "gi" = "implementation";
+            "<leader>gd" = "definition";
+            "<leader>gD" = "references";
+            "<leader>gi" = "implementation";
           };
         };
 
@@ -1303,35 +1305,43 @@ in {
           };
         };
 
-        # TODO fix
         which-key = {
           enable = true;
           settings = {
-            # ignore_missing = false;
-            plugins = {
-              presets = {
-                # Needs to be false for indent keybindings
-                operators = false; #adds help for operators like d, y, ...";
+            delay = 1000;
+            win.border = "single";
+            spec = let
+              register = key: text: icon: {
+                __unkeyed = key;
+                group = text;
+                icon = icon;
               };
-            };
+            in [
+              (register "<leader>t" "Telescope" " ")
+              (register "<leader>s" "Swap" " ")
+              (register "<leader>o" "Open" " ")
+              (register "<leader>r" "Re" " ")
+              (register "<leader>q" "Quit" "󱢓 ")
+              (register "<leader>d" "Definition" "")
+              (register "<leader>c" "Conform" " ")
+              (register "<leader>f" "File browser" " ")
+              (register "<leader>S" "Sort by length" "󰒼 ")
+              (register "<S-k>" "Hover info" "")
+
+              (register "<leader>g" "go" "󰜎 ")
+              (register "<leader>gs" "Gitsigns" " ")
+              (register "<leader>gd" "go to definition" "")
+              (register "<leader>gr" "go to references" "")
+              (register "<leader>gi" "go to implementation" "")
+
+              (register "<leader>h" "Harpoon" "󱢓 ")
+              (register "<leader>ha" "Add file" "")
+              (register "<leader>hm" "File menu" "")
+              (register "<leader>hc" "Command menu" "")
+              (register "<leader>hn" "Next file" "")
+              (register "<leader>hp" "Previous file" "")
+            ];
           };
-          #   registrations = {
-          #     "gd" = "[g]o to [d]efinition";
-          #     "gD" = "[g]o to uses";
-          #     "gi" = "[g]o to [i]mplementation";
-          #     "K" = "[H]over info";
-          #     "<Leader>t" = "+[t]elescope";
-          #     "<Leader>h" = "+[h]arpoon";
-          #     "<leader>ha" = "[h]arpoon [a]dd file";
-          #     "<leader>hm" = "[h]arpoon [m]enu";
-          #     "<leader>hcm" = "[h]arpoon [c]ommand [m]enu";
-          #     "<leader>hn" = "[h]arpoon [n]ext";
-          #     "<leader>hp" = "[h]arpoon [p]revious";
-          #     "<C-h>" = "harpoon file 1";
-          #     "<C-j>" = "harpoon file 2";
-          #     "<C-k>" = "harpoon file 3";
-          #     "<C-l>" = "harpoon file 4";
-          #   };
         };
 
         oil = {
@@ -1344,7 +1354,6 @@ in {
 
         luasnip = {
           enable = true;
-          # fromVscode = [{lazyLoad = true;}];
           settings = {
             enable_autosnippets = true;
             store_selection_keys = "<Tab>";
