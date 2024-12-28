@@ -1369,7 +1369,7 @@ in {
               debounce = 200;
               throttle = 200;
               maxViewEntries = 5;
-              # fetchingTimeout = 50;
+              fetchingTimeout = 100;
             };
             snippet.expand = ''
               function(args)
