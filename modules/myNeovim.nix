@@ -213,7 +213,6 @@ in {
         "ftplugin/markdown.vim".text = ''setlocal wrap'';
       };
 
-      extraConfigVim = builtins.readFile "${conFlakePathRel}/resources/nvim-extraConfig.vim";
       extraConfigLuaPre = ''
         -- Hide deprecation warnings, i used this as a fix to
         -- multicursors plugin, but might be useful later on
