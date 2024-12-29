@@ -1,5 +1,5 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   # Use path relative to the root of the project
-  relativeToRoot = lib.path.append ../.;
+  # Yes this can be point free
+  relativeToRoot = stringRelativePath: lib.path.append ../. stringRelativePath;
 }
