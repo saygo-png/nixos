@@ -9,6 +9,7 @@
 }: {
   environment.systemPackages = with pkgs; [
     # (pkgs.callPackage "${conFlakePathRel}/resources/librewolf-bin.nix" {}) # Browser, bin is from appimage and fixes discord crash
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/convertlink") {})
 
     (writeShellScriptBin "hyprland-next-visible-client.sh"
       (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
@@ -82,16 +83,6 @@
         esac
       '';
     })
-
-    (pkgs.writers.writeHaskellBin "convertlink" {
-        libraries = with pkgs; [
-          haskellPackages.directory_1_3_9_0
-          haskellPackages.unix_2_8_5_1
-          haskellPackages.process_1_6_25_0
-          haskellPackages.optparse-applicative
-        ];
-      }
-      builtins.readFile)
 
     (writeShellApplication {
       name = "fzfcd";
