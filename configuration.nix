@@ -1039,10 +1039,10 @@
             email = "saygo.mail@proton.me";
           };
           color.ui = "auto";
-          pull.rebase = true;
+          # pull.rebase = true;
+          # pull.autoSquash = true;
           commit.gpgsign = true;
           rerere.enabled = true;
-          pull.autoSquash = true;
           push.autoSetupRemote = true;
           branch.autosetupmerge = true;
           merge.tool = "${lib.getExe pkgs.meld}";
