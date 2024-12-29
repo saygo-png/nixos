@@ -251,6 +251,7 @@
   environment.systemPackages = with pkgs;
     [
       busybox
+      eza # ls alternative
 
       vlock
       man-pages
@@ -667,10 +668,9 @@
           "pkill" = "pkill -f";
           "countlines" = "tokei";
           "shutdown" = "poweroff";
-          "ls" = "${lib.getExe pkgs.eza}";
-          "la" = "${lib.getExe pkgs.eza} -a";
-          "ll" = "${lib.getExe pkgs.eza} -l";
-          "more" = "${lib.getExe pkgs.moar}";
+          "ls" = "eza";
+          "la" = "eza -a";
+          "ll" = "eza -l";
           "rt" = "${lib.getExe pkgs.gtrash} put";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
