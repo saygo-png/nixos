@@ -6,6 +6,8 @@
   # https://devenv.sh/packages/
   packages = [pkgs.git];
 
+  languages.haskell.enable = true;
+
   # https://devenv.sh/languages/
   # languages.rust.enable = true;
 

@@ -1,0 +1,20 @@
+cabal-version:   2.4
+name:            {{cookiecutter.binaryName}}
+version:         0
+build-type:      Simple
+author:          saygo-png
+maintainer:      saygo-png <saygo.mail@proton.me>
+copyright:       2024 saygo-png
+description:     Converts a file link to a file
+tested-with:     GHC ==9.6.6
+
+common common-options
+  build-depends:    base, process, process-extras, optparse-applicative, directory, unix, rio
+  default-language: GHC2021
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  other-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeFamilies TypeSynonymInstances ViewPatterns
+
+executable {{cookiecutter.binaryName}}
+  import:         common-options
+  hs-source-dirs: .
+  main-is:        Main.hs

@@ -8,7 +8,29 @@
 # pre-commit
 **/.pre-commit-config.yaml
 
+### Nix ###
+**/result
+
 # Haskell
 **/dist-newstyle
+**/cabal-dev
+**/*.o
+**/*.hi
+**/*.hie
+**/*.chi
+**/*.chs.h
+**/*.dyn_o
+**/*.dyn_hi
+**/.hpc
+**/.hsenv
+**/.cabal-sandbox/
+**/cabal.sandbox.config
+**/*.prof
+**/*.aux
+**/*.hp
+**/*.eventlog
+**/.stack-work/
+**/.HTF/
+**/.ghc.environment.*
 
 notes.txt
