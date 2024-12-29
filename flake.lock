@@ -174,11 +174,11 @@
     "extras-nixos": {
       "flake": false,
       "locked": {
-        "lastModified": 1734842509,
-        "narHash": "sha256-YTnzVkhGJUOktvypgmgUrxyNnRw4dcW/YTqR+s7SxmQ=",
+        "lastModified": 1735488352,
+        "narHash": "sha256-AUdn0UsIvO/In2sV+JW0DxTeytqzCTUbpCPLq4WgZZI=",
         "owner": "saygo-png",
         "repo": "extrasNixos",
-        "rev": "9b74ca2545301af931768db3aab74e8f95f9e78f",
+        "rev": "69ca4665303e3bb4db4dc7dfc51ae48effad05e0",
         "type": "github"
       },
       "original": {
