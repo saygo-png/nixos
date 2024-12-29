@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   conUsername,
   ...
 }: {
@@ -26,7 +27,7 @@
   stylix.polarity = "dark";
   stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
   stylix.cursor.package = pkgs.capitaine-cursors-themed;
-  stylix.image = ../../resources/wallpaper.png;
+  stylix.image = "${inputs.extras-nixos}/wallpaper.png";
   stylix.base16Scheme = {
     base00 = "282828"; # #282828 dark  ----
     base01 = "3c3836"; # #3c3836 dark  ---
