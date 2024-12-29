@@ -2,6 +2,7 @@
   pkgs,
   conUsername,
   conFlakePathRel,
+  lib,
   ...
 }: {
   imports = [
@@ -27,7 +28,7 @@
     ];
 
     xdg.configFile."xmonad" = {
-      source = "${conFlakePathRel}/resources/xmonad";
+      source = lib.my.relativeToRoot "resources/haskell/xmonad";
       recursive = true;
     };
 
