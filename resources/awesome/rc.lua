@@ -478,7 +478,7 @@ client.connect_signal("property::floating", function(c)
 end)
 
 client.connect_signal("property::minimized", function(c)
-  if c.class == "diablo iii64.exe" then
+  if c.class == "diablo iii64.exe" or "overwatch.exe" then
     c.minimized = false
   end
 end)
