@@ -750,7 +750,7 @@
           # nixpkgs-unstable-working-krita.krita # Painting
           pkgs-unstable.krita # Painting
           pkgs-unstable.inkscape # Vector graphics
-          pkgs-unstable.deno
+          deno
         ];
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
