@@ -1154,6 +1154,7 @@ in {
           # '';
           servers = {
             # Nix.
+            nil_ls.enable = true;
             nixd = {
               # Nix LS
               enable = true;
