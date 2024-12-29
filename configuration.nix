@@ -711,10 +711,8 @@
           mandelbulber
           anki # Flashcards
           libreoffice # office
-          foliate # Ebook reader
           sayonara # Music player
           zathura # Better for pdfs
-          fontforge-gtk # Font editor
           keepassxc # Password manager
           qbittorrent # Torrent client
           swappy # Quick drawing on images
@@ -732,7 +730,6 @@
 
           # Command line.
           devenv # Dev environments
-          blightmud # MUD client
           moar # Pager
           termdown # Timer
           tokei # Line counter

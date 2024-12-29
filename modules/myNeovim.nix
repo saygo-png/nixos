@@ -85,7 +85,6 @@ in {
         vscode-langservers-extracted # Web LSPs
         # python312Packages.mccabe # Flake8 plugin
         # python312Packages.pyflakes # Python linter
-        # luajitPackages.jsregexp # Needed for luasnip
         nodePackages.prettier # Javascript formatter
         # python312Packages.jedi # Autocomplete plugin
 
@@ -1155,7 +1154,6 @@ in {
           # '';
           servers = {
             # Nix.
-
             nixd = {
               # Nix LS
               enable = true;

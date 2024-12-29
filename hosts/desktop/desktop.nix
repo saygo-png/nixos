@@ -266,10 +266,10 @@
     piper # For ratbagd
     borgbackup
     pkgs-unstable.zed-editor.fhs # Another text editor
+
     # Game launcher
     lutris
     winetricks
-    jdk8 # Java 8 for minecraft
     wineWowPackages.waylandFull
     blender-hip
 
@@ -297,18 +297,18 @@
     # extest.enable = true;
     extraCompatPackages = [pkgs-unstable.proton-ge-bin];
     extraPackages = [
-      pkgs.libpng
-      pkgs.libkrb5
-      pkgs.gamemode
-      pkgs.keyutils
       pkgs.gamescope
-      pkgs.libvorbis
-      pkgs.xorg.libXi
-      pkgs.libpulseaudio
-      pkgs.xorg.libXcursor
-      pkgs.stdenv.cc.cc.lib
-      pkgs.xorg.libXinerama
-      pkgs.xorg.libXScrnSaver
+      pkgs.gamemode
+      # pkgs.libpng
+      # pkgs.libkrb5
+      # pkgs.keyutils
+      # pkgs.libvorbis
+      # pkgs.xorg.libXi
+      # pkgs.libpulseaudio
+      # pkgs.xorg.libXcursor
+      # pkgs.stdenv.cc.cc.lib
+      # pkgs.xorg.libXinerama
+      # pkgs.xorg.libXScrnSaver
     ];
   };
   programs.gamemode.enable = true;
