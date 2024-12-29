@@ -713,6 +713,7 @@
           libreoffice # office
           sayonara # Music player
           zathura # Better for pdfs
+          # fontforge-gtk # Font editor
           keepassxc # Password manager
           qbittorrent # Torrent client
           swappy # Quick drawing on images
