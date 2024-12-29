@@ -56,11 +56,11 @@
   };
 
   # Gaming.
-  services.xserver.deviceSection = ''
-    Option "TearFree" "True"
-    Option "VariableRefresh" "True"
-    Option "vrr_capable" "1"
-  '';
+  # services.xserver.deviceSection = ''
+  #   Option "TearFree" "True"
+  #   Option "VariableRefresh" "True"
+  #   Option "vrr_capable" "1"
+  # '';
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
