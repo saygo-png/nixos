@@ -11,55 +11,53 @@
   conUsername,
   conFlakePath,
   pkgs-unstable,
-  conFlakePathRel,
   ...
 }: {
-  imports = [
-    ({config, ...}: {
-      options = {
-        const = config.constLib.mkConstsFromSet {
-          accentColor = "7d8618";
+  imports =
+    [
+      inputs.stylix.nixosModules.stylix
+      inputs.home-manager.nixosModules.default
+      ({config, ...}: {
+        options = {
+          const = config.constLib.mkConstsFromSet {accentColor = "7d8618";};
         };
-      };
-    })
-    "${conFlakePathRel}/modules/myConstants.nix"
+      })
+    ]
+    ++ builtins.map (rest: lib.my.relativeToRoot ("modules/" + rest)) [
+      "myConstants.nix"
+      "myUtils.nix"
 
-    inputs.stylix.nixosModules.stylix
-    inputs.home-manager.nixosModules.default
+      "myEmacs.nix"
+      "myNeovim.nix"
+      "myTerminal.nix"
 
-    "${conFlakePathRel}/modules/myUtils.nix"
+      "mySway.nix"
+      "myXMonad.nix"
+      "myAwesome.nix"
+      "myHyprland.nix"
 
-    "${conFlakePathRel}/modules/myEmacs.nix"
-    "${conFlakePathRel}/modules/myNeovim.nix"
-    "${conFlakePathRel}/modules/myTerminal.nix"
+      "myZSH.nix"
+      "myMPV.nix"
+      "myTmux.nix"
+      "myMullvad.nix"
+      "myAichat.nix"
+      "mySecrets.nix"
+      "myThunar.nix"
+      "myPackages.nix"
+      "myStupid.nix"
+      "myTemplates.nix"
+      "myPrismlauncher.nix"
+      "myXDGDirsEnforcement.nix"
 
-    "${conFlakePathRel}/modules/mySway.nix"
-    "${conFlakePathRel}/modules/myXMonad.nix"
-    "${conFlakePathRel}/modules/myAwesome.nix"
-    "${conFlakePathRel}/modules/myHyprland.nix"
-
-    "${conFlakePathRel}/modules/myZSH.nix"
-    "${conFlakePathRel}/modules/myMPV.nix"
-    "${conFlakePathRel}/modules/myTmux.nix"
-    "${conFlakePathRel}/modules/myMullvad.nix"
-    "${conFlakePathRel}/modules/myAichat.nix"
-    "${conFlakePathRel}/modules/mySecrets.nix"
-    "${conFlakePathRel}/modules/myThunar.nix"
-    "${conFlakePathRel}/modules/myPackages.nix"
-    "${conFlakePathRel}/modules/myStupid.nix"
-    "${conFlakePathRel}/modules/myTemplates.nix"
-    "${conFlakePathRel}/modules/myPrismlauncher.nix"
-    "${conFlakePathRel}/modules/myXDGDirsEnforcement.nix"
-
-    "${conFlakePathRel}/modules/visuals/myTheme.nix"
-    "${conFlakePathRel}/modules/visuals/myThemeCore.nix"
-    "${conFlakePathRel}/modules/visuals/myKvantumBasedQT.nix"
-    # "${conFlakePathRel}/modules/visuals/myGtkBasedQT.nix"
-    # "${conFlakePathRel}/modules/visuals/myNixBasedQT.nix"
-    # "${conFlakePathRel}/modules/visuals/myGnomeBasedQT.nix"
-    # "${conFlakePathRel}/modules/visuals/myAdwaitaDarkQT.nix"
-    # "${conFlakePathRel}/modules/visuals/myImperativeKvantumBasedQT.nix"
-  ];
+      "visuals/myTheme.nix"
+      "visuals/myThemeCore.nix"
+      "visuals/myKvantumBasedQT.nix"
+      # "visuals/myGtkBasedQT.nix"
+      # "visuals/myNixBasedQT.nix"
+      # "visuals/myGnomeBasedQT.nix"
+      # "visuals/myAdwaitaDarkQT.nix"
+      # "visuals/myImperativeKvantumBasedQT.nix"
+    ];
   # }}}
 
   ###### Custom ###### {{{
