@@ -3,7 +3,7 @@ module StartupHook (myStartupHook) where
 import Control.Monad
 import Data.Maybe
 import XMonad
-import XMonad.Hooks.SetWMName
+-- import XMonad.Hooks.SetWMName
 import XMonad.Util.SpawnOnce
 
 ------------------------------------------------------------------------

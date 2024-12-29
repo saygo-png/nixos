@@ -3,17 +3,17 @@ module KeyBindings where
 import qualified Data.Map as M
 import Defaults
 import Graphics.X11.ExtraTypes.XF86
-import Help
+-- import Help
 import qualified WindowState as WS
 import XMonad
 import XMonad.Actions.Search
-import XMonad.Hooks.StatusBar
+-- import XMonad.Hooks.StatusBar
 import XMonad.Layout.Gaps
 import qualified XMonad.Layout.Magnifier as Magnifier
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import qualified XMonad.StackSet as W
-import XMonad.Util.Paste
+-- import XMonad.Util.Paste
 import XMonad.Util.Run
 
 -- Key bindings. Add, modify or remove key bindings here.
