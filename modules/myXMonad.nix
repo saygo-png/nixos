@@ -22,9 +22,14 @@
 
   services.displayManager.defaultSession = "none+xmonad";
 
-  home-manager.users.${conUsername} = _: {
-    home.packages = with pkgs; [
-      xmobar
+  home-manager.users.${conUsername} = {osConfig, ...}: {
+    home.packages = [
+      (let
+        xinitrc = lib.strings.concatLines [osConfig.const.xinitBase "exec xmonad"];
+      in
+        lib.my.wrapWithXinitrc xinitrc "xmonad")
+
+      pkgs.xmobar
     ];
 
     xdg.configFile."xmonad" = {

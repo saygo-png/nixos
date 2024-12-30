@@ -91,16 +91,21 @@
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
 
     mySystem = "x86_64-linux";
-    commonSpecialArgs = {
+    commonSpecialArgs = system: {
       inherit inputs self pkgs-unstable;
       # inherit nixpkgs-unstable-frozen;
       conFlakePathRel = builtins.toString ./.;
-      lib = nixpkgs.lib.extend (_: _: {my = import ./modules/myLib.nix {inherit (nixpkgs) lib;};});
+      lib = nixpkgs.lib.extend (final: prev: {
+        my = import ./modules/myLib.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+          lib = final;
+        };
+      });
     };
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
-    nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem rec {
       system = mySystem;
       specialArgs =
         {
@@ -109,7 +114,7 @@
           conHome = "/home/samsepi0l";
           conFlakePath = "/home/samsepi0l/nixos";
         }
-        // commonSpecialArgs;
+        // (commonSpecialArgs system);
       modules = [
         inputs.nixos-hardware.nixosModules.common-pc
         inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -121,7 +126,7 @@
       ];
     };
 
-    nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem {
+    nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
       system = mySystem;
       specialArgs =
         {
@@ -130,7 +135,7 @@
           conHome = "/home/samsepi0l";
           conFlakePath = "/home/samsepi0l/nixos";
         }
-        // commonSpecialArgs;
+        // (commonSpecialArgs system);
 
       modules = [
         inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
