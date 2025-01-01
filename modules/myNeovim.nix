@@ -850,6 +850,7 @@ in {
       plugins = {
         # nix.enable = true;
         flash.enable = true;
+        direnv.enable = true;
         comment.enable = true;
         fugitive.enable = true;
         vim-surround.enable = true;
