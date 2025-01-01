@@ -34,9 +34,15 @@
     osConfig,
     ...
   }: {
-    home.file.".xinitrc".text =
-      osConfig.const.xinitBase
-      + "\nexec awesome";
+    home.packages = [
+      (let
+        xinitrc = lib.strings.concatLines [
+          osConfig.const.xinitBase
+          "exec awesome"
+        ];
+      in
+        lib.my.wrapWithXinitrc xinitrc "awesome")
+    ];
 
     xdg.configFile."awesome/rc.lua" = {
       source = "${conFlakePathRel}/resources/awesome/rc.lua";
