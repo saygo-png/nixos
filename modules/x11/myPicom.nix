@@ -1,6 +1,6 @@
 {
-  lib,
   conUsername,
+  lib,
   ...
 }: {
   home-manager.users.${conUsername} = {osConfig, ...}: {
@@ -11,159 +11,227 @@
           nix
           */
           ''
+            #################################
+            #             Shadows           #
+            #################################
+
             # Enabled client-side shadows on windows. Note desktop windows
             # (windows with '_NET_WM_WINDOW_TYPE_DESKTOP') never get shadow,
             # unless explicitly requested using the wintypes option.
             #
-            # shadow = false
-            shadow = false
+            # Can be set per-window using rules.
+            #
+            # Default: false
+            shadow = false;
+
+            # The blur radius for shadows, in pixels.
+            #
+            # Default: 12
+            shadow-radius = 7;
+
+            # The opacity of shadows.
+            #
+            # Range: 0.0 - 1.0
+            # Default: 0.75
+            # shadow-opacity = .75
+
+            # The left offset for shadows, in pixels.
+            #
+            # Default: -15
+            shadow-offset-x = -7;
+
+            # The top offset for shadows, in pixels.
+            #
+            # Default: -15
+            shadow-offset-y = -7;
+
+            # Hex string color value of shadow. Formatted like "#RRGGBB", e.g. "#C0FFEE".
+            #
+            # Default: #000000
+            # shadow-color = "#000000"
+
+            # Crop shadow of a window fully on a particular monitor to that monitor. This is
+            # currently implemented using the X RandR extension.
+            #
+            # Default: false
+            # crop-shadow-to-monitor = false
+
+            #################################
+            #           Fading              #
+            #################################
 
             # Fade windows in/out when opening/closing and when opacity changes,
-            #  unless no-fading-openclose is used.
-            fading = false
+            # unless no-fading-openclose is used. Can be set per-window using rules.
+            #
+            # Default: false
+            fading = false;
 
-            # Opacity of window titlebars and borders. (0.1 - 1.0, disabled by default)
-            # frame-opacity = 1.0
-            frame-opacity = 1
+            # Opacity change between steps while fading in. (0.01 - 1.0, defaults to 0.028)
+            fade-in-step = 0.03;
+
+            # Opacity change between steps while fading out. (0.01 - 1.0, defaults to 0.03)
+            fade-out-step = 0.03;
+
+            # The time between steps in fade step, in milliseconds. (> 0, defaults to 10)
+            # fade-delta = 10
+
+            # Do not fade on window open/close.
+            # no-fading-openclose = false
+
+            # Do not fade destroyed ARGB windows with WM frame. Workaround of bugs in Openbox, Fluxbox, etc.
+            # no-fading-destroyed-argb = false
 
             #################################
-            #     Background-Blurring       #
+            #   Transparency / Opacity      #
             #################################
 
-            # Parameters for background blurring, see the *BLUR* section for more information.
-            # blur-method = "dual_kawase"
-            # blur-size = 12 # kernel and box blur only
+            # Opacity of window titlebars and borders.
             #
-            # blur-deviation = false # only for gaussian blur
+            # Range: 0.1 - 1.0
+            # Default: 1.0 (disabled)
+            frame-opacity = 0.7;
+
+            # Use fixed inactive dim value, instead of adjusting according to window opacity.
             #
-            # blur-strength = 4
-
-            # Blur background of semi-transparent / ARGB windows.
-            # Bad in performance, with driver-dependent behavior.
-            # The name of the switch may change without prior notifications.
-            #
-            # blur-background = false
-
-            # Blur background of windows when the window frame is not opaque.
-            # Implies:
-            #    blur-background
-            # Bad in performance, with driver-dependent behavior. The name may change.
-            #
-            # blur-background-frame = false
-
-            # Use fixed blur strength rather than adjusting according to window opacity.
-            # blur-background-fixed = true
-
-            # Specify the blur convolution kernel, with the following format:
-            # example:
-            #   blur-kern = "5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-            #
-            # blur-kern = ""
-            # blur-kern = "3x3box"
-
-            # Exclude conditions for background blur.
-            # blur-background-exclude = []
-            # blur-background-exclude = [
-            #   "window_type = 'dock'",
-            #   "window_type = 'desktop'",
-            #   "class_g = 'slop'",
-            #   "class_g = 'argb'",
-            #   "class_g = 'Flameshot'",
-            #   "name = 'Smite'",
-            #   "name = 'Flameshot'",
-            #   "_GTK_FRAME_EXTENTS@:c"
-            # ];
+            # Default: false
+            # inactive-dim-fixed = true
 
             #################################
             #       General Settings        #
             #################################
 
             # Enable remote control via D-Bus. See the man page for more details.
-            dbus = false
+            #
+            # Default: false
+            # dbus = true
 
             # Daemonize process. Fork to background after initialization. Causes issues with certain (badly-written) drivers.
-            daemon = true
+            # daemon = false
 
-            # backend, glx is fastest
+            # Specify the backend to use: `xrender`, `glx`, or `egl`.
+            #
+            # Default: "xrender"
             backend = "glx"
 
             # Use higher precision during rendering, and apply dither when presenting the
-            # rendered screen. Reduces banding artifacts, but might cause performance
+            # rendered screen. Reduces banding artifacts, but may cause performance
             # degradation. Only works with OpenGL.
-            dithered-present = false
+            dithered-present = false;
 
             # Enable/disable VSync.
-            # vsync = false
+            #
+            # Default: false
             vsync = ${lib.boolToString osConfig.const.vsync}
 
             # Try to detect windows with rounded corners and don't consider them
             # shaped windows. The accuracy is not very high, unfortunately.
             #
-            # detect-rounded-corners = false
-            detect-rounded-corners = false
+            # Has nothing to do with `corner-radius`.
+            #
+            # Default: false
+            detect-rounded-corners = false;
+
+            # Detect '_NET_WM_WINDOW_OPACITY' on client windows, useful for window managers
+            # not passing '_NET_WM_WINDOW_OPACITY' of client windows to frame windows.
+            #
+            # Default: false
+            detect-client-opacity = false;
 
             # Use EWMH '_NET_ACTIVE_WINDOW' to determine currently focused window,
-            # rather than listening to 'FocusIn'/'FocusOut' event. Might have more accuracy,
+            # rather than listening to 'FocusIn'/'FocusOut' event. May be more accurate,
             # provided that the WM supports it.
             #
+            # Default: false
             use-ewmh-active-win = true
 
             # Unredirect all windows if a full-screen opaque window is detected,
             # to maximize performance for full-screen windows. Known to cause flickering
             # when redirecting/unredirecting windows.
             #
+            # Default: false
             unredir-if-possible = true
 
-            # Delay before unredirecting the window, in milliseconds. Defaults to 0.
-            unredir-if-possible-delay = 5000
-
-            # Conditions of windows that shouldn't be considered full-screen for unredirecting screen.
-            # unredir-if-possible-exclude = []
-
-            # GLX backend: Avoid using stencil buffer, useful if you don't have a stencil buffer.
-            # Might cause incorrect opacity when rendering transparent content (but never
-            # practically happened) and may not work with blur-background.
-            # My tests show a 15% performance boost. Recommended.
+            # Delay before unredirecting the window, in milliseconds.
             #
-            glx-no-stencil = true
+            # Default: 0.
+            unredir-if-possible-delay = 1000
 
-            # GLX backend: Avoid rebinding pixmap on window damage.
-            # Probably could improve performance on rapid window content changes,
-            # but is known to break things on some drivers (LLVMpipe, xf86-video-intel, etc.).
-            # Recommended if it works.
+            # Use 'WM_TRANSIENT_FOR' to group windows, and consider windows
+            # in the same group focused at the same time.
             #
-            glx-no-rebind-pixmap = true
+            # Default: false
+            detect-transient = false;
 
-            # Disable the use of damage information.
-            # This cause the whole screen to be redrawn every time, instead of the part of the screen
-            # has actually changed. Potentially degrades the performance, but might fix some artifacts.
-            # The opposing option is use-damage
+            # Use of damage information for rendering. This cause the only the part of the
+            # screen that has actually changed to be redrawn, instead of the whole screen
+            # every time. Should improve performance.
             #
-            no-use-damage = false
-            use-damage = true
+            # Default: false
+            use-damage = true;
 
-            # Do not use EWMH to detect fullscreen windows.
-            # Reverts to checking if a window is fullscreen based only on its size and coordinates.
+            # Make transparent windows clip other windows like non-transparent windows do,
+            # instead of blending on top of them. e.g. placing a transparent window on top
+            # of another window will cut a "hole" in that window, and show the desktop background
+            # underneath.
             #
-            no-ewmh-fullscreen = false
-
+            # Default: false
             transparent-clipping = true
 
-            wintypes: {
-              tooltip = { fade = false; shadow = false; focus = false; };
-              normal = { };
-              dock = { shadow = false; };
-              dnd = { shadow = false; };
-              popup_menu = { shadow = false; focus = false; opacity = 1; };
-              dropdown_menu = { transparent-clipping = true;};
-              above = { shadow = false; };
-              splash = { shadow = false; };
-              utility = { focus = false; shadow = false;};
-              notification = { shadow = false; transparent-clipping = false;};
-              desktop = { shadow = false; };
-              menu = { focus = false; };
-              dialog = { shadow = false; };
-            };
+            # Set the log level. Possible values are:
+            #  "trace", "debug", "info", "warn", "error"
+            # in increasing level of importance. Case insensitive.
+            # If using the "TRACE" log level, it's better to log into a file
+            # using *--log-file*, since it can generate a huge stream of logs.
+            #
+            # Default: "warn"
+            # log-level = "warn";
+
+            # Set the log file.
+            # If *--log-file* is never specified, logs will be written to stderr.
+            # Otherwise, logs will to written to the given file, though some of the early
+            # logs might still be written to the stderr.
+            # When setting this option from the config file, it is recommended to use an absolute path.
+            #
+            # log-file = "/path/to/your/log/file"
+
+            # Write process ID to a file.
+            # write-pid-path = "/path/to/your/log/file"
+
+            # Rule-based per-window options.
+            #
+            # See WINDOW RULES section in the man page for how these work.
+            rules: ({
+              match =
+                      "window_type = 'tooltip' ||"
+                      # "window_type = 'dialog'  ||"
+                      "window_type = 'dropdown_menu'  ||"
+                      "window_type = 'popup_menu'  ||"
+                      "window_type = 'menu' ||"
+
+                      # "window_type = 'toolbar' ||"
+                      # "window_type = 'dock' ||"
+                      "window_type = 'utility'  ||"
+                      # "window_type = 'splash'  ||"
+                      # "window_type = 'normal'  ||"
+                      "window_type = 'combo'"
+                      # "window_type = 'dnd'"
+
+                      # "window_type = 'notification'";
+              transparent-clipping = false;
+            },
+            {
+              match = "window_type = 'dock' || "
+                      "window_type = 'desktop'";
+              corner-radius = 0;
+            },
+            {
+              match = "name = 'Notification'   || "
+                      "class_g = 'Conky'       || "
+                      "class_g ?= 'Notify-osd' || "
+                      "class_g = 'Cairo-clock' || "
+                      "_GTK_FRAME_EXTENTS@";
+              shadow = false;
+            })
           '';
       };
     };
