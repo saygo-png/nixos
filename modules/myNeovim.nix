@@ -37,6 +37,37 @@ in {
   home-manager.users.${conUsername} = {osConfig, ...}: {
     home.shellAliases = {"neov" = "neovide";};
     home.sessionVariables = {EDITOR = "nvim";};
+    # I put them in the global scope since direnv deletes the one in the neovim scope
+    home.packages = [
+      # vale
+      pkgs.vim-language-server
+      pkgs.deadnix # Nix linter
+      pkgs.statix # Another linter
+      pkgs.nodePackages.jsonlint
+      pkgs.hlint # Haskell linter
+      pkgs.stylua # Lua formatter
+      # marksman # Markdown LSP
+      pkgs.shfmt # Shell formatter
+      pkgs.black # Python formatter
+      # hadolint # Docker linter
+      # rust-analyzer # Rust LSP
+      # sumneko-lua-language-server
+      pkgs.isort # Python import sorter
+      pkgs.yapf # Python formatter
+      pkgs.prettierd # Javascript formatter
+      # nodePackages.bash-language-server
+      pkgs.markdownlint-cli # Markdown linter
+      pkgs.haskellPackages.fourmolu # Haskell formatter
+      pkgs.vscode-langservers-extracted # Web LSPs
+      # python312Packages.mccabe # Flake8 plugin
+      # python312Packages.pyflakes # Python linter
+      pkgs.nodePackages.prettier # Javascript formatter
+      # python312Packages.jedi # Autocomplete plugin
+
+      # zprint # Clojure formatter
+      # cljfmt # Clojure formatter
+      # clj-kondo # Clojure linter
+    ];
     programs.nixvim = {
       enable = true;
 
@@ -62,36 +93,8 @@ in {
       # Needed for special characters in spider.nvim
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
-      extraPackages = with pkgs; [
-        # vale
-        vim-language-server
-        deadnix # Nix linter
-        statix # Another linter
-        nodePackages.jsonlint
-        hlint # Haskell linter
-        stylua # Lua formatter
-        # marksman # Markdown LSP
-        shfmt # Shell formatter
-        black # Python formatter
-        # hadolint # Docker linter
-        # rust-analyzer # Rust LSP
-        # sumneko-lua-language-server
-        isort # Python import sorter
-        yapf # Python formatter
-        prettierd # Javascript formatter
-        # nodePackages.bash-language-server
-        markdownlint-cli # Markdown linter
-        haskellPackages.fourmolu # Haskell formatter
-        vscode-langservers-extracted # Web LSPs
-        # python312Packages.mccabe # Flake8 plugin
-        # python312Packages.pyflakes # Python linter
-        nodePackages.prettier # Javascript formatter
-        # python312Packages.jedi # Autocomplete plugin
-
-        # zprint # Clojure formatter
-        # cljfmt # Clojure formatter
-        # clj-kondo # Clojure linter
-      ];
+      # extraPackages = with pkgs; [
+      # ];
 
       highlightOverride = {
         # hi noCursor blend=100 cterm=strikethrough
