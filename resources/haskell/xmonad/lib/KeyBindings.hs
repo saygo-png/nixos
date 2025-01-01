@@ -51,7 +51,7 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       -- ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl s 10-%"),
 
       -- Screenshot
-      ((0, xK_Print), spawn "flameshot gui"),
+      ((0, xK_Print), spawn "flameshot_wrapper"),
       ((modm, xK_Print), spawn "flameshot screen"),
       -- My Stuff
       -- ((modm, xK_b), killAllStatusBars),
