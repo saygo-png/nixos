@@ -28,23 +28,28 @@ import XMonad.Layout.ThreeColumns
 -- which denotes layout choice.
 --
 
+-- myLayoutHook = ThreeColMid nmaster delta ratio
+--   where
+--     nmaster = 1 -- Default number of windows in the master pane
+--     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
+--     delta = 3 / 100 -- Percent of screen to increment by when resizing panes
+
 myLayoutHook =
   gaps [(L, 0), (R, 0), (U, 0), (D, 0)] $
-    spacingRaw True (Border 2 2 2 2) True (Border 2 2 2 2) True $
+    spacingRaw True (Border 6 6 6 6) True (Border 6 6 6 6) True $
       smartBorders myLayout
   where
     myLayout =
       smartBorders $
         mkToggle (NOBORDERS ?? FULL ?? EOT) $
           avoidStruts
-            ( reflectHoriz tiled
-                ||| magnifier (reflectHoriz tiled)
-                ||| Mirror tiled
-                ||| magnifier (Mirror tiled)
+            ( tiled
+                ||| tiled
                 ||| Full
                 -- large master window in the center. Windows tile to the left and right
                 -- (for ultra wide displays)
                 ||| ThreeColMid 1 (3 / 100) (3 / 7)
+                ||| magnifier tiled
                 ||| magnifier (ThreeColMid 1 (3 / 100) (3 / 7))
             )
     -- default tiling algorithm partitions the screen into two panes
