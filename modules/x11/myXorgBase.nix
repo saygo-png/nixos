@@ -60,10 +60,10 @@
       };
     };
 
-    xdg.configFile."sx/sxrc" = {
-      executable = true;
-      inherit (config.home.file.".xinitrc") text;
-    };
+    # xdg.configFile."sx/sxrc" = {
+    #   executable = true;
+    #   inherit (config.home.file.".xinitrc") text;
+    # };
 
     xdg.configFile."flameshot/flameshot.ini" = {
       # buttons=@Variant(\0\0\0\x7f\0\0\0\vQList<int>\0\0\0\0\b\0\0\0\0\0\0\0\x1\0\0\0\x2\0\0\0\x6\0\0\0\x12\0\0\0\xf\0\0\0\x16\0\0\0\n)
