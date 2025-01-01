@@ -756,6 +756,8 @@
           bc # Gnu calculator, needed for vmrss
 
           # Haskell
+          cabal-install
+          stack
           ghc # Haskell compiler for the LSP
           haskell-language-server # Haskell LSP
 
