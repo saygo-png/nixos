@@ -29,10 +29,9 @@ main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
           focusedBorderColor = myFocusedBorderColor,
           keys = myKeys,
           mouseBindings = myMouseBindings,
-          manageHook = myManageHook,
-          layoutHook = myLayoutHook,
-          handleEventHook = myEventHook,
-          logHook = myLogHook,
-          startupHook = myStartupHook
           -- manageHook = myManageHook,
+          layoutHook = myLayoutHook
+          -- handleEventHook = myEventHook,
+          -- logHook = myLogHook,
+          -- startupHook = myStartupHook
         }
