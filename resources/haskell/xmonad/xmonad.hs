@@ -9,12 +9,13 @@ import MouseBindings
 import StartupHook
 import WindowRules
 import XMonad
+import XMonad.Actions.ToggleFullFloat
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Fullscreen
 
 main :: IO ()
-main = xmonad . withStatusBars . fullscreenSupport . docks . ewmh $ defaults
+main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
   where
     defaults =
       def
@@ -33,4 +34,5 @@ main = xmonad . withStatusBars . fullscreenSupport . docks . ewmh $ defaults
           handleEventHook = myEventHook,
           logHook = myLogHook,
           startupHook = myStartupHook
+          -- manageHook = myManageHook,
         }

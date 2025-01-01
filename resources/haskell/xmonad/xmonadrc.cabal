@@ -28,6 +28,7 @@ library
     , xmonad-contrib
     , containers
     , X11
+    , flow
   default-language: Haskell2010
 
 executable xmonadrc
