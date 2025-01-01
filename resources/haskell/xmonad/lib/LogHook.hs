@@ -20,7 +20,7 @@ myLogHook :: X ()
 myLogHook = return ()
 
 withStatusBars :: (LayoutClass l Window) => XConfig l -> XConfig l
-withStatusBars = dynamicSBs barSpawner
+withStatusBars = dynamicSBs $ io . barSpawner
 
 barSpawner :: ScreenId -> IO StatusBarConfig
 barSpawner = pure . xmobar
