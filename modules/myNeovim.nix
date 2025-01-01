@@ -1,12 +1,10 @@
 {
   lib,
   pkgs,
-  host,
   config,
   inputs,
   conUsername,
   pkgs-unstable,
-  conFlakePathRel,
   ...
 }: let
   nvim-plugin-cutlass = pkgs.fetchFromGitHub {
