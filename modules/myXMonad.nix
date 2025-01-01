@@ -1,8 +1,9 @@
 {
+  lib,
   pkgs,
+  config,
   conUsername,
   conFlakePathRel,
-  lib,
   ...
 }: {
   imports = [
@@ -24,8 +25,13 @@
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
     home.packages = [
+      pkgs.feh
       (let
-        xinitrc = lib.strings.concatLines [osConfig.const.xinitBase "exec xmonad"];
+        xinitrc = lib.strings.concatLines [
+          osConfig.const.xinitBase
+          "feh --bg-center ${config.stylix.image}"
+          "exec xmonad"
+        ];
       in
         lib.my.wrapWithXinitrc xinitrc "xmonad")
 
