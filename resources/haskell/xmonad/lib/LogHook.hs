@@ -5,7 +5,7 @@ module LogHook (
   myLogHook,
 ) where
 
-import Layout (ppLayoutOverride)
+-- import Layout (ppLayoutOverride)
 import XMonad
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
@@ -32,8 +32,8 @@ barSpawner = pure . xmobar
           ppTitle = xmobarColor "#cba6f7" "" . shorten 40,
           ppVisible = wrap "(" ")",
           ppUrgent = xmobarColor "#f38ba8" "#f9e2af",
-          ppSep = " \57533 ",
-          ppLayout = ppLayoutOverride
+          ppSep = " \57533 "
+          -- ppLayout = ppLayoutOverride
         }
     xmobar :: ScreenId -> StatusBarConfig
     xmobar (S screenId) = statusBarProp ("xmobar-app -x " <> show screenId) $ pure pp

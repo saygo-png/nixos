@@ -2,7 +2,7 @@
 
 module Layout (
   myLayoutHook,
-  ppLayoutOverride,
+  -- ppLayoutOverride,
 ) where
 
 import XMonad
@@ -59,12 +59,12 @@ myLayoutHook =
     -- Percent of screen to increment by when resizing panes
     delta = 3 / 100
 
-ppLayoutOverride :: String -> String
-ppLayoutOverride "Spacing Magnifier ReflectX Tall" = "|-|\983881|" -- 󰍉
-ppLayoutOverride "Spacing ReflectX Tall" = "|-| |"
-ppLayoutOverride "Spacing Magnifier Mirror Tall" = "|\983881.-|"
-ppLayoutOverride "Spacing Mirror Tall" = "|-.-|"
-ppLayoutOverride "Spacing Full" = "| |"
-ppLayoutOverride "Spacing Magnifier ThreeCol" = "|-|\983881|-|"
-ppLayoutOverride "Spacing ThreeCol" = "|-| |-|"
-ppLayoutOverride layout = layout
+-- ppLayoutOverride :: String -> String
+-- ppLayoutOverride "Spacing Magnifier ReflectX Tall" = "|-|\983881|" -- 󰍉
+-- ppLayoutOverride "Spacing ReflectX Tall" = "|-| |"
+-- ppLayoutOverride "Spacing Magnifier Mirror Tall" = "|\983881.-|"
+-- ppLayoutOverride "Spacing Mirror Tall" = "|-.-|"
+-- ppLayoutOverride "Spacing Full" = "| |"
+-- ppLayoutOverride "Spacing Magnifier ThreeCol" = "|-|\983881|-|"
+-- ppLayoutOverride layout = layout
+-- ppLayoutOverride "Spacing ThreeCol" = "|-| |-|"
