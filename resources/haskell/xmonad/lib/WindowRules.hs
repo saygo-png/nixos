@@ -22,8 +22,7 @@ import XMonad.Layout.Fullscreen
 --
 myManageHook :: ManageHook
 myManageHook =
-  fullscreenManageHook
-    <+> manageDocks
+  manageDocks
     <+> composeAll
       [ className =? "MPlayer" --> doFloat,
         -- , className =? "Gimp"           --> doFloat
