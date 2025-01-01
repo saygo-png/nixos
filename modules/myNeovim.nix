@@ -851,13 +851,13 @@ in {
         # nix.enable = true;
         flash.enable = true;
         direnv.enable = true;
+        vimtex.enable = true;
         comment.enable = true;
         fugitive.enable = true;
         project-nvim.enable = true;
         vim-surround.enable = true;
-        vimtex.enable = true;
-        friendly-snippets.enable = true;
         web-devicons.enable = true;
+        friendly-snippets.enable = true;
 
         # Lisps
         # conjure.enable = true;
