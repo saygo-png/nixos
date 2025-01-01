@@ -853,6 +853,7 @@ in {
         direnv.enable = true;
         comment.enable = true;
         fugitive.enable = true;
+        project-nvim.enable = true;
         vim-surround.enable = true;
         vimtex.enable = true;
         friendly-snippets.enable = true;
