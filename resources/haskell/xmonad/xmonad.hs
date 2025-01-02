@@ -2,6 +2,7 @@
 
 import Defaults
 import EventHandling
+import Flow
 import KeyBindings
 import Layout
 import LogHook
@@ -15,7 +16,8 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Fullscreen
 
 main :: IO ()
-main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
+-- main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
+main = defaults |> ewmh .> ewmhFullscreen .> toggleFullFloatEwmhFullscreen .> xmonad
   where
     defaults =
       def
@@ -29,10 +31,9 @@ main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
           focusedBorderColor = myFocusedBorderColor,
           keys = myKeys,
           mouseBindings = myMouseBindings,
-          -- manageHook = myManageHook,
-          layoutHook = myLayoutHook
           manageHook = myManageHook,
+          layoutHook = myLayoutHook,
           -- handleEventHook = myEventHook,
           -- logHook = myLogHook,
-          -- startupHook = myStartupHook
+          startupHook = myStartupHook
         }

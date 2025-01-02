@@ -63,21 +63,21 @@ import XMonad.Layout.ThreeColumns
 --     ratio = 1 / 2
 
 myLayoutHook =
-  lessBorders OnlyLayoutFloatBelow <|
-    mkToggle (NOBORDERS ?? NBFULL ?? EOT) <|
-      spacing gapSize <|
-        gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)] <|
-          myLayout
+  myLayout
+    |> gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)]
+    |> spacing gapSize
+    |> mkToggle (NOBORDERS ?? NBFULL ?? EOT)
+    |> lessBorders OnlyLayoutFloatBelow
   where
     myLayout =
-      ( tiled
-          ||| magnifier tiled
-          ||| Full
-          -- large master window in the center. Windows tile to the left and right
-          -- (for ultra wide displays)
-          ||| ThreeColMid 1 (3 / 100) (3 / 7)
-          ||| magnifier (ThreeColMid 1 (3 / 100) (3 / 7))
-      )
+      tiled
+        ||| magnifier tiled
+        ||| Full
+        -- large master window in the center. Windows tile to the left and right
+        -- (for ultra wide displays)
+        ||| ThreeColMid 1 (3 / 100) (3 / 7)
+        ||| magnifier (ThreeColMid 1 (3 / 100) (3 / 7))
+
     -- default tiling algorithm partitions the screen into two panes
     tiled = Tall nmaster delta ratio
 
