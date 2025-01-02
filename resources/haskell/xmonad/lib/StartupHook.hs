@@ -18,22 +18,22 @@ myStartupHook =
   do
     spawn "xsetroot -cursor_name left_ptr"
     -- spawn "autorandr -c"
-    spawnOnce "myAutostartAwesome.sh"
-    -- spawnOnce "greenclip daemon"
-    >> addEWMHFullscreen
+    spawn "myAutostart.sh"
 
-addNETSupported :: Atom -> X ()
-addNETSupported x = withDisplay $ \dpy -> do
-  r <- asks theRoot
-  a_NET_SUPPORTED <- getAtom "_NET_SUPPORTED"
-  a <- getAtom "ATOM"
-  liftIO $ do
-    sup <- join . maybeToList <$> getWindowProperty32 dpy a_NET_SUPPORTED r
-    unless (fromIntegral x `elem` sup) $
-      changeProperty32 dpy r a_NET_SUPPORTED a propModeAppend [fromIntegral x]
+-- >> addEWMHFullscreen
 
-addEWMHFullscreen :: X ()
-addEWMHFullscreen = do
-  wms <- getAtom "_NET_WM_STATE"
-  wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
-  mapM_ addNETSupported [wms, wfs]
+-- addNETSupported :: Atom -> X ()
+-- addNETSupported x = withDisplay $ \dpy -> do
+--   r <- asks theRoot
+--   a_NET_SUPPORTED <- getAtom "_NET_SUPPORTED"
+--   a <- getAtom "ATOM"
+--   liftIO $ do
+--     sup <- join . maybeToList <$> getWindowProperty32 dpy a_NET_SUPPORTED r
+--     unless (fromIntegral x `elem` sup) $
+--       changeProperty32 dpy r a_NET_SUPPORTED a propModeAppend [fromIntegral x]
+--
+-- addEWMHFullscreen :: X ()
+-- addEWMHFullscreen = do
+--   wms <- getAtom "_NET_WM_STATE"
+--   wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
+--   mapM_ addNETSupported [wms, wfs]

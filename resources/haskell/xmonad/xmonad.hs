@@ -31,6 +31,7 @@ main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
           mouseBindings = myMouseBindings,
           -- manageHook = myManageHook,
           layoutHook = myLayoutHook
+          manageHook = myManageHook,
           -- handleEventHook = myEventHook,
           -- logHook = myLogHook,
           -- startupHook = myStartupHook

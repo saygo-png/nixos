@@ -98,7 +98,7 @@
       })
 
       (writeShellApplication {
-        name = "myAutostartAwesome.sh";
+        name = "myAutostart.sh";
         runtimeInputs = [xorg.xrandr polkit-kde-agent xmousepasteblock xssproxy];
         text = ''
           run() {
