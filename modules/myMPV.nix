@@ -87,6 +87,9 @@
       scripts = [
         pkgs.mpvScripts.uosc
         pkgs.mpvScripts.acompressor
+        pkgs.mpvScripts.autoload
+        pkgs.mpvScripts.mpris
+        pkgs.mpvScripts.memo
       ];
     };
   };
