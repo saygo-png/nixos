@@ -1,6 +1,7 @@
 module WindowRules where
 
 import XMonad
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.Fullscreen
@@ -22,7 +23,8 @@ import XMonad.Layout.Fullscreen
 --
 myManageHook :: ManageHook
 myManageHook =
-  manageDocks
+  insertPosition Below Newer
+    <+> manageDocks
     <+> composeAll
       [ className =? "MPlayer" --> doFloat,
         -- , className =? "Gimp"           --> doFloat
