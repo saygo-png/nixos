@@ -1,10 +1,11 @@
-module WindowRules where
+module ManageHook where
 
+import Flow
 import XMonad
-import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.Fullscreen
+import XMonad.StackSet
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -23,12 +24,14 @@ import XMonad.Layout.Fullscreen
 --
 myManageHook :: ManageHook
 myManageHook =
-  insertPosition Below Newer
-    <+> manageDocks
-    <+> composeAll
-      [ className =? "MPlayer" --> doFloat,
-        -- , className =? "Gimp"           --> doFloat
-        resource =? "desktop_window" --> doIgnore,
-        resource =? "kdesktop" --> doIgnore,
-        isFullscreen --> doFullFloat
-      ]
+  composeOne
+    [ checkDock -?> doIgnore, -- equivalent to manageDocks
+      isDialog -?> doFloat,
+      isFullscreen -?> doFullFloat,
+      className =? "Gimp" -?> doFloat,
+      className =? "MPlayer" -?> doFloat,
+      return True -?> doF swapDown
+    ]
+    <+> doF focusDown
+
+

@@ -1,25 +1,34 @@
 -- Modules in ~/.xmonad/lib directory
-
 import Defaults
 import EventHandling
 import Flow
 import KeyBindings
 import Layout
 import LogHook
+import ManageHook
 import MouseBindings
 import StartupHook
-import WindowRules
 import XMonad
 import XMonad.Actions.ToggleFullFloat
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
-import XMonad.Layout.Fullscreen
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
 
 main :: IO ()
--- main = xmonad . toggleFullFloatEwmhFullscreen . ewmhFullscreen . ewmh $ defaults
-main = defaults |> ewmh .> ewmhFullscreen .> toggleFullFloatEwmhFullscreen .> xmonad
+main =
+  myConfig
+    |>
+      ewmh
+      .> ewmhFullscreen
+      .> toggleFullFloatEwmhFullscreen
+      .> withEasySB (statusBarProp "xmobar ~/.config/xmobar/.xmobarrc" (pure def)) toggleStrutsKey
+      .> xmonad
   where
-    defaults =
+    toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
+    toggleStrutsKey XConfig{ modMask = m } = (m, xK_t)
+    myConfig =
       def
         { terminal = myTerminal,
           focusFollowsMouse = myFocusFollowsMouse,
@@ -34,6 +43,6 @@ main = defaults |> ewmh .> ewmhFullscreen .> toggleFullFloatEwmhFullscreen .> xm
           manageHook = myManageHook,
           layoutHook = myLayoutHook,
           -- handleEventHook = myEventHook,
-          -- logHook = myLogHook,
+          logHook = myLogHook,
           startupHook = myStartupHook
         }

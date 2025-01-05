@@ -101,7 +101,7 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
       -- lock pc
-      ((modm .|. shiftMask, xK_l), spawn "vlock"),
+      ((modm .|. shiftMask, xK_l), spawn "lock"),
       -- Restart xmonad
       ((modm .|. shiftMask, xK_r), spawn "xmonad --recompile; xmonad --restart")
       -- Run xmessage with a summary of the default keybindings (useful for beginners)

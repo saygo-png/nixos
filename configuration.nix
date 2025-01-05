@@ -719,6 +719,8 @@
         # Home packages, home manager packages, user packages, home programs.
         packages = with pkgs; [
           # GUI.
+          calibre
+          foliate
           scribus
           mandelbulber
           anki # Flashcards

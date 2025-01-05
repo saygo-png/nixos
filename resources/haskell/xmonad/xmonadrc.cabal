@@ -18,7 +18,7 @@ library
     LogHook
     MouseBindings
     StartupHook
-    WindowRules
+    ManageHook
     WindowState
   hs-source-dirs: lib
   ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded
