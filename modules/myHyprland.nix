@@ -24,6 +24,7 @@
         origin = "top-center";
       };
     };
+
     wayland.windowManager.hyprland = let
       gaps_in = osConfig.const.gaps;
       gaps_out = osConfig.const.gaps * 2;
@@ -54,6 +55,10 @@
       settings = {
         debug.disable_logs = true;
         xwayland.force_zero_scaling = true;
+        input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
+        monitor = [
+          ", highres@highrr, auto, 1"
+        ];
         # Autostart.
         exec-once = [
           "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"

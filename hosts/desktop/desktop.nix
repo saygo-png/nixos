@@ -116,13 +116,6 @@
     # services.easyeffects.enable = true;
     # services.easyeffects.preset = "Audio-Technica ATH-M30x";
 
-    wayland.windowManager.hyprland.settings = {
-      input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
-      monitor = [
-        ", highres@highrr, auto, 1"
-      ];
-    };
-
     programs.mangohud = {
       enable = true;
       enableSessionWide = false;
