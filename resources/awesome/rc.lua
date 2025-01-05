@@ -498,7 +498,7 @@ end)
 
 -- Autostart things (should put most in .xinitrc unless it dont work :D.
 -- this straight up does not fucking work if its not both "with_shell" and the util one and idont know why im sick of it, it looks so retartded
-awful.spawn.with_shell("myAutostartAwesome.sh")
+awful.spawn.with_shell("myAutostart.sh")
 awful.util.spawn("remaps")
 
 -- change border color on focus
