@@ -540,6 +540,7 @@ in {
         vim.keymap.set({"i", "c"}, "<C-V>", "<C-r>+", { desc = "Proper paste" })
         vim.keymap.set('n', 'Y', 'y$', { desc = "Copy till end of line without newline" })
         vim.keymap.set('n', 'yy', '^y$', { desc = "Copy line without newline and whitespace" })
+        vim.keymap.set('v', 'v', '<Esc>^v$', { desc = "Select line without newline and whitespace" })
 
         -- Infinite paste
         vim.keymap.set('v', 'p', '"_dP')
