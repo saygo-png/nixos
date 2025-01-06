@@ -34,12 +34,13 @@ import XMonad.Layout.ThreeColumns
 
 myLayoutHook =
   myLayout
+    -- |> gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)]
+    -- |> spacing gapSize
     |> avoidStruts
-    |> gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)]
-    |> spacing gapSize
     |> mkToggle (NOBORDERS ?? NBFULL ?? EOT)
     |> lessBorders OnlyScreenFloat
   where
+    myXmobarHidesLayout = lessBorders OnlyScreenFloat $ avoidStruts $ layoutHook def
     myLayout =
       tiled
         ||| magnifier tiled

@@ -56,9 +56,9 @@
   };
 
   # Gaming.
-  services.xserver.deviceSection = ''
-    Option "TearFree" "True"
-  '';
+  # services.xserver.deviceSection = ''
+  #   Option "TearFree" "True"
+  # '';
   # services.xserver.deviceSection = ''
   #     Option "TearFree" "True"
   #     Option "VariableRefresh" "True"
@@ -83,10 +83,11 @@
     "vm.max_map_count" = 2147483642;
   };
 
-  services.xserver.videoDrivers = ["amdgpu"];
+  services.xserver.videoDrivers = ["modesetting"];
 
   hardware = {
     amdgpu = {
+      amdvlk.enable = false;
       initrd.enable = true;
       opencl.enable = true;
     };
@@ -94,8 +95,7 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        # amdvlk # Black borders in popups bug
-        # libdrm
+        libdrm
         libva
         vaapiVdpau
         libvdpau-va-gl
@@ -103,7 +103,6 @@
       extraPackages32 = with pkgs; [
         libva
         libvdpau-va-gl
-        # driversi686Linux.amdvlk # Black borders in popups bug
       ];
     };
   };
