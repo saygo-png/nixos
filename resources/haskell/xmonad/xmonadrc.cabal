@@ -3,8 +3,8 @@ name:          xmonadrc
 version:       1.0
 synopsis:      My XMonad setup
 license:       GPL-2
-author:        Marc Jakobi <mrcjkb89@outlook.com>
-maintainer:    Marc Jakobi <mrcjkb89@outlook.com>
+author:        Saygo <saygo.mail@proton.me>
+maintainer:    Saygo <saygo.mail@proton.me>
 category:      Graphics
 build-type:    Simple
 
