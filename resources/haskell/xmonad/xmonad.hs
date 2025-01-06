@@ -59,10 +59,10 @@ main = myConfig |> xmobar .> ewmh .> ewmhFullscreen .> xmonad
       where
         toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
         toggleStrutsKey XConfig{modMask = m} = (m, xK_t)
-    myLayout = lessBorders OnlyScreenFloat $ avoidStruts $ layoutHook def
+    -- myLayout = lessBorders OnlyScreenFloat $ avoidStruts $ layoutHook def
     myConfig =
       def
-        { layoutHook = myLayout,
+        { layoutHook = myLayoutHook,
           keys = myKeys,
           terminal = myTerminal,
           focusFollowsMouse = myFocusFollowsMouse,
