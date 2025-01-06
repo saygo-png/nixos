@@ -38,7 +38,7 @@ myLayoutHook =
     |> gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)]
     |> spacing gapSize
     |> mkToggle (NOBORDERS ?? NBFULL ?? EOT)
-    |> lessBorders OnlyLayoutFloat
+    |> lessBorders OnlyScreenFloat
   where
     myLayout =
       tiled

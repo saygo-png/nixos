@@ -22,8 +22,9 @@ main =
     |>
       ewmh
       .> ewmhFullscreen
-      .> toggleFullFloatEwmhFullscreen
+      -- .> toggleFullFloatEwmhFullscreen
       .> withEasySB (statusBarProp "xmobar ~/.config/xmobar/.xmobarrc" (pure def)) toggleStrutsKey
+      .> docks
       .> xmonad
   where
     toggleStrutsKey :: XConfig Layout -> (KeyMask, KeySym)
@@ -42,7 +43,7 @@ main =
           mouseBindings = myMouseBindings,
           manageHook = myManageHook,
           layoutHook = myLayoutHook,
-          -- handleEventHook = myEventHook,
+          handleEventHook = myEventHook,
           logHook = myLogHook,
           startupHook = myStartupHook
         }

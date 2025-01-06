@@ -69,24 +69,24 @@ in {
     programs.nixvim = {
       enable = true;
 
-      performance = {
-        byteCompileLua.enable = true;
-        byteCompileLua.configs = true;
-        byteCompileLua.initLua = true;
-        byteCompileLua.nvimRuntime = true;
-        byteCompileLua.plugins = true;
-
-        combinePlugins = {
-          enable = true;
-          standalonePlugins = [
-            # "nvim-treesitter"
-            # "conform.nvim"
-            "dial.nvim"
-            "oil.nvim"
-            "mini.nvim"
-          ];
-        };
-      };
+      # performance = {
+      #   byteCompileLua.enable = true;
+      #   byteCompileLua.configs = true;
+      #   byteCompileLua.initLua = true;
+      #   byteCompileLua.nvimRuntime = true;
+      #   byteCompileLua.plugins = true;
+      #
+      #   combinePlugins = {
+      #     enable = true;
+      #     standalonePlugins = [
+      #       # "nvim-treesitter"
+      #       # "conform.nvim"
+      #       "dial.nvim"
+      #       "oil.nvim"
+      #       "mini.nvim"
+      #     ];
+      #   };
+      # };
 
       # Needed for special characters in spider.nvim
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];

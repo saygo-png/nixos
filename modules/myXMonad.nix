@@ -23,7 +23,7 @@
 
   services.displayManager.defaultSession = "none+xmonad";
 
-  home-manager.users.${conUsername} = {osConfig, ...}: {
+  home-manager.users.${conUsername} = {osConfig, config, ...}: {
     home.packages = [
       pkgs.feh
       pkgs.alsa-tools # used by xmobar
@@ -31,7 +31,7 @@
         xinitrc = lib.strings.concatLines [
           osConfig.const.xinitBase
           "feh --bg-center ${config.stylix.image}"
-          "exec xmonad"
+          "exec ${config.xdg.cacheHome}/xmonad/xmonad-x86_64-linux"
         ];
       in
         lib.my.wrapWithXinitrc xinitrc "xmonad")
