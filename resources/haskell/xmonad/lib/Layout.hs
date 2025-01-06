@@ -34,8 +34,8 @@ import XMonad.Layout.ThreeColumns
 
 myLayoutHook =
   myLayout
-    -- |> gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)]
-    -- |> spacing gapSize
+    |> gaps [(L, gapSize), (R, gapSize), (U, gapSize), (D, gapSize)]
+    |> spacing gapSize
     |> avoidStruts
     |> mkToggle (NOBORDERS ?? NBFULL ?? EOT)
     |> lessBorders OnlyScreenFloat
