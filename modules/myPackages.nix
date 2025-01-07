@@ -320,7 +320,7 @@
       })
     ]
     ++ (
-      if (config.programs.hyprland == true)
+      if (config.programs.hyprland.enable == true)
       then [
         (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/hyprfullscreenfix") {})
       ]
