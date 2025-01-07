@@ -3,6 +3,7 @@
   pkgs,
   config,
   conUsername,
+  conHome,
   conFlakePathRel,
   ...
 }: {
@@ -19,6 +20,7 @@
             borderSize = 2;
             accelSpeed = -0.5;
             vsync = true;
+            extrasNixosPath = "${conHome}/extrasNixos";
           };
         };
       }
