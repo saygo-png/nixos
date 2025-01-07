@@ -46,7 +46,7 @@
       '';
 
       xdg.configFile."Thunar/uca.xml".text =
-        lib.mkIf (osConfig.programs.thunar.enable == true)
+        lib.mkIf osConfig.programs.thunar.enable
         # XML
         ''
           <?xml version="1.0" encoding="UTF-8"?>
@@ -66,8 +66,8 @@
           </actions>
         '';
 
-      programs.rofi.terminal = lib.mkIf (config.programs.rofi.enable == true) termExe;
-      wayland.windowManager.sway.config.terminal = lib.mkIf (config.windowManager.sway.enable == true) termExe;
+      programs.rofi.terminal = lib.mkIf config.programs.rofi.enable termExe;
+      wayland.windowManager.sway.config.terminal = lib.mkIf config.windowManager.sway.enable termExe;
       xdg.desktopEntries = lib.mkIf (config.home.sessionVariables == "nvim") {
         nvim = {
           name = "Neovim wrapper ";

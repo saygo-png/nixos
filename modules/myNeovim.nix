@@ -1336,7 +1336,7 @@ in {
               register = key: text: icon: {
                 __unkeyed = key;
                 group = text;
-                icon = icon;
+                inherit icon;
               };
             in [
               (register "<leader>t" "Telescope" " ")

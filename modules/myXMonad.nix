@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  config,
   conUsername,
   conFlakePathRel,
   ...
@@ -23,7 +22,11 @@
 
   services.displayManager.defaultSession = "none+xmonad";
 
-  home-manager.users.${conUsername} = {osConfig, config, ...}: {
+  home-manager.users.${conUsername} = {
+    osConfig,
+    config,
+    ...
+  }: {
     home.packages = [
       pkgs.feh
       pkgs.alsa-tools # used by xmobar
