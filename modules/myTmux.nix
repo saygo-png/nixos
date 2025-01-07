@@ -93,6 +93,7 @@
     programs.tmux = {
       baseIndex = 1;
       enable = true;
+      shell = "$SHELL"; # Full path is needed here
       keyMode = "vi";
       prefix = "C-a";
       tmuxinator.enable = true;

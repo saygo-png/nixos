@@ -18,7 +18,6 @@
   home-manager.users.${conUsername} = {
     home.shellAliases = {"nix-shell" = "nix-shell --run zsh";};
     programs.yazi.enableZshIntegration = true;
-    programs.tmux.shell = "zsh";
     programs.zsh = {
       enable = true;
       enableVteIntegration = true;
