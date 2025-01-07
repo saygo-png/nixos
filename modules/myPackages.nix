@@ -9,7 +9,6 @@
 }: {
   environment.systemPackages = with pkgs;
     [
-      # (pkgs.callPackage "${conFlakePathRel}/resources/librewolf-bin.nix" {}) # Browser, bin is from appimage and fixes discord crash
       (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/convertlink") {})
 
       (writeShellScriptBin "hyprland-next-visible-client.sh"

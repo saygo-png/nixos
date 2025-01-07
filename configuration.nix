@@ -310,7 +310,6 @@
       gphoto2fs
 
       # GUI.
-      firefox
       nsxiv # Image viewer
       qalculate-gtk # Gui calculator
       kdePackages.dolphin # File manager
@@ -701,7 +700,7 @@
           # Default programs.
           PAGER = "moar";
           OPENER = "xdg-open";
-          BROWSER = "firefox";
+          BROWSER = "librewolf";
           EDITOR = lib.mkDefault "vim";
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
@@ -736,7 +735,8 @@
           xdragon # drag items from terminal
 
           # Browsers
-          firefox-bin
+          firefox
+          librewolf
           ungoogled-chromium
           tor-browser
 
