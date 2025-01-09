@@ -384,8 +384,19 @@
   # }}}
 
   ##### NixOS ###### {{{
+
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
-  nixpkgs.config.allowUnfree = false;
+  environment.etc."flake-rev".text = ''
+    {
+      dirtyRev: ${self.sourceInfo.dirtyRev};
+      lastModifiedDate: ${self.sourceInfo.lastModifiedDate};
+      outPath: ${self.sourceInfo.outPath};
+    }
+  '';
+  environment.etc."flake-src".source = lib.my.relativeToRoot ".";
+
+  nixpkgs.config.allowUnfree = lib.mkForce false;
+
   nix = {
     extraOptions = ''
       extra-substituters = https://devenv.cachix.org
@@ -393,15 +404,14 @@
     '';
     channel.enable = false;
     settings = {
-      warn-dirty = false;
-      connect-timeout = 5;
+      warn-dirty = true;
       auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes"];
     };
     gc = {
       automatic = true;
       dates = "2day";
-      options = "--delete-older-than 15d";
+      options = "--delete-older-than +5";
     };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
     registry.nixpkgs-unstable.flake = self.inputs.nixpkgs-unstable;
