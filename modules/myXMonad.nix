@@ -27,18 +27,19 @@
     config,
     ...
   }: {
-    home.packages = [
-      pkgs.feh
-      pkgs.alsa-tools # used by xmobar
-      (let
+    home.packages =
+      [
+        pkgs.feh
+        pkgs.alsa-tools # used by xmobar
+      ]
+      ++ (let
         xinitrc = lib.strings.concatLines [
           osConfig.const.xinitBase
-          "feh --bg-center ${config.stylix.image}"
+          "feh --no-fehbg --bg-center ${config.stylix.image}"
           "exec ${config.xdg.cacheHome}/xmonad/xmonad-x86_64-linux"
         ];
       in
-        lib.my.wrapWithXinitrc xinitrc "xmonad")
-    ];
+        lib.my.wrapWithXinitrc xinitrc "xmonad");
 
     xdg.configFile."xmonad" = {
       source = lib.my.relativeToRoot "resources/haskell/xmonad";

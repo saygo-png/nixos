@@ -1,6 +1,7 @@
 {
   config,
   conUsername,
+  lib,
   ...
 }: let
   homeConfig = config.home-manager.users.${conUsername};
@@ -26,12 +27,14 @@ in {
   #   };
   # };
   nix.settings.use-xdg-base-directories = true;
+  nix.extraOptions = ''use-xdg-base-directories = true'';
+
   environment.sessionVariables = {
     GOPATH = "${homeConfig.xdg.dataHome}/go";
     GNUPGHOME = "${homeConfig.xdg.dataHome}/gnupg";
     WINEPREFIX = "${homeConfig.xdg.dataHome}/wine";
     CARGO_HOME = "${homeConfig.xdg.dataHome}/cargo";
-    XAUTHORITY = "\$XDG_RUNTIME_DIR/Xauthority";
+    XAUTHORITY = ''''${XDG_RUNTIME_DIR}/Xauthority'';
     RUSTUP_HOME = "${homeConfig.xdg.dataHome}/rustup";
     ANDROID_HOME = "${homeConfig.xdg.dataHome}/android";
     DOTNET_CLI_HOME = "${homeConfig.xdg.dataHome}/dotnet";
@@ -41,18 +44,23 @@ in {
     MYSQL_HISTFILE = "${homeConfig.xdg.stateHome}/mysql/history";
     NUGET_PACKAGES = "${homeConfig.xdg.cacheHome}/NuGetPackages";
     PYTHONSTARTUP = "${homeConfig.xdg.configHome}/python/pythonrc";
+    ZDOTDIR = "${homeConfig.xdg.configHome}/zsh";
     COOKIECUTTER_CONFIG = "${homeConfig.xdg.configHome}/cookiecutter/config.yaml";
     NPM_CONFIG_USERCONFIG = "${homeConfig.xdg.configHome}/npm/npmrc";
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${homeConfig.xdg.configHome}/java";
   };
 
   home-manager.users.${conUsername} = {
-    # Doesnt work for some reason?
+    xresources.path = "${homeConfig.xdg.configHome}/x11";
+
+    home.file.".zshenv".enable = lib.mkForce false;
     programs.zsh = {
-      history.path = "${homeConfig.xdg.dataHome}/zsh/zsh_history";
       dotDir = ".config/zsh";
+      history.path = "${homeConfig.xdg.dataHome}/zsh/zsh_history";
     };
+
     home.shellAliases = {
+      feh = "feh --no-fehbg";
       gdb = "gdb -n -x ${homeConfig.xdg.configHome}/gdb/init";
       pidgin = "pidgin --config=${homeConfig.xdg.dataHome}/purple";
       svn = "svn --config-dir ${homeConfig.xdg.configHome}/subversion";
