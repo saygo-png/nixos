@@ -53,6 +53,7 @@ in {
   home-manager.users.${conUsername} = {
     xresources.path = "${homeConfig.xdg.configHome}/x11";
 
+    gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
     home.file.".zshenv".enable = lib.mkForce false;
     programs.zsh = {
       dotDir = ".config/zsh";
