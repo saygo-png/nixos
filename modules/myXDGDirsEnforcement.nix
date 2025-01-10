@@ -37,7 +37,7 @@ in {
     XAUTHORITY = ''''${XDG_RUNTIME_DIR}/Xauthority'';
     RUSTUP_HOME = "${homeConfig.xdg.dataHome}/rustup";
     ANDROID_HOME = "${homeConfig.xdg.dataHome}/android";
-    ANDROID_USER_HOME="${homeConfig.xdg.dataHome}/android";
+    ANDROID_USER_HOME = "${homeConfig.xdg.dataHome}/android";
     DOTNET_CLI_HOME = "${homeConfig.xdg.dataHome}/dotnet";
     HISTFILE = "${homeConfig.xdg.stateHome}/bash/history";
     GRADLE_USER_HOME = "${homeConfig.xdg.dataHome}/gradle";
