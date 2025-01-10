@@ -386,13 +386,19 @@
   ##### NixOS ###### {{{
 
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
-  environment.etc."flake-rev".text = ''
+  environment.etc."flake-rev.json".text =
+    builtins.toJSON
     {
-      dirtyRev: ${self.sourceInfo.dirtyRev};
-      lastModifiedDate: ${self.sourceInfo.lastModifiedDate};
-      outPath: ${self.sourceInfo.outPath};
-    }
-  '';
+      inherit (self.sourceInfo) dirtyRev;
+      inherit (self.sourceInfo) lastModified;
+      inherit (self.sourceInfo) lastModifiedDate;
+      inherit (self.sourceInfo) narHash;
+      inherit (self.sourceInfo) outPath;
+      inherit (self.sourceInfo) rev;
+      inherit (self.sourceInfo) revCount;
+      inherit (self.sourceInfo) shortRev;
+      inherit (self.sourceInfo) submodules;
+    };
   environment.etc."flake-src".source = lib.my.relativeToRoot ".";
 
   nixpkgs.config.allowUnfree = lib.mkForce false;
@@ -1503,4 +1509,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-
