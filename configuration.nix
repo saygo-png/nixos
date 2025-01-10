@@ -1078,7 +1078,7 @@
             email = "saygo.mail@proton.me";
           };
           color.ui = "auto";
-          # pull.rebase = true;
+          pull.rebase = false;
           # pull.autoSquash = true;
           commit.gpgsign = true;
           rerere.enabled = true;
