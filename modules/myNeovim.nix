@@ -925,7 +925,8 @@ in {
 
         lspsaga = {
           enable = true;
-          symbolInWinbar.enable = false;
+          symbolInWinbar.enable = true;
+          implement.enable = true;
           lightbulb = {
             sign = false;
             enable = false;
