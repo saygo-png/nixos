@@ -26,6 +26,7 @@ in {
   #     configPath = "${vendorPath}/firefox";
   #   };
   # };
+
   nix.settings.use-xdg-base-directories = true;
   nix.extraOptions = ''use-xdg-base-directories = true'';
 
@@ -51,7 +52,28 @@ in {
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${homeConfig.xdg.configHome}/java";
   };
 
-  home-manager.users.${conUsername} = {
+  nixpkgs.overlays = [
+    (_final: prev: {
+      steam = prev.steam.override (old: {
+        extraBwrapArgs =
+          (old.buildFHSEnv.extraBwrapArgs or [])
+          ++ [
+            "--bind $XDG_DATA_HOME/steam-home $HOME"
+
+            "--unsetenv XDG_CACHE_HOME"
+            "--unsetenv XDG_CONFIG_HOME"
+            "--unsetenv XDG_DATA_HOME"
+            "--unsetenv XDG_STATE_HOME"
+          ];
+      });
+    })
+  ];
+
+  home-manager.users.${conUsername} = {lib, ...}: {
+    home.activation.make-steam-home = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      run mkdir -p $XDG_DATA_HOME/steam-home
+    '';
+
     xresources.path = "${homeConfig.xdg.configHome}/x11";
 
     gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
