@@ -1,7 +1,6 @@
 {
   config,
   conUsername,
-  lib,
   ...
 }: let
   homeConfig = config.home-manager.users.${conUsername};
