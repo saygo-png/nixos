@@ -9,7 +9,7 @@
     "${conFlakePathRel}/modules/x11/myXorgBase.nix"
   ];
 
-  services.displayManager.defaultSession = lib.mkDefault "none+awesome";
+  # services.displayManager.defaultSession = lib.mkDefault "none+awesome";
 
   nixpkgs.overlays = [
     (_: prev: {
