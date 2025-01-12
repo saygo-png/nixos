@@ -102,6 +102,18 @@
         };
       });
     };
+    commonModules = [
+      ({
+        lib,
+        config,
+        pkgs,
+        ...
+      }: {
+        _module.args.extraLib = import ./modules/myExtraLib.nix {
+          inherit config pkgs lib;
+        };
+      })
+    ];
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
@@ -115,15 +127,17 @@
           conFlakePath = "/home/samsepi0l/nixos";
         }
         // (commonSpecialArgs system);
-      modules = [
-        inputs.nixos-hardware.nixosModules.common-pc
-        inputs.nixos-hardware.nixosModules.common-pc-ssd
-        inputs.nixos-hardware.nixosModules.common-gpu-amd
-        inputs.nixos-hardware.nixosModules.common-cpu-amd
-        ./configuration.nix
-        ./hosts/desktop/desktop.nix
-        ./hosts/desktop/hardware-configuration-desktop.nix
-      ];
+      modules =
+        [
+          inputs.nixos-hardware.nixosModules.common-pc
+          inputs.nixos-hardware.nixosModules.common-pc-ssd
+          inputs.nixos-hardware.nixosModules.common-gpu-amd
+          inputs.nixos-hardware.nixosModules.common-cpu-amd
+          ./configuration.nix
+          ./hosts/desktop/desktop.nix
+          ./hosts/desktop/hardware-configuration-desktop.nix
+        ]
+        ++ commonModules;
     };
 
     nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
@@ -137,13 +151,15 @@
         }
         // (commonSpecialArgs system);
 
-      modules = [
-        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
-        inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-        ./configuration.nix
-        ./hosts/thinkpad/thinkpad.nix
-        ./hosts/thinkpad/hardware-configuration-thinkpad.nix
-      ];
+      modules =
+        [
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
+          inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+          ./configuration.nix
+          ./hosts/thinkpad/thinkpad.nix
+          ./hosts/thinkpad/hardware-configuration-thinkpad.nix
+        ]
+        ++ commonModules;
     };
   };
 }
