@@ -14,7 +14,6 @@
   services.gnome.gnome-keyring.enable = true;
 
   # NixOS is retarded and turns on lightdm by default.
-  services.displayManager.defaultSession = lib.mkDefault "none+sway";
   services.xserver.displayManager = lib.mkDefault {
     lightdm.enable = false;
   };

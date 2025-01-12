@@ -20,8 +20,6 @@
   #   enableConfiguredRecompile = false;
   # };
 
-  services.displayManager.defaultSession = "none+xmonad";
-
   home-manager.users.${conUsername} = {
     osConfig,
     config,
