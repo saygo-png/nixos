@@ -13,10 +13,10 @@
       text = xinitrc;
     };
   in
-    if (config.services.xserver.displayManager.startx.enable && config.services.xserver.displayManager.sx.enable == false)
+    if (config.services.xserver.displayManager.startx.enable && !config.services.xserver.displayManager.sx.enable)
     then throw "You need either startx or sx enabled"
     else let
-      startx-wrapper-if = lib.mkIf (config.services.xserver.displayManager.startx.enable) [
+      startx-wrapper-if = lib.mkIf config.services.xserver.displayManager.startx.enable [
         (pkgs.writeShellApplication {
           name = "startx-${wmExe}";
           runtimeInputs = [pkgs.xorg.xinit];
@@ -25,7 +25,7 @@
           '';
         })
       ];
-      sx-wrapper-if = lib.mkIf (config.services.xserver.displayManager.sx.enable) [
+      sx-wrapper-if = lib.mkIf config.services.xserver.displayManager.sx.enable [
         (pkgs.writeShellScriptBin "sx-${wmExe}"
           ''
             sx ${xinitrcFile}
