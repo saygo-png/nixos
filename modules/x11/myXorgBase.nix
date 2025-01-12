@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   conHome,
   conUsername,
   conFlakePathRel,
@@ -40,8 +41,35 @@
   # NixOS is retarded and turns on lightdm by default.
   services.xserver.displayManager = lib.mkDefault {
     startx.enable = true;
+    sx.enable = true;
     lightdm.enable = false;
   };
+
+  # We make sx use a wrapped xorg, since it does not parse xserverrc like startx, making it
+  # not use a lot of nix options like extraLayouts in xkb.
+  nixpkgs.overlays = [
+    (final: prev: {
+      xorgWrapperForSx = prev.writeShellScriptBin "Xorg" ''
+        notify-send wrapped
+        exec ${prev.xorg.xorgserver}/bin/X ${toString config.services.xserver.displayManager.xserverArgs} "$@"
+      '';
+
+      sx = prev.sx.overrideAttrs (_oldAttrs: {
+        postInstall = ''
+          patsh -p "${final.xorgWrapperForSx}/bin:$PATH" -f $out/bin/sx -s ${builtins.storeDir}
+
+          install -Dm755 -t $out/share/xsessions ${
+            prev.makeDesktopItem {
+              name = "sx";
+              desktopName = "sx";
+              comment = "Start a xorg server";
+              exec = "sx";
+            }
+          }/share/applications/sx.desktop
+        '';
+      });
+    })
+  ];
 
   environment.systemPackages = with pkgs; [
     xclip # Xorg wl-clipboard

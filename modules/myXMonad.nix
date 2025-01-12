@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  extraLib,
   conUsername,
   conFlakePathRel,
   ...
@@ -37,7 +38,7 @@
           "exec ${config.xdg.cacheHome}/xmonad/xmonad-x86_64-linux"
         ];
       in
-        lib.my.wrapWithXinitrc xinitrc "xmonad");
+        extraLib.wrapWithXinitrc xinitrc "xmonad");
 
     xdg.configFile."xmonad" = {
       source = lib.my.relativeToRoot "resources/haskell/xmonad";

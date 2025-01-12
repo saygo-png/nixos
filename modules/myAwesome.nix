@@ -2,6 +2,7 @@
   lib,
   inputs,
   conUsername,
+  extraLib,
   conFlakePathRel,
   ...
 }: {
@@ -40,7 +41,7 @@
         "exec awesome"
       ];
     in
-      lib.my.wrapWithXinitrc xinitrc "awesome";
+      extraLib.wrapWithXinitrc xinitrc "awesome";
 
     xdg.configFile."awesome/rc.lua" = {
       source = "${conFlakePathRel}/resources/awesome/rc.lua";
