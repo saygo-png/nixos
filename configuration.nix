@@ -368,6 +368,7 @@
 
   ##### NixOS ###### {{{
 
+  # Keep trace of flake hash for every gen in /etc
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
   environment.etc."flake-rev.json".text = builtins.toJSON {inherit (self) sourceInfo;};
   environment.etc."flake-src".source = lib.my.relativeToRoot ".";
