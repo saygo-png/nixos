@@ -1054,7 +1054,7 @@
       };
 
       programs.foot = {
-        enable = true;
+        enable = false;
         settings = {
           cursor.blink = "yes";
           scrollback.lines = 1000;
