@@ -728,7 +728,6 @@
           # fontforge-gtk # Font editor
           keepassxc # Password manager
           qbittorrent # Torrent client
-          swappy # Quick drawing on images
           mission-center # GUI task manager
           localsend # Send via local network
           xdragon # drag items from terminal
