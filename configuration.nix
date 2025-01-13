@@ -40,7 +40,6 @@
       "myTmux.nix"
       "myMullvad.nix"
       "myAichat.nix"
-      "mySecrets.nix"
       "myThunar.nix"
       "myPackages.nix"
       "myStupid.nix"
