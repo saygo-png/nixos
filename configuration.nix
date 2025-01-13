@@ -680,18 +680,18 @@
           "ls" = "eza";
           "la" = "eza -a";
           "ll" = "eza -l";
-          "rt" = "${lib.getExe pkgs.gtrash} put";
+          "rt" = "gtrash put";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
-          "qcalc" = "${lib.getExe pkgs.libqalculate}";
+          "qcalc" = "qalc";
           "plan" = "nsxiv ${config.home.homeDirectory}/Sync/notes/plan.png";
-          "grep" = "${lib.getExe pkgs.gnugrep} --color=auto";
+          "grep" = "grep --color=auto";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch ${conFlakePath} -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
-          "record" = "${lib.getExe' pkgs.alsa-utils "arecord"} -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
+          "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
         };
 
         sessionVariables = {
