@@ -1316,8 +1316,6 @@
       # }}}
 
       # Extra Configs {{{
-      xdg.enable = true;
-
       xdg.configFile."zathura/" = {
         text = let
           color = config.lib.stylix.colors.withHashtag;

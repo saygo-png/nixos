@@ -69,6 +69,8 @@ in {
   ];
 
   home-manager.users.${conUsername} = {lib, ...}: {
+    xdg.enable = true;
+
     home.activation.make-steam-home = lib.hm.dag.entryAfter ["writeBoundary"] ''
       run mkdir -p $XDG_DATA_HOME/steam-home
     '';
