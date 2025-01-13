@@ -30,7 +30,7 @@
       "myNeovim.nix"
       "myTerminal.nix"
 
-      "mySway.nix"
+      # "mySway.nix"
       "myXMonad.nix"
       "myAwesome.nix"
       "myHyprland.nix"
