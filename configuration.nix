@@ -324,7 +324,7 @@
       ntfs3g # ntfs filesystem interop (windows fs)
     ]
     ++ (
-      if (config.const.importedMyMPVModule or "")
+      if (config.const.importedMyMPVModule or false)
       then [python3]
       else []
     );
