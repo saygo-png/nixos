@@ -33,7 +33,7 @@
       # "mySway.nix"
       "myXMonad.nix"
       "myAwesome.nix"
-      "myHyprland.nix"
+      # "myHyprland.nix"
 
       "myZSH.nix"
       "myMPV.nix"
