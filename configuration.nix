@@ -771,35 +771,8 @@
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
           run mkdir -p "${config.home.homeDirectory}/backups"
-
-          run mkdir -p "${config.home.homeDirectory}/Desktop"
-          run rm -f "${config.home.homeDirectory}/Desktop/Desktop" || true
-
           run mkdir -p "${config.home.homeDirectory}/screencaptures"
-          run ln -s "${config.home.homeDirectory}/screencaptures" "${config.home.homeDirectory}/Desktop/screencaptures" || true
-          run rm -f "${config.home.homeDirectory}/screencaptures/screencaptures" || true
-
-          run mkdir -p "${config.home.homeDirectory}/Downloads"
-          run ln -s "${config.home.homeDirectory}/Downloads" "${config.home.homeDirectory}/Desktop/Downloads" || true
-          run rm -f "${config.home.homeDirectory}/Downloads/Downloads" || true
-
-          run mkdir -p "${config.home.homeDirectory}/Videos"
-          run ln -s "${config.home.homeDirectory}/Videos" "${config.home.homeDirectory}/Desktop/Videos" || true
-          run rm -f "${config.home.homeDirectory}/Videos/Videos" || true
-
           run mkdir -p "${config.home.homeDirectory}/Sync"
-          run ln -s "${config.home.homeDirectory}/Sync" "${config.home.homeDirectory}/Desktop/Sync" || true
-          run rm -f "${config.home.homeDirectory}/Sync/Sync" || true
-
-          run mkdir -p "${config.xdg.configHome}"
-          run ln -s "${config.xdg.configHome}" "${config.home.homeDirectory}/Desktop/.config" || true
-          run rm -f "${config.home.homeDirectory}/Desktop/.config/.config" || true
-          run rm -f "${config.home.homeDirectory}/.config/.config" || true
-
-          run mkdir -p "${config.xdg.dataHome}"
-          run ln -s "${config.xdg.dataHome}" "${config.home.homeDirectory}/Desktop/.local" || true
-          run rm -f "${config.home.homeDirectory}/Desktop/.local/.local" || true
-          run rm -f "${config.home.homeDirectory}/.local/.local" || true
         '';
       };
 
