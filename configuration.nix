@@ -26,7 +26,6 @@
     ++ builtins.map (rest: lib.my.relativeToRoot ("modules/" + rest)) [
       "myConstants.nix"
 
-      # "myEmacs.nix"
       "myNeovim.nix"
       "myTerminal.nix"
 
