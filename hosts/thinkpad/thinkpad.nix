@@ -132,11 +132,6 @@
     };
   };
 
-  # On battery ur cpu will go down to 400 freq if this is off
-  # Still does after plugin in cable and unplugging :(
-  # TODO fix
-  # services.throttled.enable = true;
-
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
 
