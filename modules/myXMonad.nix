@@ -47,31 +47,131 @@
 
     programs.xmobar = {
       enable = true;
-      extraConfig =
+      extraConfig = let
+        green = config.lib.stylix.colors.withHashtag.base0B;
+        yellow = config.lib.stylix.colors.withHashtag.base0A;
+        orange = config.lib.stylix.colors.withHashtag.base09;
+        red = config.lib.stylix.colors.withHashtag.base08;
+        dark3 = config.lib.stylix.colors.withHashtag.base03;
+      in
         /*
         haskell
         */
         ''
-           Config { overrideRedirect = False
-          , font     = "${config.stylix.fonts.serif.name} Regular ${builtins.toString (config.stylix.fonts.sizes.desktop - 1)}"
-          , bgColor  = "${config.lib.stylix.colors.withHashtag.base00}"
-          , fgColor  = "${config.lib.stylix.colors.withHashtag.base07}"
-          , position = TopW L 90
-          , commands = [ Run Cpu
-                           [ "-L", "3"
-                           , "-H", "50"
-                           , "--high"  , "red"
-                           , "--normal", "green"
-                           ] 10
-                       , Run Memory ["--template", "Mem: <usedratio>%"] 10
-                       , Run Swap [] 10
-                       , Run Date "%a %Y-%m-%d <fc=#8be9fd>%H:%M</fc>" "date" 10
-                       , Run XMonadLog
-                       ]
-          , sepChar  = "%"
-          , alignSep = "}{"
-          , template = "%XMonadLog% }{ %alsa:default:Master% | %cpu% | %memory% * %swap% |%date% "
-          }
+          Config
+            { overrideRedirect = False,
+              allDesktops = True,
+              lowerOnStart = True,
+              font = "${config.stylix.fonts.serif.name} Regular ${builtins.toString (config.stylix.fonts.sizes.desktop - 1)}",
+              bgColor = "${config.lib.stylix.colors.withHashtag.base00}",
+              fgColor = "${config.lib.stylix.colors.withHashtag.base07}",
+              position = TopW L 100,
+              commands =
+                [ Run
+                    Cpu
+                    [ "--template",
+                      "C<total>%",
+                      "--Low",
+                      "10",
+                      "--High",
+                      "80",
+                      "--high",
+                      "${red}",
+                      "--normal",
+                      "${orange}",
+                      "--low",
+                      "${green}"
+                    ]
+                    10,
+                  Run Memory [
+                    "--template",
+                    "M<usedratio>%",
+                    "--Low",
+                    "20",
+                    "--High",
+                    "90",
+                    "--low",
+                    "${red}",
+                    "--normal",
+                    "${orange}",
+                    "--high",
+                    "${green}"
+                    ] 10,
+                  Run Swap [
+                    "--template",
+                    "S<usedratio>%",
+                    "--Low",
+                    "10",
+                    "--High",
+                    "50",
+                    "--low",
+                    "${red}",
+                    "--normal",
+                    "${orange}",
+                    "--high",
+                    "${green}"
+                    ] 10,
+                  Run Date "%a %Y-%m-%d <fc=${green}>%H:%M</fc>" "date" 10,
+                  Run XMonadLog,
+                  Run Wireless "wlp3s0" [
+                    "--template",
+                    "W<quality>",
+                    "--Low",
+                    "10",
+                    "--High",
+                    "80",
+                    "--low",
+                    "${red}",
+                    "--normal",
+                    "${orange}",
+                    "--high",
+                    "${green}"
+                    ] 10,
+                  Run
+                    Battery
+                    [ "--template",
+                      "B<acstatus>",
+                      "--Low",
+                      "10",
+                      "--High",
+                      "80",
+                      "--low",
+                      "${red}",
+                      "--normal",
+                      "${orange}",
+                      "--high",
+                      "${green}",
+                      "--",
+                      -- discharging status
+                      "-o",
+                      "<left>% <timeleft>",
+                      "-O",
+                      "<fc=${yellow}>...</fc>",
+                      "-i",
+                      "<fc=${green}>V</fc>"
+                    ]
+                    50,
+                  Run
+                    DynNetwork
+                    [ "--template",
+                      "<tx>kBs <rx>kBs",
+                      "--Low",
+                      "1000",
+                      "--High",
+                      "5000",
+                      "--low",
+                      "${green}",
+                      "--normal",
+                      "${orange}",
+                      "--high",
+                      "${red}"
+                    ]
+                    10
+                ],
+              sepChar = "%",
+              alignSep = "}{",
+              template = "%XMonadLog% }{%battery%<fc=${dark3}>|</fc>%wlp3s0wi% %dynnetwork%<fc=${dark3}>|</fc>%cpu%<fc=${dark3}>|</fc>%memory% %swap%<fc=${dark3}>|</fc>%date%"
+            }
         '';
     };
 
