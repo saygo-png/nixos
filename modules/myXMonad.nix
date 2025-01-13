@@ -91,11 +91,11 @@
                     "--High",
                     "90",
                     "--low",
-                    "${red}",
+                    "${green}",
                     "--normal",
                     "${orange}",
                     "--high",
-                    "${green}"
+                    "${red}"
                     ] 10,
                   Run Swap [
                     "--template",
@@ -105,11 +105,11 @@
                     "--High",
                     "50",
                     "--low",
-                    "${red}",
+                    "${green}",
                     "--normal",
                     "${orange}",
                     "--high",
-                    "${green}"
+                    "${red}"
                     ] 10,
                   Run Date "%a %Y-%m-%d <fc=${green}>%H:%M</fc>" "date" 10,
                   Run XMonadLog,
@@ -156,9 +156,9 @@
                     [ "--template",
                       "<tx>kBs <rx>kBs",
                       "--Low",
-                      "1000",
-                      "--High",
                       "5000",
+                      "--High",
+                      "15000",
                       "--low",
                       "${green}",
                       "--normal",
