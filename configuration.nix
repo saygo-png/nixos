@@ -286,12 +286,12 @@
       bzip2
       pbzip2
       lzip
-      plzip
-      lzop
+      # plzip
+      # lzop
       xz
-      lhasa
-      arj
-      cpio
+      # lhasa
+      # arj
+      # cpio
       p7zip
 
       # Camera.
