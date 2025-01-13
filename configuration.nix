@@ -385,11 +385,6 @@
       auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes"];
     };
-    gc = {
-      automatic = true;
-      dates = "2day";
-      options = "--delete-older-than +5";
-    };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
     registry.nixpkgs-unstable.flake = self.inputs.nixpkgs-unstable;
     nixPath = [
