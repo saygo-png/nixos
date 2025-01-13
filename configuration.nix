@@ -197,12 +197,6 @@
     };
   };
 
-  # Remap CAPS lock to ESC
-  services.udev.extraHwdb = ''
-    evdev:atkbd:*
-      KEYBOARD_KEY_3a=esc
-  '';
-
   console = {
     useXkbConfig = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
