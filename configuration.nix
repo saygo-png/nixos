@@ -266,7 +266,7 @@
 
       # Printing.
       cups
-      cups-bjnp
+      # cups-bjnp
       # cups-brother-hl1110
       # cups-brother-hl1210w
       # cups-brother-hl2260d
