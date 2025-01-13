@@ -336,10 +336,6 @@
       else []
     );
 
-  #   if (config.const.importedMyMPVModule or "") == true
-  # then
-  #   [python3] else [];
-
   # }}}
 
   ###### Miscellaneous ###### {{{
