@@ -680,6 +680,7 @@
           "ls" = "eza";
           "la" = "eza -a";
           "ll" = "eza -l";
+          "lla" = "eza -la";
           "rt" = "gtrash put";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
