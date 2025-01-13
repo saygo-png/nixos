@@ -318,7 +318,6 @@
       libqalculate # Calculator
       udftools # Udf filesystem
       ripgrep # Multithreaded grep
-      wl-clipboard # Wayland xclip
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
       libnotify # Notifications (notify-send)
