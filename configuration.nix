@@ -786,6 +786,16 @@
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
 
+      services.dunst = {
+        enable = true;
+        settings.global = {
+          width = 300;
+          height = 300;
+          offset = "30x50";
+          origin = "top-center";
+        };
+      };
+
       programs.lazygit = {
         enable = true;
         settings = {
