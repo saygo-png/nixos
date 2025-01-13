@@ -26,27 +26,6 @@
       }
     )
   ];
-  # Bluetooth
-  services.blueman.enable = true;
-  hardware.bluetooth = {
-    enable = true; # enables support for Bluetooth
-    powerOnBoot = true; # powers up the default Bluetooth controller on boot
-  };
-
-  # If you desire to compile kernel for better bluetooth support.
-  # boot.kernelModules = ["btqca"];
-  # boot.kernelPatches = [
-  #   {
-  #     name = "enable-qca6390-bluetooth";
-  #     patch = null;
-  #     extraConfig = ''
-  #       BT_QCA m
-  #       BT_HCIUART m
-  #       BT_HCIUART_QCA y
-  #     '';
-  #   }
-  # ];
-
   # Optimization for ssds
   services.fstrim.enable = true;
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];
@@ -195,9 +174,6 @@
   };
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
-    # Media controls for bluetooth headphones
-    services.mpris-proxy.enable = true;
-
     programs.foot.settings.main.pad = lib.mkForce "0x0center";
     programs.alacritty.settings.window.padding = lib.mkForce {
       x = 0;
