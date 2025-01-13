@@ -10,9 +10,6 @@
   # Polkit (needed for window managers)
   security.polkit.enable = lib.mkDefault true;
 
-  # Also needed for secrets
-  services.gnome.gnome-keyring.enable = true;
-
   # NixOS is retarded and turns on lightdm by default.
   services.xserver.displayManager = lib.mkDefault {
     lightdm.enable = false;
