@@ -30,6 +30,11 @@
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
 
+  # Open ports for qbittorrent
+  networking.firewall.allowedTCPPorts = [39578];
+  networking.firewall.allowedUDPPorts = [39578];
+  services.fail2ban.enable = true;
+
   # Optimization for ssds
   services.fstrim.enable = true;
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];

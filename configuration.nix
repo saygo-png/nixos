@@ -118,10 +118,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [39578];
-    allowedUDPPorts = [39578];
   };
-  services.fail2ban.enable = true;
 
   time.timeZone = "Europe/Warsaw";
 
