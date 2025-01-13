@@ -79,13 +79,15 @@
 
   home-manager.users.${conUsername} = {config, ...}: {
     home = {
-      file = {
-        # auto xrdb
-        ${config.xresources.path}.onChange = ''
-          [[ -z "$\{DISPLAY:-}" ]] && echo Display not set && exit 0
-          run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
-        '';
-      };
+      file =
+        lib.mkIf ("${config.xresources.path}".source or false)
+        {
+          # auto xrdb
+          ${config.xresources.path}.onChange = ''
+            [[ -z "$\{DISPLAY:-}" ]] && echo Display not set && exit 0
+            run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
+          '';
+        };
     };
 
     xdg.configFile."flameshot/flameshot.ini" = {
