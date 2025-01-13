@@ -2,8 +2,8 @@
   lib,
   pkgs,
   config,
-  conUsername,
   conHome,
+  conUsername,
   conFlakePathRel,
   ...
 }: {
