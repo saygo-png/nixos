@@ -27,11 +27,8 @@ myManageHook =
   composeOne
     [ checkDock -?> doIgnore, -- equivalent to manageDocks
       isDialog -?> doFloat,
-      -- isFullscreen -?> doFullFloat,
       className =? "Gimp" -?> doFloat,
       className =? "MPlayer" -?> doFloat,
       return True -?> doF swapDown
     ]
-    -- <+> doF focusDown
-
-
+    <+> composeAll [isFullscreen --> doFullFloat]
