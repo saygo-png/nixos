@@ -43,7 +43,7 @@
 
       (writeShellApplication {
         name = "d3-autocast-menu";
-        runtimeInputs = [coreutils udftools];
+        runtimeInputs = [coreutils];
         text = builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast-menu.sh";
       })
 
