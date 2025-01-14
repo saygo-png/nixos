@@ -69,8 +69,8 @@
   stylix.fonts.sizes = {
     popups = lib.mkDefault 12;
     desktop = lib.mkDefault 12;
-    terminal = lib.mkDefault 13;
-    applications = lib.mkDefault 11;
+    terminal = lib.mkDefault 12;
+    applications = lib.mkDefault 12;
   };
 
   stylix.opacity = {

@@ -158,16 +158,6 @@
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
-  # If using hypralnd uncomment
-  # for some reason text is much larger on awesomewm
-  # and does not need a resize
-  stylix.fonts.sizes = {
-    popups = 13;
-    desktop = 13;
-    terminal = 13;
-    applications = 14;
-  };
-
   home-manager.users.${conUsername} = {osConfig, ...}: {
     programs.foot.settings.main.pad = lib.mkForce "0x0center";
     programs.alacritty.settings.window.padding = lib.mkForce {
