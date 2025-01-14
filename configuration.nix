@@ -284,7 +284,7 @@
       gnutar
       gzip
       bzip2
-      pbzip2
+      # pbzip2
       lzip
       # plzip
       # lzop
