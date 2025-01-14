@@ -91,11 +91,8 @@ in {
       # Needed for special characters in spider.nvim
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
-      # extraPackages = with pkgs; [
-      # ];
 
       highlightOverride = {
-        # hi noCursor blend=100 cterm=strikethrough
         noCursor.blend = 100;
         statusline.bg = "NONE";
         ModeMsg.fg = "#${osConfig.const.accentColor}";
@@ -151,8 +148,6 @@ in {
         # Folds.
         foldenable = false;
         foldmethod = "expr";
-        # foldexpr = "v:lua.vim.treesitter.foldexpr()";
-        # foldtext = "v:lua.vim.treesitter.foldtext()";
 
         # More space.
         cmdheight = 0;
@@ -184,7 +179,6 @@ in {
         gruvbox_material_enable_bold = 1;
         gruvbox_material_enable_italic = 1;
         gruvbox_material_transparent_background = 2;
-
         # Otherwise python sets itself to indent 4
         python_recommended_style = 0;
 
@@ -506,9 +500,6 @@ in {
         -- Keep selection when indenting.
         vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
         vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
-
-        -- Keep cursor position after yank
-        -- vim.keymap.set("n", "y", "ygv<esc>", { desc = "Keep cursor position after yank" })
 
         -- Window switching.
         -- Conflict with harpoon
@@ -847,7 +838,6 @@ in {
 
       # Plugins {{{
       plugins = {
-        # nix.enable = true;
         flash.enable = true;
         direnv.enable = true;
         vimtex.enable = true;
@@ -1169,7 +1159,6 @@ in {
                 nixpkgs.expr = "import ${flake}.inputs.nixpkgs { }";
                 options = rec {
                   nixos.expr = "${flake}.nixosConfigurations.nixos.options";
-
                   # https://kokada.dev/blog/make-nixd-module-completion-to-work-anywhere-with-flakes/
                   # home-manager.expr = ''(let pkgs = import "${inputs.nixpkgs}" { }; lib = import "${inputs.home-manager}/modules/lib/stdlib-extended.nix" pkgs.lib; in (lib.evalModules { modules = (import "${inputs.home-manager}/modules/modules.nix") { inherit lib pkgs; check = false; }; })).options'';
 
