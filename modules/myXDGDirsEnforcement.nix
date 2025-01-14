@@ -75,7 +75,7 @@ in {
       run mkdir -p $XDG_DATA_HOME/steam-home
     '';
 
-    xresources.path = "${homeConfig.xdg.configHome}/x11";
+    xresources.path = "${homeConfig.xdg.configHome}/.xresources";
 
     gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
     home.file.".zshenv".enable = lib.mkForce false;
