@@ -89,7 +89,7 @@
     xdg.configFile."wallpaper.png".source = config.stylix.image;
 
     # Hopefully will set dark mode properly
-    # stylix.targets.gnome.enable = true;
+    stylix.targets.gnome.enable = true;
     stylix.targets.kde.enable = true;
 
     gtk = {
