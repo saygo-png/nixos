@@ -274,7 +274,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-
+      
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
