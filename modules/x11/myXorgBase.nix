@@ -50,7 +50,6 @@
   nixpkgs.overlays = [
     (final: prev: {
       xorgWrapperForSx = prev.writeShellScriptBin "Xorg" ''
-        notify-send wrapped
         exec ${prev.xorg.xorgserver}/bin/X ${toString config.services.xserver.displayManager.xserverArgs} "$@"
       '';
 
