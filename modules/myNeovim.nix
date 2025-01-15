@@ -91,7 +91,6 @@ in {
       # Needed for special characters in spider.nvim
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
-
       highlightOverride = {
         noCursor.blend = 100;
         statusline.bg = "NONE";
