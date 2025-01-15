@@ -4,29 +4,31 @@
   config,
   conHome,
   conUsername,
-  conFlakePathRel,
   ...
 }: {
-  imports = [
-    "${conFlakePathRel}/modules/myPulseaudio.nix"
-    # "${conFlakePathRel}/modules/myMullvad.nix"
-    (
-      {config, ...}: {
-        options = {
-          const = config.constLib.mkConstsFromSet {
-            refreshRate = 60;
-            screenWidth = 1366;
-            screenHeight = 768;
-            gaps = 0;
-            borderSize = 2;
-            accelSpeed = -0.5;
-            vsync = true;
-            extrasNixosPath = "${conHome}/extrasNixos";
+  imports =
+    [
+      (
+        {config, ...}: {
+          options = {
+            const = config.constLib.mkConstsFromSet {
+              refreshRate = 60;
+              screenWidth = 1366;
+              screenHeight = 768;
+              gaps = 0;
+              borderSize = 2;
+              accelSpeed = -0.5;
+              vsync = true;
+              extrasNixosPath = "${conHome}/extrasNixos";
+            };
           };
-        };
-      }
-    )
-  ];
+        }
+      )
+    ]
+    ++ lib.my.withModules [
+      "myPulseaudio.nix"
+      # "myMullvad.nix"
+    ];
   # Optimization for ssds
   services.fstrim.enable = true;
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];

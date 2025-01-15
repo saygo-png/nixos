@@ -5,28 +5,30 @@
   conHome,
   conUsername,
   pkgs-unstable,
-  conFlakePathRel,
   ...
 }: {
-  imports = [
-    "${conFlakePathRel}/modules/myPipewire.nix"
-    "${conFlakePathRel}/modules/myMullvad.nix"
-    # "${conFlakePathRel}/modules/myRocm.nix"
-    ({config, ...}: {
-      options = {
-        const = config.constLib.mkConstsFromSet {
-          refreshRate = 144;
-          screenWidth = 1920;
-          screenHeight = 1080;
-          gaps = 6;
-          borderSize = 1;
-          accelSpeed = -0.9;
-          vsync = false;
-          extrasNixosPath = "${conHome}/extrasNixos";
+  imports =
+    [
+      ({config, ...}: {
+        options = {
+          const = config.constLib.mkConstsFromSet {
+            refreshRate = 144;
+            screenWidth = 1920;
+            screenHeight = 1080;
+            gaps = 6;
+            borderSize = 1;
+            accelSpeed = -0.9;
+            vsync = false;
+            extrasNixosPath = "${conHome}/extrasNixos";
+          };
         };
-      };
-    })
-  ];
+      })
+    ]
+    ++ lib.my.withModules [
+      "myPipewire.nix"
+      "myMullvad.nix"
+      "myRocm.nix"
+    ];
 
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
@@ -272,7 +274,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \

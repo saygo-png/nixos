@@ -23,7 +23,7 @@
         };
       })
     ]
-    ++ builtins.map (rest: lib.my.relativeToRoot ("modules/" + rest)) [
+    ++ lib.my.withModules [
       "myConstants.nix"
 
       "myNeovim.nix"
