@@ -35,7 +35,6 @@
       "myZSH.nix"
       "myMPV.nix"
       "myTmux.nix"
-      "myMullvad.nix"
       "myAichat.nix"
       "myThunar.nix"
       "myPackages.nix"

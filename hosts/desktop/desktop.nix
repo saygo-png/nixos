@@ -10,6 +10,7 @@
 }: {
   imports = [
     "${conFlakePathRel}/modules/myPipewire.nix"
+    "${conFlakePathRel}/modules/myMullvad.nix"
     # "${conFlakePathRel}/modules/myRocm.nix"
     ({config, ...}: {
       options = {
@@ -271,7 +272,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
