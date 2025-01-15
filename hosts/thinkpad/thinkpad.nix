@@ -106,6 +106,12 @@
       WIFI_PWR_ON_BAT = "on";
       CPU_DRIVER_OPMODE_ON_BAT = "passive";
 
+      START_CHARGE_THRESH_BAT0 = 75;
+      STOP_CHARGE_THRESH_BAT0 = 80;
+
+      START_CHARGE_THRESH_BAT1 = 75;
+      STOP_CHARGE_THRESH_BAT1 = 80;
+
       # This is only for ACTIVE OPMODE
       # CPU_SCALING_GOVERNOR_ON_AC = "performance";
       # CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
