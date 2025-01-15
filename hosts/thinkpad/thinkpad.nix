@@ -95,6 +95,7 @@
   };
 
   # Battery saving.
+  services.upower.enable = true;
   boot.kernelParams = ["rcu_nocbs=all" "rcutree.enable_rcu_lazy=1"];
   networking.networkmanager.wifi.powersave = true;
   powerManagement.enable = true;
@@ -102,18 +103,27 @@
     enable = true;
     settings = {
       NMI_WATCHDOG = "0";
+      WIFI_PWR_ON_BAT = "on";
+      CPU_DRIVER_OPMODE_ON_BAT = "passive";
 
-      CPU_SCALING_GOVERNOR_ON_AC = "performance";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      # This is only for ACTIVE OPMODE
+      # CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      # CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
 
       CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+
+      CPU_MIN_PERF_ON_BAT = 0;
+      CPU_MAX_PERF_ON_BAT = 50;
 
       PLATFORM_PROFILE_ON_AC = "performance";
-      PLATFORM_PROFILE_ON_BAT = "balanced";
+      PLATFORM_PROFILE_ON_BAT = "low-power";
 
       CPU_BOOST_ON_AC = 1;
       CPU_BOOST_ON_BAT = 0;
+
+      CPU_HWP_DYN_BOOST_ON_AC = 1;
+      CPU_HWP_DYN_BOOST_ON_BAT = 0;
     };
   };
 
