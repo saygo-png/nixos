@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   conHome,
   conUsername,
   conFlakePathRel,
@@ -13,9 +14,6 @@
 
       (writeShellScriptBin "hyprland-next-visible-client.sh"
         (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
-
-      (writeShellScriptBin "vmrss"
-        (builtins.readFile "${conFlakePathRel}/resources/scripts/vmrss.sh"))
 
       (writeShellScriptBin "monitor-toggle"
         (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
@@ -50,7 +48,17 @@
       (writeShellApplication {
         name = "format-udf";
         runtimeInputs = [coreutils udftools];
-        text = builtins.readFile "${conFlakePathRel}/resources/scripts/format-udf.sh";
+        checkPhase = ""; # Dont shellcheck
+        bashOptions = []; # Dont add extra options
+        text = builtins.readFile "${inputs.format-udf}/format-udf.sh";
+      })
+
+      (writeShellApplication {
+        name = "vmrss";
+        runtimeInputs = [coreutils bc];
+        checkPhase = ""; # Dont shellcheck
+        bashOptions = []; # Dont add extra options
+        text = builtins.readFile "${inputs.vmrss}/vmrss";
       })
 
       (writeShellApplication {

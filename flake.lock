@@ -315,6 +315,22 @@
         "type": "github"
       }
     },
+    "format-udf": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1697473321,
+        "narHash": "sha256-fmr9wYfh9keNk57kM+zt1JFuEeFocBIl30ccV0x27CE=",
+        "owner": "JElchison",
+        "repo": "format-udf",
+        "rev": "a7b6067126d7e22fb179a50424cc904461da53bb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "JElchison",
+        "repo": "format-udf",
+        "type": "github"
+      }
+    },
     "fromYaml": {
       "flake": false,
       "locked": {
@@ -788,6 +804,7 @@
         "awesome-lain": "awesome-lain",
         "devenv": "devenv",
         "extras-nixos": "extras-nixos",
+        "format-udf": "format-udf",
         "home-manager": "home-manager",
         "mpv-intersubs": "mpv-intersubs",
         "nix-index-database": "nix-index-database",
@@ -799,7 +816,8 @@
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
         "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
         "stylix": "stylix",
-        "treefmt-nix": "treefmt-nix_2"
+        "treefmt-nix": "treefmt-nix_2",
+        "vmrss": "vmrss"
       }
     },
     "stylix": {
@@ -953,6 +971,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "vmrss": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1702010674,
+        "narHash": "sha256-trJbiyixZrbDHUCXCsxcywcgKnf8/WLM0EvLHFXDAZ8=",
+        "owner": "ThePrimeagen",
+        "repo": "vmrss",
+        "rev": "7eac021c8e12fa7e53af7f2e2e02e47b2cb38211",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ThePrimeagen",
+        "repo": "vmrss",
         "type": "github"
       }
     }

@@ -17,6 +17,16 @@
       flake = false;
     };
 
+    format-udf = {
+      url = "github:JElchison/format-udf";
+      flake = false;
+    };
+
+    vmrss = {
+      url = "github:ThePrimeagen/vmrss";
+      flake = false;
+    };
+
     devenv = {
       url = "github:cachix/devenv";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -752,7 +752,6 @@
           pulsemixer # Volume control
           ffmpeg # Video and magic editor
           gmic # Image processing language
-          bc # Gnu calculator, needed for vmrss
 
           # Haskell
           cabal-install
