@@ -104,6 +104,10 @@ in {
       };
 
       opts = {
+        # Speed
+        lazyredraw = true;
+        regexpengine = 1;
+
         # Indents.
         tabstop = 2;
         shiftwidth = 2;
