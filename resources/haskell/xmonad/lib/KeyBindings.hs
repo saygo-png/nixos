@@ -3,7 +3,6 @@ module KeyBindings where
 import qualified Data.Map as M
 import Defaults
 import Graphics.X11.ExtraTypes.XF86
--- import Help
 import qualified WindowState as WS
 import XMonad
 import XMonad.Actions.Search
@@ -111,8 +110,6 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       ((modm .|. shiftMask, xK_l), spawn "lock"),
       -- Restart xmonad
       ((modm .|. shiftMask, xK_r), spawn "xmonad --recompile; xmonad --restart")
-      -- Run xmessage with a summary of the default keybindings (useful for beginners)
-      -- ((modm .|. shiftMask, xK_h), spawn ("echo \"" ++ help ++ "\" | gxmessage -file -"))
     ]
       ++
       -- Applications --

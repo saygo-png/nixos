@@ -1,14 +1,17 @@
 -- Modules in ~/.xmonad/lib directory
+
 import Defaults
-import EventHandling
 import Flow
+-- import LogHook
+
 import KeyBindings
 import Layout
-import LogHook
 import ManageHook
 import MouseBindings
-import StartupHook
 import XMonad
+-- import StartupHook
+-- import EventHandling
+
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.StatusBar
 
@@ -32,8 +35,8 @@ main = myConfig |> xmobar .> ewmh .> ewmhFullscreen .> xmonad
           normalBorderColor = myNormalBorderColor,
           focusedBorderColor = myFocusedBorderColor,
           mouseBindings = myMouseBindings,
-          manageHook = myManageHook,
-          handleEventHook = myEventHook,
-          logHook = myLogHook,
-          startupHook = myStartupHook
+          manageHook = myManageHook
+          -- handleEventHook = myEventHook,
+          -- logHook = myLogHook,
+          -- startupHook = myStartupHook
         }
