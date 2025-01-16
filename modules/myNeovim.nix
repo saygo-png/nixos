@@ -93,6 +93,7 @@ in {
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
       extraPlugins = [
+        pkgs.vimPlugins.vim-pencil
         pkgs.vimPlugins.gruvbox-material
         pkgs.vimPlugins.dial-nvim
         # pkgs.vimPlugins.vim-dispatch
