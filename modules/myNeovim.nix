@@ -66,6 +66,7 @@ in {
       # cljfmt # Clojure formatter
       # clj-kondo # Clojure linter
     ];
+
     programs.nixvim = {
       enable = true;
 
@@ -90,6 +91,39 @@ in {
 
       # Needed for special characters in spider.nvim
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
+
+      extraPlugins = [
+        pkgs.vimPlugins.gruvbox-material
+        pkgs.vimPlugins.dial-nvim
+        # pkgs.vimPlugins.vim-dispatch
+        # pkgs.vimPlugins.vim-jack-in
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "cutlass.nvim";
+          src = nvim-plugin-cutlass;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "vim-visual-multi";
+          src = nvim-plugin-vim-visual-multi;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "rainbow";
+          src = nvim-plugin-rainbow;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "faster.nvim";
+          src = inputs.nvim-plugin-faster;
+        })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "tshjkl.nvim";
+          src = inputs.nvim-plugin-tshjkl;
+        })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "telescope-git-file-history.nvim";
+          src = inputs.nvim-plugin-telescope-git-file-history;
+        })
+      ];
 
       highlightOverride = {
         noCursor.blend = 100;
@@ -743,39 +777,6 @@ in {
       '';
       clipboard.register = "unnamedplus";
       colorschemes.base16.enable = lib.mkForce false;
-
-      extraPlugins = [
-        pkgs.vimPlugins.gruvbox-material
-        pkgs.vimPlugins.dial-nvim
-        # pkgs.vimPlugins.vim-dispatch
-        # pkgs.vimPlugins.vim-jack-in
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "cutlass.nvim";
-          src = nvim-plugin-cutlass;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "vim-visual-multi";
-          src = nvim-plugin-vim-visual-multi;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "rainbow";
-          src = nvim-plugin-rainbow;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "faster.nvim";
-          src = inputs.nvim-plugin-faster;
-        })
-
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "tshjkl.nvim";
-          src = inputs.nvim-plugin-tshjkl;
-        })
-
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "telescope-git-file-history.nvim";
-          src = inputs.nvim-plugin-telescope-git-file-history;
-        })
-      ];
 
       keymaps = [
         {
