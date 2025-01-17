@@ -321,6 +321,7 @@
       imagemagick # Image identifier
       libnotify # Notifications (notify-send)
       ntfs3g # ntfs filesystem interop (windows fs)
+      pipenv
     ]
     ++ (
       if (config.const.importedMyMPVModule or false)
