@@ -9,7 +9,7 @@ import Layout
 import ManageHook
 import MouseBindings
 import XMonad
--- import StartupHook
+import StartupHook
 -- import EventHandling
 
 import XMonad.Hooks.EwmhDesktops
@@ -35,8 +35,8 @@ main = myConfig |> xmobar .> ewmh .> ewmhFullscreen .> xmonad
           normalBorderColor = myNormalBorderColor,
           focusedBorderColor = myFocusedBorderColor,
           mouseBindings = myMouseBindings,
-          manageHook = myManageHook
+          manageHook = myManageHook,
           -- handleEventHook = myEventHook,
           -- logHook = myLogHook,
-          -- startupHook = myStartupHook
+          startupHook = myStartupHook
         }

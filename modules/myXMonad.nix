@@ -4,6 +4,7 @@
   extraLib,
   conUsername,
   conFlakePathRel,
+  conFlakePath,
   ...
 }: {
   imports = [
@@ -39,6 +40,58 @@
         ];
       in
         extraLib.wrapWithXinitrc xinitrc "xmonad");
+
+    xdg.configFile."xmonad/build" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+
+        # Your source directory. Default is the config dir, if it can be found.
+        SRC_DIR=''${XDG_CONFIG_HOME}/xmonad
+
+        # Executable name, from the executable stanza of your cabal file.
+        # The script will try to guess it if not specified.
+        EXE_NAME=xmonadrc
+
+        ##############################################################################
+
+        oldDir=$(pwd)
+        cd ${conFlakePath}/resources/haskell
+        echo "pwd $(pwd)"
+        ${lib.getExe pkgs.direnv} allow .
+        notify-send "rebuilding xmonad..."
+        eval $(${lib.getExe pkgs.direnv} export bash)
+        echo "direnv activated"
+        cd "$oldDir"
+
+        output="$1"
+        dir="$(dirname "$output")"
+        file="$(basename "$output")"
+        first=0
+
+        for exe in $EXE_NAME; do
+          cabal install exe:"$EXE_NAME" \
+            --enable-executable-stripping \
+            --enable-optimization=2 \
+            --installdir="$dir" \
+            --overwrite-policy=always
+          # NB. a cabal bug may mean it doesn't actually get stripped
+          # we assume the first executable in the list is the new xmonad
+          if [ $first = 0 ]; then
+            first=1
+            if [ "$file" = "$exe" ]; then
+              : someone will try it…
+            else
+              ln -sf "$exe" "$output"
+            fi
+          elif [ "$file" = "$exe" ]; then
+            # the link above just got replaced with a direct link into the
+            # cabal package
+            echo I hope you know what you\'re doing... >&2
+          fi
+        done
+      '';
+    };
 
     xdg.configFile."xmonad" = {
       source = lib.my.relativeToRoot "resources/haskell/xmonad";
