@@ -19,7 +19,33 @@
       inputs.home-manager.nixosModules.default
       ({config, ...}: {
         options = {
-          const = config.constLib.mkConstsFromSet {accentColor = "7d8618";};
+          const =
+            config.constLib.mkConstsFromSet {
+              accentColor = "7d8618";
+            }
+            // config.constLib.mkConstsFromSetInsanity {
+              libs = [
+                pkgs.libGL
+                pkgs.gcc
+                pkgs.libgcc
+                pkgs.e2fsprogs
+
+                # X11 libs
+                pkgs.xcb-util-cursor
+                pkgs.xorg.xcbutilwm
+                pkgs.xorg.xcbutilrenderutil
+                pkgs.xorg.xcbutilkeysyms
+                pkgs.xorg.xcbutilerrors
+                pkgs.xorg.libxcb
+                pkgs.xorg.xcbutilimage
+                pkgs.libxkbcommon
+
+                pkgs.xorg.libX11
+                pkgs.xorg.libXrandr
+                pkgs.xorg.libXScrnSaver
+                pkgs.xorg.libXext
+              ];
+            };
         };
       })
     ]
@@ -399,27 +425,7 @@
   ## https://github.com/nix-community/nix-index-database
   programs.nix-ld.libraries =
     options.programs.nix-ld.libraries.default
-    ++ (with pkgs; [
-      libGL
-      gcc
-      libgcc
-      e2fsprogs
-
-      # X11 libs
-      xcb-util-cursor
-      xorg.xcbutilwm
-      xorg.xcbutilrenderutil
-      xorg.xcbutilkeysyms
-      xorg.xcbutilerrors
-      xorg.libxcb
-      xorg.xcbutilimage
-      libxkbcommon
-
-      xorg.libX11
-      xorg.libXrandr
-      xorg.libXScrnSaver
-      xorg.libXext
-    ]);
+    ++ config.const.libs;
   # }}}
 
   ###### Services ###### {{{
@@ -1456,4 +1462,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-

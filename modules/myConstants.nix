@@ -38,6 +38,7 @@
 in {
   options = {
     constLib = mkConstsFromSetInsanity {
+      inherit mkConstsFromSetInsanity;
       inherit mkConst;
       inherit mkConstsFromSet;
     };
