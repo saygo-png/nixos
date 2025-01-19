@@ -186,6 +186,7 @@ in {
         # Folds.
         foldenable = false;
         foldmethod = "expr";
+        foldexpr = "nvim_treesitter#foldexpr()";
 
         # More space.
         cmdheight = 0;
