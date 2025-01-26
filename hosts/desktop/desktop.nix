@@ -45,24 +45,6 @@
   # Swap super and ctrl
   services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
 
-  services.actkbd = {
-    enable = true;
-    bindings = [
-      {
-        # Volume down
-        keys = [12];
-        events = ["key"];
-        command = "${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
-      }
-      {
-        # Volume up
-        keys = [13];
-        events = ["key"];
-        command = "${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)";
-      }
-    ];
-  };
-
   # Gaming.
   # services.xserver.deviceSection = ''
   #   Option "TearFree" "True"
@@ -274,7 +256,7 @@
     (
       writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
