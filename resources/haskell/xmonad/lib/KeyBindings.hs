@@ -8,6 +8,7 @@ import XMonad
 import XMonad.Actions.Search
 -- import XMonad.Hooks.StatusBar
 
+import TrueFullscreen
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Gaps
 import qualified XMonad.Layout.Magnifier as Magnifier
@@ -30,6 +31,7 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
   M.fromList $
     -- launch a terminal
     [ ((modm, xK_Return), safeSpawn (XMonad.terminal conf) []),
+      ((modm, xK_y), toggleFullscreen),
       -- launch browser
       ((modm, xK_b), safeSpawn myBrowser []),
       -- launch rofi and dashboard

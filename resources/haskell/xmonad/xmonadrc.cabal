@@ -13,6 +13,7 @@ library
     Defaults
     EventHandling
     KeyBindings
+    TrueFullscreen
     Layout
     LogHook
     MouseBindings
