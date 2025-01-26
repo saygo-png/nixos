@@ -705,7 +705,7 @@
           # Default programs.
           PAGER = "moar";
           OPENER = "xdg-open";
-          BROWSER = "librewolf";
+          BROWSER = "firefox";
           EDITOR = lib.mkDefault "vim";
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
