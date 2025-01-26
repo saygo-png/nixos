@@ -40,7 +40,6 @@ myLayoutHook =
     |> mkToggle (NOBORDERS ?? NBFULL ?? EOT)
     |> lessBorders OnlyScreenFloat
   where
-    myXmobarHidesLayout = lessBorders OnlyScreenFloat $ avoidStruts $ layoutHook def
     myLayout =
       tiled
         ||| magnifier tiled
