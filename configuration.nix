@@ -906,6 +906,14 @@
             sort_by = "natural";
             sort_dir_first = true;
           };
+          opener = {
+            extract = [
+              {
+                run = ''aunpack "$@"'';
+                desc = "Extract here";
+              }
+            ];
+          };
           plugin = {
             preloaders = [
               {
