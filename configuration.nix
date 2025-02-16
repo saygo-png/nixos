@@ -10,7 +10,6 @@
   options,
   conUsername,
   conFlakePath,
-  pkgs-unstable,
   ...
 }: {
   imports =
@@ -63,6 +62,7 @@
       "myTmux.nix"
       "myAichat.nix"
       "myThunar.nix"
+      "myGaming.nix"
       "myPackages.nix"
       "myStupid.nix"
       "myTemplates.nix"
@@ -539,7 +539,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = {inherit inputs pkgs-unstable;};
+    extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # home-manager breaks without it.
     users.${conUsername} = {
       lib,
@@ -779,8 +779,8 @@
 
           # Unstable
           # nixpkgs-unstable-working-krita.krita # Painting
-          pkgs-unstable.krita # Painting
-          pkgs-unstable.inkscape # Vector graphics
+          krita # Painting
+          inkscape # Vector graphics
           deno
         ];
 

@@ -4,7 +4,7 @@
   ...
 }: {
   home-manager.users.${conUsername} = {
-    home.packages = with pkgs; [
+    home.packages = [
       (let
         prismlauncher-unwrapped-patched = pkgs.prismlauncher-unwrapped.overrideAttrs {
           patches = [
@@ -33,11 +33,6 @@
       in
         pkgs.prismlauncher.override {
           prismlauncher-unwrapped = prismlauncher-unwrapped-patched;
-          jdks = [
-            temurin-bin-8
-            temurin-bin-17
-            temurin-bin-21
-          ];
         })
     ];
   };

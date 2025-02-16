@@ -167,11 +167,6 @@
   environment.systemPackages = with pkgs; [
     acpi # Cli battery interface.
     powertop # Power drain check
-
-    # Games.
-    lutris-free
-    winetricks
-    wineWowPackages.waylandFull
   ];
 
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
