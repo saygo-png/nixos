@@ -217,6 +217,6 @@
   environment.systemPackages = with pkgs; [
     piper # For ratbagd
     borgbackup
-    pkgs-unstable.zed-editor.fhs # Another text editor
+    # pkgs-unstable.zed-editor.fhs # Another text editor
   ];
 }

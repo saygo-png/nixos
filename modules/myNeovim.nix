@@ -1217,7 +1217,6 @@ in {
             };
             denols = {
               enable = true;
-              package = pkgs-unstable.deno;
               rootDir = ''
                 function (filename, bufnr)
                   local util = require 'lspconfig.util'
