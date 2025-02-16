@@ -4,7 +4,6 @@
   config,
   inputs,
   conUsername,
-  pkgs-unstable,
   ...
 }: let
   nvim-plugin-cutlass = pkgs.fetchFromGitHub {

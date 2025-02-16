@@ -4,7 +4,6 @@
   config,
   conHome,
   conUsername,
-  pkgs-unstable,
   ...
 }: {
   imports =
