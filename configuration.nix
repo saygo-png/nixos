@@ -323,6 +323,9 @@
       gphoto2fs
 
       # GUI.
+      simplescreenrecorder
+      godot_4 # Game engine
+      gdtoolkit_4 # Tools (needed for formatter addon)
       nsxiv # Image viewer
       qalculate-gtk # Gui calculator
       kdePackages.dolphin # File manager
@@ -331,7 +334,6 @@
       ncdu
       rclone
       exiftool
-      texliveBasic
       jq # Json parser
       gcc # C compiling
       vim # Text editor
@@ -754,9 +756,18 @@
           tokei # Line counter
           cbonsai # pretty tree
 
+          # Writing
+          pandoc # document converter
+          texliveBasic
+          asciidoctor
+          typst
+
           zoxide # Cd alternative
           htop-vim # TUI task manager
-          pulsemixer # Volume control
+
+          # Volume control
+          pulsemixer
+
           ffmpeg # Video and magic editor
           gmic # Image processing language
 
@@ -1470,4 +1481,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-

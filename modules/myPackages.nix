@@ -105,6 +105,14 @@
       })
 
       (writeShellApplication {
+        name = "pasteimg";
+        runtimeInputs = [xclip coreutils];
+        text = ''
+          xclip -selection clipboard -t image/png -o | tee "$1" >/dev/null
+        '';
+      })
+
+      (writeShellApplication {
         name = "myAutostart.sh";
         runtimeInputs = [xorg.xrandr polkit-kde-agent xmousepasteblock xssproxy];
         text = ''

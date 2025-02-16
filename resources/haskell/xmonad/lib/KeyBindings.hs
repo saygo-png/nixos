@@ -31,6 +31,7 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
   M.fromList $
     -- launch a terminal
     [ ((modm, xK_Return), safeSpawn (XMonad.terminal conf) []),
+
       ((modm, xK_y), toggleFullscreen),
       -- launch browser
       ((modm, xK_b), safeSpawn myBrowser []),
@@ -47,12 +48,11 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       -- Toggle fullscreen layout
       ((modm, xK_f), toggleFullscreenWithStruts),
       -- Audio keys
-      ((0, xF86XK_AudioPlay), spawn "playerctl play-pause"),
-      ((0, xF86XK_AudioPrev), spawn "playerctl previous"),
-      ((0, xF86XK_AudioNext), spawn "playerctl next"),
-      -- ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%"),
-      -- ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%"),
-      -- ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"),
+      -- ((0, xF86XK_AudioPlay), spawn "playerctl play-pause"),
+      -- ((0, xF86XK_AudioPrev), spawn "playerctl previous"),
+      -- ((0, xF86XK_AudioNext), spawn "playerctl next"),
+      ((modm, xK_KP_Subtract), spawn "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"),
+      ((modm, xK_KP_Equal), spawn "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"),
 
       -- -- Brightness keys
       -- ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl s +10%"),

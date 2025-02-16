@@ -21,7 +21,7 @@ library
     ManageHook
     WindowState
   hs-source-dirs: lib
-  ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded
+  ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded -haddock
   -- ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded   -Werror
   build-depends: base
     , xmonad
@@ -33,7 +33,7 @@ library
 
 executable xmonadrc
   main-is: xmonad.hs
-  ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded
+  ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded -haddock
   -- ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded   -Werror
   build-depends: base
     , xmonad

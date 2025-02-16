@@ -53,6 +53,7 @@ in {
       pkgs.isort # Python import sorter
       pkgs.yapf # Python formatter
       pkgs.prettierd # Javascript formatter
+      pkgs.tinymist # Typst lsp
       # nodePackages.bash-language-server
       pkgs.markdownlint-cli # Markdown linter
       pkgs.haskellPackages.fourmolu # Haskell formatter
@@ -93,9 +94,11 @@ in {
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
       extraPlugins = [
+        pkgs.vimPlugins.img-clip-nvim
         pkgs.vimPlugins.vim-pencil
         pkgs.vimPlugins.gruvbox-material
         pkgs.vimPlugins.dial-nvim
+        pkgs.vimPlugins.typst-preview-nvim
         # pkgs.vimPlugins.vim-dispatch
         # pkgs.vimPlugins.vim-jack-in
         (pkgs.vimUtils.buildVimPlugin {
@@ -148,7 +151,7 @@ in {
         shiftwidth = 2;
         softtabstop = 2;
         expandtab = true;
-        smartindent = true;
+        # smartindent = true;
         breakindent = true; # Indent when wrapping
 
         # Wrapping.
@@ -699,6 +702,30 @@ in {
         vim.keymap.set("v", "g<C-x>", function() require("dial.map").manipulate("decrement", "gvisual") end)
         -- }}}
 
+        -- img-clip.nvim {{{
+          require('img-clip').setup({
+            default = {
+              -- file and directory options
+              dir_path = "assets", ---@type string | fun(): string
+              extension = "png", ---@type string | fun(): string
+              file_name = "%Y-%m-%d-%H-%M-%S", ---@type string | fun(): string
+              use_absolute_path = false, ---@type boolean | fun(): boolean
+              relative_to_current_file = false, ---@type boolean | fun(): boolean
+
+              -- template options
+              template = "$FILE_PATH", ---@type string | fun(context: table): string
+              url_encode_path = false, ---@type boolean | fun(): boolean
+              relative_template_path = true, ---@type boolean | fun(): boolean
+              use_cursor_in_template = true, ---@type boolean | fun(): boolean
+              insert_mode_after_paste = false, ---@type boolean | fun(): boolean
+
+              -- prompt options
+              prompt_for_file_name = true, ---@type boolean | fun(): boolean
+              copy_images = true, ---@type boolean | fun(): boolean
+          }
+        })
+        -- }}}
+
         -- Cutlass (Delete copy registers) {{{
         require("cutlass").setup({
           override_del = true,
@@ -1150,6 +1177,9 @@ in {
 
             # Bash
             bashls.enable = true;
+
+            # Typst
+            tinymist.enable = true;
 
             # Typos.
             typos_lsp = {
