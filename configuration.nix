@@ -728,6 +728,7 @@
           calibre
           foliate
           scribus
+          godot_4 # Game engine
           mandelbulber
           anki # Flashcards
           libreoffice # office
