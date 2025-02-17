@@ -995,7 +995,6 @@
 
       programs.git = {
         enable = true;
-        package = pkgs.gitAndTools.gitFull;
         aliases = {
           aa = "add -A"; # [A]dd [A]ll
           amend = "commit -a --amend";
