@@ -213,9 +213,10 @@
     };
   };
   services.ratbagd.enable = true; # For piper
-  environment.systemPackages = with pkgs; [
-    piper # For ratbagd
-    borgbackup
+  environment.systemPackages = [
+    pkgs.piper # For ratbagd
+    pkgs.borgbackup
+    pkgs.blender-hip
     # pkgs-unstable.zed-editor.fhs # Another text editor
   ];
 }
