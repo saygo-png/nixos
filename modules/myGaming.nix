@@ -69,12 +69,10 @@
     pkgs.lutris
     pkgs.winetricks
     pkgs.wineWowPackages.waylandFull
-    pkgs.blender-hip
-
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
