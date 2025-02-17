@@ -18,8 +18,8 @@
   environment.systemPackages = with pkgs; [
     grim # screenshot functionality
     slurp # screenshot functionality
-    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
     mako # notification system developed by swaywm maintainer
+    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
   ];
 
   home-manager.users.${conUsername} = {
@@ -47,13 +47,11 @@
         window.titlebar = false;
         startup = [
           {command = "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image}";}
-          # {command = ''${lib.getExe pkgs.persway} daemon -w -e '[tiling] opacity 1' -f '[tiling] opacity 0.95; opacity 1' -l 'mark --add _prev' --default-layout spiral'';}
           {command = "${config.home.sessionVariables.TERMINAL}";}
         ];
         bars = [
           {
             position = "top";
-            # statusCommand = "${lib.getExe pkgs.i3status-rust} ~/.config/i3status-rust/config-default.toml";
             statusCommand = null;
             fonts = {
               names = ["monospace"];
@@ -76,7 +74,6 @@
         ];
         focus = {
           followMouse = false;
-          #newWindow = "focus";
           newWindow = "urgent";
         };
         keybindings = let

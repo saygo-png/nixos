@@ -1,12 +1,12 @@
 {
   ###### Imports ###### {{{
+  lib,
   host,
   pkgs,
   self,
-  inputs,
-  lib,
-  conHome,
   config,
+  inputs,
+  conHome,
   options,
   conUsername,
   conFlakePath,
@@ -119,12 +119,6 @@
 
   services.xserver.wacom.enable = true;
 
-  # Insecure
-  # hardware.opentabletdriver = {
-  #   enable = true;
-  #   daemon.enable = true;
-  # };
-
   environment.binsh = lib.getExe pkgs.dash;
 
   # Faster boot
@@ -140,9 +134,7 @@
   networking.dhcpcd.extraConfig = "nohook resolv.conf";
   networking.nameservers = ["9.9.9.9" "149.112.112.112"];
 
-  networking.firewall = {
-    enable = true;
-  };
+  networking.firewall.enable = true;
 
   time.timeZone = "Europe/Warsaw";
 
@@ -262,10 +254,8 @@
     ''
       <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
        "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
-
       <Menu>
           <Name>Applications</Name>
-
           <DefaultAppDirs/>
           <DefaultDirectoryDirs/>
           <DefaultMergeDirs/>
@@ -275,81 +265,109 @@
   # System packages.
   environment.systemPackages = with pkgs;
     [
-      busybox
-      eza # ls alternative
-
-      vlock
+      cups
       man-pages
       man-pages-posix
 
       # Nix.
-      nixd # Another nix LSP (For Zed)
       nh # Nix helper
       alejandra # Nix formatter
+      nixd # Another nix LSP (For Zed)
       nix-tree # Reverse dependency search
       nix-output-monitor # Pretty nix build output
 
-      # Printing.
-      cups
-      # cups-bjnp
-      # cups-brother-hl1110
-      # cups-brother-hl1210w
-      # cups-brother-hl2260d
-      # cups-brother-hl3140cw
-      # cups-brother-hll2340dw
-      # cups-brother-hll2375dw
-      # cups-brother-hll3230cdw
-      # cups-brother-mfcl2750dw
-
-      # All the archive garbage
-      atool # Unified CLI for all of these:
-      unrar-free
+      # All the archive garbage.
+      xz
       zip
+      gzip
+      lzip
+      bzip2
+      p7zip
       unzip
       gnutar
-      gzip
-      bzip2
-      # pbzip2
-      lzip
-      # plzip
-      # lzop
-      xz
-      # lhasa
-      # arj
-      # cpio
-      p7zip
+      unrar-free
+      atool # Unified CLI for all of these:
 
-      # Camera.
+      # Camera files support.
       gphoto2fs
 
-      # GUI.
-      simplescreenrecorder
-      godot_4 # Game engine
-      gdtoolkit_4 # Tools (needed for formatter addon)
-      nsxiv # Image viewer
-      qalculate-gtk # Gui calculator
-      kdePackages.dolphin # File manager
-
       # CLI.
+      eza
+      deno
       ncdu
+      vlock
+      pipenv
       rclone
+      busybox
       exiftool
+      moar # Pager
       jq # Json parser
+      termdown # Timer
       gcc # C compiling
       vim # Text editor
       wget # Downloader
+      tokei # Line counter
       udiskie # Auto mount
+      cbonsai # pretty tree
       gnumake # C compiling
       gtrash # Cli trashcan
       file # File identifier
+      zoxide # Cd alternative
+      devenv # Dev environments
       libqalculate # Calculator
       udftools # Udf filesystem
+      htop-vim # TUI task manager
+      pulsemixer # Volume control
       ripgrep # Multithreaded grep
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
+      ffmpeg # Video and magic editor
+      gmic # Image processing language
       libnotify # Notifications (notify-send)
+      python312Packages.ptpython # Python repl
       ntfs3g # ntfs filesystem interop (windows fs)
-      pipenv
+
+      # GUI.
+      calibre
+      foliate
+      scribus
+      mandelbulber
+      krita # Painting
+      anki # Flashcards
+      libreoffice # office
+      nsxiv # Image viewer
+      simplescreenrecorder
+      godot_4 # Game engine
+      sayonara # Music player
+      zathura # Better for pdfs
+      inkscape # Vector graphics
+      keepassxc # Password manager
+      qbittorrent # Torrent client
+      qalculate-gtk # Gui calculator
+      mission-center # GUI task manager
+      kdePackages.dolphin # File manager
+      localsend # Send via local network
+      xdragon # drag items from terminal
+      jetbrains.pycharm-community-src # python IDE
+
+      # Browsers.
+      # Librewolf is currently broken
+      # librewolf
+      firefox
+      tor-browser
+      ungoogled-chromium
+
+      # Writing.
+      typst
+      asciidoctor
+      texliveBasic
+      pandoc # document converter
+
+      # Haskell.
+      stack
+      cabal-install
+      ghc # Haskell compiler for the LSP
+      haskell-language-server # Haskell LSP
     ]
     ++ (
       if (config.const.importedMyMPVModule or false)
@@ -361,6 +379,9 @@
 
   ###### Miscellaneous ###### {{{
 
+  programs.dconf.enable = true;
+  xdg.menus.enable = true;
+
   # Create media folder in root
   systemd.tmpfiles.rules = [
     "d /media 0755 root root"
@@ -371,6 +392,7 @@
     FLAKE = "${conFlakePath}"; # For nix helper.
   };
 
+  # Fixes issues with broken portal
   systemd.user.services."wait-for-full-path-gtk" = {
     description = "wait for systemd units to have full PATH";
     wantedBy = ["xdg-desktop-portal-gtk.service"];
@@ -390,13 +412,13 @@
     };
   };
 
-  system.stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
+  system.stateVersion = "24.05"; # Don't change.
 
   # }}}
 
   ##### NixOS ###### {{{
 
-  # Keep trace of flake hash for every gen in /etc
+  # Keep trace of flake hash and flake for every gen in /etc
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
   environment.etc."flake-rev.json".text = builtins.toJSON {inherit (self) sourceInfo;};
   environment.etc."flake-src".source = lib.my.relativeToRoot ".";
@@ -428,6 +450,7 @@
   programs.nix-ld.libraries =
     options.programs.nix-ld.libraries.default
     ++ config.const.libs;
+
   # }}}
 
   ###### Services ###### {{{
@@ -446,10 +469,10 @@
   '';
 
   services.libinput.enable = true;
-  services.libinput.mouse.accelProfile = "adaptive";
-  services.libinput.mouse.middleEmulation = false;
   services.xserver.autoRepeatDelay = 170;
   services.xserver.autoRepeatInterval = 45;
+  services.libinput.mouse.middleEmulation = false;
+  services.libinput.mouse.accelProfile = "adaptive";
 
   # File synchronization.
   services.syncthing = {
@@ -531,10 +554,6 @@
 
   # }}}
 
-  # Fixes some themeing/cursor issues and is probably needed for something.
-  programs.dconf.enable = true;
-  xdg.menus.enable = true;
-
   ##### Home Manager ###### {{{
   home-manager = {
     useGlobalPkgs = true;
@@ -548,8 +567,8 @@
       ...
     }: {
       imports = [
-        inputs.nix-index-database.hmModules.nix-index
         inputs.nixvim.homeManagerModules.nixvim
+        inputs.nix-index-database.hmModules.nix-index
       ];
 
       # Prevent default apps from being changed
@@ -674,40 +693,40 @@
       home = {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
-        stateVersion = "24.05"; # Dont change # CHANGE IT ON UPDATE NO BALLS
+        stateVersion = "24.05"; # Don't change.
 
         shellAliases = {
-          "lock" = "sudo vlock -nas";
-          "archive" = "patool";
-          "f" = ''cd "$(fzfcd)"'';
+          "ls" = "eza";
           "cp" = "cp -v";
           "rm" = "rm -I";
-          "pkill" = "pkill -f";
-          "countlines" = "tokei";
-          "shutdown" = "poweroff";
-          "ls" = "eza";
           "la" = "eza -a";
           "ll" = "eza -l";
+          "qcalc" = "qalc";
           "lla" = "eza -la";
           "rt" = "gtrash put";
+          "archive" = "patool";
+          "pkill" = "pkill -f";
+          "countlines" = "tokei";
+          "f" = ''cd "$(fzfcd)"'';
+          "shutdown" = "poweroff";
+          "lock" = "sudo vlock -nas";
+          "grep" = "grep --color=auto";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
-          "qcalc" = "qalc";
-          "plan" = "nsxiv ${config.home.homeDirectory}/Sync/notes/plan.png";
-          "grep" = "grep --color=auto";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
+          "plan" = "nsxiv ${config.home.homeDirectory}/Sync/notes/plan.png";
           "nhoffline" = "nh os switch ${conFlakePath} -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
-          "search" = "sudo echo got sudo && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
+          "search" = "sudo echo 'got sudo' && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
 
         sessionVariables = {
           # Default programs.
           PAGER = "moar";
-          OPENER = "xdg-open";
           BROWSER = "firefox";
+          OPENER = "xdg-open";
           EDITOR = lib.mkDefault "vim";
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
@@ -718,72 +737,9 @@
           # Without this, games that use SDL will minimize when focus is lost
           SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0;
 
-          # Systemd is retarded and doesnt use normal pager variable :DDDDD
+          # Systemd is retarded and doesn't use normal pager variable :DDDDD
           SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
         };
-
-        # Home packages, home manager packages, user packages, home programs.
-        packages = with pkgs; [
-          # GUI.
-          calibre
-          foliate
-          scribus
-          godot_4 # Game engine
-          mandelbulber
-          anki # Flashcards
-          libreoffice # office
-          sayonara # Music player
-          zathura # Better for pdfs
-          # fontforge-gtk # Font editor
-          keepassxc # Password manager
-          qbittorrent # Torrent client
-          mission-center # GUI task manager
-          localsend # Send via local network
-          xdragon # drag items from terminal
-
-          # Browsers
-          firefox
-          librewolf
-          ungoogled-chromium
-          tor-browser
-
-          jetbrains.pycharm-community-src # python IDE
-          python312Packages.ptpython # Python repl
-
-          # Command line.
-          devenv # Dev environments
-          moar # Pager
-          termdown # Timer
-          tokei # Line counter
-          cbonsai # pretty tree
-
-          # Writing
-          pandoc # document converter
-          texliveBasic
-          asciidoctor
-          typst
-
-          zoxide # Cd alternative
-          htop-vim # TUI task manager
-
-          # Volume control
-          pulsemixer
-
-          ffmpeg # Video and magic editor
-          gmic # Image processing language
-
-          # Haskell
-          cabal-install
-          stack
-          ghc # Haskell compiler for the LSP
-          haskell-language-server # Haskell LSP
-
-          # Unstable
-          # nixpkgs-unstable-working-krita.krita # Painting
-          krita # Painting
-          inkscape # Vector graphics
-          deno
-        ];
 
         activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
@@ -1139,22 +1095,25 @@
         package = pkgs.rofi-wayland;
         enable = true;
         extraConfig = {
-          modi = "window,run,drun";
-          font = "${config.stylix.fonts.monospace.name} ${builtins.toString (config.stylix.fonts.sizes.terminal + 1)}";
-          padding = 10;
-          fixed-num-lines = true;
-          show-icons = false;
-          run-command = "{cmd}";
-          drun-show-actions = false;
-          disable-history = false;
-          matching = "fuzzy";
           sort = true;
+          padding = 10;
           scrollbar = true;
-          sorting-method = "fzf";
-          auto-select = false;
-          separator-style = "dash";
-          window-format = "{w} {c}  {t}";
           show-match = true;
+          matching = "fuzzy";
+          show-icons = false;
+          auto-select = false;
+          run-command = "{cmd}";
+          fixed-num-lines = true;
+          sorting-method = "fzf";
+          disable-history = false;
+          modi = "window,run,drun";
+          separator-style = "dash";
+          drun-show-actions = false;
+          window-format = "{w} {c}  {t}";
+          font = let
+            inherit (builtins) toString;
+            inherit (config.stylix) fonts;
+          in "${fonts.monospace.name} ${toString (fonts.sizes.terminal + 1)}";
 
           # Bindings, I use empty strings to remove bind conflicts.
           kb-remove-to-eol = "";
@@ -1398,11 +1357,11 @@
           map i toggle_statusbar
 
           set guioptions "s"
-          set statusbar-home-tilde "true"
           set adjust-open "width"
           set statusbar-h-padding 0
           set statusbar-v-padding 0
           set scroll-page-aware "true"
+          set statusbar-home-tilde "true"
           set selection-clipboard clipboard
         '';
       };
@@ -1410,38 +1369,38 @@
       xdg.configFile."yapf/style" = {
         text = ''
           [style]
-            based_on_style = google
             indent_width = 2
             use_tabs = False
             column_limit = 100
+            based_on_style = google
             coalesce_brackets = True
-            align_closing_bracket_with_visual_indent = True
-            allow_multiline_dictionary_keys = True
-            allow_multiline_lambdas = True
-            blank_lines_around_top_level_definition = 1
-            blank_line_before_class_docstring = False
-            blank_line_before_nested_class_or_def = False
-            continuation_align_style = SPACE
-            continuation_indent_width = 2
-            dedent_closing_brackets = True
-            each_dict_entry_on_separate_line = False
-            join_multiple_lines = True
-            no_spaces_around_selected_binary_operators = *,/
-            spaces_around_default_or_named_assign = False
-            spaces_around_power_operator = False
             spaces_before_comment = 1
-            space_between_ending_comma_and_closing_bracket = False
+            join_multiple_lines = True
+            continuation_indent_width = 2
+            allow_multiline_lambdas = True
+            dedent_closing_brackets = True
+            continuation_align_style = SPACE
+            spaces_around_power_operator = False
             split_before_bitwise_operator = True
+            allow_multiline_dictionary_keys = True
+            each_dict_entry_on_separate_line = False
+            blank_line_before_class_docstring = False
+            blank_lines_around_top_level_definition = 1
+            blank_line_before_nested_class_or_def = False
+            spaces_around_default_or_named_assign = False
+            align_closing_bracket_with_visual_indent = True
+            no_spaces_around_selected_binary_operators = *,/
+            space_between_ending_comma_and_closing_bracket = False
         '';
       };
 
       xdg.configFile."fourmolu.yaml".source = (pkgs.formats.yaml {}).generate "fourmoluExtraConfigDIY" {
         indentation = 2;
         respectful = false;
-        in-style = "left-align";
-        comma-style = "trailing";
         indent-wheres = true;
         let-style = "inline";
+        in-style = "left-align";
+        comma-style = "trailing";
         haddock-style = "single-line";
       };
 
@@ -1449,32 +1408,32 @@
         steps:
           - simple_align:
               cases: always
-              top_level_patterns: always
               records: always
               multi_way_if: always
+              top_level_patterns: always
           - imports:
               align: global
-              list_align: after_alias
-              pad_module_names: true
-              long_list_align: inline
-              empty_list_align: inherit
               list_padding: 4
-              separate_lists: true
-              space_surround: false
               post_qualify: false
               group_imports: false
+              separate_lists: true
+              space_surround: false
+              pad_module_names: true
+              list_align: after_alias
+              long_list_align: inline
+              empty_list_align: inherit
               group_rules:
                 - match: ".*"
                   sub_group: "^[^.]+"
           - language_pragmas:
-              style: vertical
               align: true
+              style: vertical
               remove_redundant: true
               language_prefix: LANGUAGE
           - trailing_whitespace: {}
+        cabal: true
         columns: 100
         newline: native
-        cabal: true
       '';
       # }}}
     };
@@ -1482,4 +1441,3 @@
   # }}}
 }
 ## vim:foldmethod=marker
-
