@@ -155,7 +155,7 @@ in {
 
         # Wrapping.
         linebreak = true;
-        wrap = false;
+        wrap = true;
 
         # Center it all.
         scrolloff = 999;
