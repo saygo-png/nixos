@@ -4,6 +4,7 @@ import Defaults
 import Flow
 -- import LogHook
 
+import XMonad.Util.EZConfig
 import KeyBindings
 import Layout
 import ManageHook
@@ -40,3 +41,7 @@ main = myConfig |> xmobar .> ewmh .> ewmhFullscreen .> xmonad
           -- logHook = myLogHook,
           startupHook = myStartupHook
         }
+        `additionalKeysP` [
+          ("M--", spawn "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"),
+          ("M-=", spawn "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+")
+        ]

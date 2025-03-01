@@ -47,12 +47,11 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       ((modm .|. shiftMask, xK_f), withFocused WS.toggleFloat),
       -- Toggle fullscreen layout
       ((modm, xK_f), toggleFullscreenWithStruts),
+
       -- Audio keys
       -- ((0, xF86XK_AudioPlay), spawn "playerctl play-pause"),
       -- ((0, xF86XK_AudioPrev), spawn "playerctl previous"),
       -- ((0, xF86XK_AudioNext), spawn "playerctl next"),
-      ((modm, xK_KP_Subtract), spawn "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+"),
-      ((modm, xK_KP_Equal), spawn "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-"),
 
       -- -- Brightness keys
       -- ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl s +10%"),
@@ -61,9 +60,6 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       -- Screenshot
       ((0, xK_Print), spawn "flameshot_wrapper"),
       ((modm, xK_Print), spawn "flameshot screen"),
-      -- My Stuff
-      -- ((modm, xK_b), killAllStatusBars),
-      -- ((modm, xK_v), pasteSelection),
 
       -- close focused window
       ((modm, xK_q), kill),
