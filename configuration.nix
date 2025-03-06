@@ -96,13 +96,13 @@
   documentation = {
     enable = true;
     dev.enable = true;
-    doc.enable = false;
+    doc.enable = true;
     info.enable = false;
     man = {
       enable = true;
-      generateCaches = false;
-      man-db.enable = false;
-      mandoc.enable = true;
+      generateCaches = true;
+      man-db.enable = true;
+      mandoc.enable = false;
     };
   };
 
@@ -266,8 +266,6 @@
   environment.systemPackages = with pkgs;
     [
       cups
-      man-pages
-      man-pages-posix
 
       # Nix.
       nh # Nix helper
