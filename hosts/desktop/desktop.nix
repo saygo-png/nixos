@@ -48,6 +48,14 @@
   # services.xserver.deviceSection = ''
   #   Option "TearFree" "True"
   # '';
+  services.xserver.xrandrHeads = [
+    {
+      output = "HDMI-2";
+      monitorConfig = ''
+        Modeline "1280x720_144.00"  198.75  1280 1384 1520 1760  720 723 728 786 -hsync +vsync
+      '';
+    }
+  ];
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
