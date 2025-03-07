@@ -1,0 +1,5 @@
+This is a collection of imperative things needed to replicate my system state.
+It's not ideal that i have this, but there are limitations to what nix
+currently offers
+
+* Launch easyeffects and create the preset "Audio-Technica ATH-M30x"
