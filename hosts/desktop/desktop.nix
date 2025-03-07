@@ -45,9 +45,6 @@
   services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
 
   # Gaming.
-  # services.xserver.deviceSection = ''
-  #   Option "TearFree" "True"
-  # '';
   services.xserver.xrandrHeads = [
     {
       output = "HDMI-2";
@@ -56,6 +53,11 @@
       '';
     }
   ];
+
+  services.xserver.deviceSection = ''
+    Option "VariableRefresh" "true"
+  '';
+  # Option "TearFree" "True"
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
