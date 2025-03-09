@@ -3,9 +3,15 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-24.11"; #I don't need unstable, so i set it to stable for now
+
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
+
+    zlequalizer = {
+      url = "git+file:///home/samsepi0l/Sync/builds/zlequalizer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     extras-nixos = {
       url = "github:saygo-png/extrasNixos";

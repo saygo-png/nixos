@@ -12,6 +12,8 @@
     [
       (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/convertlink") {})
 
+      inputs.zlequalizer.packages.x86_64-linux.zlequalizer
+
       (writeShellScriptBin "hyprland-next-visible-client.sh"
         (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
 
