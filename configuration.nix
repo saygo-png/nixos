@@ -64,6 +64,7 @@
       "myThunar.nix"
       "myGaming.nix"
       "myPackages.nix"
+      "myAudioEffects.nix"
       "myStupid.nix"
       "myTemplates.nix"
       "myPrismlauncher.nix"
@@ -266,6 +267,8 @@
   environment.systemPackages = with pkgs;
     [
       cups
+      tap-plugins
+      lsp-plugins
 
       # Nix.
       nh # Nix helper
@@ -298,6 +301,7 @@
       rclone
       busybox
       exiftool
+      alsa-utils
       moar # Pager
       jq # Json parser
       termdown # Timer
@@ -390,6 +394,25 @@
   environment.sessionVariables = {
     FLAKE = "${conFlakePath}"; # For nix helper.
   };
+
+  # This allows for programs to see audio plugins
+  environment.variables = let
+      homeConfig = config.home-manager.users.${conUsername};
+      makePluginPath = format:
+        (lib.makeSearchPath format [
+          "$HOME/.nix-profile/lib"
+          "/run/current-system/sw/lib"
+          "/etc/profiles/per-user/$USER/lib"
+        ])
+        + ":${homeConfig.xdg.dataHome}/.${format}";
+    in {
+      DSSI_PATH   = makePluginPath "dssi";
+      LADSPA_PATH = makePluginPath "ladspa";
+      LV2_PATH    = makePluginPath "lv2";
+      LXVST_PATH  = makePluginPath "lxvst";
+      VST_PATH    = makePluginPath "vst";
+      VST3_PATH   = makePluginPath "vst3";
+    };
 
   # Fixes issues with broken portal
   systemd.user.services."wait-for-full-path-gtk" = {
