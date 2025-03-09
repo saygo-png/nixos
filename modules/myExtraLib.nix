@@ -13,7 +13,7 @@
       text = xinitrc;
     };
   in
-    if (config.services.xserver.displayManager.startx.enable && !config.services.xserver.displayManager.sx.enable)
+    if (!config.services.xserver.displayManager.startx.enable && !config.services.xserver.displayManager.sx.enable)
     then throw "You need either startx or sx enabled"
     else let
       startx-wrapper-if = lib.mkIf config.services.xserver.displayManager.startx.enable [
