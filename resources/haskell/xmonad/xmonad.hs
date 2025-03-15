@@ -1,4 +1,5 @@
 -- Modules in ~/.xmonad/lib directory
+{-# LANGUAGE FlexibleContexts #-}
 
 import Defaults
 import Flow
@@ -17,7 +18,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.StatusBar
 
 main :: IO ()
-main = myConfig |> xmobar .> ewmh .> ewmhFullscreen .> xmonad
+main = myConfig |> xmobar .> ewmh .> ewmhFullscreen .> (\xconfig -> getDirectories >>= launch xconfig)
   where
     xmobar = withEasySB (statusBarProp "xmobar ~/.config/xmobar/.xmobarrc" (pure def)) toggleStrutsKey
       where

@@ -107,7 +107,8 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       -- lock pc
       ((modm .|. shiftMask, xK_l), spawn "lock"),
       -- Restart xmonad
-      ((modm .|. shiftMask, xK_r), spawn "xmonad --recompile; xmonad --restart")
+      ((modm, xK_r), restart "xmonad" True),
+      ((modm .|. controlMask, xK_r), restart "xmonad" False)
     ]
       ++
       -- Applications --

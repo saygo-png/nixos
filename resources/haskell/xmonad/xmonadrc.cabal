@@ -31,7 +31,7 @@ library
     , flow
   default-language: Haskell2010
 
-executable xmonadrc
+executable xmonad
   main-is: xmonad.hs
   ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded -haddock
   -- ghc-options: -Wall -rtsopts -with-rtsopts=-V0 -threaded   -Werror
