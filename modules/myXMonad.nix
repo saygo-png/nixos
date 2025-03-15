@@ -4,7 +4,6 @@
   extraLib,
   conUsername,
   conFlakePathRel,
-  conFlakePath,
   ...
 }: {
   imports = [

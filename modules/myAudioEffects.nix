@@ -1,8 +1,5 @@
 {
   pkgs,
-  inputs,
-  conUsername,
-  conFlakePathRel,
   lib,
   ...
 }: {
