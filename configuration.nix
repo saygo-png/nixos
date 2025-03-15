@@ -269,6 +269,9 @@
       cups
       tap-plugins
       lsp-plugins
+      zam-plugins
+      molot-lite
+      eq10q
 
       # Nix.
       nh # Nix helper
