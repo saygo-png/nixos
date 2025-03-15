@@ -1058,17 +1058,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1741513113,
-        "narHash": "sha256-C9koslAnQAyz/19m+Gk8g6FC1qc/Lv+pr87HZ1Y3BsY=",
-        "ref": "refs/heads/from-binary",
-        "rev": "09a8a889491bb2ff9d6eb46d4ccf1911353b7b1c",
-        "revCount": 2,
-        "type": "git",
-        "url": "file:///home/samsepi0l/Sync/builds/zlequalizer"
+        "lastModified": 1742059941,
+        "narHash": "sha256-korem6julgpxpI6nADuE8A5/qzXNU2O+MqD1vhrIFIc=",
+        "owner": "saygo-png",
+        "repo": "ZLEqualizer-nix",
+        "rev": "ac392b9e155e75552ac329c85bd3a5333ecaeb3a",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/samsepi0l/Sync/builds/zlequalizer"
+        "owner": "saygo-png",
+        "repo": "ZLEqualizer-nix",
+        "type": "github"
       }
     }
   },

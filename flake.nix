@@ -9,7 +9,7 @@
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
 
     zlequalizer = {
-      url = "git+file:///home/samsepi0l/Sync/builds/zlequalizer";
+      url = "github:saygo-png/ZLEqualizer-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -179,3 +179,7 @@
     };
   };
 }
+
+
+
+
