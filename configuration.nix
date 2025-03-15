@@ -400,22 +400,22 @@
 
   # This allows for programs to see audio plugins
   environment.variables = let
-      homeConfig = config.home-manager.users.${conUsername};
-      makePluginPath = format:
-        (lib.makeSearchPath format [
-          "$HOME/.nix-profile/lib"
-          "/run/current-system/sw/lib"
-          "/etc/profiles/per-user/$USER/lib"
-        ])
-        + ":${homeConfig.xdg.dataHome}/.${format}";
-    in {
-      DSSI_PATH   = makePluginPath "dssi";
-      LADSPA_PATH = makePluginPath "ladspa";
-      LV2_PATH    = makePluginPath "lv2";
-      LXVST_PATH  = makePluginPath "lxvst";
-      VST_PATH    = makePluginPath "vst";
-      VST3_PATH   = makePluginPath "vst3";
-    };
+    homeConfig = config.home-manager.users.${conUsername};
+    makePluginPath = format:
+      (lib.makeSearchPath format [
+        "$HOME/.nix-profile/lib"
+        "/run/current-system/sw/lib"
+        "/etc/profiles/per-user/$USER/lib"
+      ])
+      + ":${homeConfig.xdg.dataHome}/.${format}";
+  in {
+    DSSI_PATH = makePluginPath "dssi";
+    LADSPA_PATH = makePluginPath "ladspa";
+    LV2_PATH = makePluginPath "lv2";
+    LXVST_PATH = makePluginPath "lxvst";
+    VST_PATH = makePluginPath "vst";
+    VST3_PATH = makePluginPath "vst3";
+  };
 
   # Fixes issues with broken portal
   systemd.user.services."wait-for-full-path-gtk" = {
