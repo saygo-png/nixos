@@ -1058,11 +1058,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1742059941,
-        "narHash": "sha256-korem6julgpxpI6nADuE8A5/qzXNU2O+MqD1vhrIFIc=",
+        "lastModified": 1742061346,
+        "narHash": "sha256-BTbILZfl8zre0YFIJxZeOGfX7P3TFj6nvixn/Ruy678=",
         "owner": "saygo-png",
         "repo": "ZLEqualizer-nix",
-        "rev": "ac392b9e155e75552ac329c85bd3a5333ecaeb3a",
+        "rev": "492dbedeb32253ab40b040997d5361b4af3bcab6",
         "type": "github"
       },
       "original": {
