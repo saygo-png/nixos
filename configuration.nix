@@ -346,7 +346,6 @@
       simplescreenrecorder
       godot_4 # Game engine
       sayonara # Music player
-      zathura # Better for pdfs
       inkscape # Vector graphics
       keepassxc # Password manager
       qbittorrent # Torrent client
@@ -704,6 +703,76 @@
       programs.nix-index.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
+
+      stylix.targets.zathura.enable = false;
+      programs.zathura = let
+        color = config.lib.stylix.colors.withHashtag;
+        inherit (config.stylix) fonts;
+      in {
+        enable = true;
+        options = {
+          selection-clipboard = "clipboard";
+          guioptions = "s";
+          adjust-open = "width";
+          statusbar-h-padding = 0;
+          statusbar-v-padding = 0;
+          scroll-page-aware = true;
+          statusbar-home-tilde = true;
+
+          font = "${fonts.serif.name} ${builtins.toString fonts.sizes.terminal}";
+          recolor = false;
+          recolor-keephue = false;
+
+          notification-error-bg = "${color.base00}"; # bg
+          notification-error-fg = "${color.base08}"; # bright:red
+          notification-warning-bg = "${color.base00}"; # bg
+          notification-warning-fg = "${color.base0A}"; # bright:yellow
+          notification-bg = "${color.base00}"; # bg
+          notification-fg = "${color.base0B}"; # bright:green
+
+          completion-bg = "${color.base02}"; # bg2
+          completion-fg = "${color.base06}"; # fg
+          completion-group-bg = "${color.base01}"; # bg1
+          completion-group-fg = "${color.base03}"; # gray
+          completion-highlight-bg = "${color.base0B}"; # bright:blue
+          completion-highlight-fg = "${color.base02}"; # bg2
+
+          # Define the color in index mode
+          index-bg = "${color.base02}"; # bg2
+          index-fg = "${color.base06}"; # fg
+          index-active-bg = "${color.base0B}"; # bright:blue
+          index-active-fg = "${color.base02}"; # bg2
+
+          inputbar-bg = "${color.base01}"; # bg
+          inputbar-fg = "${color.base06}"; # fg
+
+          statusbar-bg = "${color.base00}"; # bg2
+          statusbar-fg = "${color.base06}"; # fg
+
+          highlight-color = "${color.base0A}"; # bright:yellow
+          highlight-active-color = "${color.base09}"; # bright:orange
+
+          default-bg = "${color.base00}"; # bg
+          default-fg = "${color.base06}"; # fg
+          render-loading = true;
+          render-loading-bg = "${color.base00}"; # bg
+          render-loading-fg = "${color.base06}"; # fg
+
+          # Recolor book content's color
+          recolor-lightcolor = "${color.base00}"; # bg
+          recolor-darkcolor = "${color.base06}"; # fg
+        };
+        mappings = {
+          "<C-r>" = "reload";
+          "<C-j>" = "zoom in";
+          "<C-k>" = "zoom out";
+          i = "toggle_statusbar";
+        };
+        extraConfig = ''
+          unmap i
+          map i toggle_statusbar
+        '';
+      };
 
       services.dunst = {
         enable = true;
@@ -1245,71 +1314,6 @@
       # }}}
 
       # Extra Configs {{{
-      xdg.configFile."zathura/" = {
-        text = let
-          color = config.lib.stylix.colors.withHashtag;
-          inherit (config.stylix) fonts;
-        in ''
-          set notification-error-bg       "${color.base00}" # bg
-          set notification-error-fg       "${color.base08}" # bright:red
-          set notification-warning-bg     "${color.base00}" # bg
-          set notification-warning-fg     "${color.base0A}" # bright:yellow
-          set notification-bg             "${color.base00}" # bg
-          set notification-fg             "${color.base0B}" # bright:green
-
-          set completion-bg               "${color.base02}" # bg2
-          set completion-fg               "${color.base06}" # fg
-          set completion-group-bg         "${color.base01}" # bg1
-          set completion-group-fg         "${color.base03}" # gray
-          set completion-highlight-bg     "${color.base0B}" # bright:blue
-          set completion-highlight-fg     "${color.base02}" # bg2
-
-          # Define the color in index mode
-          set index-bg                    "${color.base02}" # bg2
-          set index-fg                    "${color.base06}" # fg
-          set index-active-bg             "${color.base0B}" # bright:blue
-          set index-active-fg             "${color.base02}" # bg2
-
-          set inputbar-bg                 "${color.base00}" # bg
-          set inputbar-fg                 "${color.base06}" # fg
-
-          set statusbar-bg                "${color.base02}" # bg2
-          set statusbar-fg                "${color.base06}" # fg
-
-          set highlight-color             "${color.base0A}" # bright:yellow
-          set highlight-active-color      "${color.base09}" # bright:orange
-
-          set default-bg                  "${color.base00}" # bg
-          set default-fg                  "${color.base06}" # fg
-          set render-loading              true
-          set render-loading-bg           "${color.base00}" # bg
-          set render-loading-fg           "${color.base06}" # fg
-
-          # Recolor book content's color
-          set recolor-lightcolor          "${color.base00}" # bg
-          set recolor-darkcolor           "${color.base06}" # fg
-
-          set recolor "true"
-          set recolor-keephue false"
-
-          set font "${fonts.serif.name} ${builtins.toString fonts.sizes.terminal}"
-
-          map <C-r> reload
-          map <C-j> zoom in
-          map <C-k> zoom out
-
-          unmap i
-          map i toggle_statusbar
-
-          set guioptions "s"
-          set adjust-open "width"
-          set statusbar-h-padding 0
-          set statusbar-v-padding 0
-          set scroll-page-aware "true"
-          set statusbar-home-tilde "true"
-          set selection-clipboard clipboard
-        '';
-      };
 
       xdg.configFile."yapf/style" = {
         text = ''
