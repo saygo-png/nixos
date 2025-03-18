@@ -65,6 +65,7 @@
       "myGaming.nix"
       "myPackages.nix"
       "myAudioEffects.nix"
+      "mySyncthing.nix"
       "myStupid.nix"
       "myTemplates.nix"
       "myPrismlauncher.nix"
@@ -498,85 +499,6 @@
   services.xserver.autoRepeatInterval = 45;
   services.libinput.mouse.middleEmulation = false;
   services.libinput.mouse.accelProfile = "adaptive";
-
-  # File synchronization.
-  services.syncthing = {
-    enable = true;
-    dataDir = conHome;
-    user = conUsername;
-    openDefaultPorts = true;
-    overrideDevices = false;
-    overrideFolders = false;
-    settings.options.relaysEnabled = false;
-    settings.devices = {
-      nixos = {
-        addresses = [
-          "tcp://192.168.1.11:22000"
-        ];
-        id = "C6JMWDL-WYZZWGV-SJHKD5U-ZICMO7J-Z6L6T2T-LUHH3KH-TBIAGKK-FAO5TQF";
-        autoAcceptFolders = true;
-      };
-      phone = {
-        addresses = [
-          "tcp://192.168.1.10:22000"
-        ];
-        id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
-        autoAcceptFolders = true;
-      };
-      thinkpad = {
-        addresses = [
-          "tcp://192.168.1.13:22000 "
-        ];
-        id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
-        autoAcceptFolders = true;
-      };
-    };
-    settings.folders = let
-      allDevices = builtins.attrNames config.services.syncthing.settings.devices;
-    in {
-      Games = {
-        path = "~/Games";
-        id = "5mfmg-kwfkf";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "thinkpad"
-          "nixos"
-        ];
-      };
-
-      Music = {
-        path = "~/Music";
-        id = "Music";
-        type = "sendreceive";
-        versioning = null;
-        devices = allDevices;
-      };
-
-      gnupg = {
-        path = "~/.local/share/gnupg";
-        id = "fxmdx-ymklb";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "nixos"
-          "thinkpad"
-        ];
-      };
-
-      "mc instances" = {
-        path = "~/.local/share/PrismLauncher";
-        id = "ahybq-dbssj";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "nixos"
-          "thinkpad"
-        ];
-      };
-    };
-  };
-
   # }}}
 
   ##### Home Manager ###### {{{
@@ -770,7 +692,6 @@
           run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
           run mkdir -p "${config.home.homeDirectory}/backups"
           run mkdir -p "${config.home.homeDirectory}/screencaptures"
-          run mkdir -p "${config.home.homeDirectory}/Sync"
         '';
       };
 
