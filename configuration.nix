@@ -752,8 +752,8 @@
           statusbar-bg = "${color.base00}"; # bg2
           statusbar-fg = "${color.base06}"; # fg
 
-          highlight-color = "${color.base0A}"; # bright:yellow
-          highlight-active-color = "${color.base09}"; # bright:orange
+          highlight-color = "${color.base0A}80"; # bright:yellow
+          highlight-active-color = "${color.base09}80"; # bright:orange
 
           default-bg = "${color.base00}"; # bg
           default-fg = "${color.base06}"; # fg
