@@ -14,6 +14,12 @@
       "steam-unwrapped"
     ];
 
+  # This fixes lag in Saints Row: The Third
+  # game tries to connect to a dead server which freezes the game for a bit
+  networking.extraHosts = ''
+    127.0.0.1 sr3.hydra.agoragames.com
+  '';
+
   home-manager.users.${conUsername} = _: {
     programs.mangohud = {
       enable = true;
