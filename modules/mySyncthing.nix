@@ -123,6 +123,8 @@ in {
 
         makeSTSharedIgnores = syncthingFolders: let
           content = ''
+            (?d)battlenet
+
             (?d).direnv
             (?d).devenv
             (?d)node_modules
