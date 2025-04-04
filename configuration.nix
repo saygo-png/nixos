@@ -268,9 +268,12 @@
   environment.systemPackages = with pkgs;
     [
       cups
+
+      # Audio
       tap-plugins
       lsp-plugins
       zam-plugins
+      airwindows-lv2
       molot-lite
       eq10q
 
