@@ -226,7 +226,7 @@
           echo "snr lshw -json | nvim -c 'set filetype=json'"
         '')
 
-      (writeShellScriptBin "clean-nix-hard"
+      (writeShellScriptBin "nix-clean-hard"
         ''
           nix-env --delete-generations 3d
           sudo nix-env --delete-generations 3d
