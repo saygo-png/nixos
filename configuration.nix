@@ -68,7 +68,6 @@
       "mySyncthing.nix"
       "myStupid.nix"
       "myTemplates.nix"
-      "myPrismlauncher.nix"
       "myXDGDirsEnforcement.nix"
 
       "visuals/myTheme.nix"
@@ -342,6 +341,7 @@
       foliate
       scribus
       mandelbulber
+      prismlauncher
       krita # Painting
       anki # Flashcards
       libreoffice # office
