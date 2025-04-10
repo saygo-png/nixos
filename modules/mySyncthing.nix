@@ -144,7 +144,6 @@ in {
             (?d)lib64/
             (?d)parts/
             (?d)sdist/
-            (?d)var/
             (?d)wheels/
             (?d)share/python-wheels/
             (?d)*.egg-info/
@@ -253,7 +252,6 @@ in {
             (?d).nrepl-port
             (?d).cljs*
             (?d)/out
-            (?d)*out
             (?d).lein*
             (?d)*.iml
             (?d).repl*
