@@ -348,7 +348,6 @@
       calibre
       foliate
       scribus
-      mandelbulber
       prismlauncher
       krita # Painting
       anki # Flashcards
