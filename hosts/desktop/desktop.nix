@@ -56,8 +56,8 @@
 
   services.xserver.deviceSection = ''
     Option "VariableRefresh" "true"
+    Option "TearFree" "True"
   '';
-  # Option "TearFree" "True"
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
