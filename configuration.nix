@@ -891,6 +891,18 @@
 
       programs.yazi = {
         enable = true;
+        keymap = {
+          manager.prepend_keymap = [
+            {
+              on = ["b"];
+              run = [
+                # https://github.com/sxyazi/yazi/discussions/327
+                ''shell '${pkgs.ripdrag}/bin/ripdrag "$@" -x -n 2>/dev/null &' --confirm''
+              ];
+              desc = "Drag and drop selection";
+            }
+          ];
+        };
         settings = {
           preview.tab_size = 2;
           manager = {
