@@ -20,10 +20,7 @@
     ...
   }: {
     home.packages =
-      [
-        pkgs.feh
-        pkgs.alsa-tools # used by xmobar
-      ]
+      [pkgs.feh]
       ++ (let
         xinitrc = lib.strings.concatLines [
           osConfig.const.xinitBase
