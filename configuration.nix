@@ -908,12 +908,6 @@
             ];
           };
           plugin = {
-            preloaders = [
-              {
-                mime = "*";
-                run = "noop";
-              }
-            ];
             # Disable image previews
             prepend_previewers = [
               {
