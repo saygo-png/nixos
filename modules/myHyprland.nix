@@ -9,6 +9,7 @@
 
   environment.systemPackages = with pkgs; [
     hyprland-protocols
+    wl-clipboard
     hyprpicker # Color picker
     xdg-desktop-portal-hyprland
   ];
