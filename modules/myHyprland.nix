@@ -203,7 +203,7 @@
           "$mainMod, v, Toggle [p]in, tagwindow, -69PINNED69"
 
           "$mainMod, f, [f]ullscreen, exec, hyprfullscreenfix"
-          "$mainMod SHIFT, f, [f]ake fullscreen, fakefullscreen"
+          "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
 
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"
