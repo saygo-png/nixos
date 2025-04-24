@@ -126,17 +126,11 @@
           new_on_top = false;
           new_status = "slave";
           new_on_active = "after";
-          no_gaps_when_only = false;
         };
 
         decoration = {
           rounding = 0;
           dim_around = 0.8;
-          shadow_range = 10;
-          drop_shadow = true;
-          shadow_render_power = 2;
-          shadow_ignore_window = true;
-          "col.shadow" = lib.mkForce "rgba(0000007F)";
           blur = {
             enabled = false;
             size = 8;
