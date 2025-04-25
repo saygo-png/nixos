@@ -56,6 +56,7 @@
 
       "myXMonad.nix"
       "myAwesome.nix"
+      "myHyprland.nix"
 
       "myZSH.nix"
       "myMPV.nix"
