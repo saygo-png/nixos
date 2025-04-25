@@ -15,7 +15,7 @@
             screenWidth = 1920;
             screenHeight = 1080;
             gaps = 6;
-            borderSize = 1;
+            borderSize = 2;
             accelSpeed = -0.9;
             vsync = false;
             extrasNixosPath = "${conHome}/extrasNixos";
