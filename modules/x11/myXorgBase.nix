@@ -108,6 +108,7 @@
         historyConfirmationToDelete=false
         saveAfterCopy=false
         saveAsFileExtension=png
+        disabledGrimWarning=true
         savePath=${conHome}/Pictures/screenshots
         savePathFixed=true
         showDesktopNotification=true
