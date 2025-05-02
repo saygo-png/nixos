@@ -224,7 +224,7 @@ in {
           "$mainMod, f, [f]ullscreen, exec, ${lib.getExe hyprfullscreenfix}"
           "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
 
-          "$mainMod, p, Switch keyboard layout, exec, ${lib.getExe hyprctl-switch-rofi},"
+          "$mainMod, p, Switch keyboard layout, exec, ${lib.getExe hyprctl-switch-rofi}"
 
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"
