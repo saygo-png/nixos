@@ -25,6 +25,14 @@ in {
     xdg-desktop-portal-hyprland
   ];
 
+  nixpkgs.overlays = [
+    (_: prev: {
+      flameshot = prev.flameshot.override (_: {
+        enableWlrSupport = true;
+      });
+    })
+  ];
+
   home-manager.users.${conUsername} = {osConfig, ...}: {
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
 
@@ -240,7 +248,7 @@ in {
           "$mainMod, d, Set [d]windle layout, exec, hyprctl keyword general:layout \"dwindle\""
           "$mainMod, m, Set [m]aster layout, exec, hyprctl keyword general:layout \"master\""
 
-          ", Print, Screenshot, exec, ${lib.getExe pkgs.grimblast} --freeze copy area"
+          ", Print, Screenshot, exec, flameshot gui"
           "$mainMod, e, [e]dit image, exec, ${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.satty} --filename -"
 
           "$mainMod, r, [r]ecord, exec, hyprcorder.sh"
@@ -345,6 +353,14 @@ in {
           # Needed for gloss window to tile and not focus.
           "tile, class:^()$"
           "noinitialfocus, class:^()$"
+          # Flameshot fixes
+          "stayfocused, class:flameshot, title:flameshot"
+          "norounding, class:flameshot, title:flameshot"
+          "noborder, class:flameshot, title:flameshot"
+          "noanim, class:^(flameshot)$"
+          "float, class:^(flameshot)$"
+          "move 0 0, class:^(flameshot)$"
+          "pin, class:^(flameshot)$"
 
           # Drag and drop hack fixes.
           "nofocus, class:^krita$, title:^Krita$, floating:1"
