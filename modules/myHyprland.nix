@@ -2,12 +2,23 @@
   lib,
   pkgs,
   config,
+  extraLib,
   conUsername,
   ...
-}: {
+}: let
+  hyprfullscreenfix = pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/hyprfullscreenfix") {};
+  hyprctl-switch-rofi = extraLib.writeAnyShellApplication {
+    name = "hyprctl-switch-rofi";
+    shellPackage = pkgs.dash;
+    runtimeInputs = [pkgs.coreutils pkgs.rofi-wayland];
+    text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.sh");
+  };
+in {
   programs.hyprland.enable = true;
 
   environment.systemPackages = with pkgs; [
+    hyprctl-switch-rofi
+
     hyprland-protocols
     wl-clipboard
     hyprpicker # Color picker
@@ -195,15 +206,17 @@
 
           "$mainMod, q, [q]uit active, killactive,"
 
-          "$mainMod, p, Toggle float, setfloating,"
-          "$mainMod, p, Toggle [p]in, pin,"
-          "$mainMod, p, Toggle [p]in, tagwindow, 69PINNED69"
+          "$mainMod, y, Toggle float, setfloating,"
+          "$mainMod, y, Toggle [p]in, pin,"
+          "$mainMod, y, Toggle [p]in, tagwindow, 69PINNED69"
 
           "$mainMod, v, Toggle float, togglefloating,"
           "$mainMod, v, Toggle [p]in, tagwindow, -69PINNED69"
 
-          "$mainMod, f, [f]ullscreen, exec, hyprfullscreenfix"
+          "$mainMod, f, [f]ullscreen, exec, ${lib.getExe hyprfullscreenfix}"
           "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
+
+          "$mainMod, p, Switch keyboard layout, exec, ${lib.getExe hyprctl-switch-rofi},"
 
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"

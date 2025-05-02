@@ -346,14 +346,7 @@
           fi
         '';
       })
-    ]
-    ++ (
-      if config.programs.hyprland.enable
-      then [
-        (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/hyprfullscreenfix") {})
-      ]
-      else []
-    );
+    ];
 
   home-manager = {
     users.${conUsername} = {
