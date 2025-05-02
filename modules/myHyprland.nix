@@ -254,8 +254,8 @@ in {
           "$mainMod, r, [r]ecord, exec, hyprcorder.sh"
           "$mainMod SHIFT, r, [r]ecord area, exec, hyprcorder.sh -a"
 
-          "ALT, Tab, Cycle programs, exec, hyprland-next-visible-client.sh next"
-          "$mainMod, Tab, Open program menu, exec, ${lib.getExe pkgs.rofi-wayland} -show window"
+          "$mainMod, Tab, Cycle programs, exec, hyprland-next-visible-client.sh next"
+          "$ALT, Tab, Open program menu, exec, ${lib.getExe pkgs.rofi-wayland} -show window"
 
           "$mainMod, h, Move focus right, movefocus, l"
           "$mainMod, l, Move focus left, movefocus, r"
