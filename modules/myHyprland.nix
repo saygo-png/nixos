@@ -351,8 +351,9 @@ in {
 
         windowrulev2 = [
           # Needed for gloss window to tile and not focus.
-          "tile, class:^()$"
-          "noinitialfocus, class:^()$"
+          # "tile, class:^()$"
+          # "noinitialfocus, class:^()$"
+
           # Flameshot fixes
           "stayfocused, class:flameshot, title:flameshot"
           "norounding, class:flameshot, title:flameshot"
