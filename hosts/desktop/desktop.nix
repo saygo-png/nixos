@@ -91,7 +91,6 @@
   services.getty.autologinUser = "${conUsername}";
 
   home-manager.users.${conUsername} = _: {
-
     # This requires imperative action to first create the preset
     # services.easyeffects.enable = true;
     # services.easyeffects.preset = "Audio-Technica ATH-M30x";
