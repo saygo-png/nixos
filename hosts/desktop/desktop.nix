@@ -14,7 +14,7 @@
             refreshRate = 144;
             screenWidth = 1920;
             screenHeight = 1080;
-            gaps = 6;
+            gaps = 0;
             borderSize = 2;
             accelSpeed = -0.9;
             vsync = false;
