@@ -36,6 +36,227 @@ in {
   home-manager.users.${conUsername} = {osConfig, ...}: {
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
 
+    stylix.targets.waybar.enable = false;
+
+    xdg.configFile."waybar/config.jsonc".source = lib.my.relativeToRoot "resources/waybar/config.jsonc";
+
+    programs.waybar = {
+      enable = true;
+      style = let
+        inherit (config.lib.stylix.colors) withHashtag;
+        #css
+      in ''
+        * {
+          border: none;
+          border-radius: 0;
+          font-family: "monospace";
+          font-size: 11pt;
+          min-height: 0;
+          margin: 0px;
+        }
+
+        window#waybar {
+          background: rgba(0, 0, 0, 0);
+          color: gray;
+          color: ${withHashtag.base07};
+        }
+
+        #window {
+          color: #e4e4e4;
+          font-weight: bold;
+        }
+
+        #workspaces {
+          padding: 0px;
+          margin: 0px;
+        }
+
+        #workspaces button {
+          padding: 0 2px;
+          margin: 0px;
+          background: transparent;
+          color: #ff8700;
+          /* border: 1px solid #1b1d1e; */
+          font-weight: bold;
+        }
+        #workspaces button:hover {
+          box-shadow: inherit;
+          text-shadow: inherit;
+        }
+
+        #workspaces button.focused {
+          background: #e88939;
+          background: #00afd7;
+          color: #1b1d1e;
+        }
+
+        #workspaces button.urgent {
+          background: #af005f;
+          color: #1b1d1e;
+        }
+
+        #mode {
+          background: #af005f;
+          color: #1b1d1e;
+        }
+        #clock,
+        #battery,
+        #cpu,
+        #memory,
+        #network,
+        #pulseaudio,
+        #custom-spotify,
+        #tray,
+        #mode {
+          padding: 0 3px;
+          margin: 0 2px;
+        }
+
+        #battery icon {
+          color: red;
+        }
+        @keyframes blink {
+          to {
+            background-color: #af005f;
+          }
+        }
+
+        #battery.warning:not(.charging) {
+          background-color: #ff8700;
+          color: #1b1d1e;
+        }
+        #battery.critical:not(.charging) {
+          color: white;
+          animation-name: blink;
+          animation-duration: 0.5s;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+        }
+
+        #network.disconnected {
+          background: #f53c3c;
+        }
+
+        #custom-spotify {
+          color: rgb(102, 220, 105);
+        }
+      '';
+
+      # https://github.com/johnk1917/Nixrland/blob/78b452855f956249e4d639d1df2a6f2af586a234/hm-modules/waybar/waybar.nix
+
+      # settings = {
+      # mainBar = {
+      #   margin = "0 3 1 3";
+      #   layer = "top";
+      #
+      #   modules-left = ["custom/distro" "hyprland/workspaces" "hyprland/window"];
+      #   modules-center = [];
+      #   modules-right = ["battery" "cpu" "memory" "pulseaudio" "network" "tray" "clock"];
+      #
+      #   /*
+      #   Modules configuration
+      #   */
+      #   "hyprland/workspaces" = {
+      #     active-only = "false";
+      #     on-scroll-up = "hyprctl dispatch workspace e+1";
+      #     on-scroll-down = "hyprctl dispatch workspace e-1";
+      #     disable-scroll = "false";
+      #     all-outputs = "true";
+      #     format = "{icon}";
+      #     on-click = "activate";
+      #     format-icons = {
+      #       "1" = "t";
+      #       "2" = "b";
+      #       "3" = "";
+      #       "4" = "";
+      #       "5" = "";
+      #       "6" = "";
+      #       "7" = "g ";
+      #       "8" = "gl ";
+      #       "9" = "";
+      #       "10" = "p";
+      #     };
+      #   };
+      #
+      #   "idle_inhibitor" = {
+      #     format = "{icon}";
+      #     format-icons = {
+      #       activated = " ";
+      #       deactivated = " ";
+      #     };
+      #   };
+      #
+      #   "tray" = {
+      #     spacing = 8;
+      #   };
+      #
+      #   "clock" = {
+      #     tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+      #     format = " {:%H:%M}";
+      #     format-alt = " {:%A, %B %d, %Y}";
+      #   };
+      #
+      #   "cpu" = {
+      #     format = "c {usage}%";
+      #     tooltip = "false";
+      #   };
+      #
+      #   "memory" = {
+      #     format = "m {}%";
+      #   };
+      #
+      #   "backlight" = {
+      #     format = "{icon}{percent}%";
+      #     format-icons = ["󰃞 " "󰃟 " "󰃠 "];
+      #     on-scroll-up = "light -A 1";
+      #     on-scroll-down = "light -U 1";
+      #   };
+      #
+      #   "battery" = {
+      #     states = {
+      #       warning = "30";
+      #       critical = "15";
+      #     };
+      #     format = "{icon}{capacity}%";
+      #     tooltip-format = "{timeTo} {capacity}%";
+      #     format-charging = "󱐋{capacity}%";
+      #     format-plugged = " {capacity}%";
+      #     format-alt = "{time} {icon}";
+      #     format-icons = ["  " "  " "  " "  " "  "];
+      #   };
+      #
+      #   "network" = {
+      #     format-wifi = "wifi{essid} {signalStrength}%";
+      #     format-ethernet = "{ifname}";
+      #     format-linked = "{ifname}(No IP)";
+      #     format-disconnected = "Disconnected";
+      #     on-click = "wifi-menu";
+      #     on-click-release = "sleep 0";
+      #     tooltip-format = "{essid} {signalStrength}%";
+      #   };
+      #
+      #   "pulseaudio" = {
+      #     format = "v {volume}% {format_source}";
+      #     format-muted = "m {format_source}";
+      #
+      #     tooltip-format = "{desc} {volume}%";
+      #     on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
+      #     on-click-right = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
+      #     on-click-middle = "pavucontrol";
+      #     on-click-release = "sleep 0";
+      #     on-click-middle-release = "sleep 0";
+      #   };
+      #
+      #   "custom/distro" = {
+      #     format = " ";
+      #     on-click = "rofi -show drun";
+      #     on-click-release = "sleep 0";
+      #   };
+      # };
+      # };
+    };
+
     wayland.windowManager.hyprland = let
       gaps_in = osConfig.const.gaps;
       gaps_out = osConfig.const.gaps * 2;
@@ -72,6 +293,7 @@ in {
         ];
         # Autostart.
         exec-once = [
+          "waybar"
           "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
           "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
           "systemctl --user import-environment PATH &"
