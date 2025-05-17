@@ -7,8 +7,8 @@
 
   # services.pipewire.enable = lib.mkForce false;
 
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = true;
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
-  hardware.pulseaudio.extraConfig = "load-module module-combine-sink";
+  services.pulseaudio.enable = true;
+  services.pulseaudio.support32Bit = true;
+  services.pulseaudio.package = pkgs.pulseaudioFull;
+  services.pulseaudio.extraConfig = "load-module module-combine-sink";
 }
