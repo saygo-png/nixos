@@ -47,7 +47,7 @@
       pkgs.noto-fonts-emoji
       pkgs.noto-fonts-cjk-sans
       pkgs.noto-fonts-cjk-serif
-      (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+      pkgs.nerd-fonts.symbols-only
     ];
     fontconfig = {
       defaultFonts = {
