@@ -68,7 +68,7 @@
 
       programs.rofi.terminal = lib.mkIf config.programs.rofi.enable termExe;
       wayland.windowManager.sway.config.terminal = lib.mkIf config.windowManager.sway.enable termExe;
-      xdg.desktopEntries = lib.mkIf (config.home.sessionVariables == "nvim") {
+      xdg.desktopEntries = {
         nvim = {
           name = "Neovim wrapper ";
           comment = "Terminal text editor launched in a terminal emulator";
