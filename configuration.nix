@@ -348,7 +348,6 @@
       carla
       calibre
       foliate
-      scribus
       prismlauncher
       krita # Painting
       anki # Flashcards
@@ -365,14 +364,12 @@
       kdePackages.dolphin # File manager
       localsend # Send via local network
       xdragon # drag items from terminal
-      jetbrains.pycharm-community-src # python IDE
 
       # Browsers.
       # Librewolf is currently broken
       # librewolf
       firefox
       tor-browser
-      ungoogled-chromium
 
       # Writing.
       typst
