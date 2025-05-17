@@ -597,6 +597,7 @@ in {
         -- Nvim-tree {{{
         vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
         -- }}}
+
         -- Telescope {{{
         local utils = require "telescope.utils"
         local builtin = require "telescope.builtin"
@@ -760,7 +761,12 @@ in {
         --- }}}
 
         -- Telescope extensions {{{
-            require("telescope").load_extension("git_file_history")
+        require("telescope").load_extension("git_file_history")
+        -- }}}
+
+        -- Harpoon {{{
+        local harpoon_extensions = require("harpoon.extensions")
+        harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
         -- }}}
 
         -- Gitsigns {{{
@@ -807,7 +813,50 @@ in {
       clipboard.register = "unnamedplus";
       colorschemes.base16.enable = lib.mkForce false;
 
-      keymaps = [
+      keymaps = let
+        harpoon = "function() require'harpoon'";
+      in [
+        {
+          mode = "n";
+          key = "<leader>ha";
+          action.__raw = "function() require'harpoon':list():add() end";
+        }
+        {
+          mode = "n";
+          key = "<leader>hm";
+          action.__raw = "function() require'harpoon'.ui:toggle_quick_menu(require'harpoon':list()) end";
+        }
+        {
+          mode = "n";
+          key = "<leader>hn";
+          action.__raw = "function() require'harpoon':list():next() end";
+        }
+        {
+          mode = "n";
+          key = "<leader>hp";
+          action.__raw = "function() require'harpoon':list():prev() end";
+        }
+        {
+          mode = "n";
+          key = "<C-h>";
+          action.__raw = "function() require'harpoon':list():select(1) end";
+        }
+        {
+          mode = "n";
+          key = "<C-j>";
+          action.__raw = "function() require'harpoon':list():select(2) end";
+        }
+        {
+          mode = "n";
+          key = "<C-k>";
+          action.__raw = "function() require'harpoon':list():select(3) end";
+        }
+        {
+          mode = "n";
+          key = "<C-l>";
+          action.__raw = "function() require'harpoon':list():select(4) end";
+        }
+
         {
           key = "s";
           action.__raw = ''require("flash").remote'';
@@ -868,21 +917,7 @@ in {
 
         harpoon = {
           enable = true;
-          markBranch = true;
           enableTelescope = true;
-          keymaps = {
-            addFile = "<leader>ha";
-            navFile = {
-              "1" = "<C-h>";
-              "2" = "<C-j>";
-              "3" = "<C-k>";
-              "4" = "<C-l>";
-            };
-            navNext = "<leader>hn";
-            navPrev = "<leader>hp";
-            toggleQuickMenu = "<leader>hm";
-            cmdToggleQuickMenu = "<leader>hc";
-          };
         };
 
         colorizer = {
