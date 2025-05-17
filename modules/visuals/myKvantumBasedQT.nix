@@ -4,7 +4,10 @@
   lib,
   ...
 }: {
+  stylix.targets.qt.enable = false;
   home-manager.users.${conUsername} = {config, ...}: {
+    stylix.targets.qt.enable = false;
+
     qt = {
       enable = true;
       style.name = "kvantum";
