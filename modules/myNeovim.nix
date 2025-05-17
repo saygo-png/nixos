@@ -834,7 +834,6 @@ in {
       plugins = {
         flash.enable = true;
         direnv.enable = true;
-        vimtex.enable = true;
         comment.enable = true;
         fugitive.enable = true;
         project-nvim.enable = true;
