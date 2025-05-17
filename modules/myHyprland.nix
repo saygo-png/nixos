@@ -294,7 +294,7 @@ in {
         # Autostart.
         exec-once = [
           "waybar"
-          "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
+          "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
           "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
           "systemctl --user import-environment PATH &"
           "hash dbus-update-activation-environment 2>/dev/null &"
