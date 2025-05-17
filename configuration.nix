@@ -377,7 +377,6 @@
       # Writing.
       typst
       asciidoctor
-      texliveBasic
       pandoc # document converter
 
       # Haskell.

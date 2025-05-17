@@ -36,14 +36,12 @@ in {
     home.sessionVariables = {EDITOR = "nvim";};
     # I put them in the global scope since direnv deletes the one in the neovim scope
     home.packages = [
-      # vale
       pkgs.vim-language-server
       pkgs.deadnix # Nix linter
       pkgs.statix # Another linter
       pkgs.nodePackages.jsonlint
       pkgs.hlint # Haskell linter
       pkgs.stylua # Lua formatter
-      # marksman # Markdown LSP
       pkgs.shfmt # Shell formatter
       pkgs.black # Python formatter
       # hadolint # Docker linter
@@ -53,14 +51,10 @@ in {
       pkgs.yapf # Python formatter
       pkgs.prettierd # Javascript formatter
       pkgs.tinymist # Typst lsp
-      # nodePackages.bash-language-server
       pkgs.markdownlint-cli # Markdown linter
       pkgs.haskellPackages.fourmolu # Haskell formatter
       pkgs.vscode-langservers-extracted # Web LSPs
-      # python312Packages.mccabe # Flake8 plugin
-      # python312Packages.pyflakes # Python linter
       pkgs.nodePackages.prettier # Javascript formatter
-      # python312Packages.jedi # Autocomplete plugin
 
       # zprint # Clojure formatter
       # cljfmt # Clojure formatter
@@ -1204,10 +1198,6 @@ in {
               };
             };
 
-            # Latex
-            # ltex.enable = true;
-            digestif.enable = true;
-
             # Python.
             pyright.enable = true;
 
@@ -1232,7 +1222,6 @@ in {
             # Web
             html.enable = true;
             jsonls.enable = true;
-            terraformls.enable = true;
             cssls.enable = true;
             eslint.enable = true;
             ts_ls = {
