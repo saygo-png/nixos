@@ -21,21 +21,18 @@ in {
           "tcp://192.168.1.11:22000"
         ];
         id = "C6JMWDL-WYZZWGV-SJHKD5U-ZICMO7J-Z6L6T2T-LUHH3KH-TBIAGKK-FAO5TQF";
-        autoAcceptFolders = true;
       };
       phone = {
         addresses = [
           "tcp://192.168.1.10:22000"
         ];
         id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
-        autoAcceptFolders = true;
       };
       thinkpad = {
         addresses = [
           "tcp://192.168.1.13:22000 "
         ];
         id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
-        autoAcceptFolders = true;
       };
     };
     settings.folders = let
