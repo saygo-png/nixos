@@ -402,7 +402,7 @@
 
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
-    FLAKE = "${conFlakePath}"; # For nix helper.
+    NH_FLAKE = "${conFlakePath}"; # For nix helper.
   };
 
   # This allows for programs to see audio plugins
