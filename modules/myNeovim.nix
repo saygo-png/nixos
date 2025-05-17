@@ -885,20 +885,22 @@ in {
           };
         };
 
-        nvim-colorizer = {
+        colorizer = {
           enable = true;
-          fileTypes = let
-            css = {css = true;};
-          in [
-            "*"
-            ({language = "css";} // css)
-            ({language = "less";} // css)
-            ({language = "sass";} // css)
-            ({language = "scss";} // css)
-            ({language = "stylus";} // css)
-          ];
-          bufTypes = ["*" "!prompt" "!popup"];
-          userDefaultOptions.names = false;
+          settings = {
+            user_default_options.names = false;
+            buftypes = ["*" "!prompt" "!popup"];
+            fileTypes = let
+              css = {css = true;};
+            in [
+              "*"
+              ({language = "css";} // css)
+              ({language = "less";} // css)
+              ({language = "sass";} // css)
+              ({language = "scss";} // css)
+              ({language = "stylus";} // css)
+            ];
+          };
         };
 
         telescope = {
@@ -1200,7 +1202,7 @@ in {
             eslint.enable = true;
             ts_ls = {
               enable = true;
-              rootDir = ''
+              extraOptions.root_dir = ''
                 function (filename, bufnr)
                   local util = require 'lspconfig.util'
                   local denoRootDir = util.root_pattern("deno.json", "deno.jsonc")(filename);
@@ -1216,7 +1218,7 @@ in {
             };
             denols = {
               enable = true;
-              rootDir = ''
+              extraOptions.root_dir = ''
                 function (filename, bufnr)
                   local util = require 'lspconfig.util'
                   return util.root_pattern("deno.json", "deno.jsonc")(filename);
