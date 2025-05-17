@@ -62,7 +62,7 @@
       "myMPV.nix"
       "myTmux.nix"
       "myAichat.nix"
-      # "myThunar.nix"
+      "myThunar.nix"
       "myGaming.nix"
       "myPackages.nix"
       "myAudioEffects.nix"
