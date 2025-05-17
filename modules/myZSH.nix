@@ -23,7 +23,7 @@
       enableVteIntegration = true;
       history.save = 50;
       history.size = 50;
-      initExtra = ''
+      initContent = ''
         function zcompile-many() {
           local f
           for f; do zcompile -R -- "$f".zwc "$f"; done
