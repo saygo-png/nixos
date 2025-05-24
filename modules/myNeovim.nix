@@ -539,9 +539,11 @@ in {
         -- Infinite paste
         vim.keymap.set('v', 'p', '"_dP')
 
+        -- Surround each line
+        vim.keymap.set('x', 'ys', ':norm yss')
+
         -- Basic
         vim.keymap.set('n', ';', ':', { desc = "Command mode with or without shift" })
-        vim.keymap.set('n', 'q;', 'q:', { desc = "Command mode with or without shift" })
         vim.keymap.set("n", ">", ">>", { desc = "Indent more", silent = true })
         vim.keymap.set("n", "<lt>", "<lt><lt>", { desc = "Indent less", silent = true })
         vim.keymap.set("v", ".", "<cmd>normal .<CR>", { desc = "Dot commands over visual blocks" })
