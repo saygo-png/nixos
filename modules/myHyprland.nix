@@ -560,9 +560,7 @@ in {
           "workspace 10     , title:passwordManager"
         ];
 
-        windowrulev2 = let
-          steamGame = "class:steam_app_[0-9]*";
-        in [
+        windowrulev2 = [
           # Needed for gloss window to tile and not focus.
           # "tile, class:^()$"
           # "noinitialfocus, class:^()$"
