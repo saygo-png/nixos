@@ -347,6 +347,10 @@ in {
           };
         };
 
+        render = {
+          direct_scanout = 1;
+        };
+
         misc = {
           enable_swallow = false;
           disable_autoreload = true;
