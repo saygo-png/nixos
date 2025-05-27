@@ -316,6 +316,7 @@ in {
         };
 
         cursor = {
+          no_hardware_cursors = 0;
           no_warps = true;
           hide_on_key_press = false;
         };
