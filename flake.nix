@@ -78,6 +78,11 @@
       flake = false;
     };
 
+    nvim-plugin-unfocused-cursor = {
+      url = "github:amarz45/nvim-unfocused-cursor";
+      flake = false;
+    };
+
     nvim-plugin-faster = {
       url = "github:pteroctopus/faster.nvim";
       flake = false;

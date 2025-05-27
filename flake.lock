@@ -856,6 +856,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-unfocused-cursor": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1667490334,
+        "narHash": "sha256-5h1GxuEhOjMHvdO5kmrbALLUncsnJB9jRXW/PTEgY3E=",
+        "owner": "amarz45",
+        "repo": "nvim-unfocused-cursor",
+        "rev": "28f0194d59b3c60164384ac559179a8017569ed7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "amarz45",
+        "repo": "nvim-unfocused-cursor",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "awesome-git": "awesome-git",
@@ -873,6 +889,7 @@
         "nvim-plugin-faster": "nvim-plugin-faster",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
         "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
+        "nvim-plugin-unfocused-cursor": "nvim-plugin-unfocused-cursor",
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix_2",
         "vmrss": "vmrss",
