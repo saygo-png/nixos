@@ -370,6 +370,10 @@ in {
           use_active_for_splits = true;
         };
 
+        binds = {
+          movefocus_cycles_fullscreen = true;
+        };
+
         master = {
           new_on_top = false;
           new_status = "slave";
