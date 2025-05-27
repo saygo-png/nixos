@@ -352,6 +352,7 @@ in {
         };
 
         misc = {
+          enable_anr_dialog = false;
           enable_swallow = false;
           disable_autoreload = true;
           # Hides text on bottom of the screen.
