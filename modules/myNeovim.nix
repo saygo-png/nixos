@@ -112,6 +112,10 @@ in {
         })
 
         (pkgs.vimUtils.buildVimPlugin {
+          name = "unfocused-cursor";
+          src = inputs.nvim-plugin-unfocused-cursor;
+        })
+        (pkgs.vimUtils.buildVimPlugin {
           name = "tshjkl.nvim";
           src = inputs.nvim-plugin-tshjkl;
         })
@@ -626,6 +630,9 @@ in {
         end, { desc = "[c]onform" })
 
         vim.api.nvim_create_user_command("Conform", function()
+          -- Unfocused cursor {{{
+          require("unfocused-cursor").setup()
+          -- }}}
             require("conform").format({ timeout_ms = 500 })
         end, { desc = "Format using Conform with a 500ms timeout" })
 
