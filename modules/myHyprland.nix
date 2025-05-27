@@ -35,6 +35,7 @@ in {
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
     home.shellAliases = {"hyprland" = "Hyprland";};
+
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
 
     stylix.targets.waybar.enable = false;
@@ -559,7 +560,9 @@ in {
           "workspace 10     , title:passwordManager"
         ];
 
-        windowrulev2 = [
+        windowrulev2 = let
+          steamGame = "class:steam_app_[0-9]*";
+        in [
           # Needed for gloss window to tile and not focus.
           # "tile, class:^()$"
           # "noinitialfocus, class:^()$"
