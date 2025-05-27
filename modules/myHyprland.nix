@@ -34,6 +34,7 @@ in {
   ];
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
+    home.shellAliases = {"hyprland" = "Hyprland";};
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
 
     stylix.targets.waybar.enable = false;
