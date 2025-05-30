@@ -50,6 +50,7 @@
     ]
     ++ lib.my.withModules [
       "myConstants.nix"
+      "myUnfree.nix"
 
       "myNeovim.nix"
       "myTerminal.nix"

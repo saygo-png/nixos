@@ -6,12 +6,10 @@
   ...
 }: {
   # Allowed unfree packages
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "steam"
-      "steam-run"
-      "steam-original"
-      "steam-unwrapped"
+  custom.allowedUnfreePkgs = [
+      pkgs.steam
+      pkgs.steam-run
+      pkgs.steam-unwrapped
     ];
 
   # This fixes lag in Saints Row: The Third
@@ -78,7 +76,7 @@
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
