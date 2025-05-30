@@ -86,6 +86,7 @@
   ###### Custom ###### {{{
 
   custom.defaultTerminal = pkgs.alacritty;
+  custom.allowedUnfreePkgs = [ pkgs.vesktop ];
 
   # }}}
 
@@ -346,6 +347,7 @@
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
+      vesktop
       carla
       calibre
       foliate
