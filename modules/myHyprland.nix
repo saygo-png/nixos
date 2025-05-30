@@ -410,7 +410,7 @@ in {
         };
 
         # Bind accepts "flags" after "bind".
-        # "e" in "binde" means that a key can be held down to repeat an action.
+        # "e" in "bindde" means that a key can be held down to repeat an action.
         # You can add multiple flags, without order like so "bindde".
         # TODO: add these binds:
         # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
@@ -440,12 +440,12 @@ in {
           "$mainMod CTRL SHIFT, k, Move focus up, moveintogroup, u"
           "$mainMod CTRL SHIFT, j, Move focus down, moveintogroup, d"
 
-          "$mainMod, y, Toggle float, setfloating,"
-          "$mainMod, y, Toggle [p]in, pin,"
-          "$mainMod, y, Toggle [p]in, tagwindow, 69PINNED69"
+          "$mainMod, y, Toggle pin, setfloating,"
+          "$mainMod, y, Toggle pin, pin,"
+          "$mainMod, y, Toggle pin, tagwindow, 69PINNED69"
 
           "$mainMod, v, Toggle float, togglefloating,"
-          "$mainMod, v, Toggle [p]in, tagwindow, -69PINNED69"
+          "$mainMod, v, Toggle float, tagwindow, -69PINNED69"
 
           "$mainMod, f, [f]ullscreen, exec, ${lib.getExe hyprfullscreenfix}"
           "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
