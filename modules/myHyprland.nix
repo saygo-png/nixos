@@ -427,6 +427,10 @@ in {
         # "$mainMod SHIFT, Escape, Hard kill, exec, shutdown-script"
         #  add proper alt tab support using "hycov" plugin
         #  add descriptions to each key
+        bindd = [
+          "$mainMod, q, [q]uit active, killactive,"
+        ];
+
         bindde = [
           "$mainMod, g, toggle [g]roup, togglegroup"
           "$mainMod, u, [u]-lock insert into group, lockactivegroup, toggle"
@@ -446,8 +450,6 @@ in {
           "$mainMod CTRL SHIFT, l, Move focus left, moveintogroup, r"
           "$mainMod CTRL SHIFT, k, Move focus up, moveintogroup, u"
           "$mainMod CTRL SHIFT, j, Move focus down, moveintogroup, d"
-
-          "$mainMod, q, [q]uit active, killactive,"
 
           "$mainMod, y, Toggle float, setfloating,"
           "$mainMod, y, Toggle [p]in, pin,"
