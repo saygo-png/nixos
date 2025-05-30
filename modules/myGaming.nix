@@ -1,16 +1,15 @@
 {
   pkgs,
-  lib,
   config,
   conUsername,
   ...
 }: {
   # Allowed unfree packages
   custom.allowedUnfreePkgs = [
-      pkgs.steam
-      pkgs.steam-run
-      pkgs.steam-unwrapped
-    ];
+    pkgs.steam
+    pkgs.steam-run
+    pkgs.steam-unwrapped
+  ];
 
   # This fixes lag in Saints Row: The Third
   # game tries to connect to a dead server which freezes the game for a bit
@@ -76,7 +75,7 @@
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-
+      
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
