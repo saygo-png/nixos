@@ -363,7 +363,7 @@
       keepassxc # Password manager
       qbittorrent # Torrent client
       qalculate-gtk # Gui calculator
-      mission-center # GUI task manager
+      resources # GUI task manager
       kdePackages.dolphin # File manager
       localsend # Send via local network
       xdragon # drag items from terminal
