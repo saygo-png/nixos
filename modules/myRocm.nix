@@ -12,6 +12,8 @@
     "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
   ];
 
+  nixpkgs.config.rocmSupport = true;
+
   hardware = {
     amdgpu.opencl.enable = true;
     graphics = {
