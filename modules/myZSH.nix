@@ -52,7 +52,7 @@
         fi
 
         # Autocomplete.
-        setopt extendedglob
+        unsetopt EXTENDED_GLOB
         setopt no_list_ambiguous
         setopt GLOB_COMPLETE        # Show autocompletion menu with globs
         setopt MENU_COMPLETE        # Automatically highlight first element of completion menu
