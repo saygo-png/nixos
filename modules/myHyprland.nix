@@ -323,6 +323,11 @@ in {
           hide_on_key_press = false;
         };
 
+        ecosystem = {
+          no_update_news = true;
+          no_donation_nag = true;
+        };
+
         general = {
           "$mainMod" = "SUPER";
           layout = "dwindle";
