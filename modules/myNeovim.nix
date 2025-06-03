@@ -94,6 +94,7 @@ in {
         pkgs.vimPlugins.typst-preview-nvim
         # pkgs.vimPlugins.vim-dispatch
         # pkgs.vimPlugins.vim-jack-in
+
         (pkgs.vimUtils.buildVimPlugin {
           name = "cutlass.nvim";
           src = nvim-plugin-cutlass;
@@ -106,11 +107,15 @@ in {
           name = "rainbow";
           src = nvim-plugin-rainbow;
         })
+
         (pkgs.vimUtils.buildVimPlugin {
           name = "faster.nvim";
           src = inputs.nvim-plugin-faster;
         })
-
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "unfocused-cursor";
+          src = inputs.nvim-plugin-unfocused-cursor;
+        })
         (pkgs.vimUtils.buildVimPlugin {
           name = "unfocused-cursor";
           src = inputs.nvim-plugin-unfocused-cursor;
@@ -119,7 +124,6 @@ in {
           name = "tshjkl.nvim";
           src = inputs.nvim-plugin-tshjkl;
         })
-
         (pkgs.vimUtils.buildVimPlugin {
           name = "telescope-git-file-history.nvim";
           src = inputs.nvim-plugin-telescope-git-file-history;
@@ -185,8 +189,8 @@ in {
 
         # Folds.
         foldenable = false;
-        foldmethod = "expr";
-        foldexpr = "nvim_treesitter#foldexpr()";
+        foldmethod = "manual";
+        # foldexpr = "nvim_treesitter#foldexpr()";
 
         # More space.
         cmdheight = 0;
@@ -267,238 +271,199 @@ in {
         vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
       '';
 
-      extraConfigLua = ''
-        -- 24 bit color.
-        if vim.fn.has('termguicolors') == 1 then
-          vim.opt.termguicolors = true
-        end
+      extraConfigLua =
+        # This is separate because it messes up treesitter.
+        # Lua
+        ''
+          -- Neovide
+          if vim.g.neovide then
+            vim.cmd[[colorscheme gruvbox-material]]
+            vim.o.background = 'dark'
+            vim.o.guifont = '${config.stylix.fonts.monospace.name}:h${builtins.toString (config.stylix.fonts.sizes.terminal + 1)}:#e-antialias:#h-slight'
+            vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
+          end
+        ''
+        +
+        # Lua
+        ''
+            -- Miscellaneous {{{
+            -- 24 bit color.
+            if vim.fn.has('termguicolors') == 1 then
+              vim.opt.termguicolors = true
+            end
 
-        vim.cmd[[colorscheme gruvbox-material]]
+            vim.cmd[[colorscheme gruvbox-material]]
 
-        -- Faster syntax highlighting.
-        vim.cmd("syntax sync minlines=256")
+            -- Faster syntax highlighting.
+            vim.cmd("syntax sync minlines=256")
 
-        -- Hide end of line tildes.
-        vim.opt.fillchars:append({ eob = " " })
+            -- Hide end of line tildes.
+            vim.opt.fillchars:append({ eob = " " })
+            -- }}}
 
-        -- Stops treesitter node increment in command window (q:)
-        vim.api.nvim_create_augroup("_cmd_win", { clear = true })
-        vim.api.nvim_create_autocmd("CmdWinEnter", {
-            callback = function()
-                local ok, _ = pcall(vim.keymap.del, "n", "<CR>", { buffer = true })
-                if not ok then
-                    -- Silently ignore error when node increment isnt set, like in q/
-                end
-            end,
-            group = "_cmd_win",
-        })
+            -- Stops treesitter node increment in command window (q:) {{{
+            vim.api.nvim_create_augroup("_cmd_win", { clear = true })
+            vim.api.nvim_create_autocmd("CmdWinEnter", {
+                callback = function()
+                    local ok, _ = pcall(vim.keymap.del, "n", "<CR>", { buffer = true })
+                    if not ok then
+                        -- Silently ignore error when node increment isnt set, like in q/
+                    end
+                end,
+                group = "_cmd_win",
+            })
+            -- }}}
 
-        -- Vim as terminal.
-        vim.cmd[[
-          augroup neovim_terminal
-              autocmd!
-              " Enter Terminal-mode (insert) automatically
-              autocmd TermOpen * startinsert
-              " Disables number lines on terminal buffers
-              autocmd TermOpen * :setlocal nonumber norelativenumber laststatus=0
-          augroup END
+            -- Vim as terminal. {{{
+            vim.cmd[[
+              augroup neovim_terminal
+                  autocmd!
+                  " Enter Terminal-mode (insert) automatically
+                  autocmd TermOpen * startinsert
+                  " Disables number lines on terminal buffers
+                  autocmd TermOpen * :setlocal nonumber norelativenumber laststatus=0
+              augroup END
 
-          augroup remember_folds
-            autocmd!
-            au BufWinLeave ?* mkview 1
-            au BufWinEnter ?* silent! loadview 1
-          augroup END
+              augroup remember_folds
+                autocmd!
+                au BufWinLeave ?* mkview 1
+                au BufWinEnter ?* silent! loadview 1
+              augroup END
 
-          " Hide cursorline when unfocused.
-          let my_cursor_style = &guicursor
-          augroup cursorline
-            autocmd!
-            autocmd FocusGained,WinEnter * let &guicursor = my_cursor_style
-            autocmd FocusGained,WinEnter * setlocal cursorline
-            autocmd FocusLost,WinLeave * setlocal nocursorline guicursor=a:noCursor/lCursor
-          augroup END
+              " Vim visual multi binds
+              let g:VM_leader = '\'
+              let g:VM_maps = {}
+              let g:VM_maps["Add Cursor Down"] = '<M-j>'
+              let g:VM_maps["Add Cursor Up"] = '<M-k>'
+              let g:VM_silent_exit = 1
+            ]]
+            -- }}}
 
-          " Vim visual multi binds
-          let g:VM_leader = '\'
-          let g:VM_maps = {}
-          let g:VM_maps["Add Cursor Down"] = '<M-j>'
-          let g:VM_maps["Add Cursor Up"] = '<M-k>'
-          let g:VM_silent_exit = 1
-        ]]
-
-        -- Neovide
-        if vim.g.neovide then
-          vim.cmd[[colorscheme gruvbox-material]]
-          vim.o.background = 'dark'
-          vim.o.guifont = '${config.stylix.fonts.monospace.name}:h${builtins.toString (config.stylix.fonts.sizes.terminal + 1)}:#e-antialias:#h-slight'
-          vim.cmd [[ hi Normal guibg=${config.lib.stylix.colors.withHashtag.base00} ]]
-        end
-
-        vim.api.nvim_create_autocmd("BufRead", {
-          callback = function(opts)
-            vim.api.nvim_create_autocmd("BufWinEnter", {
-              once = true,
-              buffer = opts.buf,
-              callback = function()
-                local ft = vim.bo[opts.buf].filetype
-                local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
-                if
-                  not (ft:match("commit") and ft:match("rebase"))
-                  and last_known_line > 1
-                  and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
-                then
-                  vim.api.nvim_feedkeys([[g`"]], "nx", false)
-                end
+            -- Remember last line {{{
+            vim.api.nvim_create_autocmd("BufRead", {
+              callback = function(opts)
+                vim.api.nvim_create_autocmd("BufWinEnter", {
+                  once = true,
+                  buffer = opts.buf,
+                  callback = function()
+                    local ft = vim.bo[opts.buf].filetype
+                    local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+                    if
+                      not (ft:match("commit") and ft:match("rebase"))
+                      and last_known_line > 1
+                      and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+                    then
+                      vim.api.nvim_feedkeys([[g`"]], "nx", false)
+                    end
+                  end,
+                })
               end,
             })
-          end,
-        })
+            -- }}}
 
-        -- Statusline {{{
-        -- Statusline components
-        local cmp = {}
+            -- Statusline {{{
+            -- Statusline components
+            local cmp = {}
 
-        -- Helper function to call statusline components by name
-        function _G._statusline_component(name)
-          return cmp[name]()
-        end
-
-        -- Diagnostic status component
-        function cmp.diagnostic_status()
-          local ok = '''
-
-          local ignore = {
-            ['c'] = true, -- command mode
-            ['t'] = true  -- terminal mode
-          }
-
-          local mode = vim.api.nvim_get_mode().mode
-
-          if ignore[mode] then
-            return ok
-          end
-
-          local levels = vim.diagnostic.severity
-          local errors = #vim.diagnostic.get(0, { severity = levels.ERROR })
-          if errors > 0 then
-            return 'ERROR '
-          end
-
-          local warnings = #vim.diagnostic.get(0, { severity = levels.WARN })
-          if warnings > 0 then
-            return 'WARN '
-          end
-
-          return ok
-        end
-
-        -- Git status component using gitsigns
-        function cmp.git_status()
-          local git_info = vim.b.gitsigns_status_dict
-          if not git_info or git_info.head == "" then
-            return ""
-          end
-
-          local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
-          local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
-          local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
-
-          -- Clean up display if values are 0
-          if git_info.added == 0 then
-            added = ""
-          end
-          if git_info.changed == 0 then
-            changed = ""
-          end
-          if git_info.removed == 0 then
-            removed = ""
-          end
-
-          return table.concat({
-            " ",
-            added,
-            changed,
-            removed,
-            "%#GitSignsAdd#branch ",
-            git_info.head,
-            " %#Normal#",
-          })
-        end
-
-        -- Define the statusline
-        local statusline = {
-          '%{%v:lua._statusline_component("diagnostic_status")%}',  -- Diagnostic status
-          '%t',                                                    -- File name
-          '%r',                                                    -- Read-only flag
-          '%m',                                                    -- Modified flag
-          '%{%v:lua._statusline_component("git_status")%}',         -- Git status
-          '%=',                                                    -- Right align
-          '%{&filetype} ',                                         -- Filetype
-          '%2p%%',                                                 -- File position in percentage
-        }
-
-        -- Set the statusline
-        vim.o.statusline = table.concat(statusline, ''')
-        -- }}}
-
-        -- Keymaps {{{
-        -- Better open
-        local open_command = "xdg-open"
-        if vim.fn.has("mac") == 1 then
-          open_command = 'open'
-        end
-        local function url_repo()
-          local cursorword = vim.fn.expand('<cfile>')
-          if string.find(cursorword, '^[a-zA-Z0-9-_.]*/[a-zA-Z0-9-_.]*$') then
-            cursorword = "https://github.com/" .. cursorword
-          end
-          return cursorword or ""
-        end
-        vim.keymap.set('n', 'gx', function()
-          vim.fn.jobstart({ open_command, url_repo() }, { detach = true })
-        end, { silent = true })
-
-        vim.keymap.set("n", "<leader>rn", function()
-          -- when rename opens the prompt, this autocommand will trigger
-          -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
-          -- in this window I can use normal mode keybindings
-          local cmdId
-          cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-            callback = function()
-              local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
-              vim.api.nvim_feedkeys(key, "c", false)
-              vim.api.nvim_feedkeys("0", "n", false)
-              -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
-              cmdId = nil
-              return true
-            end,
-          })
-          vim.lsp.buf.rename()
-          -- if LPS couldn't trigger rename on the symbol, clear the autocmd
-          vim.defer_fn(function()
-            -- the cmdId is not nil only if the LSP failed to rename
-            if cmdId then
-              vim.api.nvim_del_autocmd(cmdId)
+            -- Helper function to call statusline components by name
+            function _G._statusline_component(name)
+              return cmp[name]()
             end
-          end, 500)
-        end, {desc = "rename node"})
 
-        -- Open/close quickfix on toggle
-        local function toggle_quickfix()
-          local quickfix_open = false
-          for _, win in ipairs(vim.fn.getwininfo()) do
-            if win.quickfix == 1 then
-              quickfix_open = true
-              break
+            -- Diagnostic status component
+            function cmp.diagnostic_status()
+              local ok = '''
+
+              local ignore = {
+                ['c'] = true, -- command mode
+                ['t'] = true  -- terminal mode
+              }
+
+              local mode = vim.api.nvim_get_mode().mode
+
+              if ignore[mode] then
+                return ok
+              end
+
+              local levels = vim.diagnostic.severity
+              local errors = #vim.diagnostic.get(0, { severity = levels.ERROR })
+              if errors > 0 then
+                return 'ERROR '
+              end
+
+              local warnings = #vim.diagnostic.get(0, { severity = levels.WARN })
+              if warnings > 0 then
+                return 'WARN '
+              end
+
+              return ok
             end
-          end
-          if quickfix_open then
-            vim.cmd('cclose')
-          else
-            vim.cmd('copen')
-          end
-        end
-        vim.keymap.set('n', '<S-f>', toggle_quickfix, { silent = true, desc = "Toggle quickfix" })
+
+            -- Git status component using gitsigns
+            function cmp.git_status()
+              local git_info = vim.b.gitsigns_status_dict
+              if not git_info or git_info.head == "" then
+                return ""
+              end
+
+              local added = git_info.added and ("%#GitSignsAdd#+" .. git_info.added .. " ") or ""
+              local changed = git_info.changed and ("%#GitSignsChange#~" .. git_info.changed .. " ") or ""
+              local removed = git_info.removed and ("%#GitSignsDelete#-" .. git_info.removed .. " ") or ""
+
+              -- Clean up display if values are 0
+              if git_info.added == 0 then
+                added = ""
+              end
+              if git_info.changed == 0 then
+                changed = ""
+              end
+              if git_info.removed == 0 then
+                removed = ""
+              end
+
+              return table.concat({
+                " ",
+                added,
+                changed,
+                removed,
+                "%#GitSignsAdd#branch ",
+                git_info.head,
+                " %#Normal#",
+              })
+            end
+
+            -- Define the statusline
+            local statusline = {
+              '%{%v:lua._statusline_component("diagnostic_status")%}',  -- Diagnostic status
+              '%t',                                                    -- File name
+              '%r',                                                    -- Read-only flag
+              '%m',                                                    -- Modified flag
+              '%{%v:lua._statusline_component("git_status")%}',         -- Git status
+              '%=',                                                    -- Right align
+              '%{&filetype} ',                                         -- Filetype
+              '%2p%%',                                                 -- File position in percentage
+            }
+
+            -- Set the statusline
+            vim.o.statusline = table.concat(statusline, ''')
+            -- }}}
+
+            -- Keymaps {{{
+            -- Better open
+            local open_command = "xdg-open"
+            if vim.fn.has("mac") == 1 then
+              open_command = 'open'
+            end
+            local function url_repo()
+              local cursorword = vim.fn.expand('<cfile>')
+              if string.find(cursorword, '^[a-zA-Z0-9-_.]*/[a-zA-Z0-9-_.]*$') then
+                cursorword = "https://github.com/" .. cursorword
+              end
+              return cursorword or ""
+            end
+            vim.keymap.set('n', 'gx', function()
+              vim.fn.jobstart({ open_command, url_repo() }, { detach = true })
+            end, { silent = true })
 
         -- Jump whitespace
         vim.keymap.set("n", "{", "<Cmd>call search('^\\s*\\S', 'Wbc') | call search('^\\s*$\\|\\%^', 'Wb')<CR>", { desc = "jump whitespace forward"})
@@ -626,12 +591,9 @@ in {
           require("conform").format({ timeout_ms = 500 })
         end, { desc = "[c]onform" })
 
-        vim.api.nvim_create_user_command("Conform", function()
-          -- Unfocused cursor {{{
-          require("unfocused-cursor").setup()
-          -- }}}
-            require("conform").format({ timeout_ms = 500 })
-        end, { desc = "Format using Conform with a 500ms timeout" })
+            -- Unfocused cursor {{{
+            require("unfocused-cursor").setup()
+            -- }}}
 
         -- Conflicts with lsp hover
         vim.g["conjure#mapping#doc_word"] = false
@@ -712,103 +674,222 @@ in {
               use_absolute_path = false, ---@type boolean | fun(): boolean
               relative_to_current_file = false, ---@type boolean | fun(): boolean
 
-              -- template options
-              template = "$FILE_PATH", ---@type string | fun(context: table): string
-              url_encode_path = false, ---@type boolean | fun(): boolean
-              relative_template_path = true, ---@type boolean | fun(): boolean
-              use_cursor_in_template = true, ---@type boolean | fun(): boolean
-              insert_mode_after_paste = false, ---@type boolean | fun(): boolean
+            -- Leap {{{
+            -- Gray out leap
+            vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
+            vim.api.nvim_set_hl(0, 'LeapMatch', {
+              fg = 'white', bold = true, nocombine = true,
+            })
 
-              -- prompt options
-              prompt_for_file_name = true, ---@type boolean | fun(): boolean
-              copy_images = true, ---@type boolean | fun(): boolean
-          }
-        })
-        -- }}}
+            -- Hide the (real) cursor when leaping, and restore it afterwards.
+            vim.api.nvim_create_autocmd('User', { pattern = 'LeapEnter',
+                callback = function()
+                  vim.cmd.hi('Cursor', 'blend=100')
+                  vim.opt.guicursor:append { 'a:Cursor/lCursor' }
+                end,
+              }
+            )
 
-        -- Cutlass (Delete copy registers) {{{
-        require("cutlass").setup({
-          override_del = true,
-          exclude = { "ns", "nS", "nx", "nX", "nxx", "nX", "vx", "vX", "xx", "xX" }, -- Motion plugins rebind this
-        })
-        -- }}}
+            vim.api.nvim_create_autocmd('User', { pattern = 'LeapLeave',
+                callback = function()
+                  vim.cmd.hi('Cursor', 'blend=0')
+                  vim.opt.guicursor:remove { 'a:Cursor/lCursor' }
+                end,
+              }
+            )
+            -- }}}
 
-        -- tshjkl {{{
-        require('tshjkl').setup()
-        -- }}}
-
-        -- Faster.nvim (Speed up big files) {{{
-        require("faster").setup({
-          behaviours = {
-            bigfile = {
-              on = true,
-              -- Table which contains names of features that will be disabled when
-              -- bigfile is opened. Feature names can be seen in features table below.
-              -- features_disabled can also be set to "all" and then all features that
-              -- are on (on=true) are going to be disabled for this behaviour
-              features_disabled = {
-                "illuminate", "matchparen", "lsp", "treesitter",
-                "indent_blankline", "vimopts", "syntax", "filetype"
+            -- dial.nvim {{{
+            local augend = require("dial.augend")
+            require("dial.config").augends:register_group{
+              default = {
+                augend.constant.alias.alpha,
+                augend.constant.alias.Alpha,
+                augend.constant.alias.bool,
+                augend.date.alias["%-d.%-m."],
+                augend.date.alias["%d.%m."],
+                augend.date.alias["%d/%m/%y"],
+                augend.date.alias["%d/%m/%Y"],
+                augend.date.alias["%H:%M"],
+                augend.date.alias["%H:%M:%S"],
+                augend.date.alias["%-m/%-d"],
+                augend.date.alias["%m/%d"],
+                augend.date.alias["%m/%d/%y"],
+                augend.date.alias["%m/%d/%Y"],
+                augend.date.alias["%Y/%m/%d"],
+                augend.integer.alias.binary,
+                augend.integer.alias.decimal,
+                augend.integer.alias.decimal_int,
+                augend.integer.alias.hex,
+                augend.integer.alias.octal,
+                augend.semver.alias.semver,
               },
-              -- Files larger than `filesize` are considered big files. Value is in MB.
-              filesize = 0.3,
-              -- Autocmd pattern that controls on which files behaviour will be applied.
-              -- `*` means any file.
-              pattern = "*",
+              typescript = {
+                augend.constant.new{ elements = {"let", "const"} },
+              },
             }
-          }
-        })
-        --- }}}
+            vim.keymap.set("n", "<C-a>",  function() require("dial.map").manipulate("increment", "normal")  end)
+            vim.keymap.set("n", "<C-x>",  function() require("dial.map").manipulate("decrement", "normal")  end)
+            vim.keymap.set("n", "g<C-a>", function() require("dial.map").manipulate("increment", "gnormal") end)
+            vim.keymap.set("n", "g<C-x>", function() require("dial.map").manipulate("decrement", "gnormal") end)
+            vim.keymap.set("v", "<C-a>",  function() require("dial.map").manipulate("increment", "visual")  end)
+            vim.keymap.set("v", "<C-x>",  function() require("dial.map").manipulate("decrement", "visual")  end)
+            vim.keymap.set("v", "g<C-a>", function() require("dial.map").manipulate("increment", "gvisual") end)
+            vim.keymap.set("v", "g<C-x>", function() require("dial.map").manipulate("decrement", "gvisual") end)
+            -- }}}
 
-        -- Telescope extensions {{{
-            require("telescope").load_extension("git_file_history")
-        -- }}}
+            -- img-clip.nvim {{{
+              require('img-clip').setup({
+                default = {
+                  -- file and directory options
+                  dir_path = "assets", ---@type string | fun(): string
+                  extension = "png", ---@type string | fun(): string
+                  file_name = "%Y-%m-%d-%H-%M-%S", ---@type string | fun(): string
+                  use_absolute_path = false, ---@type boolean | fun(): boolean
+                  relative_to_current_file = false, ---@type boolean | fun(): boolean
 
-        -- Gitsigns {{{
-        vim.keymap.set("n", "<leader>gsc", "<cmd>Gitsigns toggle_signs<CR>", {desc = "[g]it[s]igns [c]olumn"})
-        vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line_blame<CR>", {desc = "[g]it[s]igns [b]lame"})
-        -- }}}
+                  -- template options
+                  template = "$FILE_PATH", ---@type string | fun(context: table): string
+                  url_encode_path = false, ---@type boolean | fun(): boolean
+                  relative_template_path = true, ---@type boolean | fun(): boolean
+                  use_cursor_in_template = true, ---@type boolean | fun(): boolean
+                  insert_mode_after_paste = false, ---@type boolean | fun(): boolean
 
-        -- LSP {{{
-        -- Transparent hover
-        vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
+                  -- prompt options
+                  prompt_for_file_name = true, ---@type boolean | fun(): boolean
+                  copy_images = true, ---@type boolean | fun(): boolean
+              }
+            })
+            -- }}}
 
-        -- Make lsp popups pretty.
-        local border = {
-          { '┌', 'FloatBorder' },
-          { '─', 'FloatBorder' },
-          { '┐', 'FloatBorder' },
-          { '│', 'FloatBorder' },
-          { '┘', 'FloatBorder' },
-          { '─', 'FloatBorder' },
-          { '└', 'FloatBorder' },
-          { '│', 'FloatBorder' },
-        }
+            -- Cutlass (Delete copy registers) {{{
+            require("cutlass").setup({
+              override_del = true,
+              exclude = { "ns", "nS", "nx", "nX", "nxx", "nX", "vx", "vX", "xx", "xX" }, -- Motion plugins rebind this
+            })
+            -- }}}
 
-        local _border = "single"
-        require('lspconfig.ui.windows').default_options = { border = _border }
-        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, { border = _border })
-        vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with( vim.lsp.handlers.signature_help, { border = _border })
+            -- tshjkl {{{
+            require('tshjkl').setup()
+            -- }}}
 
-        vim.diagnostic.config({
-        underline = false,
-        update_in_insert = false,
-        virtual_text = false,
-        signs = true,
-          source = true,
-          float = {
-            win_options = {
-              winblend = 100
-            },
-            border = border,
-          }
-        })
-        -- }}}
-      '';
+            -- Faster.nvim (Speed up big files) {{{
+            require("faster").setup({
+              behaviours = {
+                bigfile = {
+                  on = true,
+                  -- Table which contains names of features that will be disabled when
+                  -- bigfile is opened. Feature names can be seen in features table below.
+                  -- features_disabled can also be set to "all" and then all features that
+                  -- are on (on=true) are going to be disabled for this behaviour
+                  features_disabled = {
+                    "illuminate", "matchparen", "lsp", "treesitter",
+                    "indent_blankline", "vimopts", "syntax", "filetype"
+                  },
+                  -- Files larger than `filesize` are considered big files. Value is in MB.
+                  filesize = 0.3,
+                  -- Autocmd pattern that controls on which files behaviour will be applied.
+                  -- `*` means any file.
+                  pattern = "*",
+                }
+              }
+            })
+            --- }}}
+
+            -- Harpoon {{{
+            local harpoon = require("harpoon")
+            local harpoon_extensions = require("harpoon.extensions")
+            harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
+            -- }}}
+
+            -- Gitsigns {{{
+            vim.keymap.set("n", "<leader>gsc", "<cmd>Gitsigns toggle_signs<CR>", {desc = "[g]it[s]igns [c]olumn"})
+            vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line_blame<CR>", {desc = "[g]it[s]igns [b]lame"})
+            -- }}}
+
+            -- LSP {{{
+            -- Transparent hover
+            vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
+
+            -- Make lsp popups pretty.
+            local border = {
+              { '┌', 'FloatBorder' },
+              { '─', 'FloatBorder' },
+              { '┐', 'FloatBorder' },
+              { '│', 'FloatBorder' },
+              { '┘', 'FloatBorder' },
+              { '─', 'FloatBorder' },
+              { '└', 'FloatBorder' },
+              { '│', 'FloatBorder' },
+            }
+
+            local _border = "single"
+            require('lspconfig.ui.windows').default_options = { border = _border }
+            vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, { border = _border })
+            vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with( vim.lsp.handlers.signature_help, { border = _border })
+
+            vim.diagnostic.config({
+            underline = false,
+            update_in_insert = false,
+            virtual_text = false,
+            signs = true,
+              source = true,
+              float = {
+                win_options = {
+                  winblend = 100
+                },
+                border = border,
+              }
+            })
+            -- }}}
+          -- }}}
+        '';
+
       clipboard.register = "unnamedplus";
       colorschemes.base16.enable = lib.mkForce false;
 
       keymaps = [
+        {
+          mode = "n";
+          key = "<leader>ha";
+          action.__raw = "function() require'harpoon':list():add() end";
+        }
+        {
+          mode = "n";
+          key = "<leader>hm";
+          action.__raw = "function() require'harpoon'.ui:toggle_quick_menu(require'harpoon':list()) end";
+        }
+        {
+          mode = "n";
+          key = "<leader>hn";
+          action.__raw = "function() require'harpoon':list():next() end";
+        }
+        {
+          mode = "n";
+          key = "<leader>hp";
+          action.__raw = "function() require'harpoon':list():prev() end";
+        }
+        {
+          mode = "n";
+          key = "<C-h>";
+          action.__raw = "function() require'harpoon':list():select(1) end";
+        }
+        {
+          mode = "n";
+          key = "<C-j>";
+          action.__raw = "function() require'harpoon':list():select(2) end";
+        }
+        {
+          mode = "n";
+          key = "<C-k>";
+          action.__raw = "function() require'harpoon':list():select(3) end";
+        }
+        {
+          mode = "n";
+          key = "<C-l>";
+          action.__raw = "function() require'harpoon':list():select(4) end";
+        }
+
         {
           key = "s";
           action.__raw = ''require("flash").remote'';
@@ -868,37 +949,25 @@ in {
 
         harpoon = {
           enable = true;
-          markBranch = true;
           enableTelescope = true;
-          keymaps = {
-            addFile = "<leader>ha";
-            navFile = {
-              "1" = "<C-h>";
-              "2" = "<C-j>";
-              "3" = "<C-k>";
-              "4" = "<C-l>";
-            };
-            navNext = "<leader>hn";
-            navPrev = "<leader>hp";
-            toggleQuickMenu = "<leader>hm";
-            cmdToggleQuickMenu = "<leader>hc";
-          };
         };
 
-        nvim-colorizer = {
+        colorizer = {
           enable = true;
-          fileTypes = let
-            css = {css = true;};
-          in [
-            "*"
-            ({language = "css";} // css)
-            ({language = "less";} // css)
-            ({language = "sass";} // css)
-            ({language = "scss";} // css)
-            ({language = "stylus";} // css)
-          ];
-          bufTypes = ["*" "!prompt" "!popup"];
-          userDefaultOptions.names = false;
+          settings = {
+            user_default_options.names = false;
+            buftypes = ["*" "!prompt" "!popup"];
+            fileTypes = let
+              css = {css = true;};
+            in [
+              "*"
+              ({language = "css";} // css)
+              ({language = "less";} // css)
+              ({language = "sass";} // css)
+              ({language = "scss";} // css)
+              ({language = "stylus";} // css)
+            ];
+          };
         };
 
         telescope = {
@@ -1195,7 +1264,7 @@ in {
             eslint.enable = true;
             ts_ls = {
               enable = true;
-              rootDir = ''
+              extraOptions.root_dir = ''
                 function (filename, bufnr)
                   local util = require 'lspconfig.util'
                   local denoRootDir = util.root_pattern("deno.json", "deno.jsonc")(filename);
@@ -1211,7 +1280,7 @@ in {
             };
             denols = {
               enable = true;
-              rootDir = ''
+              extraOptions.root_dir = ''
                 function (filename, bufnr)
                   local util = require 'lspconfig.util'
                   return util.root_pattern("deno.json", "deno.jsonc")(filename);
@@ -1408,6 +1477,7 @@ in {
       };
 
       # }}}
+
       autoCmd = [
         {
           event = ["BufEnter"];

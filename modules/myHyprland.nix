@@ -14,7 +14,10 @@
     text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.sh");
   };
 in {
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true; # Fixes portals, starts proper systemd sessions
+  };
 
   environment.systemPackages = with pkgs; [
     hyprctl-switch-rofi
@@ -22,7 +25,6 @@ in {
     hyprland-protocols
     wl-clipboard
     hyprpicker # Color picker
-    xdg-desktop-portal-hyprland
   ];
 
   nixpkgs.overlays = [
@@ -263,7 +265,12 @@ in {
       gaps_in = osConfig.const.gaps;
       gaps_out = osConfig.const.gaps * 2;
     in {
+      # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
+      package = null;
+      portalPackage = null;
+
       systemd.enable = true;
+
       xwayland.enable = true;
       systemd.variables = ["--all"];
       enable = true;
@@ -296,7 +303,7 @@ in {
         # Autostart.
         exec-once = [
           "waybar"
-          "${lib.getExe' pkgs.polkit-kde-agent "polkit-kde-authentication-agent-1"} &"
+          "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
           "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
           "systemctl --user import-environment PATH &"
           "hash dbus-update-activation-environment 2>/dev/null &"
@@ -317,8 +324,15 @@ in {
         };
 
         cursor = {
+          inactive_timeout = 5;
+          no_hardware_cursors = 0;
           no_warps = true;
           hide_on_key_press = false;
+        };
+
+        ecosystem = {
+          no_update_news = true;
+          no_donation_nag = true;
         };
 
         general = {
@@ -327,7 +341,7 @@ in {
           inherit gaps_in;
           inherit gaps_out;
           border_size = osConfig.const.borderSize;
-          border_part_of_window = false;
+          # border_part_of_window = false;
           no_border_on_floating = false;
           "col.active_border" = lib.mkForce "rgba(${osConfig.const.accentColor}FF)";
           "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
@@ -347,7 +361,12 @@ in {
           };
         };
 
+        render = {
+          direct_scanout = 1;
+        };
+
         misc = {
+          enable_anr_dialog = false;
           enable_swallow = false;
           disable_autoreload = true;
           # Hides text on bottom of the screen.
@@ -364,6 +383,10 @@ in {
           special_scale_factor = 1.0;
           split_width_multiplier = 1.0;
           use_active_for_splits = true;
+        };
+
+        binds = {
+          movefocus_cycles_fullscreen = true;
         };
 
         master = {
@@ -460,7 +483,7 @@ in {
           "$mainMod, z, Cycle next in active workspace, cyclenext,"
           "$mainMod, x, Center active, centerwindow,"
 
-          "$mainMod, Return, Open terminal, exec, $TERMINAL"
+          "$mainMod, Return, Open terminal, exec, ${lib.getExe config.custom.defaultTerminal}"
 
           "$mainMod, b, Open [b]rowser, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 
@@ -549,36 +572,20 @@ in {
           "workspace 4      , title:Chat"
           "workspace 8      , title:Steam"
           "workspace 10     , title:passwordManager"
-
-          "noblur,^(?!(rofi))"
-
-          "pin, ripdrag"
-          "float, ripdrag"
-
-          "float            , imv"
-          "center           , imv"
-          "size 1200 725    , imv"
-
-          "float            , mpv"
-          "center           , mpv"
-          "size 1200 725    , mpv"
-
-          "tile             , Aseprite"
-
-          "pin              , rofi"
-          "float            , rofi"
-
-          "tile             , neovide"
-
-          "idleinhibit focus, mpv"
-
-          "float            ,udiskie"
         ];
 
         windowrulev2 = [
           # Needed for gloss window to tile and not focus.
           # "tile, class:^()$"
           # "noinitialfocus, class:^()$"
+
+          "pin, class:^(rofi)"
+          "float, class:^(rofi)"
+          "tile, class:^(neovide)"
+
+          "pin, class:^(ripdrag)"
+          "float, class:^(ripdrag)"
+          "idleinhibit focus, class:^(mpv)"
 
           # Flameshot fixes
           "stayfocused, class:flameshot, title:flameshot"

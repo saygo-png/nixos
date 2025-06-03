@@ -1,5 +1,7 @@
 {conUsername, ...}: {
+  stylix.targets.qt.enable = false;
   home-manager.users.${conUsername} = _: {
+    stylix.targets.qt.enable = false;
     qt = {
       enable = true;
       style.name = "kvantum";

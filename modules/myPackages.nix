@@ -115,7 +115,7 @@
 
     (writeShellApplication {
       name = "myAutostart.sh";
-      runtimeInputs = [xorg.xrandr polkit-kde-agent xmousepasteblock xssproxy];
+      runtimeInputs = [xorg.xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
       text = ''
         run() {
           if ! pgrep -f "$1" ;

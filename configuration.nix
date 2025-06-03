@@ -63,8 +63,9 @@
       "myMPV.nix"
       "myTmux.nix"
       "myAichat.nix"
-      # "myThunar.nix"
+      "myThunar.nix"
       "myGaming.nix"
+      "myVesktop.nix"
       "myPackages.nix"
       "myAudioEffects.nix"
       "mySyncthing.nix"
@@ -230,9 +231,10 @@
     # Video allows to set brightness.
   };
 
-  # Keep sudo password cached infinitely.
+  # Keep sudo password cached infinitely and enable insults.
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=-1
+    Defaults insults
   '';
 
   # }}}
@@ -347,8 +349,6 @@
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
-      vesktop
-      carla
       calibre
       foliate
       prismlauncher
@@ -405,7 +405,7 @@
 
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
-    FLAKE = "${conFlakePath}"; # For nix helper.
+    NH_FLAKE = "${conFlakePath}"; # For nix helper.
   };
 
   # This allows for programs to see audio plugins
@@ -427,26 +427,6 @@
     VST3_PATH = makePluginPath "vst3";
   };
 
-  # Fixes issues with broken portal
-  systemd.user.services."wait-for-full-path-gtk" = {
-    description = "wait for systemd units to have full PATH";
-    wantedBy = ["xdg-desktop-portal-gtk.service"];
-    before = ["xdg-desktop-portal-gtk.service"];
-    path = with pkgs; [systemd coreutils gnugrep];
-    script = ''
-        ispresent () {
-          systemctl --user show-environment | grep -E '^PATH=.*/.nix-profile/bin'
-        }
-      while ! ispresent; do
-        sleep 0.1;
-      done
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      TimeoutStartSec = "60";
-    };
-  };
-
   system.stateVersion = "24.05"; # Don't change.
 
   # }}}
@@ -461,10 +441,6 @@
   nixpkgs.config.allowUnfree = lib.mkForce false;
 
   nix = {
-    # extraOptions = ''
-    #   extra-substituters = https://devenv.cachix.org
-    #   extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
-    # '';
     channel.enable = false;
     settings = {
       warn-dirty = true;
@@ -660,7 +636,6 @@
           "qcalc" = "qalc";
           "lla" = "eza -la";
           "rt" = "gtrash put";
-          "archive" = "patool";
           "pkill" = "pkill -f";
           "countlines" = "tokei";
           "f" = ''cd "$(fzfcd)"'';
@@ -799,6 +774,7 @@
         settings = {
           gui.border = "single";
           git = {
+            overrideGpg = true;
             commit.signOff = true;
             branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
           };

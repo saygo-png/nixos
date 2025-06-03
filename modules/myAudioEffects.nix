@@ -1,9 +1,13 @@
+# Largely based on https://bennett.dev/auto-link-pipewire-ports-wireplumber/ by Bennett Hardwick
 {
   pkgs,
   lib,
   ...
 }: {
-  # factory.name = support.null-audio-sink
+  environment.systemPackages = [
+    pkgs.carla
+  ];
+
   environment.etc."/pipewire/pipewire.conf.d/10-default-null-sink.conf".text =
     /*
     JSON-SPA
@@ -26,30 +30,25 @@
       ]
     '';
 
-  # services.pipewire.wireplumber.extraConfig = {
-  #   "virtual-mic-as-default-device" = {
-  #     "monitor.bluez.rules" = [
-  #       {
-  #         matches = [
-  #           {
-  #             # Match any bluetooth device with ids equal to that of a WH-1000XM3
-  #             "device.name" = "~bluez_card.*";
-  #             "device.product.id" = "0x0cd3";
-  #             "device.vendor.id" = "usb:054c";
-  #           }
-  #         ];
-  #         actions = {
-  #           update-props = {
-  #             # Set quality to high quality instead of the default of auto
-  #             "bluez5.a2dp.ldac.quality" = "hq";
-  #           };
-  #         };
-  #       }
-  #     ];
-  #   };
-  # };
+  services.pipewire.wireplumber.extraConfig."99-autoconnect" = {
+    "wireplumber.components" = [
+      {
+        name = "autoconnect.lua";
+        type = "script/lua";
+        provides = "custom.autoconnect";
+      }
+    ];
 
-  # node.restore-default-targets
+    "wireplumber.profiles" = {
+      main = {
+        "custom.autoconnect" = "required";
+      };
+    };
+  };
+
+  services.pipewire.wireplumber.extraScripts = {
+    "autoconnect.lua" = builtins.readFile (lib.my.relativeToRoot "resources/wireplumber/autoconnect.lua");
+  };
 
   systemd.user.services."enable-carla-postprocessing" = {
     description = "Load Carla Rack JACK host";
@@ -60,7 +59,4 @@
       ExecStart = lib.mkForce "${lib.getExe' pkgs.carla "carla-rack"} --no-gui %h/Documents/carla.carxp";
     };
   };
-
-  # home-manager.users.${conUsername} = {config, ...}: {
-  # };
 }

@@ -4,7 +4,9 @@
   conUsername,
   ...
 }: {
+  stylix.targets.qt.enable = false;
   home-manager.users.${conUsername} = {
+    stylix.targets.qt.enable = false;
     gtk = {
       enable = true;
       theme = {

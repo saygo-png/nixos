@@ -62,7 +62,7 @@
     };
     emoji = {
       name = "Symbols Nerd Font";
-      package = pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];};
+      package = pkgs.nerd-fonts.symbols-only;
     };
   };
 
