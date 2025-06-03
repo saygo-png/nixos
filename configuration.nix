@@ -797,6 +797,7 @@
         settings = {
           gui.border = "single";
           git = {
+            overrideGpg = true;
             commit.signOff = true;
             branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
           };
