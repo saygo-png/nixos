@@ -639,7 +639,6 @@
           "qcalc" = "qalc";
           "lla" = "eza -la";
           "rt" = "gtrash put";
-          "archive" = "patool";
           "pkill" = "pkill -f";
           "countlines" = "tokei";
           "f" = ''cd "$(fzfcd)"'';
