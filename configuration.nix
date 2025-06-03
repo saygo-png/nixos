@@ -347,7 +347,6 @@
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
-      carla
       calibre
       foliate
       prismlauncher
