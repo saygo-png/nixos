@@ -547,7 +547,7 @@ in {
             vim.keymap.set('v', 'p', '"_dP')
 
             -- Surround each line
-            vim.keymap.set('x', 'ys', ':norm yss')
+            vim.keymap.set('v', 'L', ':norm yss')
 
             -- Basic
             vim.keymap.set('n', ';', ':', { desc = "Command mode with or without shift" })
