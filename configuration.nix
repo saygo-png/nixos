@@ -230,9 +230,10 @@
     # Video allows to set brightness.
   };
 
-  # Keep sudo password cached infinitely.
+  # Keep sudo password cached infinitely and enable insults.
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=-1
+    Defaults insults
   '';
 
   # }}}
