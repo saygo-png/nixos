@@ -14,7 +14,10 @@
     text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.sh");
   };
 in {
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true; # Fixes portals, starts proper systemd sessions
+  };
 
   environment.systemPackages = with pkgs; [
     hyprctl-switch-rofi
@@ -22,7 +25,6 @@ in {
     hyprland-protocols
     wl-clipboard
     hyprpicker # Color picker
-    xdg-desktop-portal-hyprland
   ];
 
   nixpkgs.overlays = [
@@ -263,7 +265,12 @@ in {
       gaps_in = osConfig.const.gaps;
       gaps_out = osConfig.const.gaps * 2;
     in {
+      # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
+      package = null;
+      portalPackage = null;
+
       systemd.enable = true;
+
       xwayland.enable = true;
       systemd.variables = ["--all"];
       enable = true;
