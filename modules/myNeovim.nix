@@ -902,7 +902,6 @@ in {
         direnv.enable = true;
         comment.enable = true;
         fugitive.enable = true;
-        project-nvim.enable = true;
         vim-surround.enable = true;
         web-devicons.enable = true;
         friendly-snippets.enable = true;
@@ -911,7 +910,24 @@ in {
         # conjure.enable = true;
         # parinfer-rust.enable = true;
 
-        nvim-tree.enable = true;
+        nvim-tree = {
+          enable = true;
+          respectBufCwd = true;
+          syncRootWithCwd = true;
+          updateFocusedFile = {
+            enable = true;
+            updateRoot = true;
+          };
+        };
+
+        project-nvim = {
+          enable = true;
+          enableTelescope = true;
+          settings = {
+            silent_chdir = false;
+            detection_methods = ["pattern"];
+          };
+        };
 
         spider = {
           enable = true;
