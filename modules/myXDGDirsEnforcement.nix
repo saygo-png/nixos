@@ -27,7 +27,7 @@ in {
   # };
 
   nix.settings.use-xdg-base-directories = true;
-  nix.extraOptions = ''use-xdg-base-directories = true'';
+  nix.extraOptions = "use-xdg-base-directories = true";
 
   environment.sessionVariables = {
     GOPATH = "${homeConfig.xdg.dataHome}/go";
