@@ -54,6 +54,11 @@
     }
   ];
 
+  # https://gitlab.freedesktop.org/drm/amd/-/issues/1500
+  services.udev.extraRules = ''
+    KERNEL=="card1", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="manual", ATTR{device/pp_power_profile_mode}="1"
+  '';
+
   services.xserver.deviceSection = ''
     Option "VariableRefresh" "true"
     Option "TearFree" "True"
