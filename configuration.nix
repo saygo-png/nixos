@@ -367,6 +367,7 @@
       localsend # Send via local network
       xdragon # drag items from terminal
       tor-browser
+      ungoogled-chromium
 
       # Writing.
       typst
