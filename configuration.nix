@@ -62,7 +62,6 @@
       "myZSH.nix"
       "myMPV.nix"
       "myTmux.nix"
-      "myThunar.nix"
       "myGaming.nix"
       "myVesktop.nix"
       "myPackages.nix"
