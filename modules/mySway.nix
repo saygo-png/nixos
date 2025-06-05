@@ -32,9 +32,6 @@
       enable = true;
       package = pkgs.swayfx;
 
-      # HACK due to https://github.com/nix-community/home-manager/issues/5379
-      checkConfig = false;
-
       wrapperFeatures.gtk = true;
       systemd.enable = true;
       extraConfig = ''
