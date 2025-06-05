@@ -444,7 +444,6 @@
     channel.enable = false;
     settings = {
       warn-dirty = true;
-      auto-optimise-store = true;
       experimental-features = ["nix-command" "flakes"];
     };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
