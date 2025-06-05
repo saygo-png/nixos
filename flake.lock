@@ -167,6 +167,28 @@
         "type": "github"
       }
     },
+    "firefox-addons": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "pkgs/firefox-addons",
+        "lastModified": 1749009805,
+        "narHash": "sha256-eRv4m89aPJvIAX9mZQcJM+l3sYG+OJvcLsiHvAvXalg=",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "rev": "622c38d004cdded682d9a5ab7323181dc6efb0c1",
+        "type": "gitlab"
+      },
+      "original": {
+        "dir": "pkgs/firefox-addons",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "type": "gitlab"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -181,6 +203,22 @@
         "owner": "rafaelmardojai",
         "repo": "firefox-gnome-theme",
         "type": "github"
+      }
+    },
+    "firefox-onebar": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743642335,
+        "narHash": "sha256-Bf8GpH0kGzPibOEg8550y/JPWxQpGA5y00pyX98CKmE=",
+        "ref": "refs/heads/waf",
+        "rev": "78789cadd56cdf0d273ace47e3ac8b6f7db94eef",
+        "revCount": 63,
+        "type": "git",
+        "url": "https://git.gay/freeplay/Firefox-Onebar.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.gay/freeplay/Firefox-Onebar.git"
       }
     },
     "flake-compat": {
@@ -810,6 +848,8 @@
         "awesome-lain": "awesome-lain",
         "devenv": "devenv",
         "extras-nixos": "extras-nixos",
+        "firefox-addons": "firefox-addons",
+        "firefox-onebar": "firefox-onebar",
         "format-udf": "format-udf",
         "home-manager": "home-manager",
         "mpv-intersubs": "mpv-intersubs",

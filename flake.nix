@@ -18,6 +18,16 @@
       flake = false;
     };
 
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    firefox-onebar = {
+      url = "git+https://git.gay/freeplay/Firefox-Onebar.git";
+      flake = false;
+    };
+
     mpv-intersubs = {
       url = "github:oltodosel/interSubs";
       flake = false;
