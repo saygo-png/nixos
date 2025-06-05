@@ -787,7 +787,6 @@
                 settings = let
                   inherit (config.lib.stylix.colors) withHashtag;
                 in {
-
                   default_foreground_color = withHashtag.base05;
                   default_background_color = withHashtag.base00;
                   default_link_color = withHashtag.base0D;
