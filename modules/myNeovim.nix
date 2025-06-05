@@ -1282,9 +1282,6 @@ in {
               '';
             };
 
-            # Markdown
-            marksman.enable = true;
-
             # Haskell.
             hls = {
               installGhc = false;
