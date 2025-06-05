@@ -1223,6 +1223,7 @@ in {
                 options = rec {
                   nixos.expr = "${flake}.nixosConfigurations.nixos.options";
                   home-manager.expr = "${nixos.expr}.home-manager.users.type.getSubOptions []";
+                  nixvim.expr = ''${flake}.packages.${pkgs.system}.nvim.options'';
                 };
               };
             };
