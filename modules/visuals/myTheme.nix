@@ -34,7 +34,7 @@
     base02 = "504945"; # #504945 dark  --
     base03 = "665c54"; # #665c54 dark  -
     base04 = "bdae93"; # #bdae93 light +
-    base05 = "d5c4a1"; # #d5c4a1 light ++
+    base05 = "d5c4a1"; # #d5c4a1 light ++ # Default text
     base06 = "ebdbb2"; # #ebdbb2 light +++
     base07 = "fbf1c7"; # #fbf1c7 light ++++
     base08 = "fb4934"; # #fb4934 red
