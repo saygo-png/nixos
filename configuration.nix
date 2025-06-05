@@ -291,7 +291,6 @@
       # Nix.
       nh # Nix helper
       alejandra # Nix formatter
-      nixd # Another nix LSP (For Zed)
       nix-tree # Reverse dependency search
       nix-output-monitor # Pretty nix build output
 
