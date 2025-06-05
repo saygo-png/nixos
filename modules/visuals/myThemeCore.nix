@@ -71,26 +71,13 @@
   programs.dconf.enable = lib.mkDefault true;
 
   home-manager.users.${conUsername} = {
-    # home.pointerCursor = {
-    #   x11.enable = lib.mkForce true;
-    #   gtk.enable = lib.mkForce true;
-    # };
-
     home.sessionVariables = {
       # This i think fixes some warns/slow launches on some qt apps
       QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
-      # Fake running KDE
-      # https://wiki.archlinux.org/title/qt#Configuration_of_Qt_5_applications_under_environments_other_than_KDE_Plasma
-      # https://wiki.archlinux.org/title/Uniform_look_for_Qt_and_GTK_applications#The_KDE_Plasma_XDG_Desktop_Portal_is_not_being_used
-      DESKTOP_SESSION = "KDE";
       CALIBRE_USE_DARK_PALETTE = "1";
     };
 
     xdg.configFile."wallpaper.png".source = config.stylix.image;
-
-    # Hopefully will set dark mode properly
-    stylix.targets.gnome.enable = true;
-    stylix.targets.kde.enable = true;
 
     gtk = {
       enable = true;
