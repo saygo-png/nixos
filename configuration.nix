@@ -367,11 +367,6 @@
       kdePackages.dolphin # File manager
       localsend # Send via local network
       xdragon # drag items from terminal
-
-      # Browsers.
-      # Librewolf is currently broken
-      # librewolf
-      firefox
       tor-browser
 
       # Writing.
@@ -767,6 +762,8 @@
           origin = "top-center";
         };
       };
+
+      programs.librewolf.enable = true;
 
       programs.lazygit = {
         enable = true;
