@@ -1,5 +1,5 @@
 {
-  self,
+  lib,
   pkgs,
   ...
 }: {
@@ -14,7 +14,7 @@
           substituteInPlace static/views/splash.html \
             --replace-fail shiggy.gif loading.gif
 
-          install -m0644 ${self}/resources/vesktop/loading.gif static/
+          install -m0644 ${lib.my.relativeToRoot "resources/vesktop/loading.gif"} static/
         '';
       });
     })
