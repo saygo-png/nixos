@@ -769,6 +769,7 @@
           name = "default";
           isDefault = true;
           userChrome = builtins.readFile "${inputs.firefox-onebar}/onebar.css";
+          containersForce = true;
           extensions = {
             force = true;
             packages = let
@@ -812,6 +813,7 @@
           };
           search = {
             # {{{
+            force = true;
             default = "ddg";
             engines = {
               bing.metadata.hidden = true;
