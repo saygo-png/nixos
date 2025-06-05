@@ -71,8 +71,9 @@ in {
   home-manager.users.${conUsername} = {lib, ...}: {
     xdg.enable = true;
 
-    home.activation.make-steam-home = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      run mkdir -p $XDG_DATA_HOME/steam-home
+    home.activation.make-dirs-for-xdg = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      run mkdir -p "${homeConfig.xdg.dataHome}/steam-home"
+      run mkdir -p "${homeConfig.xdg.configHome}/simplescreenrecorder"
     '';
 
     xresources.path = "${homeConfig.xdg.configHome}/.xresources";
