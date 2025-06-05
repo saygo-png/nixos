@@ -17,12 +17,6 @@
     termPkg = config.custom.defaultTerminal;
     termExe = lib.getExe termPkg;
   in {
-    # xdg.terminal-exec = {
-    #   enable = true;
-    #   settings = {
-    #     default = ["${termExe}.desktop"];
-    #   };
-    # };
     home-manager.users.${conUsername} = {
       osConfig,
       config,

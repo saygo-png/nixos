@@ -29,22 +29,10 @@
   programs.steam = {
     enable = true;
     gamescopeSession.enable = true;
-    # Load the extest library into Steam, to translate X11 input events to uinput events (for using Steam Input on Wayland).
-    # extest.enable = true;
     extraCompatPackages = [pkgs.proton-ge-bin];
     extraPackages = [
       pkgs.gamescope
       pkgs.gamemode
-      # pkgs.libpng
-      # pkgs.libkrb5
-      # pkgs.keyutils
-      # pkgs.libvorbis
-      # pkgs.xorg.libXi
-      # pkgs.libpulseaudio
-      # pkgs.xorg.libXcursor
-      # pkgs.stdenv.cc.cc.lib
-      # pkgs.xorg.libXinerama
-      # pkgs.xorg.libXScrnSaver
     ];
   };
 
@@ -75,7 +63,7 @@
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \

@@ -232,6 +232,5 @@
     pkgs.piper # For ratbagd
     pkgs.borgbackup
     pkgs.blender-hip
-    # pkgs-unstable.zed-editor.fhs # Another text editor
   ];
 }
