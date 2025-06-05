@@ -95,21 +95,20 @@
   outputs = {
     self,
     nixpkgs,
+    systems,
+    home-manager,
     ...
   } @ inputs: let
-    allPossibleSystems = [
-      "aarch64-linux"
-      "i686-linux"
-      "x86_64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ];
-    eachSystem = f: nixpkgs.lib.genAttrs allPossibleSystems (system: f nixpkgs.legacyPackages.${system});
-    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+    lib = nixpkgs.lib // home-manager.lib;
+    eachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
+    pkgsFor = lib.genAttrs (import systems) (system:
+      import nixpkgs {
+        inherit system;
+      });
 
+    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
     pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
 
-    mySystem = "x86_64-linux";
     commonSpecialArgs = system: {
       inherit inputs self pkgs-unstable;
       # inherit nixpkgs-unstable-frozen;
@@ -121,7 +120,9 @@
         };
       });
     };
+
     commonModules = [
+      ./configuration.nix
       ({
         lib,
         config,
@@ -136,8 +137,9 @@
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
+
     nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem rec {
-      system = mySystem;
+      system = "x86_64-linux";
       specialArgs =
         {
           host = "nixos";
@@ -148,19 +150,18 @@
         // (commonSpecialArgs system);
       modules =
         [
-          inputs.nixos-hardware.nixosModules.common-pc
-          inputs.nixos-hardware.nixosModules.common-pc-ssd
-          inputs.nixos-hardware.nixosModules.common-gpu-amd
-          inputs.nixos-hardware.nixosModules.common-cpu-amd
-          ./configuration.nix
           ./hosts/desktop/desktop.nix
           ./hosts/desktop/hardware-configuration-desktop.nix
+          inputs.nixos-hardware.nixosModules.common-pc
+          inputs.nixos-hardware.nixosModules.common-pc-ssd
+          inputs.nixos-hardware.nixosModules.common-cpu-amd
+          inputs.nixos-hardware.nixosModules.common-gpu-amd
         ]
         ++ commonModules;
     };
 
     nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
-      system = mySystem;
+      system = "x86_64-linux";
       specialArgs =
         {
           host = "thinkpad";
@@ -172,11 +173,10 @@
 
       modules =
         [
-          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
-          inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-          ./configuration.nix
           ./hosts/thinkpad/thinkpad.nix
           ./hosts/thinkpad/hardware-configuration-thinkpad.nix
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
+          inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
         ]
         ++ commonModules;
     };
