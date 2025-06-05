@@ -823,6 +823,7 @@
         "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
         "nvim-plugin-unfocused-cursor": "nvim-plugin-unfocused-cursor",
         "stylix": "stylix",
+        "systems": "systems_4",
         "treefmt-nix": "treefmt-nix_2",
         "vmrss": "vmrss",
         "zlequalizer": "zlequalizer"
@@ -910,6 +911,20 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "id": "systems",
+        "type": "indirect"
       }
     },
     "tinted-foot": {
