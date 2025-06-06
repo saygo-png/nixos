@@ -67,6 +67,8 @@
   xdg.portal.config.common.default = "*";
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
 
+  stylix.targets.chromium.enable = false; # This option is seemingly broken and makes a non fitting ugly theme
+
   # Fixes some themeing/cursor issues.
   programs.dconf.enable = lib.mkDefault true;
 
