@@ -41,7 +41,7 @@
   services.fstrim.enable = true;
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];
 
-  # Swap super and ctrl
+  # Caps = escape, keyboard change key
   services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
 
   # Gaming.
