@@ -365,6 +365,7 @@
       localsend # Send via local network
       xdragon # drag items from terminal
       tor-browser
+      firefox
 
       # Writing.
       typst
@@ -647,7 +648,7 @@
         sessionVariables = {
           # Default programs.
           PAGER = "moar";
-          BROWSER = "firefox";
+          BROWSER = "librewolf";
           OPENER = "xdg-open";
           EDITOR = lib.mkDefault "vim";
           VISUAL = config.home.sessionVariables.EDITOR;
