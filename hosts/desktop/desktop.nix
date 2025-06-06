@@ -60,7 +60,6 @@
   '';
 
   services.xserver.deviceSection = ''
-    Option "VariableRefresh" "true"
     Option "TearFree" "True"
   '';
 
