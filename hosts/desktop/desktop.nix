@@ -68,8 +68,6 @@
   powerManagement.cpuFreqGovernor = "performance";
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-  services.xserver.videoDrivers = ["modesetting"];
-
   hardware = {
     amdgpu = {
       amdvlk.enable = false;
