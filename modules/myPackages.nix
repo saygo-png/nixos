@@ -89,7 +89,7 @@
     (writers.writePython3Bin "d3-autocast"
       {
         libraries = [];
-        flakeIgnore = ["E265" "E225" "E111" "E305" "E501" "E121" "E302" "E114" "F541"];
+        flakeIgnore = ["E265" "E225" "E111" "E305" "E501" "E121" "E302" "E114" "F541" "E261"];
       }
       (builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast.py"))
 
