@@ -170,7 +170,7 @@
       name = "fzfcd";
       runtimeInputs = [fzf coreutils];
       text = ''
-        dir=$(fd --type directory --maxdepth 3 . ~/Sync ~/Documents ~/Downloads ~/nixos | fzf)
+        dir=$(fd --hidden --type directory --maxdepth 15 . ~/Sync ~/Documents ~/Downloads ~/nixos | fzf)
         if [ -z "$dir" ]; then
          exit 1
         fi
