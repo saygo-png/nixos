@@ -8,7 +8,11 @@
   conFlakePathRel,
   ...
 }: {
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; let
+    regardedPythonErrors =
+      ["E265" "E225" "E111" "E305" "E501"]
+      ++ ["E121" "E302" "E114" "F541" "E261"];
+  in [
     (pkgs.stdenv.mkDerivation {
       pname = "hordes-kiosk";
       version = "1.0.0";
@@ -72,26 +76,36 @@
 
     inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
 
-    (writeShellScriptBin "hyprland-next-visible-client.sh"
-      (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
-
-    (writeShellScriptBin "monitor-toggle"
-      (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
+    # Python {{{
 
     (writers.writePython3Bin "keepfilelist"
       {
         libraries = [pkgs.python3Packages.send2trash];
-        flakeIgnore = ["E265" "E225" "E111" "E305" "E501" "E121" "E302" "E114" "F541"];
+        flakeIgnore = regardedPythonErrors;
       }
       (builtins.readFile "${conFlakePathRel}/resources/scripts/keepfilelist.py"))
+
+    (writers.writePython3Bin "ow"
+      {flakeIgnore = regardedPythonErrors;}
+      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/keepfilelist.py")))
 
     xdotool
     (writers.writePython3Bin "d3-autocast"
       {
         libraries = [];
-        flakeIgnore = ["E265" "E225" "E111" "E305" "E501" "E121" "E302" "E114" "F541" "E261"];
+        flakeIgnore = regardedPythonErrors;
       }
       (builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast.py"))
+
+    # }}}
+
+    # Shell {{{
+
+    (writeShellScriptBin "hyprland-next-visible-client.sh"
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
+
+    (writeShellScriptBin "monitor-toggle"
+      (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
 
     (writeShellApplication {
       name = "xkb-switch-rofi";
@@ -404,17 +418,6 @@
         fi
       '';
     })
+    # }}}
   ];
-
-  home-manager = {
-    users.${conUsername} = {
-      home = {
-        # Binary (or not) blobs.
-        sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
-        file = {
-          "bin/ow".source = "${conFlakePathRel}/resources/scripts/ow.py";
-        };
-      };
-    };
-  };
 }
