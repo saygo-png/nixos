@@ -64,6 +64,7 @@
       "myTmux.nix"
       "myGaming.nix"
       "myVesktop.nix"
+      "myComma.nix"
       "myPackages.nix"
       "myAudioEffects.nix"
       "mySyncthing.nix"

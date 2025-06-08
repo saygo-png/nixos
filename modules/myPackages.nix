@@ -413,23 +413,6 @@
         sessionPath = ["${conHome}/bin"]; # Add ~/bin to path.
         file = {
           "bin/ow".source = "${conFlakePathRel}/resources/scripts/ow.py";
-          "bin/nr" = {
-            executable = true;
-            text = ''
-              #!/usr/bin/env zsh
-              # Parametrized alias.
-              # $@ is an array of all arguments quoted, (w) operates on words,
-              # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
-              nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
-            '';
-          };
-          "bin/snr" = {
-            executable = true;
-            text = ''
-              #!/usr/bin/env zsh
-              sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
-            '';
-          };
         };
       };
     };
