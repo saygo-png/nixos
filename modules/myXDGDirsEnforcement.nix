@@ -5,27 +5,6 @@
 }: let
   homeConfig = config.home-manager.users.${conUsername};
 in {
-  # DO THIS ONCE LIBREWOLF GETS A HOME MANAGER MODULE TO MOVE .mozzila INTO CONFIG HOME
-  # programs = {
-  #   # use firefox dev edition
-  #   firefox = rec {
-  #     enable = true;
-  #     package = pkgs.firefox-devedition-bin.overrideAttrs (o: {
-  #       # launch firefox with user profile
-  #       buildCommand =
-  #         o.buildCommand
-  #         + ''
-  #           wrapProgram "$executablePath" \
-  #             --set 'HOME' '${config.xdg.configHome}' \
-  #             --append-flags "--name firefox -P ${user}"
-  #         '';
-  #     });
-  #
-  #     vendorPath = ".config/.mozilla";
-  #     configPath = "${vendorPath}/firefox";
-  #   };
-  # };
-
   nix.settings.use-xdg-base-directories = true;
   nix.extraOptions = "use-xdg-base-directories = true";
 
