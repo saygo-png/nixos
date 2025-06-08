@@ -943,7 +943,7 @@
       programs.yazi = {
         enable = true;
         keymap = {
-          manager.prepend_keymap = [
+          mgr.prepend_keymap = [
             {
               on = ["b"];
               run = [
@@ -956,7 +956,7 @@
         };
         settings = {
           preview.tab_size = 2;
-          manager = {
+          mgr = {
             show_hidden = true;
             show_symlink = true;
             sort_by = "natural";
