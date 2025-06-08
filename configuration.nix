@@ -326,7 +326,6 @@
       jq # Json parser
       termdown # Timer
       gcc # C compiling
-      vim # Text editor
       wget # Downloader
       tokei # Line counter
       udiskie # Auto mount
