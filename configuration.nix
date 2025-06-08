@@ -391,8 +391,6 @@
 
   ###### Miscellaneous ###### {{{
 
-  services.flatpak.enable = true;
-
   programs.dconf.enable = true;
   xdg.menus.enable = true;
 
