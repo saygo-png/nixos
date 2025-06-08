@@ -1012,17 +1012,22 @@
       programs.fzf = {
         enable = true;
         tmux.enableShellIntegration = true;
-        defaultCommand = "fd --type f";
+
+        defaultCommand = "fd --hidden --type f";
         defaultOptions = ["--no-height"];
-        fileWidgetCommand = "fd --type f";
-        changeDirWidgetCommand = "fd --type d";
+
+        fileWidgetCommand = "fd --hidden --type f";
         fileWidgetOptions = ["--preview 'head {}'"];
+
+        changeDirWidgetCommand = "fd --hidden --type d";
         changeDirWidgetOptions = ["--preview 'tree -C {} | head -200'"];
+
+        # Transparent fzf.
         colors = {
           "bg" = lib.mkForce "-1";
           "bg+" = lib.mkForce "-1";
           "gutter" = lib.mkForce "-1";
-        }; # Transparent fzf.
+        };
       };
 
       programs.btop = {
