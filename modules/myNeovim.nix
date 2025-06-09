@@ -44,9 +44,6 @@ in {
       pkgs.stylua # Lua formatter
       pkgs.shfmt # Shell formatter
       pkgs.black # Python formatter
-      # hadolint # Docker linter
-      # rust-analyzer # Rust LSP
-      # sumneko-lua-language-server
       pkgs.isort # Python import sorter
       pkgs.yapf # Python formatter
       pkgs.prettierd # Javascript formatter
@@ -55,10 +52,6 @@ in {
       pkgs.haskellPackages.fourmolu # Haskell formatter
       pkgs.vscode-langservers-extracted # Web LSPs
       pkgs.nodePackages.prettier # Javascript formatter
-
-      # zprint # Clojure formatter
-      # cljfmt # Clojure formatter
-      # clj-kondo # Clojure linter
     ];
 
     programs.nixvim = {
@@ -92,8 +85,6 @@ in {
         pkgs.vimPlugins.gruvbox-material
         pkgs.vimPlugins.dial-nvim
         pkgs.vimPlugins.typst-preview-nvim
-        # pkgs.vimPlugins.vim-dispatch
-        # pkgs.vimPlugins.vim-jack-in
 
         (pkgs.vimUtils.buildVimPlugin {
           name = "cutlass.nvim";
@@ -111,10 +102,6 @@ in {
         (pkgs.vimUtils.buildVimPlugin {
           name = "faster.nvim";
           src = inputs.nvim-plugin-faster;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "unfocused-cursor";
-          src = inputs.nvim-plugin-unfocused-cursor;
         })
         (pkgs.vimUtils.buildVimPlugin {
           name = "tshjkl.nvim";
@@ -246,21 +233,9 @@ in {
         "ftplugin/markdown.vim".text = ''setlocal wrap'';
       };
 
-      extraConfigLuaPre = ''
-        -- Hide deprecation warnings, i used this as a fix to
-        -- multicursors plugin, but might be useful later on
-        -- local notify = vim.notify
-        -- vim.notify = function(msg, ...)
-        --   if msg:match("has been deprecated") then
-        --     return
-        --   end
-        --   notify(msg, ...)
-        -- end
-      '';
       extraConfigLuaPost = ''
         -- Makes treesitter work with rainbow plugin
         vim.api.nvim_set_hl(0, "@constructor", { link = "" })
-        -- vim.api.nvim_set_hl(0, "@constructor.lua", { link = "" })
         vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
         vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
         vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
@@ -598,10 +573,6 @@ in {
 
             -- Plugins {{{
 
-            -- Unfocused cursor {{{
-            require("unfocused-cursor").setup()
-            -- }}}
-
             -- Nvim-tree {{{
             vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
             -- }}}
@@ -645,11 +616,6 @@ in {
             vim.api.nvim_create_user_command("Conform", function()
                 require("conform").format({ timeout_ms = 500 })
             end, { desc = "Format using Conform with a 500ms timeout" })
-            -- }}}
-
-            -- Conjure {{{
-            -- Conflicts with lsp hover
-            vim.g["conjure#mapping#doc_word"] = false
             -- }}}
 
             -- Leap {{{
@@ -905,10 +871,6 @@ in {
         vim-surround.enable = true;
         web-devicons.enable = true;
         friendly-snippets.enable = true;
-
-        # Lisps
-        # conjure.enable = true;
-        # parinfer-rust.enable = true;
 
         nvim-tree = {
           enable = true;
@@ -1206,10 +1168,6 @@ in {
 
         lsp = {
           enable = true;
-          # Disable highlights from LSP
-          # onAttach = ''
-          #   client.server_capabilities.semanticTokensProvider = nil
-          # '';
           servers = {
             # Nix.
             nil_ls.enable = true;
@@ -1245,9 +1203,6 @@ in {
 
             # Lua.
             lua_ls.enable = true;
-
-            # Clojure
-            clojure_lsp.enable = true;
 
             # Web
             html.enable = true;
@@ -1318,7 +1273,6 @@ in {
               sh = ["shfmt"];
               lua = ["stylua"];
               nix = ["alejandra"];
-              clojure = ["zprint"];
               haskell = ["fourmolu"];
               graphql = ["prettierd"];
               markdown = ["prettierd"];
@@ -1357,15 +1311,12 @@ in {
           enable = true;
           linters.statix.args = ["--config=${statixConfig}"];
           lintersByFt = {
-            # rst = ["vale"];
-            # text = ["vale"];
             c = ["clangtidy"];
             cpp = ["clangtidy"];
             haskell = ["hlint"];
             json = ["jsonlint"];
             bash = ["shellcheck"];
             shell = ["shellcheck"];
-            clojure = ["clj-kondo"];
             nix = ["nix" "deadnix" "statix"];
             dockerfile = ["hadolint"];
             markdown = ["markdownlint"];
