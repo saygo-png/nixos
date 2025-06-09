@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # I don't like how comma uses ","
 
   nixpkgs.overlays = [
