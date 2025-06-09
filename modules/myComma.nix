@@ -1,7 +1,5 @@
 {
-  lib,
   pkgs,
-  config,
   ...
 }: {
   # I don't like how comma uses ","

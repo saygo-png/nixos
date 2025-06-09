@@ -4,7 +4,6 @@
   config,
   inputs,
   conHome,
-  conUsername,
   conFlakePathRel,
   ...
 }: {
