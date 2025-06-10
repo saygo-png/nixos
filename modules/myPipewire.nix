@@ -12,6 +12,13 @@
     jack.enable = true;
     pulse.enable = true;
     alsa.support32Bit = true;
-    wireplumber.enable = true;
+    # Increase latency a bit to stop crackles
+    extraConfig.pipewire."92-low-latency" = {
+      "context.properties" = {
+        "default.clock.quantum" = 64; # increased from 32
+        "default.clock.min-quantum" = 32;
+        "default.clock.max-quantum" = 128; # increased from 32
+      };
+    };
   };
 }
