@@ -393,6 +393,7 @@
 
   programs.dconf.enable = true;
   xdg.menus.enable = true;
+  xdg.icons.enable = true;
 
   # Create media folder in root
   systemd.tmpfiles.rules = [
