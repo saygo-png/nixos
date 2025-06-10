@@ -151,6 +151,26 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1749436314,
+        "narHash": "sha256-CqmqU5FRg5AadtIkxwu8ulDSOSoIisUMZRLlcED3Q5w=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "dfa4d1b9c39c0342ef133795127a3af14598017a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "extras-nixos": {
       "flake": false,
       "locked": {
@@ -831,6 +851,7 @@
         "awesome-git": "awesome-git",
         "awesome-lain": "awesome-lain",
         "devenv": "devenv",
+        "disko": "disko",
         "extras-nixos": "extras-nixos",
         "firefox-addons": "firefox-addons",
         "firefox-onebar": "firefox-onebar",
