@@ -76,13 +76,10 @@
       "myXDGDirsEnforcement.nix"
 
       "visuals/myTheme.nix"
+      "visuals/myCursor.nix"
       "visuals/myThemeCore.nix"
       "visuals/myKvantumBasedQT.nix"
-      # "visuals/myGtkBasedQT.nix"
-      # "visuals/myNixBasedQT.nix"
-      # "visuals/myGnomeBasedQT.nix"
-      # "visuals/myAdwaitaDarkQT.nix"
-      # "visuals/myImperativeKvantumBasedQT.nix"
+      # "visuals/myKvantumBasedQT.nix"
     ];
   # }}}
 

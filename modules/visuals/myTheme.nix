@@ -23,10 +23,7 @@
   }; # }}}
 
   # Stylix {{{
-  stylix.cursor.size = 32;
   stylix.polarity = "dark";
-  stylix.cursor.name = "Capitaine Cursors (Gruvbox)";
-  stylix.cursor.package = pkgs.capitaine-cursors-themed;
   stylix.image = "${inputs.extras-nixos}/wallpaper.png";
   stylix.base16Scheme = {
     base00 = "282828"; # #282828 dark  ----
