@@ -32,6 +32,8 @@
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "flat";
 
+  networking.hostId = "a4e735aa";
+
   # Open ports for qbittorrent
   networking.firewall.allowedTCPPorts = [39578];
   networking.firewall.allowedUDPPorts = [39578];

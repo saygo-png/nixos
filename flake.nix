@@ -162,6 +162,7 @@
       modules =
         [
           ./hosts/desktop/desktop.nix
+          ./hosts/desktop/disko-config.nix
 
           inputs.disko.nixosModules.disko
           inputs.impermanence.nixosModules.impermanence
@@ -196,6 +197,10 @@
         ++ commonModules;
     };
 
+    # My confiugration is so bulky that i struggle with installing it from a
+    # usb without OOM errors This is a minimal host to be deployed on the
+    # install target disk It follows the partitioning schema of the "nixos"
+    # (desktop) host, which allows for a seamless switch to it.
     nixosConfigurations.install = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs =
@@ -208,7 +213,11 @@
 
       modules = [
         ./hosts/install/install.nix
-        ./hosts/install/hardware-configuration-install.nix
+
+        inputs.disko.nixosModules.disko
+        inputs.impermanence.nixosModules.impermanence
+        ./hosts/desktop/hardware-configuration-desktop.nix
+        ./hosts/desktop/disko-config.nix
       ];
     };
   };

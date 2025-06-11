@@ -129,7 +129,7 @@
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
 
-  networking.hostName = "${host}";
+  networking.hostName = host;
 
   # DNS
   services.resolved.enable = false;

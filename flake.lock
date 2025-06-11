@@ -518,6 +518,21 @@
         "type": "github"
       }
     },
+    "impermanence": {
+      "locked": {
+        "lastModified": 1737831083,
+        "narHash": "sha256-LJggUHbpyeDvNagTUrdhe/pRVp4pnS6wVKALS782gRI=",
+        "owner": "nix-community",
+        "repo": "impermanence",
+        "rev": "4b3e914cdf97a5b536a889e939fb2fd2b043a170",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "impermanence",
+        "type": "github"
+      }
+    },
     "ixx": {
       "inputs": {
         "flake-utils": [
@@ -857,6 +872,7 @@
         "firefox-onebar": "firefox-onebar",
         "format-udf": "format-udf",
         "home-manager": "home-manager",
+        "impermanence": "impermanence",
         "mpv-intersubs": "mpv-intersubs",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
