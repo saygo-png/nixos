@@ -1,10 +1,10 @@
 # Update main.device to match the main disk name from lsblk
 # https://github.com/nix-community/disko-templates/blob/6b12e5fe81fc0c06989a58bd0b01f4a2efca4906/zfs-impermanence/disko-config.nix
-{lib, ...}: {
+_: {
   disko.devices = {
     disk = {
       main = {
-        device = "dev/nvme0n1";
+        device = "/dev/nvme0n1";
         type = "disk";
         content = {
           type = "gpt";
@@ -91,7 +91,7 @@
       };
     };
   };
-  boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r zroot/local/root@blank
-  '';
+  # boot.initrd.postDeviceCommands = lib.mkAfter ''
+  #   zfs rollback -r zroot/local/root@blank
+  # '';
 }

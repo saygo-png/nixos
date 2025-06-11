@@ -15,10 +15,17 @@
 
   users = {
     mutableUsers = false;
-    users.${conUsername} = {
-      hashedPasswordFile = "/home/${conUsername}/.config/password.txt";
-      isNormalUser = true;
-      extraGroups = ["wheel" "networkmanager"]; # Enable ‘sudo’ for the user.
+    users = {
+      ${conUsername} = {
+        initialHashedPassword = "$y$j9T$vhbFbUi1uMXLH4qgYx13I1$dMmxiKFP4l236qd7ipfwmH.0PUnSehayI4jdRQmnzL0";
+        hashedPasswordFile = "/etc/password.txt";
+        isNormalUser = true;
+        extraGroups = ["wheel" "networkmanager" "video"]; # Enable ‘sudo’ for the user.
+      };
+      root = {
+        initialHashedPassword = "$y$j9T$vhbFbUi1uMXLH4qgYx13I1$dMmxiKFP4l236qd7ipfwmH.0PUnSehayI4jdRQmnzL0";
+        hashedPasswordFile = "/etc/password.txt";
+      };
     };
   };
 
