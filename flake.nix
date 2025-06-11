@@ -6,6 +6,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    impermanence.url = "github:nix-community/impermanence";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -161,7 +162,11 @@
       modules =
         [
           ./hosts/desktop/desktop.nix
+
+          inputs.disko.nixosModules.disko
+          inputs.impermanence.nixosModules.impermanence
           ./hosts/desktop/hardware-configuration-desktop.nix
+
           inputs.nixos-hardware.nixosModules.common-pc
           inputs.nixos-hardware.nixosModules.common-pc-ssd
           inputs.nixos-hardware.nixosModules.common-cpu-amd
@@ -189,6 +194,22 @@
           inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
         ]
         ++ commonModules;
+    };
+
+    nixosConfigurations.install = inputs.nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      specialArgs =
+        {
+          host = "install";
+          conUsername = "samsepi0l";
+          conHome = "/home/samsepi0l";
+        }
+        // (commonSpecialArgs system);
+
+      modules = [
+        ./hosts/install/install.nix
+        ./hosts/install/hardware-configuration-install.nix
+      ];
     };
   };
 }
