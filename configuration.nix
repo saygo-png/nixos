@@ -103,13 +103,6 @@
     };
   };
 
-  # Needed for building, by default its set to 10% of ram, which might
-  # not be enough for low ram systems causing an "out of space" error when
-  # trying to build. This will still happen with this option, since you need
-  # the resize first to apply this config. Put this line in the vanilla config,
-  # rebuild, and then build my config.
-  services.logind.extraConfig = "RuntimeDirectorySize=4G";
-
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
