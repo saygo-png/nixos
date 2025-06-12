@@ -7,7 +7,8 @@
   ...
 }: let
   homeConfig = config.home-manager.users.${conUsername};
-  configPath = lib.removePrefix homeConfig.home.homeDirectory homeConfig.xdg.configHome;
+  configPath = lib.removePrefix (homeConfig.home.homeDirectory + "/") homeConfig.xdg.configHome;
+  profileName = "librewolf-" + conUsername;
 in {
   nixpkgs.overlays = [
     (_final: prev: {
@@ -22,7 +23,7 @@ in {
               lib.concatStringsSep " " [
                 "--name librewolf"
                 # load librewolf profile with same name as user
-                "--profile ${homeConfig.home.homeDirectory}/${configPath}/${conUsername}"
+                "--profile ${homeConfig.home.homeDirectory}/${configPath}/${profileName}"
               ]
             }"
           '';
@@ -38,7 +39,7 @@ in {
     programs.librewolf = {
       inherit configPath;
       enable = true;
-      profiles.${conUsername} = {
+      profiles.${profileName} = {
         isDefault = true;
         userChrome = builtins.readFile "${inputs.firefox-onebar}/onebar.css";
         containersForce = true;
