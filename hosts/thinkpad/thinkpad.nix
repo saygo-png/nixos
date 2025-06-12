@@ -30,7 +30,6 @@
       # "myMullvad.nix"
     ];
   # Optimization for ssds
-  services.fstrim.enable = true;
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];
 
   # Wifi

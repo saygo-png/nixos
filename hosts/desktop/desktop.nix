@@ -39,9 +39,6 @@
   networking.firewall.allowedUDPPorts = [39578];
   services.fail2ban.enable = true;
 
-  # Optimization for ssds
-  services.fstrim.enable = true;
-
   # Caps = escape, keyboard change key
   services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
 
