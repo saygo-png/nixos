@@ -132,11 +132,7 @@
   networking.hostName = host;
 
   # DNS
-  services.resolved.enable = false;
-  networking.networkmanager.dns = "none";
-  networking.resolvconf.enable = lib.mkForce false;
-  networking.dhcpcd.extraConfig = "nohook resolv.conf";
-  networking.nameservers = ["9.9.9.9" "149.112.112.112"];
+  networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];
 
   networking.firewall.enable = true;
 
