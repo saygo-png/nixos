@@ -41,7 +41,6 @@
 
   # Optimization for ssds
   services.fstrim.enable = true;
-  fileSystems."/".options = ["noatime" "nodiratime" "discard"];
 
   # Caps = escape, keyboard change key
   services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
