@@ -86,6 +86,7 @@ in {
         };
         search = {
           # {{{
+          enable = true;
           force = true;
           default = "ddg";
           engines = {
