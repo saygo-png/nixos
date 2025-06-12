@@ -44,6 +44,7 @@ in {
 
     programs.waybar = {
       enable = true;
+      systemd.enable = true;
       settings = let
         inherit (config.lib.stylix.colors) withHashtag;
         color-span = content: color: ''<span color="${color}">${content}</span>'';
