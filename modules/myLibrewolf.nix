@@ -61,7 +61,7 @@ in {
           packages = let
             addons = inputs.firefox-addons.packages.${pkgs.system};
           in [
-            # Ublock is not here because librewolf itself adds it
+            addons.ublock-origin
             addons.single-file
             addons.sponsorblock
             addons.return-youtube-dislikes
