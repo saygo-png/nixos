@@ -34,7 +34,7 @@
     tree
     wget
     git
-    toybox
+    busybox
   ];
 
   system.stateVersion = "25.05";
