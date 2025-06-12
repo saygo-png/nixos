@@ -92,21 +92,14 @@
 
   ###### Essential or basic. ###### {{{
 
-  services.dbus = {
-    enable = true;
-    implementation = "broker";
-  };
+  services.dbus.implementation = "broker";
 
   documentation = {
-    enable = true;
     dev.enable = true;
-    doc.enable = true;
     info.enable = false;
     man = {
-      enable = true;
       generateCaches = true;
       man-db.enable = true;
-      mandoc.enable = false;
     };
   };
 
