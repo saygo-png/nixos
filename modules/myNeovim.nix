@@ -1177,7 +1177,10 @@ in {
           enable = true;
           servers = {
             # Nix.
-            nil_ls.enable = true;
+            nil_ls = {
+              enable = true;
+              settings.nix.flake.autoArchive = true;
+            };
             nixd = {
               # Nix LS
               enable = true;
