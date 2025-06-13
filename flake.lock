@@ -813,6 +813,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-cutlass": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1702908963,
+        "narHash": "sha256-zmS/JlcGW8hLWla01F2z9QMfnIYvWr5BkPCoZqzsAFw=",
+        "owner": "gbprod",
+        "repo": "cutlass.nvim",
+        "rev": "1ac7e4b53d79410be52a9e464d44c60556282b3e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gbprod",
+        "repo": "cutlass.nvim",
+        "type": "github"
+      }
+    },
     "nvim-plugin-faster": {
       "flake": false,
       "locked": {
@@ -826,6 +842,22 @@
       "original": {
         "owner": "pteroctopus",
         "repo": "faster.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-plugin-rainbow": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1722056440,
+        "narHash": "sha256-dBHgAc3dOoeBI/lZzIJgYYTda8ZMvdThixUZebZXRHE=",
+        "owner": "luochen1990",
+        "repo": "rainbow",
+        "rev": "76ca1a20aa42edb5c65c19029968aad4625790dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "luochen1990",
+        "repo": "rainbow",
         "type": "github"
       }
     },
@@ -861,6 +893,22 @@
         "type": "github"
       }
     },
+    "nvim-plugin-vim-visual-multi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725214162,
+        "narHash": "sha256-KzBWkB/PYph6OfuF0GgNFYgqUAwMYbQQZbaaG9XuWZY=",
+        "owner": "mg979",
+        "repo": "vim-visual-multi",
+        "rev": "a6975e7c1ee157615bbc80fc25e4392f71c344d4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mg979",
+        "repo": "vim-visual-multi",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "awesome-git": "awesome-git",
@@ -879,9 +927,12 @@
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
+        "nvim-plugin-cutlass": "nvim-plugin-cutlass",
         "nvim-plugin-faster": "nvim-plugin-faster",
+        "nvim-plugin-rainbow": "nvim-plugin-rainbow",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
         "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
+        "nvim-plugin-vim-visual-multi": "nvim-plugin-vim-visual-multi",
         "stylix": "stylix",
         "systems": "systems_4",
         "treefmt-nix": "treefmt-nix_2",

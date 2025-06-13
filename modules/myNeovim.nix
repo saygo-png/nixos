@@ -5,28 +5,7 @@
   inputs,
   conUsername,
   ...
-}: let
-  nvim-plugin-cutlass = pkgs.fetchFromGitHub {
-    owner = "gbprod";
-    repo = "cutlass.nvim";
-    rev = "1ac7e4b53d79410be52a9e464d44c60556282b3e";
-    sha256 = "zmS/JlcGW8hLWla01F2z9QMfnIYvWr5BkPCoZqzsAFw=";
-  };
-
-  nvim-plugin-vim-visual-multi = pkgs.fetchFromGitHub {
-    owner = "mg979";
-    repo = "vim-visual-multi";
-    rev = "a6975e7c1ee157615bbc80fc25e4392f71c344d4";
-    sha256 = "KzBWkB/PYph6OfuF0GgNFYgqUAwMYbQQZbaaG9XuWZY=";
-  };
-
-  nvim-plugin-rainbow = pkgs.fetchFromGitHub {
-    owner = "luochen1990";
-    repo = "rainbow";
-    rev = "76ca1a20aa42edb5c65c19029968aad4625790dc";
-    sha256 = "dBHgAc3dOoeBI/lZzIJgYYTda8ZMvdThixUZebZXRHE=";
-  };
-in {
+}: {
   environment.systemPackages = with pkgs; [
     neovide # Neovim gui
   ];
@@ -79,39 +58,28 @@ in {
       # Needed for special characters in spider.nvim
       extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
-      extraPlugins = [
-        pkgs.vimPlugins.img-clip-nvim
-        pkgs.vimPlugins.vim-pencil
-        pkgs.vimPlugins.gruvbox-material
-        pkgs.vimPlugins.dial-nvim
-        pkgs.vimPlugins.typst-preview-nvim
-
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "cutlass.nvim";
-          src = nvim-plugin-cutlass;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "vim-visual-multi";
-          src = nvim-plugin-vim-visual-multi;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "rainbow";
-          src = nvim-plugin-rainbow;
-        })
-
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "faster.nvim";
-          src = inputs.nvim-plugin-faster;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "tshjkl.nvim";
-          src = inputs.nvim-plugin-tshjkl;
-        })
-        (pkgs.vimUtils.buildVimPlugin {
-          name = "telescope-git-file-history.nvim";
-          src = inputs.nvim-plugin-telescope-git-file-history;
-        })
-      ];
+      extraPlugins = let
+        mkNvimplugin = name:
+          pkgs.vimUtils.buildVimPlugin {
+            inherit name;
+            src = builtins.getAttr ("nvim-plugin-" + name) inputs;
+          };
+      in
+        [
+          pkgs.vimPlugins.img-clip-nvim
+          pkgs.vimPlugins.vim-pencil
+          pkgs.vimPlugins.gruvbox-material
+          pkgs.vimPlugins.dial-nvim
+          pkgs.vimPlugins.typst-preview-nvim
+        ]
+        ++ map mkNvimplugin [
+          "cutlass"
+          "vim-visual-multi"
+          "rainbow"
+          "faster"
+          "tshjkl"
+          "telescope-git-file-history"
+        ];
 
       highlightOverride = {
         noCursor.blend = 100;
