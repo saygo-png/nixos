@@ -149,11 +149,11 @@
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
 
-    nixosConfigurations.nixos = inputs.nixpkgs.lib.nixosSystem rec {
+    nixosConfigurations.pc = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs =
         {
-          host = "nixos";
+          host = "pc";
           conUsername = "samsepi0l";
           conHome = "/home/samsepi0l";
           conFlakePath = "/home/samsepi0l/nixos";
@@ -161,12 +161,12 @@
         // (commonSpecialArgs system);
       modules =
         [
-          ./hosts/desktop/desktop.nix
-          ./hosts/desktop/disko-config.nix
+          ./hosts/pc/pc.nix
+          ./hosts/pc/disko-config.nix
 
           inputs.disko.nixosModules.disko
           inputs.impermanence.nixosModules.impermanence
-          ./hosts/desktop/hardware-configuration-desktop.nix
+          ./hosts/pc/hardware-configuration-pc.nix
 
           inputs.nixos-hardware.nixosModules.common-pc
           inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -212,12 +212,11 @@
         // (commonSpecialArgs system);
 
       modules = [
-        ./hosts/install/install.nix
-
         inputs.disko.nixosModules.disko
         inputs.impermanence.nixosModules.impermanence
-        ./hosts/desktop/hardware-configuration-desktop.nix
-        ./hosts/desktop/disko-config.nix
+        ./hosts/pc/install/install.nix
+        ./hosts/pc/hardware-configuration-pc.nix
+        ./hosts/pc/disko-config.nix
       ];
     };
   };
