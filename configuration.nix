@@ -656,6 +656,7 @@
           SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
         };
 
+        activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
           run mkdir -p "${config.home.homeDirectory}/backups"
           run mkdir -p "${config.home.homeDirectory}/Documents"
           run mkdir -p "${config.home.homeDirectory}/Downloads"
