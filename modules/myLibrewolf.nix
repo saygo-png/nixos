@@ -32,8 +32,9 @@ in {
   ];
 
   home-manager.users.${conUsername} = {config, ...}: {
-    # Removes .keep file from creating ~/.librewolf
+    # Removes .keep file from creating ~/.librewolf and ~/.mozzilla
     home.file.".librewolf/native-messaging-hosts".enable = lib.mkForce false;
+    home.file.".mozilla/native-messaging-hosts".enable = lib.mkForce false;
 
     stylix.targets.librewolf.enable = false;
     programs.librewolf = {
