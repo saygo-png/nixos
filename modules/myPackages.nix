@@ -78,8 +78,7 @@
     # Python {{{
     (writers.writePython3Bin "ow"
       {flakeIgnore = regardedPythonErrors;}
-      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/keepfilelist.py")))
-
+      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/ow.py")))
     # }}}
 
     # Shell {{{
