@@ -1,16 +1,13 @@
 {
   lib,
   inputs,
-  conUsername,
   extraLib,
-  conFlakePathRel,
+  conUsername,
   ...
 }: {
   imports = [
-    "${conFlakePathRel}/modules/x11/myXorgBase.nix"
+    (lib.my.relativeToRoot "modules/x11/myXorgBase.nix")
   ];
-
-  # services.displayManager.defaultSession = lib.mkDefault "none+awesome";
 
   nixpkgs.overlays = [
     (_: prev: {
@@ -44,7 +41,7 @@
       extraLib.wrapWithXinitrc xinitrc "awesome";
 
     xdg.configFile."awesome/rc.lua" = {
-      source = "${conFlakePathRel}/resources/awesome/rc.lua";
+      source = lib.my.relativeToRoot "resources/awesome/rc.lua";
     };
 
     xdg.configFile."awesome/lain" = {

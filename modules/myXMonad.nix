@@ -3,11 +3,10 @@
   pkgs,
   extraLib,
   conUsername,
-  conFlakePathRel,
   ...
 }: {
   imports = [
-    "${conFlakePathRel}/modules/x11/myXorgBase.nix"
+    (lib.my.relativeToRoot "modules/x11/myXorgBase.nix")
   ];
 
   environment.systemPackages = [

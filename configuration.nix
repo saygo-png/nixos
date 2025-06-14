@@ -8,7 +8,6 @@
   conHome,
   options,
   conUsername,
-  conFlakePath,
   ...
 }: {
   imports =
@@ -357,7 +356,7 @@
 
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
-    NH_FLAKE = "${conFlakePath}"; # For nix helper.
+    NH_FLAKE = "${lib.my.relativeToRoot "."}"; # For nix helper.
   };
 
   # This allows for programs to see audio plugins
@@ -597,7 +596,7 @@
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "plan" = "nsxiv ${config.home.homeDirectory}/Sync/notes/plan.png";
-          "nhoffline" = "nh os switch ${conFlakePath} -- --option substitute false";
+          "nhoffline" = "nh os switch -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
           "search" = "sudo echo 'got sudo' && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";

@@ -1,7 +1,7 @@
 {
+  lib,
   pkgs,
   conUsername,
-  conFlakePathRel,
   ...
 }: {
   programs.zsh.enable = true;
@@ -153,7 +153,7 @@
         source ~/.local/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         source ~/.local/zsh-autosuggestions/zsh-autosuggestions.zsh
         source ~/.local/powerlevel10k/powerlevel10k.zsh-theme
-        source ${conFlakePathRel}/resources/zsh/p10k-prompt.zsh
+        source ${lib.my.relativeToRoot "resources/zsh/p10k-prompt.zsh"}
         source ${pkgs.zsh-system-clipboard}/share/zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
       '';
     };

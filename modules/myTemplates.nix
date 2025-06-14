@@ -1,6 +1,6 @@
 {
+  lib,
   pkgs,
-  conFlakePathRel,
   conUsername,
   ...
 }: {
@@ -11,7 +11,7 @@
   home-manager.users.${conUsername} = _: {
     xdg.configFile."cookiecutters/" = {
       recursive = true;
-      source = "${conFlakePathRel}/resources/cookiecutterTemplates";
+      source = lib.my.relativeToRoot "resources/cookiecutterTemplates";
     };
   };
 }
