@@ -498,6 +498,22 @@
         "type": "github"
       }
     },
+    "gruvbox-kvantum": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1727610972,
+        "narHash": "sha256-o3EEpd8fsrKPNA6TmiK7KLxy6hld+MpSrtLAKPhtJOE=",
+        "owner": "TheGlitchh",
+        "repo": "Gruvbox-Kvantum",
+        "rev": "29ba1f05affba26ef0e718de6ddb96c21ccd182e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TheGlitchh",
+        "repo": "Gruvbox-Kvantum",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -919,6 +935,7 @@
         "firefox-addons": "firefox-addons",
         "firefox-onebar": "firefox-onebar",
         "format-udf": "format-udf",
+        "gruvbox-kvantum": "gruvbox-kvantum",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "mpv-intersubs": "mpv-intersubs",

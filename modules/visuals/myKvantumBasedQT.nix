@@ -1,7 +1,8 @@
 {
-  conUsername,
-  conFlakePathRel,
   lib,
+  pkgs,
+  inputs,
+  conUsername,
   ...
 }: {
   stylix.targets.qt.enable = false;
@@ -24,8 +25,8 @@
         theme=KvGnomeDark#
       '';
 
-      "Kvantum/gruvbox-fallnn".source = "${conFlakePathRel}/resources/qt/gruvbox-fallnn";
-      "Kvantum/KvGnomeDark#".source = "${conFlakePathRel}/resources/qt/KvGnomeDark#";
+      "Kvantum/gruvbox-fallnn".source = "${inputs.gruvbox-kvantum}/gruvbox-falln";
+      "Kvantum/KvGnomeDark#".source = "${pkgs.kdePackages.qtstyleplugin-kvantum}/share/Kvantum/KvGnomeDark/KvGnomeDark.kvconfig";
     };
     home.file = let
       baseConfig = {

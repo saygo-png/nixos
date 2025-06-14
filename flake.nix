@@ -31,6 +31,11 @@
       flake = false;
     };
 
+    gruvbox-kvantum = {
+      url = "github:TheGlitchh/Gruvbox-Kvantum";
+      flake = false;
+    };
+
     zlequalizer = {
       url = "github:saygo-png/ZLEqualizer-nix";
       inputs.nixpkgs.follows = "nixpkgs";
