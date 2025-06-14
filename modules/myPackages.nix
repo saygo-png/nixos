@@ -76,14 +76,6 @@
     inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
 
     # Python {{{
-
-    (writers.writePython3Bin "keepfilelist"
-      {
-        libraries = [pkgs.python3Packages.send2trash];
-        flakeIgnore = regardedPythonErrors;
-      }
-      (builtins.readFile "${conFlakePathRel}/resources/scripts/keepfilelist.py"))
-
     (writers.writePython3Bin "ow"
       {flakeIgnore = regardedPythonErrors;}
       (builtins.readFile (lib.my.relativeToRoot "resources/scripts/keepfilelist.py")))
