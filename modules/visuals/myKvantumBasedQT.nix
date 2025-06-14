@@ -16,14 +16,14 @@
     };
 
     xdg.configFile = {
-      # "Kvantum/kvantum.kvconfig".text = ''
-      #   [General]
-      #   theme=gruvbox-fallnn
-      # '';
       "Kvantum/kvantum.kvconfig".text = ''
         [General]
-        theme=KvGnomeDark#
+        theme=gruvbox-fallnn
       '';
+      # "Kvantum/kvantum.kvconfig".text = ''
+      #   [General]
+      #   theme=KvGnomeDark#
+      # '';
 
       "Kvantum/gruvbox-fallnn".source = "${inputs.gruvbox-kvantum}/gruvbox-falln";
       "Kvantum/KvGnomeDark#".source = "${pkgs.kdePackages.qtstyleplugin-kvantum}/share/Kvantum/KvGnomeDark/KvGnomeDark.kvconfig";
