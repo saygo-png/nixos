@@ -169,9 +169,7 @@
         config,
         pkgs,
         ...
-      }: {
-        _module.args.extraLib = import ./modules/myExtraLib.nix {inherit config pkgs lib;};
-      })
+      }: {_module.args.extraLib = import ./modules/myExtraLib.nix {inherit config pkgs lib;};})
     ];
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
@@ -203,6 +201,30 @@
         ]
         ++ commonModules;
     };
+    # install-pc {{{
+    # My configuration is so bulky that i struggle with installing it from a
+    # usb without OOM errors. This is a minimal host to be deployed on the
+    # install target disk. It follows the partitioning schema of the "pc"
+    # host, which allows for a seamless switch to it.
+    nixosConfigurations.install-pc = inputs.nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      specialArgs =
+        {
+          conUsername = "samsepi0l";
+          conHome = "/home/samsepi0l";
+        }
+        // (commonSpecialArgs system);
+
+      modules =
+        [
+          inputs.disko.nixosModules.disko
+          inputs.impermanence.nixosModules.impermanence
+          ./hosts/pc/install/install.nix
+          ./hosts/pc/hardware-configuration-pc.nix
+          ./hosts/pc/disko-config.nix
+        ]
+        ++ commonModules;
+    }; # }}}
 
     nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
@@ -221,30 +243,6 @@
           ./hosts/thinkpad/hardware-configuration-thinkpad.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
           inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-        ]
-        ++ commonModules;
-    };
-
-    # My configuration is so bulky that i struggle with installing it from a
-    # usb without OOM errors. This is a minimal host to be deployed on the
-    # install target disk. It follows the partitioning schema of the "pc"
-    # host, which allows for a seamless switch to it.
-    nixosConfigurations.install = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs =
-        {
-          conUsername = "samsepi0l";
-          conHome = "/home/samsepi0l";
-        }
-        // (commonSpecialArgs system);
-
-      modules =
-        [
-          inputs.disko.nixosModules.disko
-          inputs.impermanence.nixosModules.impermanence
-          ./hosts/pc/install/install.nix
-          ./hosts/pc/hardware-configuration-pc.nix
-          ./hosts/pc/disko-config.nix
         ]
         ++ commonModules;
     };
