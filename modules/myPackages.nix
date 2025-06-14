@@ -88,14 +88,6 @@
       {flakeIgnore = regardedPythonErrors;}
       (builtins.readFile (lib.my.relativeToRoot "resources/scripts/keepfilelist.py")))
 
-    xdotool
-    (writers.writePython3Bin "d3-autocast"
-      {
-        libraries = [];
-        flakeIgnore = regardedPythonErrors;
-      }
-      (builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast.py"))
-
     # }}}
 
     # Shell {{{
@@ -110,12 +102,6 @@
       name = "xkb-switch-rofi";
       runtimeInputs = [coreutils xkb-switch rofi-wayland];
       text = builtins.readFile "${conFlakePathRel}/resources/scripts/xkb-switch-rofi.sh";
-    })
-
-    (writeShellApplication {
-      name = "d3-autocast-menu";
-      runtimeInputs = [coreutils];
-      text = builtins.readFile "${conFlakePathRel}/resources/scripts/diablo3-autocast/d3-autocast-menu.sh";
     })
 
     (writeShellApplication {
