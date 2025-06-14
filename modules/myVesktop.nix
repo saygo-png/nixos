@@ -1,7 +1,7 @@
 {
   lib,
-  pkgs,
   config,
+  conUsername,
   ...
 }: {
   nixpkgs.overlays = [
@@ -56,5 +56,7 @@
     })
   ];
 
-  environment.systemPackages = [pkgs.vesktop];
+  home-manager.users.${conUsername} = _: {
+    programs.vesktop.enable = true;
+  };
 }
