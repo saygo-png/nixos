@@ -4,24 +4,36 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
+
     impermanence.url = "github:nix-community/impermanence";
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
-
-    zlequalizer = {
-      url = "github:saygo-png/ZLEqualizer-nix";
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     extras-nixos = {
       url = "github:saygo-png/extrasNixos";
       flake = false;
+    };
+
+    zlequalizer = {
+      url = "github:saygo-png/ZLEqualizer-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     firefox-addons = {
@@ -39,34 +51,8 @@
       flake = false;
     };
 
-    format-udf = {
-      url = "github:JElchison/format-udf";
-      flake = false;
-    };
-
-    vmrss = {
-      url = "github:ThePrimeagen/vmrss";
-      flake = false;
-    };
-
     devenv = {
       url = "github:cachix/devenv";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    stylix = {
-      url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
-
-    nixvim = {
-      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -77,6 +63,19 @@
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
+    # Small utilities {{{
+    format-udf = {
+      url = "github:JElchison/format-udf";
+      flake = false;
+    };
+
+    vmrss = {
+      url = "github:ThePrimeagen/vmrss";
+      flake = false;
+    };
+    # }}}
+
+    # Awesome {{{
     awesome-git = {
       url = "github:awesomeWM/awesome";
       flake = false;
@@ -85,6 +84,13 @@
     awesome-lain = {
       url = "github:lcpz/lain";
       flake = false;
+    };
+    # }}}
+
+    # Neovim {{{
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nvim-plugin-tshjkl = {
@@ -116,6 +122,7 @@
       url = "github:isak102/telescope-git-file-history.nvim";
       flake = false;
     };
+    # }}}
   };
 
   outputs = {
@@ -243,3 +250,4 @@
     };
   };
 }
+## vim:foldmethod=marker
