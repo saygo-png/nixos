@@ -3,14 +3,24 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {
   pkgs,
-  host,
+  config,
   conUsername,
   ...
 }: {
+  imports = [
+    ({config, ...}: {
+      options = {
+        const = config.constLib.mkConstsFromSet {
+          host = "pc";
+        };
+      };
+    })
+  ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = host; # Define your hostname.
+  networking.hostName = config.const.host; # Define your hostname.
   networking.hostId = "a4e735aa";
 
   users = {

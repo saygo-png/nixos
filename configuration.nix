@@ -1,7 +1,6 @@
 {
   ###### Imports ###### {{{
   lib,
-  host,
   pkgs,
   self,
   config,
@@ -115,7 +114,7 @@
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
 
-  networking.hostName = host;
+  networking.hostName = config.const.host;
 
   # DNS
   networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];

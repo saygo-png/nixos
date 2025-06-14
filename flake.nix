@@ -168,7 +168,6 @@
       system = "x86_64-linux";
       specialArgs =
         {
-          host = "pc";
           conUsername = "samsepi0l";
           conHome = "/home/samsepi0l";
           conFlakePath = "/home/samsepi0l/nixos";
@@ -195,7 +194,6 @@
       system = "x86_64-linux";
       specialArgs =
         {
-          host = "thinkpad";
           conUsername = "samsepi0l";
           conHome = "/home/samsepi0l";
           conFlakePath = "/home/samsepi0l/nixos";
@@ -220,7 +218,6 @@
       system = "x86_64-linux";
       specialArgs =
         {
-          host = "install";
           conUsername = "samsepi0l";
           conHome = "/home/samsepi0l";
         }

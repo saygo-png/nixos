@@ -11,6 +11,7 @@
       ({config, ...}: {
         options = {
           const = config.constLib.mkConstsFromSet {
+            host = "pc";
             refreshRate = 144;
             screenWidth = 1920;
             screenHeight = 1080;
