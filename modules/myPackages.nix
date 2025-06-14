@@ -4,7 +4,6 @@
   config,
   inputs,
   conHome,
-  conFlakePathRel,
   ...
 }: {
   environment.systemPackages = with pkgs; let
@@ -84,15 +83,15 @@
     # Shell {{{
 
     (writeShellScriptBin "hyprland-next-visible-client.sh"
-      (builtins.readFile "${conFlakePathRel}/resources/scripts/hyprland-next-visible-client.sh"))
+      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprland-next-visible-client.sh")))
 
     (writeShellScriptBin "monitor-toggle"
-      (builtins.readFile "${conFlakePathRel}/resources/scripts/monitor-toggle.sh"))
+      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/monitor-toggle.sh")))
 
     (writeShellApplication {
       name = "xkb-switch-rofi";
       runtimeInputs = [coreutils xkb-switch rofi-wayland];
-      text = builtins.readFile "${conFlakePathRel}/resources/scripts/xkb-switch-rofi.sh";
+      text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/xkb-switch-rofi.sh");
     })
 
     (writeShellApplication {

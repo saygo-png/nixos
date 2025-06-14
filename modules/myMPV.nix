@@ -1,9 +1,8 @@
 {
+  lib,
   pkgs,
   inputs,
   conUsername,
-  conFlakePathRel,
-  lib,
   ...
 }: {
   imports = [
@@ -39,7 +38,7 @@
     };
 
     xdg.configFile."mpv/scripts/interSubs_config.py" = {
-      source = "${conFlakePathRel}/resources/mpv/interSubs_config.py";
+      source = lib.my.relativeToRoot "resources/mpv/interSubs_config.py";
     };
 
     programs.mpv = {

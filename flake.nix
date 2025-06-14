@@ -150,7 +150,6 @@
     commonSpecialArgs = system: {
       inherit inputs self pkgs-unstable;
       # inherit nixpkgs-unstable-frozen;
-      conFlakePathRel = builtins.toString ./.;
       lib = nixpkgs.lib.extend (final: _prev: {
         my = import ./modules/myLib.nix {
           pkgs = nixpkgs.legacyPackages.${system};
