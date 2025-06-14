@@ -6,7 +6,6 @@
   conUsername,
   ...
 }: let
-  hyprfullscreenfix = pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/hyprfullscreenfix") {};
   hyprctl-switch-rofi = extraLib.writeAnyShellApplication {
     name = "hyprctl-switch-rofi";
     shellPackage = pkgs.dash;
@@ -436,12 +435,10 @@ in {
 
           "$mainMod, y, Toggle pin, setfloating,"
           "$mainMod, y, Toggle pin, pin,"
-          "$mainMod, y, Toggle pin, tagwindow, 69PINNED69"
 
           "$mainMod, v, Toggle float, togglefloating,"
-          "$mainMod, v, Toggle float, tagwindow, -69PINNED69"
 
-          "$mainMod, f, [f]ullscreen, exec, ${lib.getExe hyprfullscreenfix}"
+          "$mainMod, f, [f]ullscreen, exec, fullscreen"
           "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
 
           "$mainMod, p, Switch keyboard layout, exec, ${lib.getExe hyprctl-switch-rofi}"
