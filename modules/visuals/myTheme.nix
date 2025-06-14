@@ -5,6 +5,15 @@
   conUsername,
   ...
 }: {
+  imports = [
+    ({config, ...}: {
+      options = {
+        const = config.constLib.mkConstsFromSet {
+          accentColor = "7d8618";
+        };
+      };
+    })
+  ];
   # Fonts. {{{
   fonts = {
     fontconfig = {

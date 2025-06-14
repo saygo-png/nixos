@@ -148,16 +148,22 @@
     };
 
     commonModules = [
-      ./configuration.nix
+      ./modules/myConstants.nix
+      (_: {
+        options = {
+          warnings = lib.mkOption {
+            apply = builtins.filter (w: !(lib.hasInfix "If multiple of these password options are set at the same time" w));
+          };
+        };
+      })
+
       ({
         lib,
         config,
         pkgs,
         ...
       }: {
-        _module.args.extraLib = import ./modules/myExtraLib.nix {
-          inherit config pkgs lib;
-        };
+        _module.args.extraLib = import ./modules/myExtraLib.nix {inherit config pkgs lib;};
       })
     ];
   in {
@@ -175,6 +181,7 @@
         // (commonSpecialArgs system);
       modules =
         [
+          ./configuration.nix
           ./hosts/pc/pc.nix
           ./hosts/pc/disko-config.nix
 
@@ -202,6 +209,7 @@
 
       modules =
         [
+          ./configuration.nix
           ./hosts/thinkpad/thinkpad.nix
           ./hosts/thinkpad/hardware-configuration-thinkpad.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
@@ -210,10 +218,10 @@
         ++ commonModules;
     };
 
-    # My confiugration is so bulky that i struggle with installing it from a
-    # usb without OOM errors This is a minimal host to be deployed on the
-    # install target disk It follows the partitioning schema of the "nixos"
-    # (desktop) host, which allows for a seamless switch to it.
+    # My configuration is so bulky that i struggle with installing it from a
+    # usb without OOM errors. This is a minimal host to be deployed on the
+    # install target disk. It follows the partitioning schema of the "pc"
+    # host, which allows for a seamless switch to it.
     nixosConfigurations.install = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs =
@@ -223,13 +231,15 @@
         }
         // (commonSpecialArgs system);
 
-      modules = [
-        inputs.disko.nixosModules.disko
-        inputs.impermanence.nixosModules.impermanence
-        ./hosts/pc/install/install.nix
-        ./hosts/pc/hardware-configuration-pc.nix
-        ./hosts/pc/disko-config.nix
-      ];
+      modules =
+        [
+          inputs.disko.nixosModules.disko
+          inputs.impermanence.nixosModules.impermanence
+          ./hosts/pc/install/install.nix
+          ./hosts/pc/hardware-configuration-pc.nix
+          ./hosts/pc/disko-config.nix
+        ]
+        ++ commonModules;
     };
   };
 }

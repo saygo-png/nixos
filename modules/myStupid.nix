@@ -11,26 +11,7 @@
     ...
   }: {
     home = {
-      packages = with pkgs; let
-        packages = osConfig.const.libs;
-        myShell-nix = pkgs.writeText "shell.nix" ''
-          {pkgs ? import <nixpkgs> {}}:
-          pkgs.mkShell {
-            packages = with pkgs; [
-              ${lib.concatMapStringsSep "\n" (package: "${package}") packages}
-            ];
-          }
-        '';
-      in [
-        (writeShellApplication
-          {
-            name = "myShell";
-            runtimeInputs = [];
-            text = ''
-              nix-shell ${myShell-nix}
-            '';
-          })
-
+      packages = with pkgs; [
         (writeShellApplication {
           name = "update_mutable.sh";
           runtimeInputs = [coreutils];

@@ -15,37 +15,6 @@
     [
       inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.default
-      ({config, ...}: {
-        options = {
-          const =
-            config.constLib.mkConstsFromSet {
-              accentColor = "7d8618";
-            }
-            // config.constLib.mkConstsFromSetInsanity {
-              libs = [
-                pkgs.libGL
-                pkgs.gcc
-                pkgs.libgcc
-                pkgs.e2fsprogs
-
-                # X11 libs
-                pkgs.xcb-util-cursor
-                pkgs.xorg.xcbutilwm
-                pkgs.xorg.xcbutilrenderutil
-                pkgs.xorg.xcbutilkeysyms
-                pkgs.xorg.xcbutilerrors
-                pkgs.xorg.libxcb
-                pkgs.xorg.xcbutilimage
-                pkgs.libxkbcommon
-
-                pkgs.xorg.libX11
-                pkgs.xorg.libXrandr
-                pkgs.xorg.libXScrnSaver
-                pkgs.xorg.libXext
-              ];
-            };
-        };
-      })
     ]
     ++ lib.my.withModules [
       "myConstants.nix"
@@ -78,7 +47,6 @@
       "visuals/myCursor.nix"
       "visuals/myThemeCore.nix"
       "visuals/myKvantumBasedQT.nix"
-      # "visuals/myKvantumBasedQT.nix"
     ];
   # }}}
 
@@ -442,8 +410,7 @@
   ## find the name of the package from the error message:
   ## https://github.com/nix-community/nix-index-database
   programs.nix-ld.libraries =
-    options.programs.nix-ld.libraries.default
-    ++ config.const.libs;
+    options.programs.nix-ld.libraries.default;
 
   # }}}
 
