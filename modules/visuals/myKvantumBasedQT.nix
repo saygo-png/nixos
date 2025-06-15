@@ -25,8 +25,8 @@
       #   theme=KvGnomeDark#
       # '';
 
-      "Kvantum/gruvbox-fallnn".source = "${inputs.gruvbox-kvantum}/gruvbox-falln";
-      "Kvantum/KvGnomeDark#".source = "${pkgs.kdePackages.qtstyleplugin-kvantum}/share/Kvantum/KvGnomeDark/KvGnomeDark.kvconfig";
+      "Kvantum/gruvbox-fallnn".source = lib.my.getSafePath "${inputs.gruvbox-kvantum}/gruvbox-kvantum";
+      "Kvantum/KvGnomeDark#".source = lib.my.getSafePath "${pkgs.kdePackages.qtstyleplugin-kvantum}/share/Kvantum/KvGnomeDark/KvGnomeDark.kvconfig";
     };
     home.file = let
       baseConfig = {

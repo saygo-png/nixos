@@ -30,11 +30,11 @@
 
     # InterSubs plugin install.
     xdg.configFile."mpv/scripts/interSubs.py" = {
-      source = "${inputs.mpv-intersubs}/interSubs.py";
+      source = lib.my.getSafePath "${inputs.mpv-intersubs}/interSubs.py";
     };
 
     xdg.configFile."mpv/scripts/interSubs.lua" = {
-      source = "${inputs.mpv-intersubs}/interSubs.lua";
+      source = lib.my.getSafePath "${inputs.mpv-intersubs}/interSubs.lua";
     };
 
     xdg.configFile."mpv/scripts/interSubs_config.py" = {

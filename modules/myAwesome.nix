@@ -46,7 +46,7 @@
 
     xdg.configFile."awesome/lain" = {
       recursive = true;
-      source = "${inputs.awesome-lain}";
+      source = lib.my.getSafePath "${inputs.awesome-lain}";
     };
 
     xdg.configFile."awesome/theme.lua" = {
