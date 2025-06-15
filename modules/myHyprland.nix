@@ -10,7 +10,7 @@
     name = "hyprctl-switch-rofi";
     shellPackage = pkgs.dash;
     runtimeInputs = [pkgs.coreutils pkgs.rofi-wayland];
-    text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.sh");
+    text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.dash");
   };
 in {
   programs.hyprland = {

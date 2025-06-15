@@ -82,16 +82,16 @@
 
     # Shell {{{
 
-    (writeShellScriptBin "hyprland-next-visible-client.sh"
-      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprland-next-visible-client.sh")))
+    (writeShellScriptBin "hyprland-next-visible-client.bash"
+      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprland-next-visible-client.bash")))
 
     (writeShellScriptBin "monitor-toggle"
-      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/monitor-toggle.sh")))
+      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/monitor-toggle.bash")))
 
     (writeShellApplication {
       name = "xkb-switch-rofi";
       runtimeInputs = [coreutils xkb-switch rofi-wayland];
-      text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/xkb-switch-rofi.sh");
+      text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/xkb-switch-rofi.bash");
     })
 
     (writeShellApplication {
