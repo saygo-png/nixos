@@ -38,6 +38,7 @@
       "myPackages.nix"
       "myAudioEffects.nix"
       "mySyncthing.nix"
+      "myMullvad.nix"
       "myStupid.nix"
       "myTemplates.nix"
       "myXDGDirsEnforcement.nix"

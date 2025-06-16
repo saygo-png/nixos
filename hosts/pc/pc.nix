@@ -26,7 +26,6 @@
     ]
     ++ lib.my.withModules [
       "myPipewire.nix"
-      "myMullvad.nix"
       "myRocm.nix"
     ];
 
