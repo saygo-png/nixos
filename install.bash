@@ -4,8 +4,10 @@
 # Put the disk path like /dev/nvme0n1 into the variable below
 
 DISK=UNDEFINED
+CONFIG=UNDEFINED
 
 [ "$DISK" = "UNDEFINED" ] && exit
+[ "$CONFIG" = "UNDEFINED" ] && exit
 
 PASSWORD_FILE=/etc/password.txt
 
@@ -16,5 +18,5 @@ zpool labelclear -f "$DISK"
 
 sudo nix run 'github:nix-community/disko/latest#disko-install' \
   --extra-experimental-features "nix-command flakes" -- \
-  --flake .#install --disk main "$DISK" \
+  --flake .#"$CONFIG" --disk main "$DISK" \
   --extra-files "$PASSWORD_FILE" /etc/password.txt
