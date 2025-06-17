@@ -438,7 +438,8 @@ in {
 
           "$mainMod, v, Toggle float, togglefloating,"
 
-          "$mainMod, f, [f]ullscreen, exec, fullscreen"
+          "$mainMod, f, [f]ullscreen, fullscreen, 0"
+
           "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
 
           "$mainMod, p, Switch keyboard layout, exec, ${lib.getExe hyprctl-switch-rofi}"
