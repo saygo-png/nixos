@@ -95,9 +95,55 @@ in {
             addons.return-youtube-dislikes
             addons.dark-background-light-text
           ];
-          settings = {
-            # Dark background light text
-            "jid1-QoFqdK4qzUfGWQ@jetpack" = {
+          settings = let
+            ublock-origin = "uBlock0@raymondhill.net";
+            dark-background-light-text = "jid1-QoFqdK4qzUfGWQ@jetpack";
+          in {
+            ${ublock-origin} = {
+              force = true;
+              settings.selectedFilterLists = [
+                "FIN-0"
+                "POL-0"
+                "POL-3"
+                "plowe-0"
+                "easylist"
+                "block-lan"
+                "urlhaus-1"
+                "dpollock-0"
+                "easyprivacy"
+                "user-filters"
+                "easylist-chat"
+                "fanboy-social"
+                "adguard-mobile"
+                "adguard-social"
+                "ublock-badware"
+                "ublock-filters"
+                "ublock-privacy"
+                "ublock-unbreak"
+                "adguard-cookies"
+                "adguard-generic"
+                "adguard-spyware"
+                "adguard-widgets"
+                "curben-phishing"
+                "ublock-annoyances"
+                "ublock-quick-fixes"
+                "adguard-spyware-url"
+                "easylist-annoyances"
+                "easylist-newsletters"
+                "fanboy-cookiemonster"
+                "adguard-popup-overlays"
+                "easylist-notifications"
+                "LegitimateURLShortener"
+                "ublock-cookies-adguard"
+                "ublock-cookies-easylist"
+                "adguard-other-annoyances"
+                "fanboy-thirdparty_social"
+                "adguard-mobile-app-banners"
+                # Third party:
+                "https://raw.githubusercontent.com/gijsdev/ublock-hide-yt-shorts/master/list.txt"
+              ];
+            };
+            ${dark-background-light-text} = {
               force = true;
               settings = let
                 inherit (config.lib.stylix.colors) withHashtag;
@@ -108,6 +154,18 @@ in {
                 default_visited_color = withHashtag.base0E;
                 default_active_color = withHashtag.base08;
                 default_selection_color = withHashtag.base0A;
+                configured_pages = let
+                  # This setting sets how the extension works
+                  # per website
+                  disabled = 0;
+                in {
+                  "allegro.pl" = disabled;
+                  "github.com" = disabled;
+                  "poczta.wp.pl" = disabled;
+                  "www.vinted.pl" = disabled;
+                  "www.reddit.com" = disabled;
+                  "www.whitedisplay.com" = disabled;
+                };
               };
             };
           };
