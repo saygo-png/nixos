@@ -38,6 +38,16 @@ in {
 
     stylix.targets.librewolf.enable = false;
     programs.librewolf = {
+      package = pkgs.librewolf.override (old: {
+        extraPolicies =
+          (old.extraPolicies or {})
+          // {
+            NoDefaultBookmarks = false;
+            UserMessaging = {
+              SkipOnboarding = true;
+            };
+          };
+      });
       inherit configPath;
       enable = true;
       profiles.${profileName} = {
@@ -57,6 +67,22 @@ in {
           # Style
           "browser.toolbars.bookmarks.visibility" = "never";
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        };
+        bookmarks = {
+          force = true;
+          settings = let
+            mkBookmarkFolder = name: bookmarks: {inherit name bookmarks;};
+            mkBookmark = name: url: {inherit name url;};
+          in [
+            (mkBookmarkFolder "nix"
+              [
+                (mkBookmark "nixos options" "https://search.nixos.org/options?")
+                (mkBookmark "nix packages" "https://search.nixos.org/packages")
+                (mkBookmark "hm options" "https://home-manager-options.extranix.com/")
+                (mkBookmark "stylix docs" "https://stylix.danth.me")
+                (mkBookmark "nixvim docs" "https://nix-community.github.io/nixvim")
+              ])
+          ];
         };
         extensions = {
           force = true;
