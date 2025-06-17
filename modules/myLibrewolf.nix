@@ -55,14 +55,27 @@ in {
         userChrome = builtins.readFile "${inputs.firefox-onebar}/onebar.css";
         containersForce = true;
         settings = {
-          "webgl.disabled" = false;
+          # Auto enable extensions
           "extensions.autoDisableScopes" = 0;
+
+          "webgl.disabled" = false;
           "media.ffmpeg.vaapi.enabled" = true;
-          # "network.cookie.lifetimePolicy" = 0;
-          # "privacy.resistFingerprinting" = false;
+
           "privacy.clearOnShutdown_v2.cache" = false;
           "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
           "privacy.clearOnShutdown_v2.history" = false;
+
+          "browser.warnOnQuit" = false;
+          "browser.warnOnQuitShortcut" = false;
+
+          "middlemouse.paste" = false;
+          "browser.tabs.insertAfterCurrent" = true;
+
+          # Prefer dark theme
+          "layout.css.prefers-color-scheme.content-override" = 0;
+
+          # Restore previous session
+          "browser.startup.page" = 3;
 
           # Style
           "browser.toolbars.bookmarks.visibility" = "never";
