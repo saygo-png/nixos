@@ -357,7 +357,7 @@
 
   # Envvar, envars. User ones go into home manager.
   environment.sessionVariables = {
-    NH_FLAKE = "${lib.my.relativeToRoot "."}"; # For nix helper.
+    NH_FLAKE = config.const.flakePath; # For nix helper.
   };
 
   # This allows for programs to see audio plugins

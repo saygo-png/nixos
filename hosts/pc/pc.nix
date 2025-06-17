@@ -20,6 +20,7 @@
             accelSpeed = -0.9;
             vsync = false;
             extrasNixosPath = "${conHome}/extrasNixos";
+            flakePath = "${conHome}/nixos";
           };
         };
       })
