@@ -36,6 +36,11 @@
       flake = false;
     };
 
+    gruvbox-vesktop = {
+      url = "github:shvedes/discord-gruvbox";
+      flake = false;
+    };
+
     zlequalizer = {
       url = "github:saygo-png/ZLEqualizer-nix";
       inputs.nixpkgs.follows = "nixpkgs";

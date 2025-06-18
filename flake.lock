@@ -514,6 +514,22 @@
         "type": "github"
       }
     },
+    "gruvbox-vesktop": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1749384041,
+        "narHash": "sha256-y1/RCxdTn5jwFFEtZpza/aNmX0496pDXV23mGGXlmJM=",
+        "owner": "shvedes",
+        "repo": "discord-gruvbox",
+        "rev": "fa388c0609eee6930adeb6cea0a82e339f42d512",
+        "type": "github"
+      },
+      "original": {
+        "owner": "shvedes",
+        "repo": "discord-gruvbox",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -936,6 +952,7 @@
         "firefox-onebar": "firefox-onebar",
         "format-udf": "format-udf",
         "gruvbox-kvantum": "gruvbox-kvantum",
+        "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "mpv-intersubs": "mpv-intersubs",

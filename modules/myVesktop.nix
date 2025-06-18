@@ -1,5 +1,6 @@
 {
   lib,
+  inputs,
   config,
   conUsername,
   ...
@@ -57,6 +58,16 @@
   ];
 
   home-manager.users.${conUsername} = _: {
-    programs.vesktop.enable = true;
+    stylix.targets.vesktop.enable = false;
+    programs.vesktop = {
+      enable = true;
+      vencord = let
+        gruvboxTheme = "gruvbox";
+      in {
+        useSystem = true;
+        settings.enabledThemes = ["${gruvboxTheme}.css"];
+        themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css";
+      };
+    };
   };
 }
