@@ -862,7 +862,7 @@
           enableTelescope = true;
           settings = {
             silent_chdir = false;
-            detection_methods = ["pattern"];
+            exclude_dirs = ["~/nixos/resources/haskell/*"];
           };
         };
 
