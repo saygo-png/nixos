@@ -65,7 +65,17 @@
         gruvboxTheme = "gruvbox";
       in {
         useSystem = true;
-        settings.enabledThemes = ["${gruvboxTheme}.css"];
+        settings = {
+          plugins = {
+            WhoReacted.enabled = true;
+            VoiceMessages.enabled = true;
+            NoServerEmojis.enabled = true;
+            ForceOwnerCrown.enabled = true;
+            NoDevtoolsWarning.enabled = true;
+            NoOnboardingDelay.enabled = true;
+          };
+          enabledThemes = ["${gruvboxTheme}.css"];
+        };
         themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css";
       };
     };
