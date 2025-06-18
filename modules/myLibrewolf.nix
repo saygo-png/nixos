@@ -113,9 +113,10 @@ in {
           packages = let
             addons = inputs.firefox-addons.packages.${pkgs.system};
           in [
-            addons.ublock-origin
             addons.single-file
             addons.sponsorblock
+            addons.ublock-origin
+            addons.gruvbox-dark-theme
             addons.return-youtube-dislikes
             addons.dark-background-light-text
           ];
