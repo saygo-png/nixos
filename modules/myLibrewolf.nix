@@ -85,15 +85,26 @@ in {
           force = true;
           settings = let
             mkBookmarkFolder = name: bookmarks: {inherit name bookmarks;};
-            mkBookmark = name: url: {inherit name url;};
+            mkBookmark = name: url: {
+              inherit name;
+              url = "https://" + url;
+            };
           in [
             (mkBookmarkFolder "nix"
               [
-                (mkBookmark "nixos options" "https://search.nixos.org/options?")
-                (mkBookmark "nix packages" "https://search.nixos.org/packages")
-                (mkBookmark "hm options" "https://home-manager-options.extranix.com/")
-                (mkBookmark "stylix docs" "https://stylix.danth.me")
-                (mkBookmark "nixvim docs" "https://nix-community.github.io/nixvim")
+                (mkBookmark "my issues" "github.com/saygo-png/nixos/issues")
+                (mkBookmark "nixos options" "search.nixos.org/options?")
+                (mkBookmark "nix packages" "search.nixos.org/packages")
+                (mkBookmark "nix pr tracker" "nixpk.gs/pr-tracker.html")
+                (mkBookmark "hm options" "home-manager-options.extranix.com")
+                (mkBookmark "nixpkgs docs" "nixos.org/manual/nixpkgs/unstable")
+                (mkBookmark "stylix docs" "stylix.danth.me")
+                (mkBookmark "nixvim docs" "nix-community.github.io/nixvim")
+              ])
+
+            (mkBookmarkFolder "eso"
+              [
+                (mkBookmark "warden build" "https://eso.justlootit.com/eso-builds/warden/warden-healer-eso")
               ])
           ];
         };
