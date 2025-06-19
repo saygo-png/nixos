@@ -607,7 +607,7 @@
           PAGER = "moar";
           BROWSER = "librewolf";
           OPENER = "xdg-open";
-          EDITOR = lib.mkDefault "vim";
+          EDITOR = lib.mkDefault "vi";
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
 
