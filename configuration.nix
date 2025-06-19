@@ -23,7 +23,7 @@
       "myTerminal.nix"
 
       "myXMonad.nix"
-      "myAwesome.nix"
+      # "myAwesome.nix"
       "myHyprland.nix"
 
       "myZSH.nix"
