@@ -53,7 +53,6 @@
   ###### Custom ###### {{{
 
   custom.defaultTerminal = pkgs.alacritty;
-  custom.allowedUnfreePkgs = [pkgs.vesktop];
 
   # }}}
 
