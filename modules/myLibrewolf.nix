@@ -104,7 +104,12 @@ in {
 
             (mkBookmarkFolder "eso"
               [
-                (mkBookmark "warden build" "https://eso.justlootit.com/eso-builds/warden/warden-healer-eso")
+                (mkBookmark "warden build" "eso.justlootit.com/eso-builds/warden/warden-healer-eso")
+              ])
+
+            (mkBookmarkFolder "knitting"
+              [
+                (mkBookmark "hat" "bhookedcrochet.com/2022/03/18/everyday-rib-knit-hat")
               ])
           ];
         };
