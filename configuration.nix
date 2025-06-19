@@ -596,7 +596,6 @@
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
-          "plan" = "nsxiv ${config.home.homeDirectory}/Sync/notes/plan.png";
           "nhoffline" = "nh os switch -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
@@ -928,19 +927,6 @@
           diff = {
             tool = "vimdiff";
             mnemonicprefix = true;
-          };
-        };
-      };
-
-      programs.foot = {
-        enable = false;
-        settings = {
-          cursor.blink = "yes";
-          scrollback.lines = 1000;
-          mouse.hide-when-typing = "yes";
-          main = {
-            term = "foot";
-            pad = "6x6center";
           };
         };
       };
