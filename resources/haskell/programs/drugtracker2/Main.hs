@@ -1,16 +1,38 @@
-{- ORMOLU_DISABLE -}
-{-# LANGUAGE BangPatterns, BinaryLiterals, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, DoAndIfThenElse, EmptyDataDecls, ExistentialQuantification, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, InstanceSigs, KindSignatures, LambdaCase, MultiParamTypeClasses, MultiWayIf, NamedFieldPuns, NoImplicitPrelude, OverloadedStrings, PartialTypeSignatures, PatternGuards, PolyKinds, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TupleSections, TypeFamilies, TypeSynonymInstances, ViewPatterns #-}
-{-# LANGUAGE LambdaCase #-}
-{- ORMOLU_ENABLE -}
+--- Imports {{{
+
+-- cassava
+
+import Control.Exception (throw)
+import Data.Csv (
+  DefaultOrdered (headerOrder),
+  FromField (parseField),
+  FromNamedRecord (parseNamedRecord),
+  Header,
+  ToField (toField),
+  ToNamedRecord (toNamedRecord),
+  (.:),
+  (.=),
+ )
+import Data.Csv qualified as Cassava
+import Data.Text.Encoding.Error (strictDecode)
+import Flow
 import Options.Applicative
 import RIO
-import RIO.ByteString.Lazy (putStrLn)
-import RIO.Directory (XdgDirectory (XdgData))
-import System.Environment (getEnv)
-import Text.Printf (printf)
+import RIO.ByteString.Lazy (readFile)
+import RIO.Directory (XdgDirectory (XdgData), getXdgDirectory)
+import RIO.Text (unpack)
+import RIO.Time (Day, defaultTimeLocale, parseTimeM)
+import Prelude (print, putStrLn)
 
-outputDir :: XdgDirectory
-outputDir = XdgData
+-- }}}
+
+-- Config {{{
+
+-- Path relative to $XDG_DATA_HOME
+dataDir :: IO FilePath
+dataDir = getXdgDirectory XdgData "drug2/data.csv"
+
+-- }}}
 
 -- Parsing {{{
 data Command = CmdList | CmdTake
@@ -37,6 +59,35 @@ main = do
   options <- execParser parserInfo
   case optCommand options of
     CmdTake -> putStrLn "taking"
-    CmdList -> putStrLn "listing"
+    CmdList -> listDrugs
 
 -- }}}
+
+-- Data types {{{
+data DrugLine = DrugLine
+  { drugData :: Maybe Text,
+    dateData :: Day
+  }
+  deriving (Eq, Show)
+
+instance FromNamedRecord DrugLine where
+  parseNamedRecord m =
+    DrugLine
+      <$> m
+      .: "drug"
+      <*> m
+      .: "date"
+
+instance FromField Day where
+  parseField = decodeUtf8With strictDecode .> unpack .> parseTimeM True defaultTimeLocale "%Y/%m/%d"
+
+-- }}}
+
+takeDrug :: IO ()
+takeDrug = undefined
+
+listDrugs :: IO ()
+listDrugs = do
+  fileData <- readFile =<< dataDir
+  let decodedCsv = Cassava.decodeByName @DrugLine fileData
+  print decodedCsv
