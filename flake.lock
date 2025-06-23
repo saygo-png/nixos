@@ -127,6 +127,22 @@
         "type": "github"
       }
     },
+    "cookiecutter-templates": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1750691190,
+        "narHash": "sha256-nNNWJ3EroStI84cWF8A4s/vs/p8XDHHQwCeaRk3DxCY=",
+        "owner": "saygo-png",
+        "repo": "cookiecutter-templates",
+        "rev": "bd8afa0fa8e8bbbc1d2a41ecd70fef38d6a7ef40",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saygo-png",
+        "repo": "cookiecutter-templates",
+        "type": "github"
+      }
+    },
     "devenv": {
       "inputs": {
         "cachix": "cachix",
@@ -945,6 +961,7 @@
       "inputs": {
         "awesome-git": "awesome-git",
         "awesome-lain": "awesome-lain",
+        "cookiecutter-templates": "cookiecutter-templates",
         "devenv": "devenv",
         "disko": "disko",
         "extras-nixos": "extras-nixos",

@@ -1,8 +1,0 @@
-{
-  "project_slug": "myproject",
-  "binaryName": "foo",
-  "projectDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  "_copy_without_render": [
-    "*.hs"
-  ]
-}

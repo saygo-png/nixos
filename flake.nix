@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
@@ -26,10 +26,22 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    # Mine {{{
     extras-nixos = {
       url = "github:saygo-png/extrasNixos";
       flake = false;
     };
+
+    cookiecutter-templates = {
+      url = "github:saygo-png/cookiecutter-templates";
+      flake = false;
+    };
+
+    zlequalizer = {
+      url = "github:saygo-png/ZLEqualizer-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # }}}
 
     gruvbox-kvantum = {
       url = "github:TheGlitchh/Gruvbox-Kvantum";
@@ -39,11 +51,6 @@
     gruvbox-vesktop = {
       url = "github:shvedes/discord-gruvbox";
       flake = false;
-    };
-
-    zlequalizer = {
-      url = "github:saygo-png/ZLEqualizer-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     firefox-addons = {

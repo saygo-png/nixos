@@ -398,10 +398,10 @@
       experimental-features = ["nix-command" "flakes"];
     };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
-    registry.nixpkgs-unstable.flake = self.inputs.nixpkgs-unstable;
+    # registry.nixpkgs-unstable.flake = self.inputs.nixpkgs-unstable;
     nixPath = [
       "nixpkgs=${self.inputs.nixpkgs}"
-      "nixpkgs-unstable=${self.inputs.nixpkgs-unstable}"
+      # "nixpkgs-unstable=${self.inputs.nixpkgs-unstable}"
     ];
   };
   programs.nix-ld.enable = true;

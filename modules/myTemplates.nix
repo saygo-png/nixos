@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   conUsername,
   ...
 }: {
@@ -11,7 +12,7 @@
   home-manager.users.${conUsername} = _: {
     xdg.configFile."cookiecutters/" = {
       recursive = true;
-      source = lib.my.relativeToRoot "resources/cookiecutterTemplates";
+      source = lib.my.getSafePath "${inputs.cookiecutter-templates}/templates";
     };
   };
 }
