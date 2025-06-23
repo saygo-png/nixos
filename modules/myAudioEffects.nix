@@ -7,7 +7,7 @@
 }: {
   nixpkgs.overlays = [
     (_final: prev: {
-      carla = prev.carla.overrideAttrs (oldAttrs: {
+      carla = prev.carla.overrideAttrs (_oldAttrs: {
         pythonPath = [pkgs.python3Packages.rdflib];
 
         postFixup = ''
