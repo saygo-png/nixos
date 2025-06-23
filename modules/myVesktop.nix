@@ -71,6 +71,8 @@
             VoiceMessages.enabled = true;
             NoServerEmojis.enabled = true;
             ForceOwnerCrown.enabled = true;
+            NoUnblockToJump.enabled = true;
+            NoBlockedMessages.enabled = true;
             NoDevtoolsWarning.enabled = true;
             NoOnboardingDelay.enabled = true;
           };
