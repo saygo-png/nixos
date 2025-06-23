@@ -3,7 +3,40 @@
   pkgs,
   lib,
   ...
+  # fix for https://github.com/NixOS/nixpkgs/issues/389149
 }: {
+  nixpkgs.overlays = [
+    (_final: prev: {
+      carla = prev.carla.overrideAttrs (oldAttrs: {
+        pythonPath = [pkgs.python3Packages.rdflib];
+
+        postFixup = ''
+          # Also sets program_PYTHONPATH and program_PATH variables
+          wrapPythonPrograms
+          wrapPythonProgramsIn "$out/share/carla/resources" "$out $pythonPath"
+
+          find "$out/share/carla" -maxdepth 1 -type f -not -name "*.py" -print0 | while read -d "" f; do
+            patchPythonScript "$f"
+          done
+
+          # patchPythonScript "$out/share/carla/carla_settings.py"
+
+          for program in $out/bin/*; do
+            wrapQtApp "$program" \
+              --prefix PATH : "$program_PATH:${pkgs.which}/bin" \
+              --set PYTHONNOUSERSITE true
+          done
+
+          find "$out/share/carla/resources" -maxdepth 1 -type f -not -name "*.py" -print0 | while read -d "" f; do
+            wrapQtApp "$f" \
+              --prefix PATH : "$program_PATH:${pkgs.which}/bin" \
+              --set PYTHONNOUSERSITE true
+          done
+        '';
+      });
+    })
+  ];
+
   environment.systemPackages = [
     pkgs.carla
   ];
