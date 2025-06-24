@@ -69,7 +69,6 @@ in {
           "browser.warnOnQuitShortcut" = false;
 
           "middlemouse.paste" = false;
-          "browser.tabs.insertAfterCurrent" = true;
 
           # Prefer dark theme
           "layout.css.prefers-color-scheme.content-override" = 0;
