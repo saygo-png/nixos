@@ -134,11 +134,11 @@
     "cookiecutter-templates": {
       "flake": false,
       "locked": {
-        "lastModified": 1750691190,
-        "narHash": "sha256-nNNWJ3EroStI84cWF8A4s/vs/p8XDHHQwCeaRk3DxCY=",
+        "lastModified": 1750736069,
+        "narHash": "sha256-Xk5lIWOU8xAdNPLHHG2F4vy+W+GjlVEwX70Z1Xs2Ev8=",
         "owner": "saygo-png",
         "repo": "cookiecutter-templates",
-        "rev": "bd8afa0fa8e8bbbc1d2a41ecd70fef38d6a7ef40",
+        "rev": "36986628399471bbc76784fa7d76fcb88c697356",
         "type": "github"
       },
       "original": {
