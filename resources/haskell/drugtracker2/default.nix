@@ -12,4 +12,3 @@
   };
 in
   pkgs.haskellPackages.generateOptparseApplicativeCompletions ["convertlink"] pkg
-
