@@ -197,9 +197,9 @@
       };
 
       extraFiles = {
-        "ftplugin/json.vim".text = ''setlocal foldmethod=manual'';
-        "ftplugin/markdown.vim".text = ''setlocal wrap'';
+        "ftplugin/json.vim".text = "setlocal foldmethod=manual";
         "ftplugin/haskell.vim".text = "set nocursorline"; # https://github.com/nvim-treesitter/nvim-treesitter/issues/7967
+        "ftplugin/markdown.vim".text = "setlocal wrap";
       };
 
       extraConfigLuaPost = ''
