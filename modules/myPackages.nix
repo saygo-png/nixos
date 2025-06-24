@@ -70,7 +70,7 @@
       };
     })
 
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/programs/convertlink") {})
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/convertlink") {})
 
     inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
 
