@@ -11,4 +11,4 @@
     returnShellEnv = false;
   };
 in
-  pkgs.haskellPackages.generateOptparseApplicativeCompletions ["convertlink"] pkg
+  pkgs.haskellPackages.generateOptparseApplicativeCompletions ["drug2"] pkg
