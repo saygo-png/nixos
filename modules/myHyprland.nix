@@ -472,7 +472,7 @@ in {
           "$mainMod, r, [r]ecord, exec, hyprcorder.sh"
           "$mainMod SHIFT, r, [r]ecord area, exec, hyprcorder.sh -a"
 
-          "$mainMod, Tab, Cycle programs, exec, hyprland-next-visible-client.sh next"
+          "$mainMod, Tab, Cycle programs, exec, hyprland-next-visible-client.bash next"
           "$ALT, Tab, Open program menu, exec, ${lib.getExe pkgs.rofi-wayland} -show window"
 
           "$mainMod, h, Move focus right, movefocus, l"
