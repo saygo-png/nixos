@@ -8,7 +8,7 @@
 }: {
   nixpkgs.overlays = [
     (_final: _prev: {
-      carla = inputs.carla-fix.legacyPackages.${pkgs.system}.carla;
+      inherit (inputs.carla-fix.legacyPackages.${pkgs.system}) carla;
     })
   ];
 
