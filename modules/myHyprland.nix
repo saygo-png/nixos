@@ -420,7 +420,7 @@ in {
         bindde = [
           "$mainMod, g, toggle [g]roup, togglegroup"
           "$mainMod, u, [u]-lock insert into group, lockactivegroup, toggle"
-          "$mainMod, n, [n]ext tab, changegroupactive, f"
+          "ALT, n, [n]ext tab, changegroupactive, f"
           "ALT, 1, Switch group tab, changegroupactive, 1"
           "ALT, 2, Switch group tab, changegroupactive, 2"
           "ALT, 3, Switch group tab, changegroupactive, 3"
@@ -483,6 +483,9 @@ in {
           "$mainMod, l, Move focus left, movefocus, r"
           "$mainMod, k, Move focus up, movefocus, u"
           "$mainMod, j, Move focus down, movefocus, d"
+
+          "$mainMod, comma, previous workspace, workspace, -1"
+          "$mainMod, period, next workspace, workspace, +1"
 
           "$mainMod, 1, Switch workspace, workspace, 1"
           "$mainMod, 2, Switch workspace, workspace, 2"
