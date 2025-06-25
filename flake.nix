@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
+    carla-fix.url = "github:ArchercatNEO/nixpkgs/pyliblo-drop";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
