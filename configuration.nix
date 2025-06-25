@@ -607,6 +607,8 @@
           BROWSER = "librewolf";
           OPENER = "xdg-open";
           EDITOR = lib.mkDefault "vi";
+          SHELL = lib.getExe pkgs.zsh;
+
           VISUAL = config.home.sessionVariables.EDITOR;
           SUDO_EDITOR = config.home.sessionVariables.EDITOR;
 
