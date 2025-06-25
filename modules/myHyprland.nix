@@ -355,6 +355,10 @@ in {
           use_active_for_splits = true;
         };
 
+        group.groupbar = {
+          render_titles = false;
+        };
+
         binds = {
           movefocus_cycles_fullscreen = true;
         };
