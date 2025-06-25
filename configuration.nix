@@ -188,9 +188,9 @@
     };
   };
 
-  # Keep sudo password cached infinitely and enable insults.
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=-1
+    Defaults passwd_timeout=0
     Defaults insults
   '';
 
