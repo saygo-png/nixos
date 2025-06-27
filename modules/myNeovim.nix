@@ -1237,7 +1237,7 @@
           enable = true;
           settings = {
             current_line_blame = false;
-            signcolumn = false;
+            signcolumn = true;
           };
         };
 
