@@ -184,17 +184,34 @@ in {
                 default_active_color = withHashtag.base08;
                 default_selection_color = withHashtag.base0A;
                 configured_pages = let
-                  # This setting sets how the extension works
-                  # per website
-                  disabled = 0;
-                in {
-                  "allegro.pl" = disabled;
-                  "github.com" = disabled;
-                  "poczta.wp.pl" = disabled;
-                  "www.vinted.pl" = disabled;
-                  "www.reddit.com" = disabled;
-                  "www.whitedisplay.com" = disabled;
-                };
+                  # Helper functions {{{
+                  disabledList = l: lib.genAttrs l (_: 0);
+                  stylesheetProcessorCssList = l: lib.genAttrs l (_: 1);
+                  simpleCssList = l: lib.genAttrs l (_: 2);
+                  invertList = l: lib.genAttrs l (_: 3);
+                  pageSettings = s:
+                    lib.foldl lib.mergeAttrs {} [
+                      (invertList s.invert)
+                      (disabledList s.disabled)
+                      (simpleCssList s.simpleCss)
+                      (stylesheetProcessorCssList s.stylesheetProcessor)
+                    ];
+                  # }}}
+                in
+                  pageSettings {
+                    invert = [];
+                    disabled = [
+                      "allegro.pl"
+                      "github.com"
+                      "poczta.wp.pl"
+                      "vinted.pl"
+                      "reddit.com"
+                      "whitedisplay.com"
+                      "pstream.org"
+                    ];
+                    simpleCss = [];
+                    stylesheetProcessor = [];
+                  };
               };
             };
           };
