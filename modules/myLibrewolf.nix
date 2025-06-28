@@ -130,47 +130,56 @@ in {
           in {
             ${ublock-origin} = {
               force = true;
-              settings.selectedFilterLists = [
-                "FIN-0"
-                "POL-0"
-                "POL-3"
-                "plowe-0"
-                "easylist"
-                "block-lan"
-                "urlhaus-1"
-                "dpollock-0"
-                "easyprivacy"
-                "user-filters"
-                "easylist-chat"
-                "fanboy-social"
-                "adguard-mobile"
-                "adguard-social"
-                "ublock-badware"
-                "ublock-filters"
-                "ublock-privacy"
-                "ublock-unbreak"
-                "adguard-cookies"
-                "adguard-generic"
-                "adguard-spyware"
-                "adguard-widgets"
-                "curben-phishing"
-                "ublock-annoyances"
-                "ublock-quick-fixes"
-                "adguard-spyware-url"
-                "easylist-annoyances"
-                "easylist-newsletters"
-                "fanboy-cookiemonster"
-                "adguard-popup-overlays"
-                "easylist-notifications"
-                "LegitimateURLShortener"
-                "ublock-cookies-adguard"
-                "ublock-cookies-easylist"
-                "adguard-other-annoyances"
-                "fanboy-thirdparty_social"
-                "adguard-mobile-app-banners"
-                # Third party:
-                "https://raw.githubusercontent.com/gijsdev/ublock-hide-yt-shorts/master/list.txt"
-              ];
+              settings = let
+                customLists = [
+                  "https://raw.githubusercontent.com/gijsdev/ublock-hide-yt-shorts/master/list.txt"
+                  "https://raw.githubusercontent.com/DandelionSprout/adfilt/master/BrowseWebsitesWithoutLoggingIn.txt"
+                ];
+              in {
+                importedLists = customLists;
+                externalLists = lib.concatStringsSep "\n" customLists;
+                selectedFilterLists =
+                  [
+                    "FIN-0"
+                    "POL-0"
+                    "POL-3"
+                    "plowe-0"
+                    "easylist"
+                    "block-lan"
+                    "urlhaus-1"
+                    "dpollock-0"
+                    "easyprivacy"
+                    "user-filters"
+                    "easylist-chat"
+                    "fanboy-social"
+                    "adguard-mobile"
+                    "adguard-social"
+                    "ublock-badware"
+                    "ublock-filters"
+                    "ublock-privacy"
+                    "ublock-unbreak"
+                    "adguard-cookies"
+                    "adguard-generic"
+                    "adguard-spyware"
+                    "adguard-widgets"
+                    "curben-phishing"
+                    "ublock-annoyances"
+                    "ublock-quick-fixes"
+                    "adguard-spyware-url"
+                    "easylist-annoyances"
+                    "easylist-newsletters"
+                    "fanboy-cookiemonster"
+                    "adguard-popup-overlays"
+                    "easylist-notifications"
+                    "LegitimateURLShortener"
+                    "ublock-cookies-adguard"
+                    "ublock-cookies-easylist"
+                    "adguard-other-annoyances"
+                    "fanboy-thirdparty_social"
+                    "adguard-mobile-app-banners"
+                  ]
+                  ++ customLists;
+              };
             };
             ${dark-background-light-text} = {
               force = true;
