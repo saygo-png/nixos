@@ -896,7 +896,6 @@
           };
           color.ui = "auto";
           pull.rebase = true;
-          # pull.autoSquash = true;
           commit.gpgsign = true;
           rerere.enabled = true;
           push.autoSetupRemote = true;
