@@ -15,7 +15,6 @@
 in {
   programs.hyprland = {
     enable = true;
-    withUWSM = true; # Fixes portals, starts proper systemd sessions
   };
 
   environment.systemPackages = with pkgs; [
