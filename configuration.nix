@@ -929,29 +929,17 @@
             y = 8;
           };
           font.offset.y = 3; # Line spacing
-          keyboard.bindings = [
-            {
-              key = "Escape";
-              mods = "Alt";
-              action = "ToggleViMode";
-            }
-            # Copy paste
-            {
-              key = "V";
-              mods = "Control";
-              action = "Paste";
-            }
-            {
-              key = "C";
-              mods = "Control";
-              action = "Copy";
-            }
-            {
-              # Interrupt (ctrl + c)
-              key = "C";
-              mods = "Control|Shift";
-              chars = "\\u0003";
-            }
+          keyboard.bindings = let
+            mkBind = key: mods: action: {inherit key mods action;};
+            mkBindC = key: mods: chars: {inherit key mods chars;};
+          in [
+            (mkBind "Escape" "Alt" "ToggleViMode")
+
+            (mkBind "V" "Control" "Paste")
+            (mkBind "C" "Control" "Copy")
+
+            # Interrupt (ctrl + c)
+            (mkBindC "C" "Control|Shift" "\\u0003")
           ];
         };
       };
