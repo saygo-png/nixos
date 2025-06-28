@@ -16,17 +16,16 @@
     };
 
     xdg.configFile = {
-      "Kvantum/kvantum.kvconfig".text = ''
-        [General]
-        theme=gruvbox-fallnn
-      '';
       # "Kvantum/kvantum.kvconfig".text = ''
       #   [General]
-      #   theme=KvGnomeDark#
+      #   theme=KvGnomeDark
       # '';
+      "Kvantum/kvantum.kvconfig".text = ''
+        [General]
+        theme=gruvbox-kvantum
+      '';
 
-      "Kvantum/gruvbox-fallnn".source = lib.my.getSafePath "${inputs.gruvbox-kvantum}/gruvbox-kvantum";
-      "Kvantum/KvGnomeDark#".source = lib.my.getSafePath "${pkgs.kdePackages.qtstyleplugin-kvantum}/share/Kvantum/KvGnomeDark/KvGnomeDark.kvconfig";
+      "Kvantum/gruvbox-kvantum".source = lib.my.getSafePath "${inputs.gruvbox-kvantum}/gruvbox-kvantum";
     };
     home.file = let
       baseConfig = {
