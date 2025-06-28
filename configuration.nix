@@ -41,6 +41,7 @@
       "mySyncthing.nix"
       "myMullvad.nix"
       "myStupid.nix"
+      "myImpermanence.nix"
       "myTemplates.nix"
       "myXDGDirsEnforcement.nix"
 
