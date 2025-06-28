@@ -719,6 +719,12 @@
               context = "commitFiles";
               description = "Compare (difftool) with local copy";
             }
+            {
+              key = "F";
+              command = "git pull --rebase --autostash {{ SelectedLocalBranch.Name }}";
+              context = "localBranches";
+              output = "log";
+            }
           ];
         };
       };
