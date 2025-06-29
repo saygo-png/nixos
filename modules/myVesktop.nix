@@ -57,6 +57,19 @@
     })
   ];
 
+  custom.persist = {
+    home = {
+      cache = {
+        directories = [
+          ".config/vesktop/sessionData"
+        ];
+        files = [
+          ".config/vesktop/state.json"
+        ];
+      };
+    };
+  };
+
   home-manager.users.${conUsername} = _: {
     stylix.targets.vesktop.enable = false;
     xdg.configFile."vesktop/settings.json" = {
