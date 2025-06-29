@@ -48,7 +48,6 @@ in {
   ];
 
   custom.persist = {
-    enable = true;
     home = {
       directories = [
         ".local"
@@ -83,7 +82,6 @@ in {
 
         ".cache/radv_builtin_shaders"
         ".cache/mesa_shader_cache_db"
-
 
         ".config/nix"
         ".config/librewolf-${conUsername}"
@@ -168,4 +166,3 @@ in {
     };
   };
 }
-
