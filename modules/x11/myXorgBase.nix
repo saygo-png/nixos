@@ -111,7 +111,7 @@
           saveAfterCopy=false
           saveAsFileExtension=png
           disabledGrimWarning=true
-          savePath=${conHome}/Pictures/screenshots
+          savePath=${config.home.homeDirectory}/Pictures/screenshots
           savePathFixed=true
           showDesktopNotification=true
           showHelp=false

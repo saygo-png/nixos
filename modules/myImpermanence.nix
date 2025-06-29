@@ -1,65 +1,150 @@
 {
-  conUsername,
-  pkgs,
   lib,
+  config,
+  conUsername,
   ...
 }: {
-  security.sudo.extraConfig = "Defaults lecture=never";
+  # Refrence https://github.com/iynaix/dotfiles/blob/32e43c330cca0b52f584d0007fe64746994233b0/nixos/impermanence.nix
+  options.custom = let
+    assertNoHomeDirs = paths:
+      assert (lib.assertMsg (!lib.any (lib.hasPrefix "/home") paths) "/home used in a root persist!"); paths;
+  in {
+    persist = {
+      root = {
+        directories = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          apply = assertNoHomeDirs;
+          description = "Directories to persist in root filesystem";
+        };
+        files = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          apply = assertNoHomeDirs;
+          description = "Files to persist in root filesystem";
+        };
 
-  fileSystems = {
-    "/".neededForBoot = true;
-    "/nix".neededForBoot = true;
-    "/boot".neededForBoot = true;
-    "/cache".neededForBoot = true;
-    "/persist".neededForBoot = true;
+        cache = {
+          directories = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            apply = assertNoHomeDirs;
+            description = "Root directories to persist, but not to snapshot";
+          };
+          files = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            apply = assertNoHomeDirs;
+            description = "Root files to persist, but not to snapshot";
+          };
+        };
+      };
+
+      home = {
+        directories = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          description = "Directories to persist in home directory";
+        };
+        files = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          description = "Files to persist in home directory";
+        };
+
+        cache = {
+          directories = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Home directories to persist, but not to snapshot";
+          };
+          files = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Home files to persist, but not to snapshot";
+          };
+        };
+      };
+    };
   };
 
-  boot.initrd.postResumeCommands = lib.mkAfter ''
-    zfs rollback -r zroot/local/root@blank
-  '';
+  config = {
+    security.sudo.extraConfig = "Defaults lecture=never";
 
-  # FIX: replace above with this
-  # boot.initrd.systemd.services.rollback = {
-  #   description = "Rollback root filesystem to a pristine state on boot";
-  #   wantedBy = ["initrd.target"];
-  #   after = ["zfs-import-zroot.service"];
-  #   before = ["sysroot.mount"];
-  #   path = [pkgs.zfs];
-  #   unitConfig.DefaultDependencies = "no";
-  #   serviceConfig.Type = "oneshot";
-  #   script = ''
-  #     zfs rollback -r zroot/local/root@blank && echo ">> rollback complete <<" || echo "!! rollback failed !!"
-  #   '';
-  # };
+    fileSystems = {
+      "/".neededForBoot = true;
+      "/nix".neededForBoot = true;
+      "/boot".neededForBoot = true;
+      "/cache".neededForBoot = true;
+      "/persist".neededForBoot = true;
+    };
 
-  environment.persistence = {
-    "/persist" = {
-      directories = [
-        "/var/log" # systemd journal is stored in /var/log/journal
-        "/var/lib/nixos" # user uids and gids
-        "/var/lib/systemd/coredump"
-      ];
-      files = [
-        "/etc/machine-id"
-      ];
+    boot.initrd.postResumeCommands = lib.mkAfter ''
+      zfs rollback -r zroot/local/root@blank
+    '';
 
-      users.${conUsername} = {
-        directories = [
-          ".config"
-          ".local"
-          ".ssh"
-          "backups"
-          "builds"
-          "Documents"
-          "Downloads"
-          "Games"
-          "Music"
-          "nixos"
-          "Pictures"
-          "screencaptures"
-          "Sync"
-          "Videos"
-        ];
+    # FIX: replace above with this
+    # boot.initrd.systemd.services.rollback = {
+    #   description = "Rollback root filesystem to a pristine state on boot";
+    #   wantedBy = ["initrd.target"];
+    #   after = ["zfs-import-zroot.service"];
+    #   before = ["sysroot.mount"];
+    #   path = [pkgs.zfs];
+    #   unitConfig.DefaultDependencies = "no";
+    #   serviceConfig.Type = "oneshot";
+    #   script = ''
+    #     zfs rollback -r zroot/local/root@blank && echo ">> rollback complete <<" || echo "!! rollback failed !!"
+    #   '';
+    # };
+
+    environment.persistence = let
+      cfg = config.custom.persist;
+    in {
+      "/persist" = {
+        hideMounts = false;
+        files = lib.unique cfg.root.files;
+        directories = lib.unique (
+          [
+            "/var/log" # systemd journal is stored in /var/log/journal
+            "/var/lib/nixos" # user uids and gids
+            "/var/lib/systemd/coredump"
+          ]
+          ++ cfg.root.directories
+        );
+
+        users.${conUsername} = {
+          files = lib.unique cfg.home.files;
+          directories = lib.unique (
+            [
+              ".config"
+              ".local"
+              ".ssh"
+              "backups"
+              "builds"
+              "Documents"
+              "Downloads"
+              "Games"
+              "Music"
+              "nixos"
+              "Pictures"
+              "Sync"
+              "Videos"
+            ]
+            ++ cfg.home.directories
+          );
+        };
+      };
+
+      # Cache are files that should be persisted, but not backed up
+      "/cache" = {
+        hideMounts = true;
+        files = lib.unique cfg.root.cache.files;
+        directories = lib.unique cfg.root.cache.directories;
+
+        users.${conUsername} = {
+          files = lib.unique cfg.home.cache.files;
+          directories = lib.unique cfg.home.cache.directories;
+        };
       };
     };
   };

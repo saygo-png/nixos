@@ -48,7 +48,23 @@ in {
   ];
 
   home-manager.users.${conUsername} = {lib, ...}: {
-    xdg.enable = true;
+    xdg = {
+      enable = true;
+      userDirs = {
+        createDirectories = true;
+
+        templates = null;
+        publicShare = null;
+        desktop = null;
+
+        extraConfig = {
+          MY_BACKUP_DIR = "${homeConfig.homeDirectory}/backups";
+          MY_SCREENSHOTS_DIR = "${homeConfig.homeDirectory}/Pictures/screenshots";
+          MY_SCREENCAPTURES_DIR = "${homeConfig.homeDirectory}/Pictures/screencaptures";
+          MY_AUDIOCAPTURES_DIR = "${homeConfig.homeDirectory}/Pictures/audiocaptures";
+        };
+      };
+    };
 
     home.activation.make-dirs-for-xdg = lib.hm.dag.entryAfter ["writeBoundary"] ''
       run mkdir -p "${homeConfig.xdg.dataHome}/steam-home"

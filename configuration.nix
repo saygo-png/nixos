@@ -580,7 +580,7 @@
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
-          "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/screencaptures/recording.wav";
+          "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/Pictures/audiocaptures/recording.wav";
           "search" = "sudo echo 'got sudo' && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
 
@@ -604,14 +604,6 @@
           # Systemd is retarded and doesn't use normal pager variable :DDDDD
           SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
         };
-
-        activation.directories = lib.hm.dag.entryAfter ["writeBoundary"] ''
-          run mkdir -p "${config.home.homeDirectory}/backups"
-          run mkdir -p "${config.home.homeDirectory}/Documents"
-          run mkdir -p "${config.home.homeDirectory}/Downloads"
-          run mkdir -p "${config.home.homeDirectory}/screencaptures"
-          run mkdir -p "${config.home.homeDirectory}/Pictures/screenshots"
-        '';
       };
 
       # Wayland, X, etc. support for session variables.

@@ -363,7 +363,7 @@
           notify-send "$@"
           echo "$@"
         }
-        dir="${conHome}/screencaptures"
+        dir="${conHome}/Pictures/screencaptures"
         [ -d "$dir" ] || mkdir -p "$dir"
         filename="$dir/$(date +%y.%m.%d-%H:%M).mp4"
 
