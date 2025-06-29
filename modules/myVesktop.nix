@@ -59,6 +59,14 @@
 
   home-manager.users.${conUsername} = _: {
     stylix.targets.vesktop.enable = false;
+    xdg.configFile."vesktop/settings.json" = {
+      force = true;
+      text = builtins.toJSON {
+        discordBranch = "stable";
+        minimizeToTray = false;
+        arRPC = false;
+      };
+    };
     programs.vesktop = {
       enable = true;
       vencord = let
