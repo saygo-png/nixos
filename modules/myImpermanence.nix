@@ -10,6 +10,11 @@
       assert (lib.assertMsg (!lib.any (lib.hasPrefix "/home") paths) "/home used in a root persist!"); paths;
   in {
     persist = {
+      enable =
+        lib.mkEnableOption "Impermanence"
+        // {
+          default = true;
+        };
       root = {
         directories = lib.mkOption {
           type = lib.types.listOf lib.types.str;
@@ -68,7 +73,7 @@
     };
   };
 
-  config = {
+  config = lib.mkIf config.custom.persist.enable {
     security.sudo.extraConfig = "Defaults lecture=never";
 
     fileSystems = {
@@ -114,31 +119,14 @@
 
         users.${conUsername} = {
           files = lib.unique cfg.home.files;
-          directories = lib.unique (
-            [
-              ".config"
-              ".local"
-              ".ssh"
-              "backups"
-              "builds"
-              "Documents"
-              "Downloads"
-              "Games"
-              "Music"
-              "nixos"
-              "Pictures"
-              "Sync"
-              "Videos"
-            ]
-            ++ cfg.home.directories
-          );
+          directories = lib.unique cfg.home.directories;
         };
       };
 
       # Cache are files that should be persisted, but not backed up
       "/cache" = {
         hideMounts = true;
-        files = lib.unique cfg.root.cache.files;
+        files = lib.unique (["/etc/machine-id"] ++ cfg.root.cache.files);
         directories = lib.unique cfg.root.cache.directories;
 
         users.${conUsername} = {

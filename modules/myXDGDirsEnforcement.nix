@@ -47,6 +47,50 @@ in {
     })
   ];
 
+  custom.persist = {
+    enable = true;
+    home = {
+      directories = [
+        ".local"
+        ".ssh"
+        "Misc"
+        "builds"
+        "Documents"
+        "Downloads"
+        "Games"
+        "Music"
+        "nixos"
+        "Pictures"
+        "Sync"
+        "Videos"
+      ];
+      cache.directories = [
+        ".cache/Anki"
+        ".cache/Borg"
+        ".cache/Calibre"
+        ".cache/keepassxc"
+
+        ".cache/Dconf"
+
+        ".cache/Cabal"
+        ".cache/hie-bios"
+
+        ".cache/nix"
+        ".cache/Direnv"
+        ".cache/nix-index"
+        ".cache/npm"
+        ".cache/tealdeer"
+
+        ".cache/radv_builtin_shaders"
+        ".cache/mesa_shader_cache_db"
+
+
+        ".config/nix"
+        ".config/librewolf-${conUsername}"
+      ];
+    };
+  };
+
   home-manager.users.${conUsername} = {lib, ...}: {
     xdg = {
       enable = true;
@@ -58,7 +102,7 @@ in {
         desktop = null;
 
         extraConfig = {
-          MY_BACKUP_DIR = "${homeConfig.homeDirectory}/backups";
+          MY_MISC_DIR = "${homeConfig.homeDirectory}/Misc";
           MY_SCREENSHOTS_DIR = "${homeConfig.homeDirectory}/Pictures/screenshots";
           MY_SCREENCAPTURES_DIR = "${homeConfig.homeDirectory}/Pictures/screencaptures";
           MY_AUDIOCAPTURES_DIR = "${homeConfig.homeDirectory}/Pictures/audiocaptures";
@@ -124,3 +168,4 @@ in {
     };
   };
 }
+
