@@ -12,9 +12,7 @@
     })
   ];
 
-  environment.systemPackages = [
-    pkgs.carla
-  ];
+  environment.systemPackages = [pkgs.carla];
 
   environment.etc."/pipewire/pipewire.conf.d/10-default-null-sink.conf".text =
     /*
@@ -58,7 +56,9 @@
     "autoconnect.lua" = builtins.readFile (lib.my.relativeToRoot "resources/wireplumber/autoconnect.lua");
   };
 
-  systemd.user.services."enable-carla-postprocessing" = {
+  custom.persist.home.directories = [".config/falkTX"];
+
+  systemd.user.services."carla-postprocessing" = {
     description = "Load Carla Rack JACK host";
     wantedBy = ["default.target"];
     environment = {PIPEWIRE_LINK_PASSIVE = "true";};
