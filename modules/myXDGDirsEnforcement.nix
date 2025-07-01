@@ -109,8 +109,8 @@ in {
     };
 
     home.activation.make-dirs-for-xdg = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      run mkdir -p "${homeConfig.xdg.dataHome}/steam-home"
-      run mkdir -p "${homeConfig.xdg.configHome}/simplescreenrecorder"
+      run mkdir -p $VERBOSE_ARG "${homeConfig.xdg.dataHome}/steam-home"
+      run mkdir -p $VERBOSE_ARG "${homeConfig.xdg.configHome}/simplescreenrecorder"
     '';
 
     xresources.path = "${homeConfig.xdg.configHome}/.xresources";
