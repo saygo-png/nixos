@@ -107,10 +107,9 @@
     in {
       "/persist" = {
         hideMounts = false;
-        files = lib.unique ([
-            "/etc/password.hash"
-          ]
-          ++ cfg.root.files);
+        files =
+          lib.unique ([]
+            ++ cfg.root.files);
         directories = lib.unique (
           [
             "/var/log" # systemd journal is stored in /var/log/journal
