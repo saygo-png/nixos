@@ -289,6 +289,7 @@
 
       # GUI.
       calibre
+      mission-center
       foliate
       prismlauncher
       krita # Painting
