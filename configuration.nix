@@ -610,7 +610,6 @@
       systemd.user.sessionVariables = config.home.sessionVariables;
 
       # Development, internal.
-      programs.bash.enable = true;
       programs.zoxide.enable = true;
       programs.nix-index.enable = true;
       programs.home-manager.enable = true;
