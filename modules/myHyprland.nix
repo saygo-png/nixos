@@ -274,9 +274,6 @@ in {
         exec-once = [
           "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
           "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
-          "systemctl --user import-environment PATH &"
-          "hash dbus-update-activation-environment 2>/dev/null &"
-          "dbus-update-activation-environment --systemd --all &"
           "udiskie &"
           "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
           "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
