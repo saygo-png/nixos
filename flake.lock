@@ -905,22 +905,6 @@
         "type": "github"
       }
     },
-    "nvim-plugin-tshjkl": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1748539680,
-        "narHash": "sha256-jNSa2biinxEloE8ioQNPeoYkcf+87YUHHcwSWz2JGVY=",
-        "owner": "gsuuon",
-        "repo": "tshjkl.nvim",
-        "rev": "09aa3581fa1461c068214bba114c4a7bdcd29dcf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gsuuon",
-        "repo": "tshjkl.nvim",
-        "type": "github"
-      }
-    },
     "nvim-plugin-vim-visual-multi": {
       "flake": false,
       "locked": {
@@ -962,7 +946,6 @@
         "nvim-plugin-faster": "nvim-plugin-faster",
         "nvim-plugin-rainbow": "nvim-plugin-rainbow",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
-        "nvim-plugin-tshjkl": "nvim-plugin-tshjkl",
         "nvim-plugin-vim-visual-multi": "nvim-plugin-vim-visual-multi",
         "stylix": "stylix",
         "systems": "systems_4",

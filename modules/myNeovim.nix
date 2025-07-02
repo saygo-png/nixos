@@ -77,7 +77,6 @@
           "vim-visual-multi"
           "rainbow"
           "faster"
-          "tshjkl"
           "telescope-git-file-history"
         ];
 
@@ -687,10 +686,6 @@
               override_del = true,
               exclude = { "ns", "nS", "nx", "nX", "nxx", "nX", "vx", "vX", "xx", "xX" }, -- Motion plugins rebind this
             })
-            -- }}}
-
-            -- tshjkl {{{
-            require('tshjkl').setup()
             -- }}}
 
             -- Faster.nvim (Speed up big files) {{{

@@ -115,11 +115,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvim-plugin-tshjkl = {
-      url = "github:gsuuon/tshjkl.nvim";
-      flake = false;
-    };
-
     nvim-plugin-cutlass = {
       url = "github:gbprod/cutlass.nvim";
       flake = false;
