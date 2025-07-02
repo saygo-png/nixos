@@ -454,13 +454,6 @@
             vim.keymap.set("v", ">", ">gv", { desc = "Keep selection after indenting" })
             vim.keymap.set("v", "<", "<gv", { desc = "Keep selection after unindenting" })
 
-            -- Window switching.
-            -- Conflict with harpoon
-            -- vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { desc = "Move to the split on the left side" })
-            -- vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { desc = "Move to the split on the right side" })
-            -- vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { desc = "Move to the split above" })
-            -- vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { desc = "Move to the split below" })
-
             -- Previous buffer
             vim.keymap.set('n', '<S-B>', '<C-6>')
 
@@ -661,22 +654,22 @@
               require('img-clip').setup({
                 default = {
                   -- file and directory options
-                  dir_path = "assets", ---@type string | fun(): string
-                  extension = "png", ---@type string | fun(): string
-                  file_name = "%Y-%m-%d-%H-%M-%S", ---@type string | fun(): string
-                  use_absolute_path = false, ---@type boolean | fun(): boolean
-                  relative_to_current_file = false, ---@type boolean | fun(): boolean
+                  dir_path = "assets",
+                  extension = "png",
+                  file_name = "%Y-%m-%d-%H-%M-%S",
+                  use_absolute_path = false,
+                  relative_to_current_file = false,
 
                   -- template options
-                  template = "$FILE_PATH", ---@type string | fun(context: table): string
-                  url_encode_path = false, ---@type boolean | fun(): boolean
-                  relative_template_path = true, ---@type boolean | fun(): boolean
-                  use_cursor_in_template = true, ---@type boolean | fun(): boolean
-                  insert_mode_after_paste = false, ---@type boolean | fun(): boolean
+                  template = "$FILE_PATH",
+                  url_encode_path = false,
+                  relative_template_path = true,
+                  use_cursor_in_template = true,
+                  insert_mode_after_paste = false,
 
                   -- prompt options
-                  prompt_for_file_name = true, ---@type boolean | fun(): boolean
-                  copy_images = true, ---@type boolean | fun(): boolean
+                  prompt_for_file_name = true,
+                  copy_images = true,
               }
             })
             -- }}}
