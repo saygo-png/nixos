@@ -141,7 +141,7 @@
         # Folds.
         foldenable = false;
         foldmethod = "marker";
-        foldexpr = "nvim_treesitter#foldexpr()";
+        # foldexpr = "nvim_treesitter#foldexpr()";
 
         # More space.
         cmdheight = 0;
