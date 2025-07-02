@@ -264,7 +264,7 @@ in {
         '';
 
       settings = {
-        debug.disable_logs = false;
+        debug.disable_logs = true;
         xwayland.force_zero_scaling = true;
         input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
         monitor = [
