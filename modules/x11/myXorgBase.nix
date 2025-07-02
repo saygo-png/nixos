@@ -6,32 +6,36 @@
   conUsername,
   ...
 }: {
-  imports = [
-    (lib.my.relativeToRoot "modules/x11/myPicom.nix")
-    ({config, ...}: {
-      options = {
-        const = config.constLib.mkConstsFromSet {
-          xinitBase =
-            # bash
-            ''
-              if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-                eval $(dbus-launch --exit-with-session --sh-syntax)
-              fi
-              systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-              if command -v dbus-update-activation-environment >/dev/null 2>&1; then
-                dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
-              fi
-              systemctl --user import-environment PATH &
-              dbus-update-activation-environment --systemd PATH &
-              hash dbus-update-activation-environment 2>/dev/null &
+  imports =
+    [
+      ({config, ...}: {
+        options = {
+          const = config.constLib.mkConstsFromSet {
+            xinitBase =
+              # bash
+              ''
+                if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+                  eval $(dbus-launch --exit-with-session --sh-syntax)
+                fi
+                systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+                if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+                  dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP
+                fi
+                systemctl --user import-environment PATH &
+                dbus-update-activation-environment --systemd PATH &
+                hash dbus-update-activation-environment 2>/dev/null &
 
-              export XDG_SESSION_TYPE=x11
-              picom &
-            '';
+                export XDG_SESSION_TYPE=x11
+                picom &
+              '';
+          };
         };
-      };
-    })
-  ];
+      })
+    ]
+    ++ lib.my.withModules [
+      "x11/myPicom.nix"
+      "myFlameshot.nix"
+    ];
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -88,74 +92,6 @@
             run ${lib.getExe pkgs.xorg.xrdb} "${config.xresources.path}"
           '';
         };
-    };
-
-    xdg.configFile."flameshot/flameshot.ini" = {
-      text =
-        # INI
-        ''
-          [General]
-          allowMultipleGuiInstances=false
-          antialiasingPinZoom=false
-          autoCloseIdleDaemon=false
-          contrastOpacity=188
-          contrastUiColor=${config.lib.stylix.colors.withHashtag.base0A}
-          copyOnDoubleClick=true
-          copyPathAfterSave=true
-          disabledTrayIcon=true
-          drawColor=${config.lib.stylix.colors.withHashtag.base08}
-          drawFontSize=7
-          drawThickness=2
-          filenamePattern=screen.png
-          historyConfirmationToDelete=false
-          saveAfterCopy=false
-          saveAsFileExtension=png
-          disabledGrimWarning=true
-          savePath=${config.home.homeDirectory}/Pictures/screenshots
-          savePathFixed=true
-          showDesktopNotification=true
-          showHelp=false
-          showSidePanelButton=false
-          showStartupLaunchMessage=false
-          startupLaunch=false
-          uiColor=${config.lib.stylix.colors.withHashtag.base0B}
-          uploadWithoutConfirmation=false
-          useJpgForClipboard=false
-          userColors=picker, ${config.lib.stylix.colors.withHashtag.base08}, ${config.lib.stylix.colors.withHashtag.base0B}
-
-          [Shortcuts]
-          TYPE_ARROW=A
-          TYPE_CIRCLE=C
-          TYPE_CIRCLECOUNT=
-          TYPE_COMMIT_CURRENT_TOOL=Ctrl+Return
-          TYPE_COPY=Ctrl+C
-          TYPE_DRAWER=D
-          TYPE_EXIT=Ctrl+Q
-          TYPE_IMAGEUPLOADER=Return
-          TYPE_MARKER=M
-          TYPE_MOVESELECTION=Ctrl+M
-          TYPE_MOVE_DOWN=Down
-          TYPE_MOVE_LEFT=Left
-          TYPE_MOVE_RIGHT=Right
-          TYPE_MOVE_UP=Up
-          TYPE_OPEN_APP=Ctrl+O
-          TYPE_PENCIL=P
-          TYPE_PIN=
-          TYPE_PIXELATE=B
-          TYPE_RECTANGLE=R
-          TYPE_REDO=Ctrl+Shift+Z
-          TYPE_RESIZE_DOWN=Shift+Down
-          TYPE_RESIZE_LEFT=Shift+Left
-          TYPE_RESIZE_RIGHT=Shift+Right
-          TYPE_RESIZE_UP=Shift+Up
-          TYPE_SAVE=Ctrl+S
-          TYPE_SELECTION=S
-          TYPE_SELECTIONINDICATOR=
-          TYPE_SELECT_ALL=Ctrl+A
-          TYPE_TEXT=T
-          TYPE_TOGGLE_PANEL=Space
-          TYPE_UNDO=Ctrl+Z
-        '';
     };
   };
 }

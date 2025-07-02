@@ -222,44 +222,6 @@
     })
 
     (writeShellApplication {
-      name = "flameshot_wrapper";
-      runtimeInputs = [flameshot xdotool];
-      text = ''
-        # This script is called instead of flameshot in awesome to fix an issue
-        # where calling flameshot would drop focus, even after taking a screenshot
-        focusedwindow_before=$(xdotool getactivewindow)
-        flameshot gui
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-      '';
-    })
-
-    (writeShellApplication {
-      name = "flameshot_wrapper_ocr";
-      runtimeInputs = [flameshot xdotool tesseract];
-      text = ''
-        # This script does what flameshot_wrapper does, and
-        # copies the screenshoted text to your clipboard
-        focusedwindow_before=$(xdotool getactivewindow)
-        message=$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin+pol stdin stdout)
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-        notify-send "$message"
-        echo "$message" | xclip -r -sel clip
-      '';
-    })
-
-    (writeShellApplication {
-      name = "flameshot_wrapper_ocr_trans";
-      runtimeInputs = [flameshot xdotool tesseract translate-shell libnotify];
-      text = ''
-        # This script does what flameshot_wrapper does, and
-        # translates the screenshotted text, sending a notification with the translation
-        focusedwindow_before=$(xdotool getactivewindow)
-        notify-send -t 3000 "$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin stdin stdout | trans -brief)"
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-      '';
-    })
-
-    (writeShellApplication {
       name = "rdepends";
       runtimeInputs = [nix];
       text = ''
