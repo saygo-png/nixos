@@ -71,7 +71,7 @@ in {
 
         ".cache/Dconf"
 
-        ".cache/Cabal"
+        ".cache/cabal"
         ".cache/hie-bios"
 
         ".cache/nix"
