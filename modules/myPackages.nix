@@ -88,6 +88,24 @@
     (writeShellScriptBin "monitor-toggle"
       (builtins.readFile (lib.my.relativeToRoot "resources/scripts/monitor-toggle.bash")))
 
+    (pkgs.writeScriptBin "nr"
+      ''
+        #!${pkgs.zsh}
+
+        # Parametrized alias.
+        # $@ is an array of all arguments quoted, (w) operates on words,
+        # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
+
+        nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+      '')
+
+    (pkgs.writeScriptBin "snr"
+      ''
+        #!${pkgs.zsh}
+
+        sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+      '')
+
     (writeShellApplication {
       name = "xkb-switch-rofi";
       runtimeInputs = [coreutils xkb-switch rofi-wayland];
