@@ -13,6 +13,8 @@
     text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.dash");
   };
 in {
+  imports = lib.my.withModules ["myFlameshot.nix"];
+
   programs.hyprland = {
     enable = true;
   };
