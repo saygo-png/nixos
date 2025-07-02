@@ -252,6 +252,7 @@ in {
         */
         ''
           env = NIXOS_OZONE_WL, 1
+          env = ZSH_SYSTEM_CLIPBOARD_USE_WL_CLIPBOARD, 1
           env = XDG_CURRENT_DESKTOP, Hyprland
           env = XDG_SESSION_TYPE, wayland
           env = XDG_SESSION_DESKTOP, Hyprland
