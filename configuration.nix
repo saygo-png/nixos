@@ -22,7 +22,8 @@
       "myNeovim.nix"
       "myTerminal.nix"
 
-      "myXMonad.nix"
+      # "mySway.nix"
+      # "myXMonad.nix"
       # "myAwesome.nix"
       "myHyprland.nix"
 
