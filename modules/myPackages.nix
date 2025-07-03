@@ -72,6 +72,8 @@
 
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/convertlink") {})
 
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/timezones") {})
+
     inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
 
     # Python {{{
