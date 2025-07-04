@@ -91,6 +91,8 @@ _: {
       };
     };
   };
+  services.zfs.autoScrub.enable = true;
+
   # https://github.com/openzfs/zfs/issues/10891
   systemd.services.systemd-udev-settle.enable = false;
   services.sanoid = {
