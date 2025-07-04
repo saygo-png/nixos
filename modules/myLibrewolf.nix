@@ -89,16 +89,18 @@ in {
               url = "https://" + url;
             };
           in [
-            (mkBookmarkFolder "nix"
+            (mkBookmark "my issues" "github.com/saygo-png/nixos/issues")
+            (mkBookmark "nixos options" "search.nixos.org/options?")
+            (mkBookmark "nix packages" "search.nixos.org/packages")
+            (mkBookmark "nix pr tracker" "nixpk.gs/pr-tracker.html")
+            (mkBookmark "hm options" "home-manager-options.extranix.com")
+            (mkBookmark "nixpkgs docs" "nixos.org/manual/nixpkgs/unstable")
+            (mkBookmark "stylix docs" "stylix.danth.me")
+            (mkBookmark "nixvim docs" "nix-community.github.io/nixvim")
+
+            (mkBookmarkFolder "resources"
               [
-                (mkBookmark "my issues" "github.com/saygo-png/nixos/issues")
-                (mkBookmark "nixos options" "search.nixos.org/options?")
-                (mkBookmark "nix packages" "search.nixos.org/packages")
-                (mkBookmark "nix pr tracker" "nixpk.gs/pr-tracker.html")
-                (mkBookmark "hm options" "home-manager-options.extranix.com")
-                (mkBookmark "nixpkgs docs" "nixos.org/manual/nixpkgs/unstable")
-                (mkBookmark "stylix docs" "stylix.danth.me")
-                (mkBookmark "nixvim docs" "nix-community.github.io/nixvim")
+                (mkBookmark "free icons" "https://feathericons.com/")
               ])
 
             (mkBookmarkFolder "eso"
