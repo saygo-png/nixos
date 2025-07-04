@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   inputs,
   config,
   conUsername,
@@ -11,6 +12,9 @@
         preConfigurePhases = (oldAttrs.preConfigurePhases or []) ++ ["myPatchImages"];
 
         myPatchImages = let
+          inherit (config.lib.stylix.colors) withHashtag;
+          inherit (lib.strings) escapeShellArg;
+
           patchFile = builtins.toFile "patch.txt" ''
             46,51c46
             <         <img
@@ -22,11 +26,19 @@
             ---
             >         <span class="loader"></span>
           '';
+
+          newIconSvg =
+            # svg
+            ''
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${withHashtag.base06}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            '';
+
           spinnerCss =
             # css
-            let
-              inherit (config.lib.stylix.colors) withHashtag;
-            in ''
+            ''
               .loader {
                 width: 48px;
                 height: 48px;
@@ -47,10 +59,12 @@
                 }
               }
             '';
+
+          rsvg-convert = lib.getExe' pkgs.librsvg "rsvg-convert";
+          oldPngIconSize = builtins.toString 1024;
         in ''
-          rm static/shiggy.gif
-          echo ${lib.strings.escapeShellArg spinnerCss} >> static/views/style.css
-          cat static/views/style.css
+          echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/icon.png
+          echo ${escapeShellArg spinnerCss} >> static/views/style.css
           patch static/views/splash.html ${patchFile}
         '';
       });
