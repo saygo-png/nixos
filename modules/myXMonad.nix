@@ -48,7 +48,7 @@
               lowerOnStart = True,
               font = "${config.stylix.fonts.serif.name} Regular ${builtins.toString (config.stylix.fonts.sizes.desktop - 1)}",
               bgColor = "${config.lib.stylix.colors.withHashtag.base00}",
-              fgColor = "${config.lib.stylix.colors.withHashtag.base06}",
+              fgColor = "${config.lib.stylix.colors.withHashtag.base05}",
               position = TopW L 100,
               commands =
                 [ Run

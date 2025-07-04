@@ -643,7 +643,7 @@
           notification-fg = "${color.base0B}"; # bright:green
 
           completion-bg = "${color.base02}"; # bg2
-          completion-fg = "${color.base06}"; # fg
+          completion-fg = "${color.base05}"; # fg
           completion-group-bg = "${color.base01}"; # bg1
           completion-group-fg = "${color.base03}"; # gray
           completion-highlight-bg = "${color.base0B}"; # bright:blue
@@ -651,28 +651,28 @@
 
           # Define the color in index mode
           index-bg = "${color.base02}"; # bg2
-          index-fg = "${color.base06}"; # fg
+          index-fg = "${color.base05}"; # fg
           index-active-bg = "${color.base0B}"; # bright:blue
           index-active-fg = "${color.base02}"; # bg2
 
           inputbar-bg = "${color.base01}"; # bg
-          inputbar-fg = "${color.base06}"; # fg
+          inputbar-fg = "${color.base05}"; # fg
 
           statusbar-bg = "${color.base00}"; # bg2
-          statusbar-fg = "${color.base06}"; # fg
+          statusbar-fg = "${color.base05}"; # fg
 
           highlight-color = "${color.base0A}80"; # bright:yellow
           highlight-active-color = "${color.base09}80"; # bright:orange
 
           default-bg = "${color.base00}"; # bg
-          default-fg = "${color.base06}"; # fg
+          default-fg = "${color.base05}"; # fg
           render-loading = true;
           render-loading-bg = "${color.base00}"; # bg
-          render-loading-fg = "${color.base06}"; # fg
+          render-loading-fg = "${color.base05}"; # fg
 
           # Recolor book content's color
           recolor-lightcolor = "${color.base00}"; # bg
-          recolor-darkcolor = "${color.base06}"; # fg
+          recolor-darkcolor = "${color.base05}"; # fg
         };
         extraConfig = ''
           unmap +
@@ -995,8 +995,8 @@
             "*" = {
               highlight = "bold";
               border-color = mkLiteral "#${osConfig.const.accentColor}";
-              gruvbox-dark-fg0 = mkLiteral "${color.base07}";
-              gruvbox-dark-fg1 = mkLiteral "${color.base06}";
+              gruvbox-dark-fg0 = mkLiteral "${color.base06}";
+              gruvbox-dark-fg1 = mkLiteral "${color.base05}";
               gruvbox-dark-gray = mkLiteral "${color.base04}";
               gruvbox-dark-red-dark = mkLiteral "${color.base09}";
               gruvbox-dark-red-light = mkLiteral "${color.base08}";

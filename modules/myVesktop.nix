@@ -30,7 +30,7 @@
           newIconSvg =
             # svg
             ''
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${withHashtag.base06}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${withHashtag.base05}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
@@ -42,7 +42,7 @@
               .loader {
                 width: 48px;
                 height: 48px;
-                border: 5px solid ${withHashtag.base06};
+                border: 5px solid ${withHashtag.base05};
                 border-bottom-color: transparent;
                 border-radius: 50%;
                 display: inline-block;
