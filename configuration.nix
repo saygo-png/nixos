@@ -19,7 +19,7 @@
       "myConstants.nix"
       "myUnfree.nix"
 
-      "myNeovim.nix"
+      "neovim/myNeovim.nix"
       "myTerminal.nix"
 
       # "mySway.nix"
