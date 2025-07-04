@@ -14,17 +14,15 @@
       platformTheme.name = "qtct";
     };
 
-    xdg.configFile = {
-      # "Kvantum/kvantum.kvconfig".text = ''
-      #   [General]
-      #   theme=KvGnomeDark
-      # '';
+    xdg.configFile = let
+      theme = "Gruvbox-Dark-Green";
+    in {
       "Kvantum/kvantum.kvconfig".text = ''
         [General]
-        theme=gruvbox-kvantum
+        theme=${theme}
       '';
 
-      "Kvantum/gruvbox-kvantum".source = lib.my.getSafePath "${inputs.gruvbox-kvantum}/gruvbox-kvantum";
+      "Kvantum/${theme}".source = lib.my.getSafePath "${inputs.gruvbox-kvantum}/${theme}";
     };
     home.file = let
       baseConfig = {

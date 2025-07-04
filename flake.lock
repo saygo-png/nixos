@@ -536,16 +536,16 @@
     "gruvbox-kvantum": {
       "flake": false,
       "locked": {
-        "lastModified": 1727610972,
-        "narHash": "sha256-o3EEpd8fsrKPNA6TmiK7KLxy6hld+MpSrtLAKPhtJOE=",
-        "owner": "TheGlitchh",
-        "repo": "Gruvbox-Kvantum",
-        "rev": "29ba1f05affba26ef0e718de6ddb96c21ccd182e",
+        "lastModified": 1696096968,
+        "narHash": "sha256-u2J4Zf9HuMjNCt3qVpgEffkytl/t277FzOvWL8Nm8os=",
+        "owner": "sachnr",
+        "repo": "gruvbox-kvantum-themes",
+        "rev": "f47670be407c1f07c64890ad53884ee9977a7db1",
         "type": "github"
       },
       "original": {
-        "owner": "TheGlitchh",
-        "repo": "Gruvbox-Kvantum",
+        "owner": "sachnr",
+        "repo": "gruvbox-kvantum-themes",
         "type": "github"
       }
     },

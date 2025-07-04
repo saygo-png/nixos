@@ -49,7 +49,7 @@
     # }}}
 
     gruvbox-kvantum = {
-      url = "github:TheGlitchh/Gruvbox-Kvantum";
+      url = "github:sachnr/gruvbox-kvantum-themes";
       flake = false;
     };
 
