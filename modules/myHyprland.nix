@@ -75,11 +75,13 @@ in {
 
           cpu = {
             format = bg-text-color "c" + base0B "{usage}" + "%";
+            interval = 3;
             tooltip = true;
           };
 
           memory = {
             format = bg-text-color "m" + base0B "{used:0.1f}" + "G";
+            tooltip = true;
           };
 
           network = {
@@ -87,6 +89,7 @@ in {
             format-ethernet = "{ifname}";
             format-linked = "{ifname} (No IP)";
             format-disconnected = "disconnected";
+            tooltip = true;
             interval = 5;
           };
 
@@ -144,35 +147,32 @@ in {
         #css
       in ''
         * {
-          border: none;
-          border-radius: 0;
           font-family: "monospace";
           font-size: 11pt;
-          min-height: 0;
+
+          border: none;
+          border-radius: 0;
+          min-height: 0px;
+          padding: 0px;
           margin: 0px;
+        }
+
+        tooltip, tooltip * {
+          color: ${withHashtag.base04};
+          background:  ${withHashtag.base01};
         }
 
         window#waybar {
           background: rgba(0, 0, 0, 0);
-          color: ${withHashtag.base06};
-        }
-
-        .bg-text {
-          color: ${withHashtag.base04};
+          color: ${withHashtag.base05};
         }
 
         #window {
-          color: ${withHashtag.base06};
-          padding-left: 3px;
+          color: ${withHashtag.base05};
           font-weight: bold;
         }
 
-        #workspaces {
-          padding: 0px;
-        }
-
         #workspaces button {
-          padding: 0px;
           background: transparent;
           color: ${withHashtag.base0B};
           font-weight: bold;
@@ -192,17 +192,36 @@ in {
           background: ${withHashtag.base0E};
           color: #1b1d1e;
         }
-        #clock,
-        #battery,
+
         #cpu,
-        #memory,
-        #network,
-        #pulseaudio,
-        #custom-spotify,
+        #workspaces,
+        #window,
         #tray,
+        #clock,
+        #memory,
+        #battery,
+        #network,
+        #custom-disk_root,
+        #backlight,
+        #pulseaudio,
         #mode {
           padding: 0 4px;
           margin: 0 2px;
+          margin-bottom: -2px;
+          margin-right: -2px;
+        }
+
+        #window {
+          padding-left: 0px;
+        }
+
+        #workspaces {
+          padding-left: 0px;
+          margin-left: 0px;
+        }
+
+        #tray {
+          margin-bottom: 1px;
         }
 
         #battery icon {
