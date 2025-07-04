@@ -674,15 +674,16 @@
           recolor-lightcolor = "${color.base00}"; # bg
           recolor-darkcolor = "${color.base06}"; # fg
         };
-        mappings = {
-          "<C-r>" = "reload";
-          "<C-j>" = "zoom in";
-          "<C-k>" = "zoom out";
-          i = "toggle_statusbar";
-        };
         extraConfig = ''
-          unmap i
-          map i toggle_statusbar
+          unmap +
+          unmap _
+          map = zoom_in
+          map - zoom_out
+          map <C-j> zoom_in
+          map <C-k> zoom_out
+
+          map <C-r> reload
+          map i toggle_statusbar;
         '';
       };
 
