@@ -255,6 +255,7 @@
       # CLI.
       eza
       deno
+      bonk
       entr
       ncdu
       vlock
