@@ -15,10 +15,9 @@ optionsParser =
   Options
     <$> argument
       str
-      ( help "Target for the greeting"
+      ( help "Symlink that will get converted"
           <> metavar "SYMLINK"
-          <> help "Symlink that will be converted"
-          <> action "default"
+          <> action "file"
       )
     <*> switch
       ( long "write"
@@ -63,18 +62,18 @@ convertLinkAndWrite filepath write = do
   when write $ do
     currentMode <- fileMode <$> getFileStatus filepath
     currentMode `unionFileModes` ownerWriteMode & setFileMode filepath
-
-convertSymlink :: FilePath -> IO ()
-convertSymlink symlink = do
-  fileFromSymlink <- readSymbolicLink symlink
-  filestatus <- getFileStatus symlink
-  let pointsToDir = isDirectory filestatus
-  removeLink symlink
-  if pointsToDir
-    then
-      U.copyDirectoryRecursive normal fileFromSymlink symlink
-    else
-      D.copyFile fileFromSymlink symlink
+  where
+    convertSymlink :: FilePath -> IO ()
+    convertSymlink symlink = do
+      fileFromSymlink <- readSymbolicLink symlink
+      filestatus <- getFileStatus symlink
+      let pointsToDir = isDirectory filestatus
+      removeLink symlink
+      if pointsToDir
+        then
+          U.copyDirectoryRecursive normal fileFromSymlink symlink
+        else
+          D.copyFile fileFromSymlink symlink
 
 recursiveConvert :: [FilePath] -> Bool -> IO [FilePath]
 recursiveConvert fileList giveWrite = do
