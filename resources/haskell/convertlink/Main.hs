@@ -1,11 +1,9 @@
-{- ORMOLU_DISABLE -}
-{-# LANGUAGE BangPatterns, BinaryLiterals, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, DoAndIfThenElse, EmptyDataDecls, ExistentialQuantification, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, InstanceSigs, KindSignatures, LambdaCase, MultiParamTypeClasses, MultiWayIf, NamedFieldPuns, NoImplicitPrelude, OverloadedStrings, PartialTypeSignatures, PatternGuards, PolyKinds, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TupleSections, TypeFamilies, TypeSynonymInstances, ViewPatterns #-}
-{- ORMOLU_ENABLE -}
-
-import Flow
+import Distribution.Simple.Utils qualified as U
+import Distribution.Verbosity (normal)
 import Options.Applicative
 import RIO
-import System.Directory
+import System.Directory (pathIsSymbolicLink)
+import System.Directory qualified as D
 import System.FilePath
 import System.Posix.Files
 import Text.Printf (printf)
@@ -20,6 +18,7 @@ optionsParser =
       ( help "Target for the greeting"
           <> metavar "SYMLINK"
           <> help "Symlink that will be converted"
+          <> action "default"
       )
     <*> switch
       ( long "write"
@@ -36,67 +35,67 @@ parserInfo :: ParserInfo Options
 parserInfo = info (helper <*> optionsParser) (progDesc "Convert a symlink to the file its pointing to")
 
 main :: IO ()
-main = convertlinksAndWrite =<< execParser parserInfo
+main = convertlink =<< execParser parserInfo
 
-convertlinksAndWrite :: Options -> IO ()
-convertlinksAndWrite opts = do
+convertlink :: Options -> IO ()
+convertlink opts = do
   let filepath = path opts
       giveWrite = write opts
       recursive = recurse opts
-  filestatus <- getFileStatus filepath
 
-  case isDirectory filestatus of
-    True
-      | not recursive -> printf "convertlink: -r not specified; omitting directory %s\n" filepath
-      | otherwise -> do
-          symlinks <- findSymlinksRecursively filepath
-          if symlinks /= []
-            then mapM_ (`convertLinkAndWrite` giveWrite) symlinks
-            else printf "convertlink: directory doesn't contain symlinks %s\n" filepath
-    False -> do
-      isSymlink <- pathIsSymbolicLink filepath
-      if isSymlink
-        then convertLinkAndWrite filepath giveWrite
-        else printf "convertlink: cannot convert %s: Not a symlink\n" filepath
+  filestatus <- getFileStatus filepath
+  isSymlink <- pathIsSymbolicLink filepath
+  let pointsToDir = isDirectory filestatus
+
+  -- pointsToDir becomes isDir when isSymlink is false
+  -- due to how getFileStatus works
+  case (isSymlink, pointsToDir, recursive) of
+    (True, _, False) -> convertLinkAndWrite filepath giveWrite
+    (True, False, _) -> convertLinkAndWrite filepath giveWrite
+    (False, False, _) -> printf "convertlink: %s is not a symlink or a directory\n" filepath
+    (False, True, False) -> printf "convertlink: -r not specified; omitting directory %s\n" filepath
+    (_, True, True) -> do _ <- recursiveConvert [filepath] giveWrite; pure ()
 
 convertLinkAndWrite :: FilePath -> Bool -> IO ()
 convertLinkAndWrite filepath write = do
-  convertSymlinkPreservePerms filepath
+  convertSymlink filepath
   printf "Converted symlink %s\n" filepath
-  when write <| do
-    addOwnerWritePermission filepath
+  when write $ do
+    currentMode <- fileMode <$> getFileStatus filepath
+    currentMode `unionFileModes` ownerWriteMode & setFileMode filepath
 
-addOwnerWritePermission :: FilePath -> IO ()
-addOwnerWritePermission filepath = do
-  currentMode <- fileMode <$> getFileStatus filepath
-  currentMode `unionFileModes` ownerWriteMode |> setFileMode filepath
-
-convertSymlinkPreservePerms :: FilePath -> IO ()
-convertSymlinkPreservePerms symlink = do
+convertSymlink :: FilePath -> IO ()
+convertSymlink symlink = do
   fileFromSymlink <- readSymbolicLink symlink
-  targetMode <- fileMode <$> getFileStatus fileFromSymlink
-
+  filestatus <- getFileStatus symlink
+  let pointsToDir = isDirectory filestatus
   removeLink symlink
-  copyFile fileFromSymlink symlink
-  setFileMode symlink targetMode
+  if pointsToDir
+    then
+      U.copyDirectoryRecursive normal fileFromSymlink symlink
+    else
+      D.copyFile fileFromSymlink symlink
 
-findSymlinksRecursively :: FilePath -> IO [FilePath]
-findSymlinksRecursively dir = do
-  result <- try <| listDirectory dir
+recursiveConvert :: [FilePath] -> Bool -> IO [FilePath]
+recursiveConvert fileList giveWrite = do
+  symlinkList <- concat <$> mapM findSymlinks fileList
+  if null symlinkList
+    then
+      pure fileList
+    else do
+      mapM_ (`convertLinkAndWrite` giveWrite) symlinkList
+      recursiveConvert symlinkList giveWrite
+
+findSymlinks :: FilePath -> IO [FilePath]
+findSymlinks dir = do
+  result <- try $ D.listDirectory dir
   case result of
     Left (_ :: SomeException) -> return []
     Right entries -> do
       let fullPaths = map (dir </>) entries
-      symlinkResults <- mapM checkAndRecurse fullPaths
-      return <| concat symlinkResults
+      print fullPaths
+      filterM check fullPaths
   where
-    checkAndRecurse :: FilePath -> IO [FilePath]
-    checkAndRecurse path = do
-      isSymlink <- pathIsSymbolicLink path
-      if isSymlink
-        then return [path]
-        else do
-          isDir <- doesDirectoryExist path
-          if isDir
-            then findSymlinksRecursively path
-            else return []
+    check :: FilePath -> IO Bool
+    check path = do
+      pathIsSymbolicLink path
