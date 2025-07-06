@@ -247,7 +247,7 @@
       unzip
       gnutar
       unrar-free
-      atool # Unified CLI for all of these:
+      atool # Unified CLI for all of these
 
       # Camera files support.
       gphoto2fs
@@ -255,6 +255,7 @@
       # CLI.
       eza
       deno
+      entr
       ncdu
       vlock
       pipenv
