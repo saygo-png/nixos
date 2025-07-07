@@ -179,13 +179,13 @@ in {
         }
 
         #workspaces button.active {
-          background: #e88939;
           color: #1b1d1e;
+          background: ${withHashtag.base0B};
         }
 
         #workspaces button.urgent {
-          background: ${withHashtag.base0E};
           color: #1b1d1e;
+          background: ${withHashtag.base08};
         }
 
         #mode {
