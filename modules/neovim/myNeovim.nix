@@ -11,6 +11,7 @@
       "myNeovide.nix"
 
       "plugins/myVimVisualMulti.nix"
+      "plugins/mySpider.nix"
       "plugins/myRainbow.nix"
     ]);
 
@@ -46,9 +47,6 @@
         byteCompileLua.plugins = true;
         byteCompileLua.nvimRuntime = true;
       };
-
-      # Needed for special characters in spider.nvim
-      extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
 
       extraPlugins = let
         mkNvimplugin = name:
@@ -770,18 +768,6 @@
           settings = {
             silent_chdir = false;
             exclude_dirs = ["~/nixos/resources/haskell/*"];
-          };
-        };
-
-        spider = {
-          enable = true;
-          skipInsignificantPunctuation = true;
-          extraOptions.consistentOperatorPending = true;
-          keymaps.motions = {
-            b = "b";
-            e = "e";
-            ge = "ge";
-            w = "w";
           };
         };
 
