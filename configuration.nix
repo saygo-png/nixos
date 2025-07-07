@@ -16,35 +16,34 @@
       inputs.home-manager.nixosModules.default
     ]
     ++ lib.my.withModules [
-      "myConstants.nix"
       "myUnfree.nix"
-
-      "neovim/myNeovim.nix"
       "myTerminal.nix"
+      "myConstants.nix"
 
       # "mySway.nix"
       # "myXMonad.nix"
       # "myAwesome.nix"
       "myHyprland.nix"
 
-      "myZSH.nix"
-      "myMPV.nix"
-      "myTmux.nix"
       "myGaming.nix"
-
-      "myVesktop.nix"
-      "myDolphin.nix"
-      "myLibrewolf.nix"
-      "myComma.nix"
-
-      "myPackages.nix"
-      "myAudioEffects.nix"
-      "mySyncthing.nix"
-      "myMullvad.nix"
       "myStupid.nix"
-      "myImpermanence.nix"
+      "myPackages.nix"
       "myTemplates.nix"
+      "myAudioEffects.nix"
+      "myImpermanence.nix"
       "myXDGDirsEnforcement.nix"
+
+      "myMPV.nix"
+      "myZSH.nix"
+      "myTmux.nix"
+      "myComma.nix"
+      "myDolphin.nix"
+      "myMullvad.nix"
+      "myVesktop.nix"
+      "myIncus.nix"
+      "myLibrewolf.nix"
+      "mySyncthing.nix"
+      "neovim/myNeovim.nix"
 
       "visuals/myTheme.nix"
       "visuals/myCursor.nix"
