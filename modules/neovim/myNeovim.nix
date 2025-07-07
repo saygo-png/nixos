@@ -208,16 +208,7 @@
           })
           -- }}}
 
-          -- Vim as terminal. {{{
           vim.cmd[[
-            augroup neovim_terminal
-                autocmd!
-                " Enter Terminal-mode (insert) automatically
-                autocmd TermOpen * startinsert
-                " Disables number lines on terminal buffers
-                autocmd TermOpen * :setlocal nonumber norelativenumber laststatus=0
-            augroup END
-
             augroup remember_folds
               autocmd!
               au BufWinLeave ?* mkview 1
@@ -231,7 +222,6 @@
             let g:VM_maps["Add Cursor Up"] = '<M-k>'
             let g:VM_silent_exit = 1
           ]]
-          -- }}}
 
           -- Remember last line {{{
           vim.api.nvim_create_autocmd("BufRead", {
@@ -417,14 +407,6 @@
           vim.keymap.set("n", "<S-M-l>", "<cmd>wincmd l<CR>", { desc = "Move to the split on the right side" })
           vim.keymap.set("n", "<S-M-k>", "<cmd>wincmd k<CR>", { desc = "Move to the split above" })
           vim.keymap.set("n", "<S-M-j>", "<cmd>wincmd j<CR>", { desc = "Move to the split below" })
-          -- In nvim terminal
-          vim.keymap.set("t", "<S-M-h>", "<c-\\><c-n><c-w>h", { desc = "Move to the split on the left side" })
-          vim.keymap.set("t", "<S-M-l>", "<c-\\><c-n><c-w>j", { desc = "Move to the split on the right side" })
-          vim.keymap.set("t", "<S-M-k>", "<c-\\><c-n><c-w>k", { desc = "Move to the split above" })
-          vim.keymap.set("t", "<S-M-j>", "<c-\\><c-n><c-w>l", { desc = "Move to the split below" })
-          -- Shift + Esc for normal mode in nvim terminal
-          vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
-          vim.keymap.set("t", "<S-M-Esc>", "<C-\\><C-n>", { desc = "Normal mode in terminal mode" })
 
           -- Copy and paste
           vim.keymap.set("n", "<c-v>", '"+p', { desc = "proper paste" })
@@ -483,7 +465,6 @@
 
           vim.keymap.set('n', '<leader>q', vim.cmd.quit, { desc = "Quit"})
           vim.keymap.set('n', '<leader>Q', vim.cmd.only, { desc = "Quit other windows"})
-
           vim.keymap.set("n", "<leader>ob", "<cmd>!$BROWSER '%' &<CR>", {desc = "[o]pen in [b]rowser"})
           -- }}}
 
