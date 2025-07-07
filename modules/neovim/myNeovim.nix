@@ -509,6 +509,8 @@
 
           -- Telescope extensions {{{
           require("telescope").load_extension("git_file_history")
+          local gfh = require("telescope").extensions.git_file_history
+          vim.keymap.set("n", "<leader>tv", gfh.git_file_history, { desc = "[t]elescope [v]ersions" })
           -- }}}
 
           -- Conform {{{
