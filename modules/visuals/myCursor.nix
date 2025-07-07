@@ -14,7 +14,6 @@ in {
   home-manager.users.${conUsername} = {
     home.pointerCursor = {
       enable = true;
-      dotIcons.enable = true;
       x11.enable = true;
       gtk.enable = true;
       name = cursorName;
