@@ -6,29 +6,33 @@
   conUsername,
   ...
 }: {
-  imports = lib.my.withModules [
-    "neovim/myNeovide.nix"
-  ];
-
   home-manager.users.${conUsername} = {osConfig, ...}: {
+    imports = lib.my.withModules (map (x: "neovim/" + x) [
+      "myNeovide.nix"
+
+      "plugins/myVimVisualMulti.nix"
+      "plugins/myRainbow.nix"
+    ]);
+
     home.sessionVariables = {EDITOR = "nvim";};
+
     # I put them in the global scope since direnv deletes the one in the neovim scope
     home.packages = [
       pkgs.vim-language-server
       pkgs.deadnix # Nix linter
-      pkgs.statix # Another linter
+      pkgs.tinymist # Typst lsp
       pkgs.nodePackages.jsonlint
       pkgs.hlint # Haskell linter
       pkgs.stylua # Lua formatter
       pkgs.shfmt # Shell formatter
+      pkgs.statix # Another linter
+      pkgs.yapf # Python formatter
       pkgs.black # Python formatter
       pkgs.isort # Python import sorter
-      pkgs.yapf # Python formatter
       pkgs.prettierd # Javascript formatter
-      pkgs.tinymist # Typst lsp
       pkgs.markdownlint-cli # Markdown linter
-      pkgs.haskellPackages.fourmolu # Haskell formatter
       pkgs.vscode-langservers-extracted # Web LSPs
+      pkgs.haskellPackages.fourmolu # Haskell formatter
       pkgs.nodePackages.prettier # Javascript formatter
     ];
 
@@ -39,8 +43,8 @@
         byteCompileLua.enable = true;
         byteCompileLua.configs = true;
         byteCompileLua.initLua = true;
-        byteCompileLua.nvimRuntime = true;
         byteCompileLua.plugins = true;
+        byteCompileLua.nvimRuntime = true;
       };
 
       # Needed for special characters in spider.nvim
@@ -62,7 +66,6 @@
         ]
         ++ map mkNvimplugin [
           "cutlass"
-          "rainbow"
           "faster"
           "telescope-git-file-history"
         ];
@@ -153,8 +156,6 @@
         mapleader = " ";
         maplocalleader = ",";
 
-        rainbow_active = 1;
-
         gruvbox_material_foreground = "original";
         gruvbox_material_enable_bold = 1;
         gruvbox_material_enable_italic = 1;
@@ -167,15 +168,6 @@
         "ftplugin/haskell.vim".text = "set nocursorline"; # https://github.com/nvim-treesitter/nvim-treesitter/issues/7967
         "ftplugin/markdown.vim".text = "setlocal wrap";
       };
-
-      extraConfigLuaPost = ''
-        -- Makes treesitter work with rainbow plugin
-        vim.api.nvim_set_hl(0, "@constructor", { link = "" })
-        vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
-        vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
-        vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
-        vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
-      '';
 
       extraConfigLua =
         # Lua
@@ -214,13 +206,6 @@
               au BufWinLeave ?* mkview 1
               au BufWinEnter ?* silent! loadview 1
             augroup END
-
-            " Vim visual multi binds
-            let g:VM_leader = '\'
-            let g:VM_maps = {}
-            let g:VM_maps["Add Cursor Down"] = '<M-j>'
-            let g:VM_maps["Add Cursor Up"] = '<M-k>'
-            let g:VM_silent_exit = 1
           ]]
 
           -- Remember last line {{{
@@ -767,7 +752,6 @@
         fugitive.enable = true;
         vim-surround.enable = true;
         web-devicons.enable = true;
-        visual-multi.enable = true;
         friendly-snippets.enable = true;
 
         nvim-tree = {
