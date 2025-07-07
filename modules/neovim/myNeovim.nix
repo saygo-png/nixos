@@ -791,7 +791,7 @@
 
         spider = {
           enable = true;
-          skipInsignificantPunctuation = false;
+          skipInsignificantPunctuation = true;
           extraOptions.consistentOperatorPending = true;
           keymaps.motions = {
             b = "b";
