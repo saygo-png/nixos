@@ -465,7 +465,6 @@
 
           vim.keymap.set('n', '<leader>q', vim.cmd.quit, { desc = "Quit"})
           vim.keymap.set('n', '<leader>Q', vim.cmd.only, { desc = "Quit other windows"})
-          vim.keymap.set("n", "<leader>ob", "<cmd>!$BROWSER '%' &<CR>", {desc = "[o]pen in [b]rowser"})
           -- }}}
 
           -- Plugins {{{
