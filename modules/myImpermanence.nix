@@ -108,8 +108,7 @@
       "/persist" = {
         hideMounts = false;
         files =
-          lib.unique ([]
-            ++ cfg.root.files);
+          lib.unique cfg.root.files;
         directories = lib.unique (
           [
             "/var/log" # systemd journal is stored in /var/log/journal
