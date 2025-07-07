@@ -10,9 +10,10 @@
     imports = lib.my.withModules (map (x: "neovim/" + x) [
       "myNeovide.nix"
 
-      "plugins/myVimVisualMulti.nix"
       "plugins/mySpider.nix"
       "plugins/myRainbow.nix"
+      "plugins/myVimVisualMulti.nix"
+      "plugins/myGruvboxMaterial.nix"
     ]);
 
     home.sessionVariables = {EDITOR = "nvim";};
@@ -58,7 +59,6 @@
         [
           pkgs.vimPlugins.img-clip-nvim
           pkgs.vimPlugins.vim-pencil
-          pkgs.vimPlugins.gruvbox-material
           pkgs.vimPlugins.dial-nvim
           pkgs.vimPlugins.typst-preview-nvim
         ]
@@ -153,13 +153,7 @@
       globals = {
         mapleader = " ";
         maplocalleader = ",";
-
-        gruvbox_material_foreground = "original";
-        gruvbox_material_enable_bold = 1;
-        gruvbox_material_enable_italic = 1;
-        gruvbox_material_transparent_background = 2;
-        # Otherwise python sets itself to indent 4
-        python_recommended_style = 0;
+        python_recommended_style = 0; # Otherwise python sets itself to indent 4
       };
 
       extraFiles = {
@@ -175,8 +169,6 @@
           if vim.fn.has('termguicolors') == 1 then
             vim.opt.termguicolors = true
           end
-
-          vim.cmd[[colorscheme gruvbox-material]]
 
           -- Faster syntax highlighting.
           vim.cmd("syntax sync minlines=256")
