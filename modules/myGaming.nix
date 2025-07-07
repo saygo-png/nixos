@@ -60,6 +60,7 @@
     pkgs.lutris
     pkgs.winetricks
     pkgs.wineWowPackages.waylandFull
+    pkgs.steam-run
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]

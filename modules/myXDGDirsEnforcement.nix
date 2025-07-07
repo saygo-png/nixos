@@ -1,12 +1,12 @@
 {
   config,
+  pkgs,
   conUsername,
   ...
 }: let
   homeConfig = config.home-manager.users.${conUsername};
 in {
   nix.settings.use-xdg-base-directories = true;
-  nix.extraOptions = "use-xdg-base-directories = true";
 
   environment.sessionVariables = {
     GOPATH = "${homeConfig.xdg.dataHome}/go";
@@ -30,22 +30,18 @@ in {
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${homeConfig.xdg.configHome}/java";
   };
 
-  nixpkgs.overlays = [
-    (_final: prev: {
-      steam = prev.steam.override (old: {
-        extraBwrapArgs =
-          (old.buildFHSEnv.extraBwrapArgs or [])
-          ++ [
-            "--bind $XDG_DATA_HOME/steam-home $HOME"
+  programs.steam.package = pkgs.steam.override (old: {
+    extraBwrapArgs =
+      (old.buildFHSEnv.extraBwrapArgs or [])
+      ++ [
+        "--bind $XDG_DATA_HOME/steam-home $HOME"
 
-            "--unsetenv XDG_CACHE_HOME"
-            "--unsetenv XDG_CONFIG_HOME"
-            "--unsetenv XDG_DATA_HOME"
-            "--unsetenv XDG_STATE_HOME"
-          ];
-      });
-    })
-  ];
+        "--unsetenv XDG_CACHE_HOME"
+        "--unsetenv XDG_CONFIG_HOME"
+        "--unsetenv XDG_DATA_HOME"
+        "--unsetenv XDG_STATE_HOME"
+      ];
+  });
 
   custom.persist = {
     home = {
