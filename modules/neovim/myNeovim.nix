@@ -623,10 +623,6 @@
             behaviours = {
               bigfile = {
                 on = true,
-                -- Table which contains names of features that will be disabled when
-                -- bigfile is opened. Feature names can be seen in features table below.
-                -- features_disabled can also be set to "all" and then all features that
-                -- are on (on=true) are going to be disabled for this behaviour
                 features_disabled = {
                   "illuminate", "matchparen", "lsp", "treesitter",
                   "indent_blankline", "vimopts", "syntax", "filetype"
