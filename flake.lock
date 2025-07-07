@@ -897,22 +897,6 @@
         "type": "github"
       }
     },
-    "nvim-plugin-vim-visual-multi": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1725214162,
-        "narHash": "sha256-KzBWkB/PYph6OfuF0GgNFYgqUAwMYbQQZbaaG9XuWZY=",
-        "owner": "mg979",
-        "repo": "vim-visual-multi",
-        "rev": "a6975e7c1ee157615bbc80fc25e4392f71c344d4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mg979",
-        "repo": "vim-visual-multi",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "awesome-git": "awesome-git",
@@ -938,7 +922,6 @@
         "nvim-plugin-faster": "nvim-plugin-faster",
         "nvim-plugin-rainbow": "nvim-plugin-rainbow",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
-        "nvim-plugin-vim-visual-multi": "nvim-plugin-vim-visual-multi",
         "stylix": "stylix",
         "systems": "systems_4",
         "treefmt-nix": "treefmt-nix_2",

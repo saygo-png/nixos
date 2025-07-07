@@ -121,11 +121,6 @@
       flake = false;
     };
 
-    nvim-plugin-vim-visual-multi = {
-      url = "github:mg979/vim-visual-multi";
-      flake = false;
-    };
-
     nvim-plugin-faster = {
       url = "github:pteroctopus/faster.nvim";
       flake = false;

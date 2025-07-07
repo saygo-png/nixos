@@ -62,7 +62,6 @@
         ]
         ++ map mkNvimplugin [
           "cutlass"
-          "vim-visual-multi"
           "rainbow"
           "faster"
           "telescope-git-file-history"
@@ -790,6 +789,7 @@
         fugitive.enable = true;
         vim-surround.enable = true;
         web-devicons.enable = true;
+        visual-multi.enable = true;
         friendly-snippets.enable = true;
 
         nvim-tree = {
