@@ -321,7 +321,7 @@ in {
 
         general = {
           "$mainMod" = "SUPER";
-          layout = "dwindle";
+          layout = "master";
           inherit gaps_in;
           inherit gaps_out;
           border_size = osConfig.const.borderSize;
