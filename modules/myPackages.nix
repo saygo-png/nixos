@@ -163,13 +163,21 @@
 
     (writeShellApplication {
       name = "fzfcd";
-      runtimeInputs = [fzf coreutils];
+      runtimeInputs = [fzf fd coreutils];
       text = ''
-        dir=$(fd --hidden --type directory --maxdepth 15 . ~/Sync ~/Documents ~/Downloads ~/nixos | fzf)
+        dir=$(fd --hidden --type directory --type file --maxdepth 15 . | fzf)
+
         if [ -z "$dir" ]; then
          exit 1
         fi
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && echo "$dir"
+
+        if [ -d "$dir" ]; then
+            printf '%s\n' "$dir"
+        elif [ -f "$dir" ]; then
+            dirname "$dir"
+        else
+            exit 1
+        fi
       '';
     })
 
