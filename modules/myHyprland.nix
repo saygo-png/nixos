@@ -15,9 +15,7 @@
 in {
   imports = lib.my.withModules ["myFlameshot.nix"];
 
-  programs.hyprland = {
-    enable = true;
-  };
+  programs.hyprland.enable = true;
 
   environment.systemPackages = with pkgs; [
     hyprctl-switch-rofi
@@ -289,9 +287,7 @@ in {
         debug.disable_logs = true;
         xwayland.force_zero_scaling = true;
         input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
-        monitor = [
-          ", highres@highrr, auto, 1"
-        ];
+        monitor = [", highres@highrr, auto, 1"];
         # Autostart.
         exec-once = [
           "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
@@ -329,7 +325,6 @@ in {
           inherit gaps_in;
           inherit gaps_out;
           border_size = osConfig.const.borderSize;
-          # border_part_of_window = false;
           no_border_on_floating = false;
           "col.active_border" = lib.mkForce "rgba(${osConfig.const.accentColor}FF)";
           "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}00)";
@@ -349,9 +344,7 @@ in {
           };
         };
 
-        render = {
-          direct_scanout = 1;
-        };
+        render.direct_scanout = 1;
 
         misc = {
           enable_anr_dialog = false;
