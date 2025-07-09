@@ -293,6 +293,7 @@ in {
           "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
           "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
           "udiskie &"
+          "hyprctl dispatch exec '[workspace 2 silent] vesktop' &"
           "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"
           "hyprctl dispatch exec '[workspace 1 silent] $TERMINAL' &"
         ];
