@@ -355,7 +355,7 @@ in {
 
         misc = {
           enable_anr_dialog = false;
-          enable_swallow = false;
+          enable_swallow = true;
           disable_autoreload = false;
           # Hides text on bottom of the screen.
           disable_hyprland_logo = true;
