@@ -57,6 +57,7 @@ in {
         settings = {
           # Auto enable extensions
           "extensions.autoDisableScopes" = 0;
+          "privacy.resistFingerprinting" = false;
 
           "webgl.disabled" = false;
           "media.ffmpeg.vaapi.enabled" = true;
