@@ -12,8 +12,8 @@
 
       "plugins/mySpider.nix"
       "plugins/myRainbow.nix"
+      "plugins/myGruvbox.nix"
       "plugins/myVimVisualMulti.nix"
-      "plugins/myGruvboxMaterial.nix"
     ]);
 
     home.sessionVariables = {EDITOR = "nvim";};
