@@ -579,7 +579,7 @@
           "grep" = "grep --color=auto";
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
-          "date" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
+          "mdate" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch -- --option substitute false";
           "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
