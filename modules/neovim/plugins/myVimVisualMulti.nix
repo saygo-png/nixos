@@ -7,7 +7,6 @@ _: {
         silent_exit = 1;
         skip_empty_lines = 1;
         maps = {
-          "Find Under" = "<C-d>";
           "Find Subword Under" = "<C-d>";
           "Add Cursor Down" = "<M-j>";
           "Add Cursor Up" = "<M-k>";
