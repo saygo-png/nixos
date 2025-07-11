@@ -20,6 +20,8 @@
       "myTerminal.nix"
       "myConstants.nix"
 
+      "zsh/myZSH.nix"
+
       # "mySway.nix"
       # "myXMonad.nix"
       # "myAwesome.nix"
@@ -34,7 +36,6 @@
       "myXDGDirsEnforcement.nix"
 
       "myMPV.nix"
-      "myZSH.nix"
       "myTmux.nix"
       "myComma.nix"
       "myDolphin.nix"
