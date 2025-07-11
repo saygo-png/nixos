@@ -101,7 +101,7 @@ in {
 
             (mkBookmarkFolder "resources"
               [
-                (mkBookmark "free icons" "https://feathericons.com/")
+                (mkBookmark "free icons" "feathericons.com/")
               ])
 
             (mkBookmarkFolder "eso"
@@ -112,6 +112,11 @@ in {
             (mkBookmarkFolder "knitting"
               [
                 (mkBookmark "hat" "bhookedcrochet.com/2022/03/18/everyday-rib-knit-hat")
+              ])
+
+            (mkBookmarkFolder "misc"
+              [
+                (mkBookmark "white page" "whitescreen.org")
               ])
           ];
         };
@@ -218,7 +223,7 @@ in {
                       "poczta.wp.pl"
                       "vinted.pl"
                       "reddit.com"
-                      "whitedisplay.com"
+                      "whitescreen.org"
                       "pstream.org"
                     ];
                     simpleCss = [];
