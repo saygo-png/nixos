@@ -32,32 +32,22 @@
         inherit (pkgs) callPackage;
 
         fsh = callPackage (withPlug "fsh.nix") {};
+        p10k = callPackage (withPlug "p10k.nix") {};
         autosuggestions = callPackage (withPlug "autosuggestions.nix") {};
         notify = callPackage (withPlug "notify.nix") {};
+
+        zcomp = f: ''zcompile -R -- "${f}".zwc "${f}"'';
+        zcompdumpFile = "${zshConfig}/.zcompdump";
       in
         # sh
         ''
-          function zcompile-many() {
-            local f
-            for f; do zcompile -R -- "$f".zwc "$f"; done
-          }
-
-          # Clone and compile to wordcode missing plugins.
-          if [[ ! -e ${data}/powerlevel10k ]]; then
-            git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${data}/powerlevel10k
-            make -C ${data}/powerlevel10k pkg
-            zcompile-many ${data}/zsh-autosuggestions/{powerlevel10k.zsh-theme,internal/**/*.zsh,config/**/*.zsh,gitstatus/**/*.zsh}
-          fi
-
           # Activate Powerlevel10k Instant Prompt.
           if [[ -r "${cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
             source "${cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
           fi
 
           autoload -Uz compinit && compinit
-          [[ ${zshConfig}/.zcompdump.zwc -nt ${zshConfig}/.zcompdump ]] || zcompile-many ${zshConfig}/.zcompdump
-
-          unfunction zcompile-many
+          [[ ${zshConfig}/.zcompdump.zwc -nt ${zshConfig}/.zcompdump ]] || ${zcomp zcompdumpFile}
 
           # Autocomplete.
           unsetopt EXTENDED_GLOB
@@ -163,10 +153,12 @@
             nohup setsid $prog $@ > /dev/null 2>&1
           }
 
-          source ${fsh}/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+          source ${notify}/zsh-auto-notify/auto-notify.plugin.zsh
+          export AUTO_NOTIFY_WHITELIST=("nh" "nix" "nbuild" "nix-build" "nix-shell" "git" "cabal" "cp" "rclone" "borg" "borgmatic")
+
+          source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
           source ${autosuggestions}/zsh-autosuggestions/zsh-autosuggestions.zsh
-          source ${notify}/zsh-notify/notify.plugin.zsh
-          source ${data}/powerlevel10k/powerlevel10k.zsh-theme
+          source ${p10k}/powerlevel10k/powerlevel10k.zsh-theme
           source ${lib.my.relativeToRoot "resources/zsh/p10k-prompt.zsh"}
           source ${pkgs.zsh-system-clipboard}/share/zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
         '';

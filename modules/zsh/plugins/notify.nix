@@ -6,14 +6,14 @@
   fetchFromGitHub,
 }:
 stdenvNoCC.mkDerivation {
-  pname = "compiled-zsh-autosuggestions";
-  version = "0.7.1";
+  pname = "compiled-zsh-auto-notify";
+  version = "0.11.1";
 
   src = fetchFromGitHub {
-    owner = "zsh-users";
-    repo = "zsh-autosuggestions";
-    rev = "85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5";
-    hash = "sha256-KmkXgK1J6iAyb1FtF/gOa0adUnh1pgFsgQOUnNngBaE=";
+    owner = "MichaelAquilina";
+    repo = "zsh-auto-notify";
+    rev = "b51c934d88868e56c1d55d0a2a36d559f21cb2ee";
+    hash = "sha256-s3TBAsXOpmiXMAQkbaS5de0t0hNC1EzUUb0ZG+p9keE=";
   };
 
   nativeBuildInputs = [zsh];
@@ -26,20 +26,20 @@ stdenvNoCC.mkDerivation {
         local f
         for f; do zcompile -R -- "$f".zwc "$f"; done
       }
-      zcompile-many {zsh-autosuggestions.zsh,src/**/*.zsh}
+      zcompile-many auto-notify.plugin.zsh
     '';
   in ''
     ${zcomp}/bin/zcomp
 
-    plugindir="$out/zsh-autosuggestions"
+    plugindir="$out/zsh-auto-notify"
     mkdir -p "$plugindir"
     mv ./* $plugindir
   '';
 
   meta = with lib; {
-    homepage = "https://github.com/zsh-users/zsh-autosuggestions";
-    description = "Fish-like autosuggestions for zsh";
-    license = licenses.mit;
+    homepage = "https://github.com/marzocchi/zsh-notify";
+    description = "ZSH plugin that automatically sends out a notification when a long running task has completed.";
+    license = licenses.gpl3Plus;
     platforms = platforms.unix;
   };
 }
