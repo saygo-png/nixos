@@ -691,11 +691,25 @@
 
       services.dunst = {
         enable = true;
-        settings.global = {
-          width = 300;
-          height = 300;
-          offset = "30x50";
-          origin = "top-center";
+        settings = {
+          play_sound = {
+            summary = "*";
+            script = let
+              ffplay = lib.getExe' pkgs.ffmpeg "ffplay";
+              unsafe-soundFile = "${inputs.extras-nixos}/notifs/male-look-at-me.mp3";
+              alert = pkgs.writeScriptBin "alert.dash" ''
+                #!${lib.getExe pkgs.dash}
+                ${ffplay} -v 0 -nodisp -autoexit ${lib.my.getSafePath unsafe-soundFile}
+              '';
+            in
+              lib.getExe alert;
+          };
+          global = {
+            width = 300;
+            height = 300;
+            offset = "30x50";
+            origin = "top-center";
+          };
         };
       };
 
