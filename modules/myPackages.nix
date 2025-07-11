@@ -92,7 +92,7 @@
 
     (pkgs.writeScriptBin "nr"
       ''
-        #!${pkgs.zsh}
+        #!${lib.getExe pkgs.zsh}
 
         # Parametrized alias.
         # $@ is an array of all arguments quoted, (w) operates on words,
@@ -103,7 +103,7 @@
 
     (pkgs.writeScriptBin "snr"
       ''
-        #!${pkgs.zsh}
+        #!${lib.getExe pkgs.zsh}
 
         sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
       '')
