@@ -37,6 +37,7 @@ in {
     home.shellAliases = {"hyprland" = "Hyprland";};
 
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
+    services.swayosd.enable = true;
 
     stylix.targets.waybar.enable = false;
 
@@ -537,8 +538,8 @@ in {
           "$mainMod ALT, k, Move floating up, moveactive, 0 -100"
           "$mainMod ALT, j, Move floating down, moveactive, 0 100"
 
-          "$mainMod, Equal, Volume down, exec, ${lib.getExe pkgs.pamixer} -i 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)"
-          "$mainMod, Minus, Volume up, exec, ${lib.getExe pkgs.pamixer} -d 2 && notify-send -t 500 $(${lib.getExe pkgs.pamixer} --get-volume-human)"
+          "$mainMod, Equal, Volume up, exec, swayosd-client --output-volume raise"
+          "$mainMod, Minus, Volume down, exec, swayosd-client --output-volume lower"
         ];
 
         # mouse binding
