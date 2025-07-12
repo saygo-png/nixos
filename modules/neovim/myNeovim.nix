@@ -342,7 +342,7 @@
               end,
             })
             vim.lsp.buf.rename()
-            -- if LPS couldn't trigger rename on the symbol, clear the autocmd
+            -- if LSP couldn't trigger rename on the symbol, clear the autocmd
             vim.defer_fn(function()
               -- the cmdId is not nil only if the LSP failed to rename
               if cmdId then
