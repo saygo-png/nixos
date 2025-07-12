@@ -1,5 +1,6 @@
 {
   lib,
+  config,
   inputs,
   pkgs,
   ...
@@ -8,6 +9,7 @@
     plugins = {
       telescope = {
         enable = true;
+        lazyLoad.settings.cmd = "Telescope";
         enabledExtensions = ["git_file_history"];
         extensions.fzf-native = {
           enable = true;
@@ -17,12 +19,104 @@
             override_generic_sorter = true;
           };
         };
+        keymaps = {
+          "<leader>tb" = {
+            action = "current_buffer_fuzzy_find";
+            options.desc = "[t]elescope [b]uffer";
+          };
+          "<leader>tn" = {
+            action = "help_tags";
+            options.desc = "[t]elescope [n]oob";
+          };
+          "<leader>tk" = {
+            action = "keymaps";
+            options.desc = "[t]elescope [k]eymaps";
+          };
+          "<leader>tf" = {
+            action = "find_files";
+            options.desc = "[t]elescope [f]iles";
+          };
+          "<leader>ts" = {
+            action = "builtin";
+            options.desc = "[t]elescope [s]elect telescope";
+          };
+          "<leader>tw" = {
+            action = "grep_string";
+            options.desc = "[t]elescope current [w]ord";
+          };
+          "<leader>tl" = {
+            action = "live_grep";
+            options.desc = "[t]elescope [l]ive grep";
+          };
+          "<leader>td" = {
+            action = "diagnostics";
+            options.desc = "[t]elescope [d]iagnostics";
+          };
+          "<leader>tr" = {
+            action = "resume";
+            options.desc = "[t]elescope [r]esume";
+          };
+          "<leader>t." = {
+            action = "oldfiles";
+            options.desc = "[t]elescope recent files (. for repeat)";
+          };
+          "<leader><leader>" = {
+            action = "buffers";
+            options.desc = "Find existing buffers";
+          };
+        };
       };
 
       which-key.settings.spec = [(lib.my.nRegister "<leader>t" "Telescope" " ")];
       project-nvim.enableTelescope = true;
       harpoon.enableTelescope = true;
     };
+
+    keymaps =
+      [
+        {
+          key = "<leader>to";
+          action.__raw = "function()
+            require'telescope.builtin'.live_grep({ grep_open_files = true, prompt_title = 'Live Grep in Open Files' })
+          end";
+          options.desc = "[S]earch in [O]pen Files";
+        }
+        {
+          key = "<leader>tcf";
+          action.__raw = "function()
+            require'telescope.builtin'.find_files({ cwd = require'telescope.utils'.buffer_dir() })
+          end";
+          options.desc = "[t]elescope find [f]iles in [c]urrent dir";
+        }
+        {
+          key = "<leader>tcg";
+          action.__raw = "function()
+            require'telescope.builtin'.live_grep({ cwd = require'telescope.utils'.buffer_dir() })
+          end";
+          options.desc = "[t]elescope grep in [c]urrent dir";
+        }
+        {
+          key = "<leader>tg";
+          action.__raw = "function()
+            require'telescope.builtin'.grep_string({ shorten_path = true, word_match = '-w', only_sort_text = true, search = '' })
+          end";
+          options.desc = "[t]elescope fuzzy [g]rep";
+        }
+        {
+          key = "<leader>tv";
+          action.__raw = "function()
+            require'telescope'.extensions.git_file_history.git_file_history()
+          end";
+          options.desc = "[t]elescope [v]ersions";
+        }
+      ]
+      ++ lib.optionals config.programs.nixvim.plugins.harpoon.enable [
+        {
+          action = "<cmd>Telescope harpoon marks<CR>";
+          key = "<Leader>th";
+          options.desc = "[t]elescope [h]arpoon Marks";
+        }
+      ];
 
     highlightOverride = {
       TelescopeBorder.link = "LineNr";
@@ -37,40 +131,5 @@
         src = inputs.nvim-plugin-telescope-git-file-history;
       })
     ];
-
-    extraConfigLua = ''
-      local utils = require "telescope.utils"
-      local builtin = require "telescope.builtin"
-
-      vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
-      vim.keymap.set("n", "<leader>tcf", function()
-        builtin.find_files({ cwd = utils.buffer_dir() })
-      end, { silent = true, desc = "[t]elescope find [f]iles in [c]urrent buffer" })
-      vim.keymap.set("n", "<leader>tcg", function()
-        builtin.live_grep({ cwd = utils.buffer_dir() })
-      end, { silent = true, desc = "[t]elescope grep in [c]urrent buffer" })
-
-      vim.keymap.set("n", "<leader>tb", builtin.current_buffer_fuzzy_find, { desc = "[t]elescope [b]uffer" })
-      vim.keymap.set("n", "<leader>tn", builtin.help_tags, { desc = "[t]elescope [n]oob" })
-      vim.keymap.set("n", "<leader>tk", builtin.keymaps, { desc = "[t]elescope [k]eymaps" })
-      vim.keymap.set("n", "<leader>tf", builtin.find_files, { desc = "[t]elescope [f]iles" })
-      vim.keymap.set("n", "<leader>ts", builtin.builtin, { desc = "[t]elescope [s]elect telescope" })
-      vim.keymap.set("n", "<leader>tw", builtin.grep_string, { desc = "[t]elescope current [w]ord" })
-      vim.keymap.set("n", "<leader>tl", builtin.live_grep, { desc = "[t]elescope [l]ive grep" })
-
-      local fuzzy_search = function()
-        builtin.grep_string({ shorten_path = true, word_match = "-w", only_sort_text = true, search = "" })
-      end
-      vim.keymap.set("n", "<leader>tg", fuzzy_search, { desc = "[t]elescope fuzzy [g]rep" })
-
-      vim.keymap.set("n", "<leader>td", builtin.diagnostics, { desc = "[t]elescope [d]iagnostics" })
-      vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
-      vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
-      vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Find existing buffers" })
-
-      -- Telescope extensions
-      local gfh = require("telescope").extensions.git_file_history
-      vim.keymap.set("n", "<leader>tv", gfh.git_file_history, { desc = "[t]elescope [v]ersions" })
-    '';
   };
 }
