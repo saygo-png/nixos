@@ -12,6 +12,7 @@
 
       "plugins/mySpider.nix"
       "plugins/myGruvbox.nix"
+      "plugins/myRainbow.nix"
       "plugins/myVimVisualMulti.nix"
       "plugins/myTelescope.nix"
     ]);
@@ -707,10 +708,6 @@
         vim-surround.enable = true;
         web-devicons.enable = true;
         friendly-snippets.enable = true;
-
-        rainbow-delimiters = {
-          enable = true;
-        };
 
         nvim-tree = {
           enable = true;

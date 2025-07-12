@@ -1,25 +1,26 @@
 {
-  inputs,
   pkgs,
+  config,
   ...
 }: {
   programs.nixvim = {
-    extraPlugins = [
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "rainbow";
-        src = inputs.nvim-plugin-rainbow;
-      })
-    ];
+    extraPlugins = [pkgs.vimPlugins.rainbow];
 
-    globals.rainbow_active = 1;
+    globals = {
+      rainbow_active = 1;
+      rainbow_conf = let
+        c = config.lib.stylix.colors.withHashtag;
+      in {
+        guifgs = [c.base0A c.base0C c.base0E c.base0B c.base0F c.base09];
+      };
+    };
 
-    extraConfigLuaPost = ''
-      -- Makes treesitter work with rainbow plugin
-      vim.api.nvim_set_hl(0, "@constructor", { link = "" })
-      vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "" })
-      vim.api.nvim_set_hl(0, "@punctuation.special", { link = "" })
-      vim.api.nvim_set_hl(0, "@punctuation.delimiter", { link = "" })
-      vim.api.nvim_set_hl(0, "@variable.parameter.haskell", { link = "" })
-    '';
+    highlightOverride = {
+      "@constructor".link = "";
+      "@punctuation.bracket".link = "";
+      "@punctuation.special".link = "";
+      "@punctuation.delimiter".link = "";
+      "@variable.parameter.haskell".link = "";
+    };
   };
 }
