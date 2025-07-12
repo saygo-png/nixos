@@ -13,6 +13,7 @@
       "plugins/mySpider.nix"
       "plugins/myGruvbox.nix"
       "plugins/myVimVisualMulti.nix"
+      "plugins/myTelescope.nix"
     ]);
 
     home.sessionVariables = {EDITOR = "nvim";};
@@ -61,12 +62,10 @@
           pkgs.vimPlugins.img-clip-nvim
           pkgs.vimPlugins.vim-pencil
           pkgs.vimPlugins.dial-nvim
-          pkgs.vimPlugins.typst-preview-nvim
         ]
         ++ map mkNvimplugin [
           "cutlass"
           "faster"
-          "telescope-git-file-history"
         ];
 
       highlightOverride = {
@@ -445,48 +444,12 @@
 
           -- Plugins {{{
 
-          -- Nvim-tree {{{
-          vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
-          -- }}}
-
-          -- Telescope {{{
-          local utils = require "telescope.utils"
-          local builtin = require "telescope.builtin"
-
           vim.keymap.set("n", "<leader>f", "<cmd>Oil<CR>", {desc = "[f]ile browser"})
           vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", {desc = "hover"})
           vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
-          vim.keymap.set("n", "<leader>th", "<cmd>Telescope harpoon marks<CR>", { silent = true, desc = "[t]elescope [h]arpoon Marks" })
-          vim.keymap.set("n", "<leader>tcf", function()
-            builtin.find_files({ cwd = utils.buffer_dir() })
-          end, { silent = true, desc = "[t]elescope find [f]iles in [c]urrent buffer" })
-          vim.keymap.set("n", "<leader>tcg", function()
-            builtin.live_grep({ cwd = utils.buffer_dir() })
-          end, { silent = true, desc = "[t]elescope grep in [c]urrent buffer" })
 
-          vim.keymap.set("n", "<leader>tb", builtin.current_buffer_fuzzy_find, { desc = "[t]elescope [b]uffer" })
-          vim.keymap.set("n", "<leader>tn", builtin.help_tags, { desc = "[t]elescope [n]oob" })
-          vim.keymap.set("n", "<leader>tk", builtin.keymaps, { desc = "[t]elescope [k]eymaps" })
-          vim.keymap.set("n", "<leader>tf", builtin.find_files, { desc = "[t]elescope [f]iles" })
-          vim.keymap.set("n", "<leader>ts", builtin.builtin, { desc = "[t]elescope [s]elect telescope" })
-          vim.keymap.set("n", "<leader>tw", builtin.grep_string, { desc = "[t]elescope current [w]ord" })
-          vim.keymap.set("n", "<leader>tl", builtin.live_grep, { desc = "[t]elescope [l]ive grep" })
-
-          local fuzzy_search = function()
-            builtin.grep_string({ shorten_path = true, word_match = "-w", only_sort_text = true, search = "" })
-          end
-          vim.keymap.set("n", "<leader>tg", fuzzy_search, { desc = "[t]elescope fuzzy [g]rep" })
-
-          vim.keymap.set("n", "<leader>td", builtin.diagnostics, { desc = "[t]elescope [d]iagnostics" })
-          vim.keymap.set("n", "<leader>tr", builtin.resume, { desc = "[t]elescope [r]esume" })
-          vim.keymap.set("n", "<leader>t.", builtin.oldfiles, { desc = "[t]elescope recent files (. for repeat)" })
-          vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Find existing buffers" })
-          -- }}}
-
-          -- Telescope extensions {{{
-          require("telescope").load_extension("git_file_history")
-          local gfh = require("telescope").extensions.git_file_history
-          vim.keymap.set("n", "<leader>tv", gfh.git_file_history, { desc = "[t]elescope [v]ersions" })
+          -- Nvim-tree {{{
+          vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
           -- }}}
 
           -- Conform {{{
@@ -761,7 +724,6 @@
 
         project-nvim = {
           enable = true;
-          enableTelescope = true;
           settings = {
             silent_chdir = false;
             exclude_dirs = ["~/nixos/resources/haskell/*"];
@@ -770,7 +732,6 @@
 
         harpoon = {
           enable = true;
-          enableTelescope = true;
         };
 
         colorizer = {
@@ -788,18 +749,6 @@
               ({language = "scss";} // css)
               ({language = "stylus";} // css)
             ];
-          };
-        };
-
-        telescope = {
-          enable = true;
-          extensions.fzf-native = {
-            enable = true;
-            settings = {
-              fuzzy = true;
-              override_file_sorter = true;
-              override_generic_sorter = true;
-            };
           };
         };
 
@@ -1035,35 +984,30 @@
             delay = 1000;
             win.border = "single";
             spec = let
-              register = key: text: icon: {
-                __unkeyed = key;
-                group = text;
-                inherit icon;
-              };
+              inherit (lib.my) nRegister;
             in [
-              (register "<leader>t" "Telescope" " ")
-              (register "<leader>s" "Swap" " ")
-              (register "<leader>o" "Open" " ")
-              (register "<leader>r" "Re" " ")
-              (register "<leader>q" "Quit" "󱢓 ")
-              (register "<leader>d" "Definition" "")
-              (register "<leader>c" "Conform" " ")
-              (register "<leader>f" "File browser" " ")
-              (register "<leader>S" "Sort by length" "󰒼 ")
-              (register "<S-k>" "Hover info" "")
+              (nRegister "<leader>s" "Swap" " ")
+              (nRegister "<leader>o" "Open" " ")
+              (nRegister "<leader>r" "Re" " ")
+              (nRegister "<leader>q" "Quit" "󱢓 ")
+              (nRegister "<leader>d" "Definition" "")
+              (nRegister "<leader>c" "Conform" " ")
+              (nRegister "<leader>f" "File browser" " ")
+              (nRegister "<leader>S" "Sort by length" "󰒼 ")
+              (nRegister "<S-k>" "Hover info" "")
 
-              (register "<leader>g" "go" "󰜎 ")
-              (register "<leader>gs" "Gitsigns" " ")
-              (register "<leader>gd" "go to definition" "")
-              (register "<leader>gr" "go to references" "")
-              (register "<leader>gi" "go to implementation" "")
+              (nRegister "<leader>g" "go" "󰜎 ")
+              (nRegister "<leader>gs" "Gitsigns" " ")
+              (nRegister "<leader>gd" "go to definition" "")
+              (nRegister "<leader>gr" "go to references" "")
+              (nRegister "<leader>gi" "go to implementation" "")
 
-              (register "<leader>h" "Harpoon" "󱢓 ")
-              (register "<leader>ha" "Add file" "")
-              (register "<leader>hm" "File menu" "")
-              (register "<leader>hc" "Command menu" "")
-              (register "<leader>hn" "Next file" "")
-              (register "<leader>hp" "Previous file" "")
+              (nRegister "<leader>h" "Harpoon" "󱢓 ")
+              (nRegister "<leader>ha" "Add file" "")
+              (nRegister "<leader>hm" "File menu" "")
+              (nRegister "<leader>hc" "Command menu" "")
+              (nRegister "<leader>hn" "Next file" "")
+              (nRegister "<leader>hp" "Previous file" "")
             ];
           };
         };

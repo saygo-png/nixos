@@ -9,4 +9,11 @@
     if !(builtins.pathExists path)
     then builtins.throw "Path ${path} does not exist"
     else path;
+
+  # Whichkey register helper
+  nRegister = key: text: icon: {
+    __unkeyed = key;
+    group = text;
+    inherit icon;
+  };
 }
