@@ -10,6 +10,7 @@
     imports = lib.my.withModules (map (x: "neovim/" + x) [
       "myNeovide.nix"
 
+      "plugins/myFlash.nix"
       "plugins/mySpider.nix"
       "plugins/myGruvbox.nix"
       "plugins/myRainbow.nix"
@@ -645,22 +646,6 @@
           key = "<C-l>";
           action.__raw = "function() require'harpoon':list():select(4) end";
         }
-
-        {
-          key = "s";
-          action.__raw = ''require("flash").remote'';
-          options.desc = "Flash";
-        }
-        {
-          key = "S";
-          action.__raw = ''require("flash").treesitter_search'';
-          options.desc = "Flash treesitter";
-        }
-        {
-          key = "gs";
-          action.__raw = ''require("flash").treesitter'';
-          options.desc = "Flash treesitter";
-        }
         {
           action = "<cmd>lua vim.diagnostic.open_float()<CR>";
           key = "<Leader>e";
@@ -677,7 +662,6 @@
       # Plugins {{{
       plugins = {
         lz-n.enable = true;
-        flash.enable = true;
         direnv.enable = true;
         comment.enable = true;
         fugitive.enable = true;
