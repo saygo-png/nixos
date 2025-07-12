@@ -701,6 +701,7 @@
 
       # Plugins {{{
       plugins = {
+        lz-n.enable = true;
         flash.enable = true;
         direnv.enable = true;
         comment.enable = true;
