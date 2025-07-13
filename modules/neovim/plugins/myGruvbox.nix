@@ -13,6 +13,7 @@ _: {
       enable = true;
       settings = {
         undercurl = false;
+        bold = false;
         underline = false;
         transparent_mode = true;
       };
