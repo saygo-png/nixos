@@ -46,7 +46,14 @@ in {
   custom.persist = {
     home = {
       directories = [
-        ".local"
+        ".local/share/PrismLauncher"
+        ".local/share/Anki2"
+        ".local/share/drug2"
+        ".local/share/gnupg"
+        ".local/share/krita"
+        ".local/share/lutris"
+        ".local/share/Trash"
+
         ".ssh"
         "Misc"
         "builds"
@@ -59,29 +66,49 @@ in {
         "Sync"
         "Videos"
       ];
-      cache.directories = [
-        ".cache/Anki"
-        ".cache/Borg"
-        ".cache/Calibre"
-        ".cache/keepassxc"
+      cache = {
+        directories = [
+          ".local/state/cabal"
+          ".local/state/lazygit"
+          ".local/state/wireplumber"
+          ".local/state/mpv"
 
-        ".cache/Dconf"
+          ".local/share/devenv"
+          ".local/share/direnv"
+          ".local/share/nix"
+          ".local/share/org.localsend.localsend_app"
+          ".local/share/steam-home"
+          ".local/share/nvim"
+          ".local/share/zoxide"
+          ".local/share/nvim"
 
-        ".cache/cabal"
-        ".cache/hie-bios"
+          ".cache/Anki"
+          ".cache/Borg"
+          ".cache/Calibre"
+          ".cache/keepassxc"
 
-        ".cache/nix"
-        ".cache/Direnv"
-        ".cache/nix-index"
-        ".cache/npm"
-        ".cache/tealdeer"
+          ".cache/Dconf"
 
-        ".cache/radv_builtin_shaders"
-        ".cache/mesa_shader_cache_db"
+          ".cache/cabal"
+          ".cache/hie-bios"
 
-        ".config/nix"
-        ".config/librewolf-${conUsername}"
-      ];
+          ".cache/nix"
+          ".cache/Direnv"
+          ".cache/nix-index"
+          ".cache/npm"
+          ".cache/tealdeer"
+
+          ".cache/radv_builtin_shaders"
+          ".cache/mesa_shader_cache_db"
+
+          ".config/nix"
+          ".config/librewolf-${conUsername}"
+        ];
+        files = [
+          ".local/share/recently-used.xbel"
+          ".local/share/user-places.xbel"
+        ];
+      };
     };
   };
 
