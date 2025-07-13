@@ -186,43 +186,30 @@
     };
   };
 
-  # There is a module for this but i find nix -> yaml weird
-  services.borgmatic.enable = true;
-  environment.etc = {
-    "borgmatic/config.yaml" = {
-      mode = "0777";
-      text = ''
-        before_backup:
-        - findmnt /media/backup > /dev/null || exit 75
-        keep_daily: 1
-        keep_monthly: 12
-        keep_weekly: 4
-        keep_yearly: 10
-        exclude_caches: true
-        exclude_patterns:
-        - '*/.cache'
-        - '*/.npm'
-        - '*/.direnv'
-        - '*/.devenv'
-        - '*/.devenv*'
-        - '*/clj-kondo'
-        - '*/__pycache__'
-        - '*/venv.bak'
-        - '*/env.bak'
-        - '*/node_modules'
-        - '*/.local/share/Steam'
-        - '*/Games/battlenet'
-        repositories:
-        - path: /media/backup/backup.borg
-        source_directories:
-        - ${conHome}
-      '';
+  services.borgmatic = {
+    enable = true;
+    configurations.persist = {
+      repositories = [
+        {
+          path = "/media/backup/backup.borg";
+          label = "local";
+        }
+      ];
+      exclude_caches = true;
+      source_directories = ["/persist"];
+      commands = [
+        {
+          before = "repository";
+          run = ["findmnt /media/backup > /dev/null || exit 75"];
+        }
+      ];
+      keep_monthly = -1;
     };
   };
+
   services.ratbagd.enable = true; # For piper
   environment.systemPackages = [
     pkgs.piper # For ratbagd
-    pkgs.borgbackup
     pkgs.blender-hip
   ];
 }
