@@ -52,7 +52,6 @@ in {
         ".local/share/gnupg"
         ".local/share/krita"
         ".local/share/lutris"
-        ".local/share/Trash"
 
         ".ssh"
         "Misc"

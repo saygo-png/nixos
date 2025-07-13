@@ -273,7 +273,6 @@
       udiskie # Auto mount
       cbonsai # pretty tree
       gnumake # C compiling
-      gtrash # Cli trashcan
       file # File identifier
       zoxide # Cd alternative
       devenv # Dev environments
@@ -570,7 +569,6 @@
           "ll" = "eza -l";
           "qcalc" = "qalc";
           "lla" = "eza -la";
-          "rt" = "gtrash put";
           "pkill" = "pkill -f";
           "countlines" = "tokei";
           "f" = ''cd "$(fzfcd)"'';
@@ -817,7 +815,6 @@
           "nix/profiles"
           "node_modules"
           "cargo/registry"
-          ".local/share/Trash"
         ];
         extraOptions = [
           "--glob"
