@@ -674,7 +674,6 @@
         mini = {
           enable = true;
           modules = {
-            align = {};
             indentscope = {
               symbol = "│";
               draw.delay = 0;
