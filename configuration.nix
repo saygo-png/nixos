@@ -755,6 +755,11 @@
         keymap = {
           mgr.prepend_keymap = [
             {
+              on = ["d"];
+              run = ["remove --permanently"];
+              desc = "remove permanently";
+            }
+            {
               on = ["b"];
               run = [
                 # https://github.com/sxyazi/yazi/discussions/327
