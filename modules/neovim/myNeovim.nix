@@ -13,6 +13,7 @@
       "plugins/myFlash.nix"
       "plugins/mySpider.nix"
       "plugins/myGruvbox.nix"
+      "plugins/myHarpoon.nix"
       "plugins/myRainbow.nix"
       "plugins/myTelescope.nix"
       "plugins/myVimVisualMulti.nix"
@@ -553,12 +554,6 @@
           })
           --- }}}
 
-          -- Harpoon {{{
-          local harpoon = require("harpoon")
-          local harpoon_extensions = require("harpoon.extensions")
-          harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
-          -- }}}
-
           -- Gitsigns {{{
           vim.keymap.set("n", "<leader>gsc", "<cmd>Gitsigns toggle_signs<CR>", {desc = "[g]it[s]igns [c]olumn"})
           vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line_blame<CR>", {desc = "[g]it[s]igns [b]lame"})
@@ -607,46 +602,6 @@
 
       keymaps = [
         {
-          mode = "n";
-          key = "<leader>ha";
-          action.__raw = "function() require'harpoon':list():add() end";
-        }
-        {
-          mode = "n";
-          key = "<leader>hm";
-          action.__raw = "function() require'harpoon'.ui:toggle_quick_menu(require'harpoon':list()) end";
-        }
-        {
-          mode = "n";
-          key = "<leader>hn";
-          action.__raw = "function() require'harpoon':list():next() end";
-        }
-        {
-          mode = "n";
-          key = "<leader>hp";
-          action.__raw = "function() require'harpoon':list():prev() end";
-        }
-        {
-          mode = "n";
-          key = "<C-h>";
-          action.__raw = "function() require'harpoon':list():select(1) end";
-        }
-        {
-          mode = "n";
-          key = "<C-j>";
-          action.__raw = "function() require'harpoon':list():select(2) end";
-        }
-        {
-          mode = "n";
-          key = "<C-k>";
-          action.__raw = "function() require'harpoon':list():select(3) end";
-        }
-        {
-          mode = "n";
-          key = "<C-l>";
-          action.__raw = "function() require'harpoon':list():select(4) end";
-        }
-        {
           action = "<cmd>lua vim.diagnostic.open_float()<CR>";
           key = "<Leader>e";
           options.desc = "Open diagnostic";
@@ -685,10 +640,6 @@
             silent_chdir = false;
             exclude_dirs = ["~/nixos/resources/haskell/*"];
           };
-        };
-
-        harpoon = {
-          enable = true;
         };
 
         colorizer = {
@@ -959,7 +910,6 @@
               (nRegister "<leader>gr" "go to references" "")
               (nRegister "<leader>gi" "go to implementation" "")
 
-              (nRegister "<leader>h" "Harpoon" "󱢓 ")
               (nRegister "<leader>ha" "Add file" "")
               (nRegister "<leader>hm" "File menu" "")
               (nRegister "<leader>hc" "Command menu" "")
