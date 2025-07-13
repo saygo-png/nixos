@@ -11,8 +11,5 @@ _: {
         w = "w";
       };
     };
-
-    # Needed for special character handling
-    extraLuaPackages = luaPkgs: [luaPkgs.luautf8];
   };
 }
