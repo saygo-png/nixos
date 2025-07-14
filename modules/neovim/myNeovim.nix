@@ -49,11 +49,23 @@
       enable = true;
 
       performance = {
-        byteCompileLua.enable = true;
-        byteCompileLua.configs = true;
-        byteCompileLua.initLua = true;
-        byteCompileLua.plugins = true;
-        byteCompileLua.nvimRuntime = true;
+        byteCompileLua = {
+          enable = true;
+          configs = true;
+          luaLib = true;
+          initLua = false;
+          plugins = true;
+          nvimRuntime = true;
+        };
+
+        combinePlugins = {
+          enable = true;
+          standalonePlugins = with pkgs.vimPlugins; [
+            "nvim-treesitter"
+            "oil.nvim"
+            mini-nvim
+          ];
+        };
       };
 
       extraPlugins = let
