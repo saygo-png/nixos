@@ -23,6 +23,7 @@
 
     # I put them in the global scope since direnv deletes the one in the neovim scope
     home.packages = [
+      pkgs.tree-sitter
       pkgs.vim-language-server
       pkgs.deadnix # Nix linter
       pkgs.tinymist # Typst lsp
