@@ -103,10 +103,6 @@ in {
           ".config/nix"
           ".config/librewolf-${conUsername}"
         ];
-        files = [
-          ".local/share/recently-used.xbel"
-          ".local/share/user-places.xbel"
-        ];
       };
     };
   };
