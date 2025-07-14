@@ -434,7 +434,7 @@
     }: {
       imports = [
         inputs.nixvim.homeManagerModules.nixvim
-        inputs.nix-index-database.hmModules.nix-index
+        inputs.nix-index-database.homeModules.nix-index
       ];
 
       # Prevent default apps from being changed

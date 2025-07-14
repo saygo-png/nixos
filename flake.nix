@@ -106,7 +106,7 @@
 
     # Neovim {{{
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "git+file:///home/samsepi0l/builds/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
