@@ -1,11 +1,13 @@
 module Take where
 
+import ClassyPrelude
 import Config
 import Data.ByteString.Char8 qualified as BS8
 import Data.ByteString.Lazy.Char8 qualified as BL8
 import Data.Csv qualified as Cassava
-import Data.Time (UTCTime, getCurrentTime)
-import System.Directory (XdgDirectory (XdgData), doesFileExist, getXdgDirectory)
+import Data.Function
+import System.Directory (doesFileExist)
+import Text.Printf (printf)
 import Types
 
 takeDrug :: IO ()
@@ -27,12 +29,22 @@ getFileState path = do
       isEmpty <- BS8.null <$> BS8.readFile path
       pure $ if isEmpty then FileEmpty else FileHasContent
 
+wroteInfo :: DrugLine -> IO ()
+wroteInfo i = do
+  let x = drugData i
+  let date = dateData i & tshow & takeWhile (/= '.')
+  case x of
+    Just _ -> printf "Took on %s\n" date
+    Nothing -> error "drugData returned Nothing when it shouldn't have"
+
 writeWithHeader :: DrugLine -> FilePath -> IO ()
 writeWithHeader drug output = do
   let dataForWrite = Cassava.encodeByName csvHeader [drug]
   BL8.writeFile output dataForWrite
+  wroteInfo drug
 
 appendWithoutHeader :: DrugLine -> FilePath -> IO ()
 appendWithoutHeader drug output = do
   let dataForWrite = Cassava.encode [drug]
   BL8.appendFile output dataForWrite
+  wroteInfo drug

@@ -1,8 +1,9 @@
 module Config where
 
+import ClassyPrelude
 import Data.Csv
 import Data.Vector qualified as Vector
-import System.Directory (XdgDirectory (XdgData), doesFileExist, getXdgDirectory)
+import System.Directory (XdgDirectory (XdgData), getXdgDirectory)
 
 -- Path relative to $XDG_DATA_HOME
 dataDir :: IO FilePath
