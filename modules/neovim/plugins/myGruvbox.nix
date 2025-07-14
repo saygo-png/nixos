@@ -11,6 +11,7 @@ _: {
 
     colorschemes.gruvbox = {
       enable = true;
+      lazyLoad.enable = true;
       settings = {
         undercurl = false;
         bold = false;
