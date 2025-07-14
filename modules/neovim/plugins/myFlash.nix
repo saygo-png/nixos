@@ -1,24 +1,27 @@
-_: {
+{lib, ...}: {
   programs.nixvim = {
     plugins.flash = {
       enable = true;
       settings.autojump = true;
+      lazyLoad.settings.keys = ["s" "S" "gs"];
     };
 
-    keymaps = [
+    keymaps = let
+      inherit (lib.my) nWrapFunc;
+    in [
       {
         key = "s";
-        action.__raw = ''require("flash").remote'';
+        action.__raw = nWrapFunc ''require("flash").remote()'';
         options.desc = "Flash";
       }
       {
         key = "S";
-        action.__raw = ''require("flash").treesitter_search'';
+        action.__raw = nWrapFunc ''require("flash").treesitter_search()'';
         options.desc = "Flash treesitter";
       }
       {
         key = "gs";
-        action.__raw = ''require("flash").treesitter'';
+        action.__raw = nWrapFunc ''require("flash").treesitter()'';
         options.desc = "Flash treesitter";
       }
     ];

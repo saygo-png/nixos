@@ -16,4 +16,6 @@
     group = text;
     inherit icon;
   };
+
+  nWrapFunc = s: "function() ${s} end";
 }
