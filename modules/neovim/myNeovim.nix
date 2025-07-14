@@ -616,13 +616,15 @@
 
       # Plugins {{{
       plugins = {
-        lz-n.enable = true;
         direnv.enable = true;
         comment.enable = true;
         fugitive.enable = true;
         vim-surround.enable = true;
         web-devicons.enable = true;
         friendly-snippets.enable = true;
+
+        lz-n.enable = true;
+        lzn-auto-require.enable = true;
 
         nvim-tree = {
           enable = true;
