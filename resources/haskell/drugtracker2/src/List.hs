@@ -28,10 +28,11 @@ prettyPrint vec = do
 niceLines :: Vector DrugLine -> IO [Text]
 niceLines vec = do
   dateLines <- traverse prDrugLine vec
-  let nums = map ((++ " ") . tshow) [1 :: Int ..]
+  let nums = map ((<> " | ") . tshow) [1 :: Int ..]
   return $ zipWith T.append nums (toList dateLines)
 
 prDrugLine :: DrugLine -> IO Text
 prDrugLine dl = do
-  t <- prettyTimeAutoFromNow $ dateData dl
-  return $ T.pack t
+  t <- T.pack <$> prettyTimeAutoFromNow (dateData dl)
+  let nt = T.dropEnd 3 $ takeWhile (/= '.') . tshow $ dateData dl
+  return $ t <> ", " <> nt
