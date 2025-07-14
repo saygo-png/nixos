@@ -538,8 +538,8 @@ in {
           "$mainMod ALT, k, Move floating up, moveactive, 0 -100"
           "$mainMod ALT, j, Move floating down, moveactive, 0 100"
 
-          "$mainMod, Equal, Volume up, exec, swayosd-client --output-volume raise"
-          "$mainMod, Minus, Volume down, exec, swayosd-client --output-volume lower"
+          ", XF86AudioRaiseVolume, Volume up, exec, swayosd-client --output-volume +1"
+          ", XF86AudioLowerVolume, Volume down, exec, swayosd-client --output-volume -1"
         ];
 
         # mouse binding
