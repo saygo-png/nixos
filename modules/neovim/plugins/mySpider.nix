@@ -2,8 +2,11 @@ _: {
   programs.nixvim = {
     plugins.spider = {
       enable = true;
-      skipInsignificantPunctuation = true;
-      extraOptions.consistentOperatorPending = true;
+      lazyLoad.settings.keys = ["b" "e" "ge" "w"];
+      settings = {
+        consistentOperatorPending = true;
+        skipInsignificantPunctuation = true;
+      };
       keymaps.motions = {
         b = "b";
         e = "e";
