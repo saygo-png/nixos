@@ -154,6 +154,7 @@
           }
 
           source ${notify}/zsh-auto-notify/auto-notify.plugin.zsh
+          export AUTO_NOTIFY_CANCEL_ON_SIGINT=1
           export AUTO_NOTIFY_WHITELIST=("nh" "nix" "nbuild" "nix-build" "nix-shell" "git" "cabal" "cp" "rclone" "borg" "borgmatic")
 
           source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
