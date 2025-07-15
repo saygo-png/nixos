@@ -12,7 +12,6 @@
   [[ $ZSH_VERSION == (5.<1->*|<6->.*) ]] || return
 
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-    time
     context
     dir                     # current directory
     vcs                     # git status
@@ -51,16 +50,11 @@
     gcloud                  # google cloud cli account and project (https://cloud.google.com/)
     google_app_cred         # google application credentials (https://cloud.google.com/docs/authentication/production)
     toolbox                 # toolbox name (https://github.com/containers/toolbox)
-    nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
-    ranger                  # ranger shell (https://github.com/ranger/ranger)
-    nnn                     # nnn shell (https://github.com/jarun/nnn)
-    lf                      # lf shell (https://github.com/gokcehan/lf)
     xplr                    # xplr shell (https://github.com/sayanarijit/xplr)
     vim_shell               # vim shell indicator (:sh)
     midnight_commander      # midnight commander shell (https://midnight-commander.org/)
     nix_shell               # nix shell (https://nixos.org/nixos/nix-pills/developing-with-nix-shell.html)
     chezmoi_shell           # chezmoi shell (https://www.chezmoi.io/)
-    disk_usage            # disk usage
     todo                    # todo items (https://github.com/todotxt/todo.txt-cli)
     timewarrior             # timewarrior tracking status (https://timewarrior.net/)
     taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
@@ -331,16 +325,6 @@
 
   typeset -g POWERLEVEL9K_ASDF_JULIA_FOREGROUND=2
 
-  typeset -g POWERLEVEL9K_NORDVPN_FOREGROUND=6
-  typeset -g POWERLEVEL9K_NORDVPN_{DISCONNECTED,CONNECTING,DISCONNECTING}_CONTENT_EXPANSION=
-  typeset -g POWERLEVEL9K_NORDVPN_{DISCONNECTED,CONNECTING,DISCONNECTING}_VISUAL_IDENTIFIER_EXPANSION=
-
-  typeset -g POWERLEVEL9K_RANGER_FOREGROUND=3
-
-  typeset -g POWERLEVEL9K_NNN_FOREGROUND=3
-
-  typeset -g POWERLEVEL9K_LF_FOREGROUND=3
-
   typeset -g POWERLEVEL9K_XPLR_FOREGROUND=3
 
   typeset -g POWERLEVEL9K_VIM_SHELL_FOREGROUND=3
@@ -350,13 +334,6 @@
   typeset -g POWERLEVEL9K_NIX_SHELL_FOREGROUND=4
 
   typeset -g POWERLEVEL9K_CHEZMOI_SHELL_FOREGROUND=4
-
-  typeset -g POWERLEVEL9K_DISK_USAGE_NORMAL_FOREGROUND=2
-  typeset -g POWERLEVEL9K_DISK_USAGE_WARNING_FOREGROUND=3
-  typeset -g POWERLEVEL9K_DISK_USAGE_CRITICAL_FOREGROUND=1
-  typeset -g POWERLEVEL9K_DISK_USAGE_WARNING_LEVEL=90
-  typeset -g POWERLEVEL9K_DISK_USAGE_CRITICAL_LEVEL=95
-  typeset -g POWERLEVEL9K_DISK_USAGE_ONLY_WARNING=false
 
   typeset -g POWERLEVEL9K_RAM_FOREGROUND=2
 
@@ -543,11 +520,6 @@
 
   typeset -g POWERLEVEL9K_PUBLIC_IP_FOREGROUND=6
 
-  typeset -g POWERLEVEL9K_VPN_IP_FOREGROUND=3
-  typeset -g POWERLEVEL9K_VPN_IP_CONTENT_EXPANSION=
-  typeset -g POWERLEVEL9K_VPN_IP_INTERFACE='(gpd|wg|(.*tun)|tailscale)[0-9]*|(zt.*)'
-  typeset -g POWERLEVEL9K_VPN_IP_SHOW_ALL=false
-
   typeset -g POWERLEVEL9K_IP_FOREGROUND=4
   typeset -g POWERLEVEL9K_IP_CONTENT_EXPANSION='$P9K_IP_IP${P9K_IP_RX_RATE:+ %2F<$P9K_IP_RX_RATE}${P9K_IP_TX_RATE:+ %3F>$P9K_IP_TX_RATE}'
   typeset -g POWERLEVEL9K_IP_INTERFACE='[ew].*'
@@ -562,11 +534,6 @@
   typeset -g POWERLEVEL9K_BATTERY_VERBOSE=false
 
   typeset -g POWERLEVEL9K_WIFI_FOREGROUND=4
-
-  typeset -g POWERLEVEL9K_TIME_FOREGROUND=2
-  typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M}'
-  typeset -g POWERLEVEL9K_TIME_UPDATE_ON_COMMAND=false
-  typeset -g POWERLEVEL9K_TIME_VISUAL_IDENTIFIER_EXPANSION=
 
   function prompt_example() {
     p10k segment -f 2 -i '*' -t 'hello, %n'
