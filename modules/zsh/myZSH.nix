@@ -130,11 +130,12 @@
 
               zle push-line
               if builtin cd -- "''${dir:a}"; then
-                  zle reset-prompt
+                  zle accept-line
               else
                   zle redisplay
                   return 1
               fi
+              unset dir
           }
           zle -N fzf-cd-filedir
           bindkey '^f' fzf-cd-filedir
