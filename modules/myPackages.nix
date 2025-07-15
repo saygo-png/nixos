@@ -71,6 +71,7 @@
     })
 
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/convertlink") {})
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/drug2") {})
 
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/timezones") {})
 
