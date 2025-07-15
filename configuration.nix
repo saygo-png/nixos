@@ -14,6 +14,7 @@
     [
       inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.default
+      inputs.nix-index-database.nixosModules.nix-index
     ]
     ++ lib.my.withModules [
       "myUnfree.nix"
@@ -37,7 +38,6 @@
 
       "myMPV.nix"
       "myTmux.nix"
-      "myComma.nix"
       "myDolphin.nix"
       "myMullvad.nix"
       "myVesktop.nix"
@@ -389,6 +389,15 @@
       # "nixpkgs-unstable=${self.inputs.nixpkgs-unstable}"
     ];
   };
+
+  programs.command-not-found.enable = false;
+  programs.nix-index = {
+    enableZshIntegration = false;
+    enableFishIntegration = false;
+    enableBashIntegration = false;
+  };
+  programs.nix-index-database.comma.enable = true;
+
   programs.nix-ld.enable = true;
   ## If needed, you can add missing libraries here. nix-index-database is your friend to
   ## find the name of the package from the error message:
@@ -432,10 +441,7 @@
       osConfig,
       ...
     }: {
-      imports = [
-        inputs.nixvim.homeManagerModules.nixvim
-        inputs.nix-index-database.homeModules.nix-index
-      ];
+      imports = [inputs.nixvim.homeManagerModules.nixvim];
 
       # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
@@ -612,7 +618,6 @@
 
       # Development, internal.
       programs.zoxide.enable = true;
-      programs.nix-index.enable = true;
       programs.home-manager.enable = true;
       programs.git-credential-oauth.enable = true;
 
