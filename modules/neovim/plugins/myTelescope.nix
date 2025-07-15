@@ -19,6 +19,24 @@
             override_generic_sorter = true;
           };
         };
+
+        settings = {
+          defaults = {
+            mappings = {
+              n = {
+                "<C-f>" = {
+                  __raw = "require('telescope.actions.layout').toggle_preview";
+                };
+              };
+              i = {
+                "<M-f>" = {
+                  __raw = "require('telescope.actions.layout').toggle_preview";
+                };
+              };
+            };
+          };
+        };
+
         keymaps = {
           "<leader>tb" = {
             action = "current_buffer_fuzzy_find";

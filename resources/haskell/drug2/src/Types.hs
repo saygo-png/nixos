@@ -1,9 +1,14 @@
-module Types where
+module Types (
+  FileState (FileNotExists, FileEmpty, FileHasContent),
+  DrugLine (DrugLine),
+  drugData,
+  dateData,
+) where
 
 import ClassyPrelude
 import Data.ByteString.Char8 qualified as BS8
-import Data.Function ((&))
 import Data.Csv
+import Data.Function ((&))
 import Data.Time.Format.ISO8601 (iso8601ParseM, iso8601Show)
 
 data FileState = FileNotExists | FileEmpty | FileHasContent
@@ -30,8 +35,6 @@ instance ToNamedRecord DrugLine where
   toNamedRecord (DrugLine drugData dateData) =
     namedRecord
       ["drug" .= drugData, "date" .= dateData]
-
-newtype MyUTCTime = MyUTCTime UTCTime
 
 instance ToField UTCTime where
   toField i = iso8601Show i & BS8.pack

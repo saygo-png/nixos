@@ -1,4 +1,6 @@
-module Take where
+module Take (
+  takeDrug,
+) where
 
 import ClassyPrelude
 import Config
@@ -13,12 +15,12 @@ import Types
 takeDrug :: IO ()
 takeDrug = do
   output <- dataDir
-  testDrug <- DrugLine (Just "test") <$> getCurrentTime
+  drug <- DrugLine (Just "Pills") <$> getCurrentTime
   filestate <- getFileState output
   case filestate of
-    FileEmpty -> writeWithHeader testDrug output
-    FileNotExists -> writeWithHeader testDrug output
-    FileHasContent -> appendWithoutHeader testDrug output
+    FileEmpty -> writeWithHeader drug output
+    FileNotExists -> writeWithHeader drug output
+    FileHasContent -> appendWithoutHeader drug output
 
 getFileState :: FilePath -> IO FileState
 getFileState path = do

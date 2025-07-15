@@ -1,4 +1,4 @@
-module Config where
+module Config (dataDir, csvHeader) where
 
 import ClassyPrelude
 import Data.Csv
