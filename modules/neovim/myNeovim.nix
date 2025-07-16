@@ -756,6 +756,7 @@
         cmp = {
           enable = true;
           autoEnableSources = true;
+          lazyLoad.settings.event = "DeferredUIEnter";
           settings = {
             autocomplete = true;
             sources = [{name = "nvim_lsp";}];
