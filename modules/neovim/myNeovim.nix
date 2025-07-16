@@ -535,17 +535,8 @@
 
         lspkind = {
           enable = true;
-          mode = "symbol_text";
-          preset = "codicons";
-          symbolMap = null;
-          lazyLoad.settings.event = "DeferredUIEnter";
-          cmp = {
-            enable = true;
-            maxWidth = 50;
-            ellipsisChar = "...";
-            menu = null;
-            after = null;
-          };
+          # lazyLoad.settings.event = "DeferredUIEnter"; # https://github.com/nix-community/nixvim/pull/3563
+          cmp.enable = true;
         };
 
         nvim-tree = {
