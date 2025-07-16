@@ -13,9 +13,9 @@ _: {
       enable = true;
       lazyLoad.enable = true;
       settings = {
-        undercurl = false;
+        undercurl = true;
         bold = false;
-        underline = false;
+        underline = true;
         transparent_mode = true;
       };
     };
