@@ -18,6 +18,8 @@
       "plugins/myRainbow.nix"
       "plugins/myTelescope.nix"
       "plugins/myVimVisualMulti.nix"
+
+      "plugins/ide/myLsp.nix"
     ]);
 
     home.sessionVariables = {EDITOR = "nvim";};
@@ -25,9 +27,7 @@
     # I put them in the global scope since direnv deletes the one in the neovim scope
     home.packages = [
       pkgs.tree-sitter
-      pkgs.vim-language-server
       pkgs.deadnix # Nix linter
-      pkgs.tinymist # Typst lsp
       pkgs.nodePackages.jsonlint
       pkgs.hlint # Haskell linter
       pkgs.stylua # Lua formatter
@@ -38,7 +38,6 @@
       pkgs.isort # Python import sorter
       pkgs.prettierd # Javascript formatter
       pkgs.markdownlint-cli # Markdown linter
-      pkgs.vscode-langservers-extracted # Web LSPs
       pkgs.haskellPackages.fourmolu # Haskell formatter
       pkgs.nodePackages.prettier # Javascript formatter
     ];
@@ -340,31 +339,6 @@
             vim.fn.jobstart({ open_command, url_repo() }, { detach = true })
           end, { silent = true })
 
-          vim.keymap.set("n", "<leader>rn", function()
-            -- when rename opens the prompt, this autocommand will trigger
-            -- it will "press" CTRL-F to enter the command-line window `:h cmdwin`
-            -- in this window I can use normal mode keybindings
-            local cmdId
-            cmdId = vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-              callback = function()
-                local key = vim.api.nvim_replace_termcodes("<C-f>", true, false, true)
-                vim.api.nvim_feedkeys(key, "c", false)
-                vim.api.nvim_feedkeys("0", "n", false)
-                -- autocmd was triggered and so we can remove the ID and return true to delete the autocmd
-                cmdId = nil
-                return true
-              end,
-            })
-            vim.lsp.buf.rename()
-            -- if LSP couldn't trigger rename on the symbol, clear the autocmd
-            vim.defer_fn(function()
-              -- the cmdId is not nil only if the LSP failed to rename
-              if cmdId then
-                vim.api.nvim_del_autocmd(cmdId)
-              end
-            end, 500)
-          end, {desc = "rename node"})
-
           -- Open/close quickfix on toggle
           local function toggle_quickfix()
             local quickfix_open = false
@@ -460,9 +434,9 @@
 
           -- Plugins {{{
 
+          -- oil.nvim {{{
           vim.keymap.set("n", "<leader>f", "<cmd>Oil<CR>", {desc = "[f]ile browser"})
-          vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", {desc = "hover"})
-          vim.keymap.set("n", "<leader>a", "<cmd>Lspsaga code_action<CR>", {desc = "code [a]ctions"})
+          -- }}};
 
           -- Nvim-tree {{{
           vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
@@ -532,42 +506,6 @@
           vim.keymap.set("n", "<leader>gsc", "<cmd>Gitsigns toggle_signs<CR>", {desc = "[g]it[s]igns [c]olumn"})
           vim.keymap.set("n", "<leader>gsb", "<cmd>Gitsigns toggle_current_line_blame<CR>", {desc = "[g]it[s]igns [b]lame"})
           -- }}}
-
-          -- LSP {{{
-          -- Transparent hover
-          vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
-
-          -- Make lsp popups pretty.
-          local border = {
-            { '┌', 'FloatBorder' },
-            { '─', 'FloatBorder' },
-            { '┐', 'FloatBorder' },
-            { '│', 'FloatBorder' },
-            { '┘', 'FloatBorder' },
-            { '─', 'FloatBorder' },
-            { '└', 'FloatBorder' },
-            { '│', 'FloatBorder' },
-          }
-
-          local _border = "single"
-          require('lspconfig.ui.windows').default_options = { border = _border }
-          vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, { border = _border })
-          vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with( vim.lsp.handlers.signature_help, { border = _border })
-
-          vim.diagnostic.config({
-          underline = false,
-          update_in_insert = false,
-          virtual_text = false,
-          signs = true,
-            source = true,
-            float = {
-              win_options = {
-                winblend = 100
-              },
-              border = border,
-            }
-          })
-            -- }}}
           -- }}}
         '';
 
@@ -575,11 +513,6 @@
       colorschemes.base16.enable = lib.mkForce false;
 
       keymaps = [
-        {
-          action = "<cmd>lua vim.diagnostic.open_float()<CR>";
-          key = "<Leader>e";
-          options.desc = "Open diagnostic";
-        }
         {
           action = '':!awk '{ print length(), $0 | "sort -n | cut -d\\  -f2-" }'<CR><CR>'';
           key = "<Leader>S";
@@ -599,6 +532,21 @@
 
         lz-n.enable = true;
         lzn-auto-require.enable = true;
+
+        lspkind = {
+          enable = true;
+          mode = "symbol_text";
+          preset = "codicons";
+          symbolMap = null;
+          lazyLoad.settings.event = "DeferredUIEnter";
+          cmp = {
+            enable = true;
+            maxWidth = 50;
+            ellipsisChar = "...";
+            menu = null;
+            after = null;
+          };
+        };
 
         nvim-tree = {
           enable = true;
@@ -633,17 +581,6 @@
               ({language = "scss";} // css)
               ({language = "stylus";} // css)
             ];
-          };
-        };
-
-        lspsaga = {
-          enable = true;
-          symbolInWinbar.enable = true;
-          implement.enable = true;
-          lightbulb = {
-            sign = false;
-            enable = false;
-            virtualText = false;
           };
         };
 
@@ -698,97 +635,6 @@
                 init_selection = "<Enter>";
               };
             };
-          };
-        };
-
-        lsp = {
-          enable = true;
-          servers = {
-            # Nix.
-            nil_ls = {
-              enable = true;
-              settings.nix.flake.autoArchive = true;
-            };
-            nixd = {
-              # Nix LS
-              enable = true;
-              settings = let
-                flake = ''(builtins.getFlake "${inputs.self}")'';
-              in {
-                nixpkgs.expr = "import ${flake}.inputs.nixpkgs { }";
-                options = rec {
-                  nixos.expr = "${flake}.nixosConfigurations.nixos.options";
-                  home-manager.expr = "${nixos.expr}.home-manager.users.type.getSubOptions []";
-                  nixvim.expr = ''${flake}.packages.${pkgs.system}.nvim.options'';
-                };
-              };
-            };
-
-            # Python.
-            pyright.enable = true;
-
-            # Bash
-            bashls.enable = true;
-
-            # Typst
-            tinymist.enable = true;
-
-            # Typos.
-            typos_lsp = {
-              enable = true;
-              extraOptions.init_options.diagnosticSeverity = "Hint";
-            };
-
-            # Lua.
-            lua_ls.enable = true;
-
-            # Web
-            html.enable = true;
-            jsonls.enable = true;
-            cssls.enable = true;
-            eslint.enable = true;
-            ts_ls = {
-              enable = true;
-              extraOptions.root_dir = ''
-                function (filename, bufnr)
-                  local util = require 'lspconfig.util'
-                  local denoRootDir = util.root_pattern("deno.json", "deno.jsonc")(filename);
-                  if denoRootDir then
-                    return nil;
-                  end
-                  return util.root_pattern("package.json")(filename);
-                end
-              '';
-              extraOptions = {
-                single_file_support = false;
-              };
-            };
-            denols = {
-              enable = true;
-              extraOptions.root_dir = ''
-                function (filename, bufnr)
-                  local util = require 'lspconfig.util'
-                  return util.root_pattern("deno.json", "deno.jsonc")(filename);
-                end
-              '';
-            };
-
-            # Haskell.
-            hls = {
-              installGhc = false;
-              enable = true;
-            };
-
-            rust_analyzer = {
-              enable = true;
-              installCargo = false;
-              installRustc = false;
-            };
-          };
-          keymaps.lspBuf = {
-            "<leader>gd" = "definition";
-            "<leader>gD" = "references";
-            "<leader>gi" = "implementation";
           };
         };
 
