@@ -381,6 +381,7 @@
     settings = {
       warn-dirty = true;
       experimental-features = ["nix-command" "flakes"];
+      trusted-users = ["${conUsername}"];
     };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
     # registry.nixpkgs-unstable.flake = self.inputs.nixpkgs-unstable;
