@@ -41,9 +41,8 @@ prettyTable t =
         \col -> V.maximum $ V.mapMaybe (\row -> length <$> (row V.!? col)) t
 
       formatRow row =
-        intercalate " | "
-          . toList
-          $ V.imap (\col cell -> padRToLen (columnWidths V.! col) cell) row
+        intercalate " | " $
+          V.imap (\col cell -> padRToLen (columnWidths V.! col) cell) row
   in  intercalate "\n" $ formatRow <$> t
 
 prettyPrint :: Vector DrugLine -> IO ()
