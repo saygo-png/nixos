@@ -5,7 +5,7 @@ import List
 import Options.Applicative
 import Take
 
-data Command = CmdList | CmdTake
+data Command = CmdList | CmdTake Text
 
 newtype Options = Options
   { optCommand :: Command
@@ -17,9 +17,12 @@ parserInfo = info (helper <*> parseOptions) (progDesc "Reminds you to take a dru
 parseCommand :: Parser Command
 parseCommand =
   subparser
-    ( command "take" (info (pure CmdTake) (progDesc "Take drug"))
+    ( command "take" (info parseTake (progDesc "Take drug"))
         <> command "list" (info (pure CmdList) (progDesc "List previously taken drug"))
     )
+
+parseTake :: Parser Command
+parseTake = CmdTake <$> argument str (metavar "DRUG_NAME" <> help "Name of the drug to take")
 
 parseOptions :: Parser Options
 parseOptions = Options <$> parseCommand
@@ -28,5 +31,5 @@ main :: IO ()
 main = do
   options <- execParser parserInfo
   case optCommand options of
-    CmdTake -> takeDrug
+    CmdTake drugName -> takeDrug drugName
     CmdList -> listDrugs

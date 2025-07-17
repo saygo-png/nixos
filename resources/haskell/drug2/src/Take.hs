@@ -12,10 +12,10 @@ import System.Directory (doesFileExist)
 import Text.Printf (printf)
 import Types
 
-takeDrug :: IO ()
-takeDrug = do
+takeDrug :: Text -> IO ()
+takeDrug drugName = do
   output <- dataDir
-  drug <- DrugLine (Just "Pills") <$> getCurrentTime
+  drug <- DrugLine (Just drugName) <$> getCurrentTime
   filestate <- getFileState output
   case filestate of
     FileEmpty -> writeWithHeader drug output
@@ -36,7 +36,7 @@ wroteInfo i = do
   let x = drugData i
   let date = dateData i & tshow & takeWhile (/= '.')
   case x of
-    Just _ -> printf "Took on %s\n" date
+    Just name -> printf "Took %s on %s\n" name date
     Nothing -> error "drugData returned Nothing when it shouldn't have"
 
 writeWithHeader :: DrugLine -> FilePath -> IO ()
