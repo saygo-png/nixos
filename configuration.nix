@@ -40,6 +40,7 @@
       "myTmux.nix"
       "myDolphin.nix"
       "myMullvad.nix"
+      "myPrismlauncher.nix"
       "myVesktop.nix"
       "myIncus.nix"
       "myLibrewolf.nix"
@@ -292,7 +293,6 @@
       # GUI.
       calibre
       foliate
-      prismlauncher
       krita # Painting
       anki # Flashcards
       libreoffice # office
