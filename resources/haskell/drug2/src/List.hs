@@ -8,7 +8,8 @@ import Data.ByteString.Lazy.Char8 qualified as BL8
 import Data.Csv qualified as Cassava
 import Data.Function ((&))
 import Data.Text qualified as T
-import Data.Vector (generate)
+import Data.Vector qualified as V
+import Text.Layout.Table
 import Text.Time.Pretty
 import Types
 
@@ -29,17 +30,16 @@ takeLast i l = reverse l & take i & reverse
 prettyPrint :: Vector DrugLine -> IO ()
 prettyPrint vec = do
   nl <- niceLines vec
-  mapM_ putStrLn $ takeLast 14 nl
+  let few = takeLast 14 nl
+  let table = gridString [def, def, def] (toList (fmap V.toList few))
+  putStrLn $ T.pack table
 
-niceLines :: Vector DrugLine -> IO (Vector Text)
+niceLines :: Vector DrugLine -> IO (Vector (Vector Text))
 niceLines vec = do
-  let nums = generate (length vec) (\x -> tshow $ x + 1)
+  let nums = V.generate (length vec) (\x -> tshow $ x + 1)
   let names = fromMaybe "DRUG NAME MISSING" . drugData <$> vec
   dates <- traverse dateStamp vec
-  return $ zipWith3 (\a b c -> addSeps $ fromList [a, b, c]) nums names dates
-
-addSeps :: Vector Text -> Text
-addSeps = intercalate " | "
+  return $ zipWith3 (\num name date -> fromList [num, name, date]) nums names dates
 
 dateStamp :: DrugLine -> IO Text
 dateStamp dl = do
