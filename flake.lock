@@ -131,22 +131,6 @@
         "type": "github"
       }
     },
-    "carla-fix": {
-      "locked": {
-        "lastModified": 1750490820,
-        "narHash": "sha256-vDD7wxGx5qyS4X7/YEsCN5MIG6PquFnz1CLi57s9JOs=",
-        "owner": "ArchercatNEO",
-        "repo": "nixpkgs",
-        "rev": "8b076d007c061c1236079767f07a69947a1367a3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ArchercatNEO",
-        "ref": "pyliblo-drop",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "cookiecutter-templates": {
       "flake": false,
       "locked": {

@@ -4,15 +4,11 @@
   pkgs,
   lib,
   ...
-  # fix for https://github.com/NixOS/nixpkgs/issues/389149
 }: {
-  nixpkgs.overlays = [
-    (_final: _prev: {
-      inherit (inputs.carla-fix.legacyPackages.${pkgs.system}) carla;
-    })
+  environment.systemPackages = [
+    pkgs.carla
+    inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
   ];
-
-  environment.systemPackages = [pkgs.carla];
 
   environment.etc."/pipewire/pipewire.conf.d/10-default-null-sink.conf".text =
     /*
