@@ -9,7 +9,7 @@ description:     Reminds you to take a drug
 tested-with:     GHC ==9.8.4
 
 common common-options
-  build-depends: base, optparse-applicative, directory, unix, bytestring, cassava, text, time, vector, classy-prelude, pretty-relative-time, table-layout
+  build-depends: base, optparse-applicative, directory, unix, bytestring, cassava, text, time, vector, classy-prelude, pretty-relative-time
   default-language: GHC2021
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   default-extensions: NoImplicitPrelude BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeFamilies TypeSynonymInstances ViewPatterns
