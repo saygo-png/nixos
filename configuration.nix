@@ -1213,37 +1213,6 @@
         indent-wheres = true;
       };
 
-      xdg.configFile."stylish-haskell/config.yaml".text = ''
-        steps:
-          - simple_align:
-              cases: always
-              records: always
-              multi_way_if: always
-              top_level_patterns: always
-          - imports:
-              align: global
-              list_padding: 4
-              post_qualify: false
-              group_imports: false
-              separate_lists: true
-              space_surround: false
-              pad_module_names: true
-              list_align: after_alias
-              long_list_align: inline
-              empty_list_align: inherit
-              group_rules:
-                - match: ".*"
-                  sub_group: "^[^.]+"
-          - language_pragmas:
-              align: true
-              style: vertical
-              remove_redundant: true
-              language_prefix: LANGUAGE
-          - trailing_whitespace: {}
-        cabal: true
-        columns: 100
-        newline: native
-      '';
       # }}}
     };
   };
