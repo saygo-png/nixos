@@ -26,12 +26,9 @@
       initContent = let
         zshConfig = config.xdg.configHome + "/zsh";
         cache = config.xdg.cacheHome;
-        data = config.xdg.dataHome;
 
         withPlug = x: lib.my.relativeToRoot ("modules/zsh/plugins/" + x);
         inherit (pkgs) callPackage;
-
-        fsh = callPackage (withPlug "fsh.nix") {};
         p10k = callPackage (withPlug "p10k.nix") {};
         autosuggestions = callPackage (withPlug "autosuggestions.nix") {};
         notify = callPackage (withPlug "notify.nix") {};

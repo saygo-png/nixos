@@ -28,12 +28,12 @@ barSpawner = pure . xmobar
     pp :: PP
     pp =
       def
-        { ppCurrent = xmobarColor "#f9e2af" "" . wrap "[" "]",
-          ppTitle = xmobarColor "#cba6f7" "" . shorten 40,
-          ppVisible = wrap "(" ")",
-          ppUrgent = xmobarColor "#f38ba8" "#f9e2af",
-          ppSep = " \57533 "
-          -- ppLayout = ppLayoutOverride
+        { ppCurrent = xmobarColor "#f9e2af" "" . wrap "[" "]"
+        , ppTitle = xmobarColor "#cba6f7" "" . shorten 40
+        , ppVisible = wrap "(" ")"
+        , ppUrgent = xmobarColor "#f38ba8" "#f9e2af"
+        , ppSep = " \57533 "
+        -- ppLayout = ppLayoutOverride
         }
     xmobar :: ScreenId -> StatusBarConfig
     xmobar (S screenId) = statusBarProp ("xmobar-app -x " <> show screenId) $ pure pp

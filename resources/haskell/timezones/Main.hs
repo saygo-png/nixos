@@ -6,9 +6,9 @@ import Options.Applicative
 
 timezones :: [TZLabel]
 timezones =
-  [ Europe__Warsaw,
-    America__New_York,
-    Australia__Sydney
+  [ Europe__Warsaw
+  , America__New_York
+  , Australia__Sydney
   ]
 
 parserInfo :: ParserInfo ()

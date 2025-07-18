@@ -25,10 +25,10 @@ import XMonad.StackSet
 myManageHook :: ManageHook
 myManageHook =
   composeOne
-    [ checkDock -?> doIgnore, -- equivalent to manageDocks
-      isDialog -?> doFloat,
-      className =? "Gimp" -?> doFloat,
-      className =? "MPlayer" -?> doFloat,
-      return True -?> doF swapDown
+    [ checkDock -?> doIgnore -- equivalent to manageDocks
+    , isDialog -?> doFloat
+    , className =? "Gimp" -?> doFloat
+    , className =? "MPlayer" -?> doFloat
+    , return True -?> doF swapDown
     ]
     <+> composeAll [isFullscreen --> doFullFloat]

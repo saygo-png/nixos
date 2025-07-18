@@ -10,9 +10,10 @@ import XMonad.Util.SpawnOnce
 
 -- | Startup hook
 
--- | Perform an arbitrary action each time xmonad starts or is restarted
---  | with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
---  | per-workspace layout choices.
+{- | Perform an arbitrary action each time xmonad starts or is restarted
+ | with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
+ | per-workspace layout choices.
+-}
 myStartupHook :: X ()
 myStartupHook =
   do
