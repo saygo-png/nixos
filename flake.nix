@@ -110,7 +110,7 @@
 
     # Neovim {{{
     nixvim = {
-      url = "git+file:///home/samsepi0l/builds/nixvim";
+      url = "git+file:///home/samsepi0l/builds/nixvim?ref=lspkind-mkNeovimPlugin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
