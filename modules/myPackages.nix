@@ -70,8 +70,9 @@
       };
     })
 
+
+    (inputs.drugtracker2.packages.${pkgs.system}.drug)
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/convertlink") {})
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/drug2") {})
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/timezones") {})
 
     # Python {{{
