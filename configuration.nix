@@ -1211,10 +1211,6 @@
         indentation = 2;
         respectful = false;
         indent-wheres = true;
-        let-style = "inline";
-        in-style = "left-align";
-        comma-style = "trailing";
-        haddock-style = "single-line";
       };
 
       xdg.configFile."stylish-haskell/config.yaml".text = ''
