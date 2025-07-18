@@ -910,29 +910,23 @@
           prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
         };
         extraConfig = {
-          init = {
-            defaultBranch = "origin";
-          };
+          color.ui = "auto";
+          pull.rebase = true;
+          commit.gpgsign = true;
+          rerere.enabled = true;
+          branch.autosetupmerge = true;
+          merge.tool = "${lib.getExe pkgs.meld}";
+          core.excludesfile = "~/.gitignore_global";
+          init.defaultBranch = "origin";
           user = {
             signingKey = "86B6FCCC3563C00B";
             name = "saygo-png";
             email = "saygo.mail@proton.me";
           };
-          color.ui = "auto";
-          pull.rebase = true;
-          commit.gpgsign = true;
-          rerere.enabled = true;
-          push.autoSetupRemote = true;
-          branch.autosetupmerge = true;
-          merge.tool = "${lib.getExe pkgs.meld}";
-          core.excludesfile = "~/.gitignore_global";
           push = {
-            default = "upstream";
+            autoSetupRemote = true;
             useForceIfIncludes = true;
-          };
-          diff = {
-            tool = "vimdiff";
-            mnemonicprefix = true;
+            default = "upstream";
           };
         };
       };
