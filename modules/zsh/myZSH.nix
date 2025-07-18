@@ -30,6 +30,7 @@
         withPlug = x: lib.my.relativeToRoot ("modules/zsh/plugins/" + x);
         inherit (pkgs) callPackage;
         p10k = callPackage (withPlug "p10k.nix") {};
+        clipboard = callPackage (withPlug "clipboard.nix") {};
         autosuggestions = callPackage (withPlug "autosuggestions.nix") {};
         notify = callPackage (withPlug "notify.nix") {};
 
@@ -151,15 +152,16 @@
             nohup setsid $prog $@ > /dev/null 2>&1
           }
 
+
+          source ${p10k}/powerlevel10k/powerlevel10k.zsh-theme
+          source ${lib.my.relativeToRoot "resources/zsh/p10k-prompt.zsh"}
+
+          source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
           source ${notify}/zsh-auto-notify/auto-notify.plugin.zsh
           export AUTO_NOTIFY_CANCEL_ON_SIGINT=1
           export AUTO_NOTIFY_WHITELIST=("nh" "nix" "nbuild" "nix-build" "nix-shell" "git" "cabal" "cp" "rclone" "borg" "borgmatic")
-
-          source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
+          source ${clipboard}/zsh-system-clipboard/zsh-system-clipboard.zsh
           source ${autosuggestions}/zsh-autosuggestions/zsh-autosuggestions.zsh
-          source ${p10k}/powerlevel10k/powerlevel10k.zsh-theme
-          source ${lib.my.relativeToRoot "resources/zsh/p10k-prompt.zsh"}
-          source ${pkgs.zsh-system-clipboard}/share/zsh/zsh-system-clipboard/zsh-system-clipboard.zsh
         '';
     };
   };
