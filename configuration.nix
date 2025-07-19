@@ -1031,8 +1031,8 @@
               background = mkLiteral "@gruvbox-dark-bg0";
               foreground = mkLiteral "@gruvbox-dark-fg1";
               separatorcolor = mkLiteral "@border-color";
-              active-foreground = mkLiteral "@foreground";
               normal-foreground = mkLiteral "@foreground";
+              active-foreground = mkLiteral "${color.base00}";
               scrollbar-handle = mkLiteral "@border-color";
               urgent-foreground = mkLiteral "@gruvbox-dark-fg1";
               alternate-normal-foreground = mkLiteral "@foreground";
