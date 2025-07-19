@@ -13,9 +13,10 @@ _: {
       enable = true;
       lazyLoad.enable = true;
       settings = {
-        undercurl = true;
         bold = false;
+        undercurl = true;
         underline = true;
+        strikethrough = false;
         transparent_mode = true;
       };
     };
