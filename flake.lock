@@ -200,11 +200,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1752799710,
-        "narHash": "sha256-6PPBwWVk48zXpxgboGoK3FDBYLtenwabE0D7Zmc3CNk=",
+        "lastModified": 1752873574,
+        "narHash": "sha256-ZuueQf0XkR+HHC0zjw4bL9M/j5E0xs2pFO0vltH/y7M=",
         "owner": "saygo-png",
         "repo": "drugTracker2",
-        "rev": "7e332f60a7258b39cd491ab27ec4c9331aaf9f81",
+        "rev": "2eb613bec618ed83c8db9eefb86beb16404919bf",
         "type": "github"
       },
       "original": {
@@ -829,6 +829,22 @@
         "type": "github"
       }
     },
+    "powerlevel10k": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1745931653,
+        "narHash": "sha256-BRJyGn+gTGUWifpJ1ziBKVHACcWw+R5N/HdUi8HzSvY=",
+        "owner": "romkatv",
+        "repo": "powerlevel10k",
+        "rev": "36f3045d69d1ba402db09d09eb12b42eebe0fa3b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "romkatv",
+        "repo": "powerlevel10k",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "awesome-git": "awesome-git",
@@ -853,11 +869,15 @@
         "nvim-plugin-cutlass": "nvim-plugin-cutlass",
         "nvim-plugin-faster": "nvim-plugin-faster",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
+        "powerlevel10k": "powerlevel10k",
         "stylix": "stylix",
         "systems": "systems_5",
         "treefmt-nix": "treefmt-nix_2",
         "vmrss": "vmrss",
-        "zlequalizer": "zlequalizer"
+        "zlequalizer": "zlequalizer",
+        "zsh-auto-notify": "zsh-auto-notify",
+        "zsh-autosuggestions": "zsh-autosuggestions",
+        "zsh-system-clipboard": "zsh-system-clipboard"
       }
     },
     "stylix": {
@@ -1117,6 +1137,54 @@
       "original": {
         "owner": "saygo-png",
         "repo": "ZLEqualizer-nix",
+        "type": "github"
+      }
+    },
+    "zsh-auto-notify": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1750669386,
+        "narHash": "sha256-s3TBAsXOpmiXMAQkbaS5de0t0hNC1EzUUb0ZG+p9keE=",
+        "owner": "MichaelAquilina",
+        "repo": "zsh-auto-notify",
+        "rev": "b51c934d88868e56c1d55d0a2a36d559f21cb2ee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MichaelAquilina",
+        "repo": "zsh-auto-notify",
+        "type": "github"
+      }
+    },
+    "zsh-autosuggestions": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1750781703,
+        "narHash": "sha256-KmkXgK1J6iAyb1FtF/gOa0adUnh1pgFsgQOUnNngBaE=",
+        "owner": "zsh-users",
+        "repo": "zsh-autosuggestions",
+        "rev": "85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zsh-users",
+        "repo": "zsh-autosuggestions",
+        "type": "github"
+      }
+    },
+    "zsh-system-clipboard": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1721306211,
+        "narHash": "sha256-phsIdvuqcwtAVE1dtQyXcMgNdRMNY03/mIzsvHWPS1Y=",
+        "owner": "kutsan",
+        "repo": "zsh-system-clipboard",
+        "rev": "8b4229000d31e801e6458a3dfa2d60720c110d11",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kutsan",
+        "repo": "zsh-system-clipboard",
         "type": "github"
       }
     }

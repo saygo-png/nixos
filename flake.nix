@@ -84,6 +84,31 @@
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
+    # Zsh plugins {{{
+
+
+    zsh-autosuggestions = {
+      url = "github:zsh-users/zsh-autosuggestions";
+      flake = false;
+    };
+
+    powerlevel10k = {
+      url = "github:romkatv/powerlevel10k";
+      flake = false;
+    };
+
+    zsh-system-clipboard = {
+      url = "github:kutsan/zsh-system-clipboard";
+      flake = false;
+    };
+
+    zsh-auto-notify = {
+      url = "github:MichaelAquilina/zsh-auto-notify";
+      flake = false;
+    };
+
+    # }}}
+
     # Small utilities {{{
     format-udf = {
       url = "github:JElchison/format-udf";

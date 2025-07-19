@@ -1,5 +1,6 @@
 {
   lib,
+  inputs,
   pkgs,
   conUsername,
   ...
@@ -27,15 +28,16 @@
         zshConfig = config.xdg.configHome + "/zsh";
         cache = config.xdg.cacheHome;
 
-        withPlug = x: lib.my.relativeToRoot ("modules/zsh/plugins/" + x);
-        inherit (pkgs) callPackage;
-        p10k = callPackage (withPlug "p10k.nix") {};
-        clipboard = callPackage (withPlug "clipboard.nix") {};
-        autosuggestions = callPackage (withPlug "autosuggestions.nix") {};
-        notify = callPackage (withPlug "notify.nix") {};
-
         zcomp = f: ''zcompile -R -- "${f}".zwc "${f}"'';
         zcompdumpFile = "${zshConfig}/.zcompdump";
+
+        withPlug = x: lib.my.relativeToRoot ("modules/zsh/plugins/" + x);
+        ovSrc = p: s: (pkgs.callPackage (withPlug "${p}") {}).overrideAttrs (_: {src = s;});
+
+        p10k = ovSrc "p10k.nix" inputs.powerlevel10k;
+        notify = ovSrc "notify.nix" inputs.zsh-auto-notify;
+        clipboard = ovSrc "clipboard.nix" inputs.zsh-system-clipboard;
+        autosuggestions = ovSrc "autosuggestions.nix" inputs.zsh-autosuggestions;
       in
         # sh
         ''
@@ -151,7 +153,6 @@
             shift
             nohup setsid $prog $@ > /dev/null 2>&1
           }
-
 
           source ${p10k}/powerlevel10k/powerlevel10k.zsh-theme
           source ${lib.my.relativeToRoot "resources/zsh/p10k-prompt.zsh"}
