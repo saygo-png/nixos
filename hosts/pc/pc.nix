@@ -19,7 +19,7 @@
             borderSize = 2;
             accelSpeed = -0.9;
             vsync = false;
-            extrasNixosPath = "${conHome}/extrasNixos";
+            extrasNixosPath = "${conHome}/builds/extrasNixos";
             flakePath = "${conHome}/nixos";
           };
         };
