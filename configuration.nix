@@ -291,7 +291,6 @@
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
-      calibre
       foliate
       krita # Painting
       anki # Flashcards

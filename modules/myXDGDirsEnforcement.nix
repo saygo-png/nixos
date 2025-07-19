@@ -83,7 +83,6 @@ in {
 
           ".cache/Anki"
           ".cache/Borg"
-          ".cache/Calibre"
           ".cache/keepassxc"
 
           ".cache/Dconf"

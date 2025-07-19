@@ -76,7 +76,6 @@
     home.sessionVariables = {
       # This i think fixes some warns/slow launches on some qt apps
       QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
-      CALIBRE_USE_DARK_PALETTE = "1";
     };
 
     xdg.configFile."wallpaper.png".source = config.stylix.image;
