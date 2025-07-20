@@ -53,7 +53,7 @@
         force = true;
         text = ''
           [General]
-          TerminalApplication=${termExe} $SHELL
+          TerminalApplication=${termExe}
         '';
       };
 
