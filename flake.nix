@@ -110,6 +110,7 @@
     # }}}
 
     # Small utilities {{{
+
     format-udf = {
       url = "github:JElchison/format-udf";
       flake = false;
@@ -119,19 +120,6 @@
       url = "github:ThePrimeagen/vmrss";
       flake = false;
     };
-    # }}}
-
-    # Awesome {{{
-    awesome-git = {
-      url = "github:awesomeWM/awesome";
-      flake = false;
-    };
-
-    awesome-lain = {
-      url = "github:lcpz/lain";
-      flake = false;
-    };
-    # }}}
 
     # Neovim {{{
     nixvim = {

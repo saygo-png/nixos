@@ -1,37 +1,5 @@
 {
   "nodes": {
-    "awesome-git": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1747506778,
-        "narHash": "sha256-Tw5OZNe+FdqRvPdaWviDFHDCJ7KFvsBi12WryZt+PEs=",
-        "owner": "awesomeWM",
-        "repo": "awesome",
-        "rev": "f009815cb75139acf4d8ba3c1090bf2844d13f4c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "awesomeWM",
-        "repo": "awesome",
-        "type": "github"
-      }
-    },
-    "awesome-lain": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1673554968,
-        "narHash": "sha256-MH/aiYfcO3lrcuNbnIu4QHqPq25LwzTprOhEJUJBJ7I=",
-        "owner": "lcpz",
-        "repo": "lain",
-        "rev": "88f5a8abd2649b348ffec433a24a263b37f122c0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lcpz",
-        "repo": "lain",
-        "type": "github"
-      }
-    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -847,8 +815,6 @@
     },
     "root": {
       "inputs": {
-        "awesome-git": "awesome-git",
-        "awesome-lain": "awesome-lain",
         "cookiecutter-templates": "cookiecutter-templates",
         "devenv": "devenv",
         "disko": "disko",

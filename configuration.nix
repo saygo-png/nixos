@@ -25,7 +25,6 @@
 
       # "mySway.nix"
       # "myXMonad.nix"
-      # "myAwesome.nix"
       "myHyprland.nix"
 
       "myGaming.nix"
