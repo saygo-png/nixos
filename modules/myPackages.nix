@@ -6,11 +6,7 @@
   conHome,
   ...
 }: {
-  environment.systemPackages = with pkgs; let
-    regardedPythonErrors =
-      ["E265" "E225" "E111" "E305" "E501"]
-      ++ ["E121" "E302" "E114" "F541" "E261"];
-  in [
+  environment.systemPackages = [
     (pkgs.stdenv.mkDerivation {
       pname = "hordes-kiosk";
       version = "1.0.0";
@@ -35,7 +31,7 @@
 
       dontUnpack = true;
 
-      nativeBuildInputs = with pkgs; [makeWrapper];
+      nativeBuildInputs = [pkgs.makeWrapper];
 
       installPhase = ''
         runHook preInstall
@@ -73,19 +69,14 @@
     inputs.drugtracker2.packages.${pkgs.system}.drug
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/convertlink") {})
     (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/timezones") {})
-
-    # Python {{{
-    (writers.writePython3Bin "ow"
-      {flakeIgnore = regardedPythonErrors;}
-      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/ow.py")))
-    # }}}
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/ow") {})
 
     # Shell {{{
 
-    (writeShellScriptBin "hyprland-next-visible-client.bash"
+    (pkgs.writeShellScriptBin "hyprland-next-visible-client.bash"
       (builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprland-next-visible-client.bash")))
 
-    (writeShellScriptBin "monitor-toggle"
+    (pkgs.writeShellScriptBin "monitor-toggle"
       (builtins.readFile (lib.my.relativeToRoot "resources/scripts/monitor-toggle.bash")))
 
     (pkgs.writeScriptBin "nr"
@@ -106,31 +97,31 @@
         sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
       '')
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "xkb-switch-rofi";
-      runtimeInputs = [coreutils xkb-switch rofi-wayland];
+      runtimeInputs = with pkgs; [coreutils xkb-switch rofi-wayland];
       text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/xkb-switch-rofi.bash");
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "format-udf";
-      runtimeInputs = [coreutils udftools];
+      runtimeInputs = with pkgs; [coreutils udftools];
       checkPhase = ""; # Dont shellcheck
       bashOptions = []; # Dont add extra options
       text = builtins.readFile "${inputs.format-udf}/format-udf.sh";
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "vmrss";
-      runtimeInputs = [coreutils bc];
+      runtimeInputs = with pkgs; [coreutils bc];
       checkPhase = ""; # Dont shellcheck
       bashOptions = []; # Dont add extra options
       text = builtins.readFile "${inputs.vmrss}/vmrss";
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "airplane-mode";
-      runtimeInputs = [util-linux];
+      runtimeInputs = [pkgs.util-linux];
       text = ''
         [ "$#" -ne 1 ] && { echo "Usage: $0 {on|off}"; exit 1; }
         case "$1" in
@@ -159,9 +150,9 @@
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "fzfcd";
-      runtimeInputs = [fzf fd coreutils];
+      runtimeInputs = with pkgs; [fzf fd coreutils];
       text = ''
         dir=$(fd --hidden --type directory --type file --maxdepth 15 . | fzf)
 
@@ -179,17 +170,17 @@
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "pasteimg";
-      runtimeInputs = [xclip coreutils];
+      runtimeInputs = with pkgs; [xclip coreutils];
       text = ''
         xclip -selection clipboard -t image/png -o | tee "$1" >/dev/null
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "myAutostart.sh";
-      runtimeInputs = [xorg.xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
+      runtimeInputs = with pkgs; [xorg.xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
       text = ''
         run() {
           if ! pgrep -f "$1" ;
@@ -207,17 +198,17 @@
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "tree";
-      runtimeInputs = [eza];
+      runtimeInputs = [pkgs.eza];
       text = ''
         eza --group-directories-first --tree
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "remaps";
-      runtimeInputs = [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
+      runtimeInputs = with pkgs; [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
       text = ''
         # This script is called on startup to remap keys.
         # Decrease key repeat delay and increase key repeat rate.
@@ -229,9 +220,9 @@
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "rdepends";
-      runtimeInputs = [nix];
+      runtimeInputs = [pkgs.nix];
       text = ''
         if [ "$#" -eq 0 ]; then
             echo "No package(s) provided."
@@ -253,7 +244,7 @@
       '';
     })
 
-    (writeShellScriptBin "hwinfolist"
+    (pkgs.writeShellScriptBin "hwinfolist"
       ''
         echo "GPU"
         echo "nr amdgpu_top --gui"
@@ -261,7 +252,7 @@
         echo "snr lshw -json | nvim -c 'set filetype=json'"
       '')
 
-    (writeShellScriptBin "nix-clean-hard"
+    (pkgs.writeShellScriptBin "nix-clean-hard"
       ''
         nix-env --delete-generations 3d
         sudo nix-env --delete-generations 3d
@@ -284,7 +275,7 @@
 
     (let
       connection-test =
-        writeShellScriptBin "connection-test"
+        pkgs.writeShellScriptBin "connection-test"
         ''
           connected_to_internet() {
             test_urls="\
@@ -326,7 +317,7 @@
           fi
         '';
     in
-      writeShellApplication {
+      pkgs.writeShellApplication {
         name = "connection-tester";
         runtimeInputs = with pkgs; [coreutils];
         text = ''
@@ -334,7 +325,7 @@
         '';
       })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "mynix-list-packages";
       runtimeInputs = with pkgs; [coreutils fzf];
       text = ''
@@ -342,7 +333,7 @@
       '';
     })
 
-    (writeShellApplication {
+    (pkgs.writeShellApplication {
       name = "hyprcorder.sh";
       bashOptions = ["pipefail"];
       runtimeInputs = with pkgs; [wl-screenrec slurp ripdrag libnotify coreutils procps];
