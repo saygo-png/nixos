@@ -5,42 +5,7 @@
   conUsername,
   ...
 }: {
-  imports = [
-    ({config, ...}: {
-      options.const = config.constLib.mkConstsFromSet {
-        importedMyMPVModule = true;
-      };
-    })
-  ];
   home-manager.users.${conUsername} = {config, ...}: {
-    home.packages = with pkgs; [
-      # Dependencies for intersubs for mpv.
-      (python3.withPackages (python312Packages: [
-        python312Packages.six
-        python312Packages.lxml
-        python312Packages.httpx
-        python312Packages.numpy
-        python312Packages.pyqt5
-        python312Packages.thttp
-        python312Packages.requests
-        python312Packages.beautifulsoup4
-      ]))
-      socat
-    ];
-
-    # InterSubs plugin install.
-    xdg.configFile."mpv/scripts/interSubs.py" = {
-      source = lib.my.getSafePath "${inputs.mpv-intersubs}/interSubs.py";
-    };
-
-    xdg.configFile."mpv/scripts/interSubs.lua" = {
-      source = lib.my.getSafePath "${inputs.mpv-intersubs}/interSubs.lua";
-    };
-
-    xdg.configFile."mpv/scripts/interSubs_config.py" = {
-      source = lib.my.relativeToRoot "resources/mpv/interSubs_config.py";
-    };
-
     programs.mpv = {
       enable = true;
       bindings = {

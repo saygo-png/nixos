@@ -541,22 +541,6 @@
         "type": "github"
       }
     },
-    "mpv-intersubs": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1742277142,
-        "narHash": "sha256-t30fEbpzKO7AkYv403QVP+T84g5XWLysS8k5W9CX4XY=",
-        "owner": "oltodosel",
-        "repo": "interSubs",
-        "rev": "a4113586db8f60f1c533f717c1c1a928f3723049",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oltodosel",
-        "repo": "interSubs",
-        "type": "github"
-      }
-    },
     "nix": {
       "inputs": {
         "flake-compat": [
@@ -827,7 +811,6 @@
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
-        "mpv-intersubs": "mpv-intersubs",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",

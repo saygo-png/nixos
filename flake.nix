@@ -67,11 +67,6 @@
       flake = false;
     };
 
-    mpv-intersubs = {
-      url = "github:oltodosel/interSubs";
-      flake = false;
-    };
-
     devenv = {
       url = "github:cachix/devenv";
       inputs.nixpkgs.follows = "nixpkgs";
