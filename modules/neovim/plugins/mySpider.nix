@@ -5,7 +5,7 @@ _: {
       lazyLoad.settings.keys = ["b" "e" "ge" "w"];
       settings = {
         consistentOperatorPending = true;
-        skipInsignificantPunctuation = true;
+        skipInsignificantPunctuation = false;
       };
       keymaps.motions = {
         b = "b";
