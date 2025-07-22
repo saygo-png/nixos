@@ -75,10 +75,7 @@
             src = builtins.getAttr ("nvim-plugin-" + name) inputs;
           };
       in
-        [
-          pkgs.vimPlugins.img-clip-nvim
-          pkgs.vimPlugins.vim-pencil
-        ]
+        [pkgs.vimPlugins.vim-pencil]
         ++ map mkNvimplugin [
           "cutlass"
           "faster"
