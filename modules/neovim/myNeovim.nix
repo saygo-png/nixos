@@ -20,6 +20,7 @@
       "plugins/myVimVisualMulti.nix"
 
       "plugins/ide/myLsp.nix"
+      "plugins/ide/myFormatting.nix"
     ]);
 
     home.sessionVariables = {EDITOR = "nvim";};
@@ -157,10 +158,6 @@
 
         # Better completion.
         completeopt = ["menuone" "noselect" "noinsert"];
-
-        # Use conform-nvim for gq formatting. ('formatexpr' is set to vim.lsp.formatexpr(),
-        # so you can format lines via gq if the language server supports it).
-        formatexpr = "v:lua.require'conform'.formatexpr()";
 
         # (https://neovim.io/doc/user/options.html#'laststatus')
         laststatus = 3;
@@ -442,40 +439,6 @@
           vim.keymap.set("n", "<leader>op", "<cmd>NvimTreeToggle<CR>", {desc = "[o]pen [p]roject"})
           -- }}}
 
-          -- Conform {{{
-          vim.keymap.set("n", "<Leader>c", function()
-            require("conform").format({ timeout_ms = 500 })
-          end, { desc = "[c]onform" })
-
-          vim.api.nvim_create_user_command("Conform", function()
-              require("conform").format({ timeout_ms = 500 })
-          end, { desc = "Format using Conform with a 500ms timeout" })
-          -- }}}
-
-          -- img-clip.nvim {{{
-            require('img-clip').setup({
-              default = {
-                -- file and directory options
-                dir_path = "assets",
-                extension = "png",
-                file_name = "%Y-%m-%d-%H-%M-%S",
-                use_absolute_path = false,
-                relative_to_current_file = false,
-
-                -- template options
-                template = "$FILE_PATH",
-                url_encode_path = false,
-                relative_template_path = true,
-                use_cursor_in_template = true,
-                insert_mode_after_paste = false,
-
-                -- prompt options
-                prompt_for_file_name = true,
-                copy_images = true,
-            }
-          })
-          -- }}}
-
           -- Cutlass (Delete copy registers) {{{
           require("cutlass").setup({
             override_del = true,
@@ -637,49 +600,6 @@
           };
         };
 
-        conform-nvim = {
-          enable = true;
-          settings = {
-            lsp_fallback = false;
-            formatters_by_ft = {
-              # Conform will run multiple formatters sequentially.
-              json = ["jq"];
-              jsonc = ["prettierd"];
-              sh = ["shfmt"];
-              lua = ["stylua"];
-              nix = ["alejandra"];
-              haskell = ["fourmolu"];
-              graphql = ["prettierd"];
-              markdown = ["prettierd"];
-              python = ["isort" "yapf"];
-              css = ["prettierd"];
-              html = ["prettierd"];
-              scss = ["prettierd"];
-              javascript = ["prettierd"];
-              javascriptreact = ["prettierd"];
-              typescript = ["prettierd"];
-              typescriptreact = ["prettierd"];
-              # Use the "*" filetype to run formatters on all filetypes.
-              "*" = [
-                "squeeze_blanks"
-                "trim_whitespace"
-                "trim_newlines"
-              ];
-            };
-            formatters = {
-              cljfmt = {
-                command = "${lib.getExe pkgs.cljfmt}";
-                args = ["fix" "-"];
-                stdin = true;
-              };
-              shfmt.args = lib.mkOptionDefault ["-i" "2"];
-              squeeze_blanks = {
-                command = pkgs.lib.getExe' pkgs.coreutils "cat";
-              };
-            };
-          };
-        };
-
         lint = let
           statixConfig = builtins.toFile "statix.toml" ''disabled = [repeated_keys]'';
         in {
@@ -711,7 +631,6 @@
               (nRegister "<leader>r" "Re" " ")
               (nRegister "<leader>q" "Quit" "󱢓 ")
               (nRegister "<leader>d" "Definition" "")
-              (nRegister "<leader>c" "Conform" " ")
               (nRegister "<leader>f" "File browser" " ")
               (nRegister "<leader>S" "Sort by length" "󰒼 ")
               (nRegister "<S-k>" "Hover info" "")
