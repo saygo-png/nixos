@@ -10,10 +10,8 @@
         '';
       };
 
-      which-key.settings.spec = let
-        inherit (lib.my) nRegister;
-      in [
-        (nRegister "<leader>h" "Harpoon" "󱢓 ")
+      which-key.settings.spec = [
+        (lib.my.nRegister "<leader>h" "Harpoon" "󱢓 ")
       ];
     };
 
