@@ -45,7 +45,7 @@
       "myIncus.nix"
       "myLibrewolf.nix"
       "mySyncthing.nix"
-      "neovim/myNeovim.nix"
+      "myNeovim.nix"
 
       "visuals/myTheme.nix"
       "visuals/myCursor.nix"
@@ -436,8 +436,6 @@
       osConfig,
       ...
     }: {
-      imports = [inputs.nixvim.homeManagerModules.nixvim];
-
       # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {

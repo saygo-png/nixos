@@ -36,6 +36,11 @@
       flake = false;
     };
 
+    my-neovim = {
+      url = "github:saygo-png/neovim-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     cookiecutter-templates = {
       url = "github:saygo-png/cookiecutter-templates";
       flake = false;
@@ -81,7 +86,6 @@
 
     # Zsh plugins {{{
 
-
     zsh-autosuggestions = {
       url = "github:zsh-users/zsh-autosuggestions";
       flake = false;
@@ -116,26 +120,6 @@
       flake = false;
     };
 
-    # Neovim {{{
-    nixvim = {
-      url = "git+file:///home/samsepi0l/builds/nixvim?ref=lspkind-mkNeovimPlugin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nvim-plugin-cutlass = {
-      url = "github:gbprod/cutlass.nvim";
-      flake = false;
-    };
-
-    nvim-plugin-faster = {
-      url = "github:pteroctopus/faster.nvim";
-      flake = false;
-    };
-
-    nvim-plugin-telescope-git-file-history = {
-      url = "github:isak102/telescope-git-file-history.nvim";
-      flake = false;
-    };
     # }}}
   };
 

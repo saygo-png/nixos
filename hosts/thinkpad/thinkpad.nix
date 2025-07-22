@@ -203,14 +203,5 @@
         ", preferred, auto, 1"
       ];
     };
-
-    programs.nixvim = {
-      globals = {
-        neovide_padding_top = 0;
-        neovide_padding_bottom = 0;
-        neovide_padding_right = 0;
-        neovide_padding_left = 0;
-      };
-    };
   };
 }

@@ -292,6 +292,7 @@
     "flake-parts_2": {
       "inputs": {
         "nixpkgs-lib": [
+          "my-neovim",
           "nixvim",
           "nixpkgs"
         ]
@@ -516,11 +517,13 @@
     "ixx": {
       "inputs": {
         "flake-utils": [
+          "my-neovim",
           "nixvim",
           "nuschtosSearch",
           "flake-utils"
         ],
         "nixpkgs": [
+          "my-neovim",
           "nixvim",
           "nuschtosSearch",
           "nixpkgs"
@@ -538,6 +541,30 @@
         "owner": "NuschtOS",
         "ref": "v0.0.8",
         "repo": "ixx",
+        "type": "github"
+      }
+    },
+    "my-neovim": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixvim": "nixvim",
+        "nvim-plugin-cutlass": "nvim-plugin-cutlass",
+        "nvim-plugin-faster": "nvim-plugin-faster",
+        "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history"
+      },
+      "locked": {
+        "lastModified": 1753226431,
+        "narHash": "sha256-9FcPLXvvRyv84fk760XvHmkOnIcWXZuEiZJ9f+f6U78=",
+        "owner": "saygo-png",
+        "repo": "neovim-config",
+        "rev": "24e528ee66559fbc427b52382a729287e2af2b99",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saygo-png",
+        "repo": "neovim-config",
         "type": "github"
       }
     },
@@ -665,24 +692,24 @@
       "inputs": {
         "flake-parts": "flake-parts_2",
         "nixpkgs": [
+          "my-neovim",
           "nixpkgs"
         ],
         "nuschtosSearch": "nuschtosSearch",
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1753118035,
-        "narHash": "sha256-z8QL420HKTRLF6hULKy5MKrcPPwaxpzBW/oRcNzoBhY=",
-        "ref": "nvim-tree-mkNeovimPlugin",
-        "rev": "d2809e6fc7cb998f79d66045f72b2c99be8f02e6",
-        "revCount": 3573,
-        "type": "git",
-        "url": "file:///home/samsepi0l/builds/nixvim"
+        "lastModified": 1752976861,
+        "narHash": "sha256-59HcrqHfbSJUdmpzrAa9x8fW1PoS+ZGhCjL5k5HbyV8=",
+        "owner": "nix-community",
+        "repo": "nixvim",
+        "rev": "0c50ed9349199219583cb1ed1a972d71e06039ec",
+        "type": "github"
       },
       "original": {
-        "ref": "nvim-tree-mkNeovimPlugin",
-        "type": "git",
-        "url": "file:///home/samsepi0l/builds/nixvim"
+        "owner": "nix-community",
+        "repo": "nixvim",
+        "type": "github"
       }
     },
     "nur": {
@@ -715,6 +742,7 @@
         "flake-utils": "flake-utils",
         "ixx": "ixx",
         "nixpkgs": [
+          "my-neovim",
           "nixvim",
           "nixpkgs"
         ]
@@ -811,13 +839,10 @@
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
+        "my-neovim": "my-neovim",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
-        "nixvim": "nixvim",
-        "nvim-plugin-cutlass": "nvim-plugin-cutlass",
-        "nvim-plugin-faster": "nvim-plugin-faster",
-        "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
         "powerlevel10k": "powerlevel10k",
         "stylix": "stylix",
         "systems": "systems_5",
