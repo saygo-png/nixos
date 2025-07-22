@@ -623,6 +623,7 @@
 
         which-key = {
           enable = true;
+          lazyLoad.settings.event = "DeferredUIEnter";
           settings = {
             delay = 1000;
             win.border = "single";
