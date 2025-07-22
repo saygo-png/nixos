@@ -15,6 +15,17 @@
   };
 
   networking.firewall.checkReversePath = lib.mkForce "strict";
+
+  custom.persist = {
+    home = {
+      cache = {
+        directories = [
+          ".config/Mullvad VPN"
+        ];
+      };
+    };
+  };
+
   home-manager.users.${conUsername} = {
     home.packages = with pkgs; [
       mullvad-vpn
