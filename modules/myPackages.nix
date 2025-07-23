@@ -4,6 +4,8 @@
   config,
   inputs,
   conHome,
+  conHost,
+  conFlakePath,
   ...
 }: {
   environment.systemPackages = [
@@ -96,6 +98,23 @@
 
         sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
       '')
+
+    (pkgs.writeShellApplication {
+      name = "nrepl";
+      runtimeInputs = with pkgs; [coreutils];
+      text = ''
+        if [[ -f repl.nix ]]; then
+          nix repl --arg host '"${conHost}"' --file ./repl.nix "$@"
+        elif [[ -f ./flake.nix ]]; then
+          nix repl .
+        else
+          # use flake repl if not in a nix project
+          pushd ${conFlakePath} > /dev/null
+          nix repl --arg host '"${conHost}"' --file ./repl.nix "$@"
+          popd > /dev/null
+        fi
+      '';
+    })
 
     (pkgs.writeShellApplication {
       name = "xkb-switch-rofi";
