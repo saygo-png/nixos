@@ -1,13 +1,6 @@
 {pkgs}: let
   pkg = pkgs.haskellPackages.developPackage {
-    root =
-      pkgs.nix-gitignore.gitignoreSourcePure
-      [
-        "dist-newstyle"
-        ".*#"
-        ".git"
-      ]
-      ./.;
+    root = ./.;
     returnShellEnv = false;
   };
 in
