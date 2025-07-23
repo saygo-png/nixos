@@ -31,9 +31,7 @@
 
   programs.niri.enable = true;
 
-  home-manager.users.${conUsername} = {
-    ...
-  }: {
+  home-manager.users.${conUsername} = _: {
     services.polkit-gnome.enable = true;
     xdg.configFile."niri/config.kdl".source = lib.my.relativeToRoot "resources/niri.kdl";
   };
