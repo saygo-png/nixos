@@ -24,9 +24,10 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-    flameshot
     swaybg
+    flameshot
+    xwayland-satellite
+    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
   ];
 
   programs.niri.enable = true;
