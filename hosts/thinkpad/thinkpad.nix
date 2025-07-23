@@ -34,6 +34,8 @@
   # Optimization for ssds
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];
 
+  networking.hostId = "91b1153b";
+
   # Wifi
   networking.networkmanager.enable = true;
 

@@ -156,6 +156,8 @@
 
     commonModules = [
       ./modules/myConstants.nix
+      inputs.disko.nixosModules.disko
+      inputs.impermanence.nixosModules.impermanence
       (_: {
         options = {
           warnings = lib.mkOption {
@@ -191,8 +193,6 @@
           ./hosts/pc/pc.nix
           ./hosts/pc/disko-config.nix
 
-          inputs.disko.nixosModules.disko
-          inputs.impermanence.nixosModules.impermanence
           ./hosts/pc/hardware-configuration-pc.nix
 
           inputs.nixos-hardware.nixosModules.common-pc
@@ -219,8 +219,6 @@
 
       modules =
         [
-          inputs.disko.nixosModules.disko
-          inputs.impermanence.nixosModules.impermanence
           ./hosts/pc/install/install.nix
           ./hosts/pc/hardware-configuration-pc.nix
           ./hosts/pc/disko-config.nix
@@ -243,6 +241,7 @@
         [
           ./configuration.nix
           ./hosts/thinkpad/thinkpad.nix
+          ./hosts/thinkpad/disko-config.nix
           ./hosts/thinkpad/hardware-configuration-thinkpad.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
           inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
