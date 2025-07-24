@@ -171,9 +171,10 @@ layout {
 // See the binds section below for more spawn examples.
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
-spawn-at-startup "xwayland-satellite" ":12"
 spawn-at-startup "swaybg" "-m" "center" "-i" "/home/samsepi0l/.config/wallpaper.png"
+spawn-at-startup "waybar-niri"
 spawn-at-startup "alacritty"
+spawn-at-startup "xwayland-satellite" ":12"
 environment {
   DISPLAY ":12"
   NIXOS_OZONE_WL "1"

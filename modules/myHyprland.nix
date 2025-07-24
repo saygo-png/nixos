@@ -13,24 +13,28 @@
     text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.dash");
   };
 in {
-  imports = lib.my.withModules ["myFlameshot.nix"];
+  imports = lib.my.withModules ["myWaylandBase.nix"];
 
   programs.hyprland.enable = true;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = let
+    inherit (import (lib.my.relativeToRoot "modules/waybar/lib.nix") lib pkgs) wrapWaybarWithConfig;
+
+    waybar-config =
+      lib.attrsets.recursiveUpdate
+      config.const.waybarBase
+      {
+        mainBar = {
+          modules-left = ["hyprland/workspaces" "hyprland/window"];
+        };
+      };
+
+    waybar-hyprland = wrapWaybarWithConfig waybar-config "hyprland";
+  in [
+    waybar-hyprland
     hyprctl-switch-rofi
-
-    hyprland-protocols
-    wl-clipboard
-    hyprpicker # Color picker
-  ];
-
-  nixpkgs.overlays = [
-    (_: prev: {
-      flameshot = prev.flameshot.override (_: {
-        enableWlrSupport = true;
-      });
-    })
+    pkgs.hyprland-protocols
+    pkgs.hyprpicker # Color picker
   ];
 
   home-manager.users.${conUsername} = {osConfig, ...}: {
@@ -38,218 +42,6 @@ in {
 
     services.hyprpaper.enable = lib.mkForce false; # Enabled by default with hyprland.
     services.swayosd.enable = true;
-
-    stylix.targets.waybar.enable = false;
-
-    programs.waybar = {
-      enable = true;
-      systemd.enable = true;
-      settings = let
-        inherit (config.lib.stylix.colors) withHashtag;
-        color-span = content: color: ''<span color="${color}">${content}</span>'';
-
-        bg-text-color = content: color-span content withHashtag.base04;
-        base0B = content: color-span content withHashtag.base0B;
-      in {
-        # Choose the order of the modules
-        mainBar = {
-          modules-left = ["hyprland/workspaces" "hyprland/window"];
-          modules-right = [
-            "custom/disk_root"
-            "cpu"
-            "memory"
-            "network"
-            "backlight"
-            "pulseaudio"
-            "clock"
-            "battery"
-            "tray"
-          ];
-
-          "custom/disk_root" = {
-            format = bg-text-color "d" + "{}";
-            interval = 30;
-            exec = "df -h --output=avail / | tail -1 | tr -d ' '";
-          };
-
-          cpu = {
-            format = bg-text-color "c" + base0B "{usage}" + "%";
-            interval = 3;
-            tooltip = true;
-          };
-
-          memory = {
-            format = bg-text-color "m" + base0B "{used:0.1f}" + "G";
-            tooltip = true;
-          };
-
-          network = {
-            format-wifi = "<span color='#589df6'></span> <span color='gray'>{essid}</span> {frequency} <span color='#589df6'>{signaldBm} dB</span> <span color='#589df6'>⇵</span> {bandwidthUpBits}/{bandwidthDownBits}";
-            format-ethernet = "{ifname}";
-            format-linked = "{ifname} (No IP)";
-            format-disconnected = "disconnected";
-            tooltip = true;
-            interval = 5;
-          };
-
-          backlight = {
-            format = "{icon} {percent}%";
-            format-icons = ["🔅" "🔆"];
-          };
-
-          pulseaudio = {
-            format = bg-text-color "{icon}" + "{volume}%";
-            format-muted = bg-text-color "M" + "{format_source}";
-            format-bluetooth = "{icon}{volume}% {format_source}";
-            format-bluetooth-muted = bg-text-color "MB" + "{format_source}";
-
-            format-icons = {
-              headphones = "h";
-              handsfree = "";
-              headset = "hs";
-              phone = "p";
-              portable = "pp";
-              car = "c";
-              default = ["a" "aa" "aaa"];
-            };
-            on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
-            on-click-right = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
-            on-click-middle = "pavucontrol";
-          };
-
-          clock = {
-            interval = 1;
-            format = "{0:%a %Y-%m(%B)-%d}" + " " + base0B "{0:%H:%M}";
-            tooltip-format = "{0:%Y-%m-%d}" + " " + base0B "{0:%H:%M:%S}";
-          };
-
-          battery = {
-            states = {
-              warning = 20;
-              critical = 10;
-            };
-            format-icons = ["" "" "" "" ""];
-          };
-
-          "battery#bat2" = {
-            bat = "BAT2";
-          };
-
-          tray = {
-            spacing = 10;
-          };
-        };
-      };
-
-      style = let
-        inherit (config.lib.stylix.colors) withHashtag;
-        #css
-      in ''
-        * {
-          font-family: "monospace";
-          font-size: 11pt;
-
-          border: none;
-          border-radius: 0;
-          min-height: 0px;
-          padding: 0px;
-          margin: 0px;
-        }
-
-        tooltip, tooltip * {
-          color: ${withHashtag.base04};
-          background:  ${withHashtag.base01};
-        }
-
-        window#waybar {
-          background: rgba(0, 0, 0, 0);
-          color: ${withHashtag.base05};
-        }
-
-        #window {
-          color: ${withHashtag.base05};
-          font-weight: bold;
-        }
-
-        #workspaces button {
-          background: transparent;
-          color: ${withHashtag.base0B};
-          font-weight: bold;
-        }
-
-        #workspaces button.active {
-          color: #1b1d1e;
-          background: ${withHashtag.base0B};
-        }
-
-        #workspaces button.urgent {
-          color: #1b1d1e;
-          background: ${withHashtag.base08};
-        }
-
-        #mode {
-          background: ${withHashtag.base0E};
-          color: #1b1d1e;
-        }
-
-        #cpu,
-        #workspaces,
-        #window,
-        #tray,
-        #clock,
-        #memory,
-        #battery,
-        #network,
-        #custom-disk_root,
-        #backlight,
-        #pulseaudio,
-        #mode {
-          padding: 0 4px;
-          margin: 0 2px;
-          margin-bottom: -2px;
-          margin-right: -2px;
-        }
-
-        #window {
-          padding-left: 0px;
-        }
-
-        #workspaces {
-          padding-left: 0px;
-          margin-left: 0px;
-        }
-
-        #tray {
-          margin-bottom: 1px;
-        }
-
-        #battery icon {
-          color: red;
-        }
-        @keyframes blink {
-          to {
-            background-color: ${withHashtag.base0E};
-          }
-        }
-
-        #battery.warning:not(.charging) {
-          background-color: ${withHashtag.base0B};
-          color: #1b1d1e;
-        }
-        #battery.critical:not(.charging) {
-          color: white;
-          animation-name: blink;
-          animation-duration: 0.5s;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-          animation-direction: alternate;
-        }
-
-        #network.disconnected {
-          background: ${withHashtag.base08};
-        }
-      '';
-    };
 
     wayland.windowManager.hyprland = let
       gaps_in = osConfig.const.gaps;
@@ -293,6 +85,7 @@ in {
         exec-once = [
           "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
           "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
+          "waybar-hyprland &"
           "udiskie &"
           "hyprctl dispatch exec '[workspace 2 silent] vesktop' &"
           "hyprctl dispatch exec '[workspace 2 silent] $BROWSER' &"

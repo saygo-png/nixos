@@ -1,33 +1,29 @@
 {
   lib,
   pkgs,
+  config,
   conUsername,
   ...
-}: {
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+}: let
+  inherit (import (lib.my.relativeToRoot "modules/waybar/lib.nix") lib pkgs) wrapWaybarWithConfig;
+in {
+  imports = lib.my.withModules ["myWaylandBase.nix"];
 
-  # Polkit (needed for window managers)
-  security.polkit.enable = lib.mkDefault true;
+  environment.systemPackages = let
+    waybar-config =
+      lib.attrsets.recursiveUpdate
+      config.const.waybarBase
+      {
+        mainBar = {
+          modules-left = ["niri/workspaces" "niri/window"];
+        };
+      };
 
-  # NixOS is retarded and turns on lightdm by default.
-  services.xserver.displayManager = {
-    lightdm.enable = false;
-  };
-
-  nixpkgs.overlays = [
-    (_: prev: {
-      flameshot = prev.flameshot.override (_: {
-        enableWlrSupport = true;
-      });
-    })
-  ];
-
-  environment.systemPackages = with pkgs; [
-    swaybg
-    flameshot
-    xwayland-satellite
-    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
+    waybar-niri = wrapWaybarWithConfig waybar-config "niri";
+  in [
+    waybar-niri
+    pkgs.swaybg
+    pkgs.xwayland-satellite
   ];
 
   programs.niri.enable = true;
