@@ -95,15 +95,4 @@ _: {
 
   # https://github.com/openzfs/zfs/issues/10891
   systemd.services.systemd-udev-settle.enable = false;
-  services.sanoid = {
-    enable = true;
-    datasets = {
-      "zroot/local/persist" = {
-        hourly = 50;
-        daily = 15;
-        weekly = 3;
-        monthly = 1;
-      };
-    };
-  };
 }

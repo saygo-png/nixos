@@ -203,9 +203,9 @@
         ++ commonModules;
     };
     # install-pc {{{
-    # My configuration is so bulky that i struggle with installing it from a
+    # My configurations are so bulky that i struggle with installing them from a
     # usb without OOM errors. This is a minimal host to be deployed on the
-    # install target disk. It follows the partitioning schema of the "pc"
+    # install target disk. It follows the partitioning schema of corresponding
     # host, which allows for a seamless switch to it.
     nixosConfigurations.install-pc = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
@@ -248,6 +248,26 @@
         ]
         ++ commonModules;
     };
+
+    # install-thinkpad {{{
+    nixosConfigurations.install-thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      specialArgs =
+        {
+          conHost = "install-thinkpad";
+          conUsername = "samsepi0l";
+          conHome = "/home/samsepi0l";
+        }
+        // (commonSpecialArgs system);
+
+      modules =
+        [
+          ./hosts/thinkpad/disko-config.nix
+          ./hosts/thinkpad/install/install.nix
+          ./hosts/thinkpad/hardware-configuration-thinkpad.nix
+        ]
+        ++ commonModules;
+    }; # }}}
   };
 }
 ## vim:foldmethod=marker

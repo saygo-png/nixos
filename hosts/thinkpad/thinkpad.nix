@@ -31,6 +31,19 @@
       "myPulseaudio.nix"
       # "myMullvad.nix"
     ];
+
+  services.sanoid = {
+    enable = true;
+    datasets = {
+      "zroot/local/persist" = {
+        hourly = 50;
+        daily = 15;
+        weekly = 3;
+        monthly = 1;
+      };
+    };
+  };
+
   # Optimization for ssds
   fileSystems."/".options = ["noatime" "nodiratime" "discard"];
 

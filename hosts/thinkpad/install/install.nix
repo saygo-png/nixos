@@ -6,10 +6,11 @@
     (lib.my.relativeToRoot "hosts/install.nix")
     ({config, ...}: {
       options.const = config.constLib.mkConstsFromSet {
-        host = "pc";
+        host = "thinkpad";
       };
     })
   ];
 
-  networking.hostId = "a4e735aa";
+  networking.hostId = "91b1153b";
+  networking.networkmanager.enable = true;
 }
