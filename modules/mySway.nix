@@ -4,22 +4,7 @@
   conUsername,
   ...
 }: {
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Polkit (needed for window managers)
-  security.polkit.enable = lib.mkDefault true;
-
-  # NixOS is retarded and turns on lightdm by default.
-  services.xserver.displayManager = lib.mkDefault {
-    lightdm.enable = false;
-  };
-
-  environment.systemPackages = with pkgs; [
-    grim # screenshot functionality
-    slurp # screenshot functionality
-    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-  ];
+  imports = lib.my.withModules ["myWaylandBase.nix"];
 
   home-manager.users.${conUsername} = {
     osConfig,
@@ -135,7 +120,7 @@
           "${mod}+a" = "focus parent";
           "${mod}+r" = "mode resize";
           "${mod}+u" = ''[app_id="file-manager"] scratchpad show'';
-          "${mod}+Shift+s" = ''exec --no-startup-id grim -g "$(slurp)" - | wl-copy'';
+          "${mod}+Shift+s" = ''exec flameshot gui'';
           "Mod1+Control+l" = "exec ${swaylock-cmd}";
           "Mod1+Control+m" = "exec --no-startup-id volumectl mute";
           "XF86AudioRaiseVolume" = "exec --no-startup-id volumectl raise";
