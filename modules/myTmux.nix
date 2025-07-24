@@ -6,72 +6,31 @@
 }: {
   environment.systemPackages = [
     pkgs.tmux-sessionizer # Tmux session manager
-    (pkgs.callPackage
-      ({stdenv}:
-        stdenv.mkDerivation {
-          pname = "tmux-mem-cpp";
-          version = "1.0";
-          nativeBuildInputs = [stdenv.cc];
-          dontUnpack = true;
+    (pkgs.writers.writeHaskellBin "tmux-mem-haskell"
+      {libraries = [pkgs.haskellPackages.bytestring];}
+      # Haskell
+      ''
+        import Data.ByteString.Char8 qualified as C8
+        import Data.Char (isDigit)
+        import Data.List (find)
+        import Data.Maybe (fromMaybe)
+        import Text.Printf (printf)
+        import Text.Read (readMaybe)
 
-          buildPhase = let
-            main-cpp =
-              builtins.toFile "main.cpp"
-              # cpp
-              ''
-                #include <cstdint>
-                #include <fstream>
-                #include <iomanip>
-                #include <iostream>
-                #include <string>
+        main :: IO ()
+        main = do
+          meminfo <- C8.readFile "/proc/meminfo"
+          let freeRam = extractNumber $ matchLineWith $ C8.lines meminfo
+          putStrLn $ printf "MemF %.1fG" freeRam
 
-                using i32 = int32_t;
-                using u64 = uint64_t;
-                using f32 = float;
+        matchLineWith :: [C8.ByteString] -> C8.ByteString
+        matchLineWith = fromMaybe C8.empty . find (C8.isPrefixOf target)
+          where
+            target = C8.pack "MemAvailable:"
 
-                int main(void)
-                {
-                  std::fstream meminfo("/proc/meminfo", std::ios::in);
-
-                  std::string name;
-                  u64 value;
-                  std::string unit;
-
-                  u64 total_free{};
-
-                  // Read in the amount of available memory and swap
-                  while (meminfo >> name >> value >> unit)
-                  {
-                    if (name == "MemAvailable:" || name == "SwapAvailable:")
-                      total_free += value;
-                  }
-
-                  // Convert the free memory from kilobytes to gigabytes
-                  constexpr f32 divisor = 1.0f / 1024.0f / 1024.0f;
-                  const f32 total_free_gb = total_free * divisor;
-
-                  // Increase precision if the amount of free memory is more than 10 gigabytes
-                  const i32 precision = total_free_gb > 10 ? 3 : 2;
-
-                  std::cout << "MemF " << std::setprecision(precision) << total_free_gb << "G\n";
-                }
-              '';
-          in ''
-            g++ ${main-cpp} -o tmux-mem-cpp
-          '';
-
-          installPhase = ''
-            mkdir -p $out/bin
-            cp tmux-mem-cpp $out/bin/
-            chmod +x $out/bin/tmux-mem-cpp
-          '';
-
-          meta = {
-            mainProgram = "tmux-mem-cpp";
-            description = "Prints free RAM for use in a tmux statusline";
-          };
-        })
-      {})
+        extractNumber :: C8.ByteString -> Double
+        extractNumber = maybe 0 (/ 1048576) . readMaybe . C8.unpack . C8.filter isDigit
+      '')
   ];
 
   home-manager.users.${conUsername} = {config, ...}: {
@@ -150,7 +109,7 @@
         set-option -sg status-left-style default
         set-option -sg status-right-style default
         set-option -sg status-style fg=green,bg=default
-        set-option -sg status-right "#(tmux-mem-cpp) %Y-%m-%d (%Ob %a) %H:%M"
+        set-option -sg status-right "#(tmux-mem-haskell) %Y-%m-%d (%Ob %a) %H:%M"
 
         # y and p as in vim.
         set-option -sg set-clipboard on
