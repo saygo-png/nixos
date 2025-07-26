@@ -14,6 +14,8 @@
     programs.neovide = {
       enable = true;
       settings = {
+        fork = true;
+        vsync = false;
         font = {
           normal = ["${config.stylix.fonts.monospace.name}"];
           size = lib.mkForce 13;
