@@ -24,6 +24,7 @@ in {
     waybar-niri
     pkgs.swaybg
     pkgs.xwayland-satellite
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/niri-switch-keyboard-rofi") {})
   ];
 
   programs.niri.enable = true;

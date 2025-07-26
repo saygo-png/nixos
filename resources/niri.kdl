@@ -382,6 +382,8 @@ binds {
   // Alternatively, there are commands to move just a single window:
   // Mod+Ctrl+1 { move-window-to-workspace 1; }
 
+  Mod+P { spawn "niri-switch-keyboard"; }
+
   // Switches focus between the current and the previous workspace.
   Alt+Tab { focus-workspace-previous; }
 
