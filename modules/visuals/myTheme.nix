@@ -53,30 +53,41 @@
     base0F = "d65d0e"; # #d65d0e brown
   };
 
-  stylix.fonts = {
+  stylix.fonts = let
+    courier-patched = pkgs.courier-prime.overrideAttrs {
+      src = "${inputs.extras-nixos}/courier-prime-no-ligatures";
+      installPhase = ''
+        runHook preInstall
+
+        install -m444 -Dt $out/share/fonts/truetype *.ttf
+
+        runHook postInstall
+      '';
+    };
+  in {
     monospace = {
       name = "Courier Prime";
-      package = pkgs.courier-prime;
+      package = courier-patched;
     };
     sansSerif = {
       name = "Courier Prime";
-      package = pkgs.courier-prime;
+      package = courier-patched;
     };
     serif = {
       name = "Courier Prime";
-      package = pkgs.courier-prime;
+      package = courier-patched;
     };
     emoji = {
       name = "Symbols Nerd Font";
       package = pkgs.nerd-fonts.symbols-only;
     };
-  };
 
-  stylix.fonts.sizes = {
-    popups = lib.mkDefault 12;
-    desktop = lib.mkDefault 12;
-    terminal = lib.mkDefault 12;
-    applications = lib.mkDefault 12;
+    sizes = {
+      popups = lib.mkDefault 12;
+      desktop = lib.mkDefault 12;
+      terminal = lib.mkDefault 12;
+      applications = lib.mkDefault 12;
+    };
   };
 
   stylix.opacity = {
