@@ -1,7 +1,6 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-
 import Shh
 
 load SearchPath ["niri", "rofi"]
