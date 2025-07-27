@@ -12,11 +12,12 @@ in rec {
 
   wrapWaybarWithConfig = config: wrapperName: let
     configFile = jsonFormat.generate "waybar-${wrapperName}-config.json" (finalConfiguration config);
-  in (pkgs.writeShellApplication {
-    name = "waybar-${wrapperName}";
-    runtimeInputs = [pkgs.waybar];
-    text = ''
-      waybar -c ${configFile}
-    '';
-  });
+  in
+    pkgs.writeShellApplication {
+      name = "waybar-${wrapperName}";
+      runtimeInputs = [pkgs.waybar];
+      text = ''
+        waybar -c ${configFile}
+      '';
+    };
 }
