@@ -20,7 +20,7 @@ input {
       // For more information, see xkeyboard-config(7).
 
       // For example:
-      layout "pl,fi"
+      layout "pl,plfi"
       options "caps:escape,grp:sclk_toggle"
     }
 
