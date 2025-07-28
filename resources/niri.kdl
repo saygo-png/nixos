@@ -193,6 +193,12 @@ window-rule {
 }
 
 window-rule {
+  match app-id=r#"flameshot"#
+  open-fullscreen true
+  open-focused true
+}
+
+window-rule {
   match app-id=r#".*"#
   draw-border-with-background false
 }
