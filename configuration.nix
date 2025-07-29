@@ -1012,9 +1012,9 @@
               gruvbox-dark-red-light = mkLiteral "${color.base08}";
               gruvbox-dark-yellow-dark = mkLiteral "${color.base0A}";
               gruvbox-dark-yellow-light = mkLiteral "${color.base0C}";
-              gruvbox-dark-bg0 = mkLiteral "rgba (40, 40, 40, 0%)";
-              gruvbox-dark-bg3 = mkLiteral "rgba (125, 134, 24, 0%)";
-              selected-normal-background = mkLiteral "#${osConfig.const.accentColor}";
+              gruvbox-dark-bg0 = mkLiteral "${color.base00}";
+              gruvbox-dark-bg3 = mkLiteral "${color.base01}";
+              selected-normal-background = mkLiteral "${color.base0B}";
 
               normal-background = mkLiteral "@background";
               gruvbox-dark-bg0-soft = mkLiteral "@background";
@@ -1024,13 +1024,13 @@
               foreground = mkLiteral "@gruvbox-dark-fg1";
               separatorcolor = mkLiteral "@border-color";
               normal-foreground = mkLiteral "@foreground";
-              active-foreground = mkLiteral "${color.base00}";
+              active-foreground = mkLiteral "@background";
               scrollbar-handle = mkLiteral "@border-color";
-              urgent-foreground = mkLiteral "@gruvbox-dark-fg1";
+              urgent-foreground = mkLiteral "@background";
               alternate-normal-foreground = mkLiteral "@foreground";
               urgent-background = mkLiteral "@gruvbox-dark-red-dark";
               active-background = mkLiteral "@gruvbox-dark-yellow-dark";
-              selected-normal-foreground = mkLiteral "@gruvbox-dark-fg0";
+              selected-normal-foreground = mkLiteral "@background";
               alternate-urgent-foreground = mkLiteral "@gruvbox-dark-fg1";
               selected-active-foreground = mkLiteral "@active-foreground";
               selected-urgent-foreground = mkLiteral "@urgent-foreground";
