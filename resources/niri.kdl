@@ -47,7 +47,6 @@ output "DP-1" {
 workspace "t"
 workspace "b"
 workspace "d"
-workspace "s"
 
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
 layout {
@@ -382,7 +381,6 @@ binds {
   //
   // For example, with 2 workspaces + 1 empty, indices 3, 4, 5 and so on
   // will all refer to the 3rd workspace.
-  Mod+S { focus-workspace "s"; }
   Mod+1 { focus-workspace "t"; }
   Mod+2 { focus-workspace "b"; }
   Mod+3 { focus-workspace "d"; }
