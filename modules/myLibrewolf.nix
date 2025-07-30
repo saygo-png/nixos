@@ -225,6 +225,7 @@ in {
                       "reddit.com"
                       "whitescreen.org"
                       "pstream.org"
+                      "hackage.haskell.org"
                     ];
                     simpleCss = [];
                     stylesheetProcessor = [];
