@@ -87,6 +87,9 @@
 
   networking.hostName = config.const.host;
 
+  # Enable sysrq fully
+  boot.kernel.sysctl."kernel.sysrq" = 1;
+
   # DNS
   networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];
 
