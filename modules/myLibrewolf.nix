@@ -128,6 +128,7 @@ in {
             addons.single-file
             addons.sponsorblock
             addons.ublock-origin
+            addons.refined-github
             addons.gruvbox-dark-theme
             addons.return-youtube-dislikes
             addons.dark-background-light-text
