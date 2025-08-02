@@ -768,8 +768,8 @@
 
       programs.tealdeer = {
         enable = true;
+        enableAutoUpdates = true;
         settings = {
-          updates.auto_update = true;
           display = {
             compact = false;
             use_pager = true;
