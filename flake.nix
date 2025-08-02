@@ -21,7 +21,7 @@
     };
 
     drugtracker2 = {
-      url = "github:saygo-png/drugTracker2";
+      url = "github:saygo-png/drugTracker2/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

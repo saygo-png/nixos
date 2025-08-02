@@ -440,6 +440,11 @@
       osConfig,
       ...
     }: {
+      imports = [
+        inputs.drugtracker2.homeManagerModules.default
+      ];
+      programs.drugtracker2.enable = true;
+
       # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
       xdg.mimeApps = {
