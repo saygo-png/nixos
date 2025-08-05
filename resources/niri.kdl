@@ -248,6 +248,7 @@ binds {
   Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty"; }
   Mod+Space hotkey-overlay-title="Rofi" { spawn "rofi" "-show" "drun"; }
   Mod+B hotkey-overlay-title="Browser" { spawn "librewolf"; }
+  Mod+R hotkey-overlay-title="Recording" { spawn "hyprcorder.sh"; }
 
   // Example volume keys mappings for PipeWire & WirePlumber.
   // The allow-when-locked=true property makes them work even when the session is locked.
@@ -419,9 +420,9 @@ binds {
   // Expel the bottom window from the focused column to the right.
   Mod+Period { expel-window-from-column; }
 
-  Mod+R { switch-preset-column-width; }
-  Mod+Shift+R { switch-preset-window-height; }
-  Mod+Ctrl+R { reset-window-height; }
+  Mod+E { switch-preset-column-width; }
+  Mod+Shift+E { switch-preset-window-height; }
+  Mod+Ctrl+E { reset-window-height; }
   Mod+F { maximize-column; }
   Mod+Shift+F { fullscreen-window; }
 
