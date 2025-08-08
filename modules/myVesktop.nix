@@ -96,6 +96,20 @@
     };
     programs.vesktop = {
       enable = true;
+      settings = {
+        appBadge = false;
+        arRPC = true;
+        enableSplashScreen = true;
+        customTitleBar = false;
+        disableMinSize = true;
+        minimizeToTray = false;
+        tray = true;
+        splashTheming = true;
+        staticTitle = false;
+        hardwareAcceleration = true;
+        videoHardwareAcceleration = true;
+        discordBranch = "stable";
+      };
       vencord = let
         gruvboxTheme = "gruvbox";
       in {
