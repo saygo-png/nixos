@@ -15,6 +15,7 @@ in {
       config.const.waybarBase
       {
         mainBar = {
+          layer = "top";
           modules-left = ["niri/workspaces" "niri/window"];
         };
       };
