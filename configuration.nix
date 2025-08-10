@@ -443,7 +443,6 @@
       imports = [
         inputs.drugtracker2.homeManagerModules.default
       ];
-      programs.drugtracker2.enable = true;
 
       # Prevent default apps from being changed
       xdg.configFile."mimeapps.list".force = true;
@@ -847,6 +846,11 @@
           "bg+" = lib.mkForce "-1";
           "gutter" = lib.mkForce "-1";
         };
+      };
+
+      programs.drugtracker2 = {
+        systemdIntegration.remindFrequency = "*:0/10:00";
+        enable = true;
       };
 
       programs.btop = {
