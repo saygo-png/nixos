@@ -129,6 +129,7 @@ in {
             addons.sponsorblock
             addons.ublock-origin
             addons.gruvbox-dark-theme
+            addons.close-tabs-shortcuts
             addons.return-youtube-dislikes
             addons.dark-background-light-text
           ];
