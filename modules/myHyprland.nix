@@ -262,7 +262,7 @@ in {
           "$mainMod, z, Cycle next in active workspace, cyclenext,"
           "$mainMod, x, Center active, centerwindow,"
 
-          "$mainMod, Return, Open terminal, exec, ${lib.getExe config.custom.defaultTerminal}"
+          "$mainMod, Return, Open terminal, exec, ${lib.getExe config.custom.defaultTerminal.package}"
 
           "$mainMod, b, Open [b]rowser, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 

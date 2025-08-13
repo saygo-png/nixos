@@ -57,7 +57,10 @@
 
   ###### Custom ###### {{{
 
-  custom.defaultTerminal = pkgs.alacritty;
+  custom.defaultTerminal = {
+    package = pkgs.alacritty;
+    desktopFile = "alacritty.desktop";
+  };
 
   # }}}
 

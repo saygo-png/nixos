@@ -6,15 +6,22 @@
   ...
 }: {
   options.custom = {
-    defaultTerminal = lib.mkOption {
-      default = pkgs.xterm;
-      description = "Set a terminal as default everywhere. Expects package";
-      type = lib.types.package;
+    defaultTerminal = {
+      package = lib.mkOption {
+        default = pkgs.xterm;
+        description = "Set a terminal as default everywhere. Expects package";
+        type = lib.types.package;
+      };
+      desktopFile = lib.mkOption {
+        description = "Name of the desktop file of the default terminal";
+        type = lib.types.string;
+      };
     };
   };
 
   config = let
-    termPkg = config.custom.defaultTerminal;
+    inherit (config.custom.defaultTerminal) desktopFile;
+    termPkg = config.custom.defaultTerminal.package;
     termExe = lib.getExe termPkg;
   in {
     home-manager.users.${conUsername} = {config, ...}: {
@@ -23,38 +30,41 @@
         TERMINAL_PROG = termExe;
       };
 
-      home.packages = [
-        (pkgs.writeShellScriptBin "xdg-terminal-exec" ''
-          exec "${termExe}" -- "$@"
-        '')
-      ];
+      xdg = {
+        terminal-exec = {
+          enable = true;
+          settings = {
+            default = [desktopFile];
+          };
+        };
 
-      xdg.configFile."Thunar/uca.xml".text =
-        # XML
-        ''
-          <?xml version="1.0" encoding="UTF-8"?>
-          <actions>
-          <action>
-            <icon>utilities-terminal</icon>
-            <name>Open Terminal Here</name>
-            <submenu></submenu>
-            <unique-id>1734179588135391-1</unique-id>
-            <command>cd %f &amp;&amp; "$TERMINAL"</command>
-            <description>Example for a custom action</description>
-            <range></range>
-            <patterns>*</patterns>
-            <startup-notify/>
-            <directories/>
-          </action>
-          </actions>
-        '';
+        configFile."Thunar/uca.xml".text =
+          # XML
+          ''
+            <?xml version="1.0" encoding="UTF-8"?>
+            <actions>
+            <action>
+              <icon>utilities-terminal</icon>
+              <name>Open Terminal Here</name>
+              <submenu></submenu>
+              <unique-id>1734179588135391-1</unique-id>
+              <command>cd %f &amp;&amp; "${termExe}"</command>
+              <description>Example for a custom action</description>
+              <range></range>
+              <patterns>*</patterns>
+              <startup-notify/>
+              <directories/>
+            </action>
+            </actions>
+          '';
 
-      xdg.configFile."kdeglobals" = {
-        force = true;
-        text = ''
-          [General]
-          TerminalApplication=${termExe}
-        '';
+        configFile."kdeglobals" = {
+          force = true;
+          text = ''
+            [General]
+            TerminalApplication=${termExe}
+          '';
+        };
       };
 
       programs.rofi.terminal = lib.mkIf config.programs.rofi.enable termExe;
