@@ -16,7 +16,6 @@
           name = "update_mutable.sh";
           runtimeInputs = [coreutils];
           text = ''
-            set -o pipefail
             set -u
             IFS= # don't split
             set +f # do glob
@@ -36,9 +35,9 @@
             rm -vf "$KRITANIXHOME/krita-toplevel/resourcecache.sqlite"
 
             cd "$KRITANIXHOME"/.. || exit
-            git add -A
-            git commit -m "chore: auto commit update"
-            git push
+            git add -A || true
+            git commit -m "chore: auto commit update" || true
+            git push || true
 
             # Anki
             rm -vrf "''${ANKINIXHOME:?}/*"
@@ -47,9 +46,9 @@
             find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
 
             cd "$ANKINIXHOME"/.. || exit
-            git add -A
-            git commit -m "chore: auto commit update"
-            git push
+            git add -A || true
+            git commit -m "chore: auto commit update" || true
+            git push || true
           '';
         })
       ];
