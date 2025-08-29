@@ -1,0 +1,32 @@
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  conUsername,
+  ...
+}: {
+  environment.systemPackages = [
+    inputs.my-neovim.packages.${pkgs.system}.neovim
+  ];
+
+  home-manager.users.${conUsername} = {
+    programs.neovide = {
+      enable = true;
+      settings = {
+        fork = true;
+        vsync = false;
+        font = {
+          normal = ["${config.stylix.fonts.monospace.name}"];
+          size = lib.mkForce 13;
+        };
+      };
+    };
+
+    home.shellAliases = {"neov" = "neovide";};
+    home.sessionVariables = {EDITOR = "nvim";};
+    home.packages = [pkgs.tree-sitter];
+
+    stylix.targets.nixvim.enable = false;
+  };
+}

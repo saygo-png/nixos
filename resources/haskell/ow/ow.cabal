@@ -1,0 +1,24 @@
+cabal-version: 3.0
+name: ow
+version: 0.0.0
+license: MIT
+build-type: Simple
+
+common common-options
+  build-depends:
+    base >= 4.7 && < 5,
+    cassava,
+    path,
+    path-io,
+    time,
+    bytestring,
+    directory
+
+  default-language: GHC2021
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  other-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternGuards PolyKinds RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeFamilies TypeSynonymInstances ViewPatterns
+
+executable ow
+    import: common-options
+    main-is: Main.hs
+    hs-source-dirs: .

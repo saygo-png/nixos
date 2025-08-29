@@ -1,0 +1,14 @@
+cabal-version:   2.4
+name:            niri-switch-keyboard
+version:         0
+build-type:      Simple
+
+common common-options
+  build-depends:    base, shh, shh-extras
+  default-language: GHC2021
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+
+executable niri-switch-keyboard
+  import:         common-options
+  hs-source-dirs: .
+  main-is:        Main.hs
