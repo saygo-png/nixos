@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
-# Run this from inside my dotfiles directory root since path to flake is relative.
-# Put the disk path like /dev/nvme0n1 into the variable below
+# Put the disk path like /dev/nvme0n1 into the variable below.
+# This wipes a lot of data. Do not run this if u don't understand what it's doing.
 
 DISK=UNDEFINED
 CONFIG=UNDEFINED
+CONFIG_PATH="/home/nixos/nixos"
 
-[ "$DISK" = "UNDEFINED" ] && exit
-[ "$CONFIG" = "UNDEFINED" ] && exit
-nixos-install --flake 'path/to/flake.nix#nixos'
-wipefs -a "$DISK"
-blkdiscard -f "$DISK"
-sgdisk --zap-all "$DISK"
-zpool labelclear -f "$DISK"
+[[ ${DISK} = UNDEFINED ]] && { echo "DISK not defined"; exit 1; }
+[[ ${CONFIG} = UNDEFINED ]] && { echo "CONFIG not defined"; exit 1; }
+[[ ${EUID} -ne 0 ]] && { echo "Script must be ran as root"; exit 1; }
 
-sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount PATH_TO_DISKO_CONFIG
+zpool destroy zroot # Might fail if it doesn't exist, that's okay.
+wipefs -a "${DISK}" || exit 1
+blkdiscard -f "${DISK}" || exit 1
+sgdisk --zap-all "${DISK}" || exit 1
 
-nixos-install --flake 'path/to/flake.nix#HOST-install'
+sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- \
+  --mode destroy,format,mount "${CONFIG_PATH}/hosts/${CONFIG}/disko-config.nix" || exit 1
+
+nixos-install --flake "${CONFIG_PATH}#${CONFIG}-install"
