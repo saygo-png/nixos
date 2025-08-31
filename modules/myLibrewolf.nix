@@ -116,7 +116,7 @@ in {
 
             (mkBookmarkFolder "misc"
               [
-                (mkBookmark "white page" "whitescreen.org")
+                (mkBookmark "white page" "saygo-png.github.io/white-page")
               ])
           ];
         };
