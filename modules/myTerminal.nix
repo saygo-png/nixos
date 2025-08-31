@@ -14,7 +14,7 @@
       };
       desktopFile = lib.mkOption {
         description = "Name of the desktop file of the default terminal";
-        type = lib.types.string;
+        type = lib.types.str;
       };
     };
   };
