@@ -99,6 +99,11 @@ in {
             (mkBookmark "stylix docs" "stylix.danth.me")
             (mkBookmark "nixvim docs" "nix-community.github.io/nixvim")
 
+            (mkBookmarkFolder "haskell"
+              [
+                (mkBookmark "haskell symbols" "github.com/takenobu-hs/haskell-symbol-search-cheatsheet")
+              ])
+
             (mkBookmarkFolder "resources"
               [
                 (mkBookmark "free icons" "feathericons.com/")
