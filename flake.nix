@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/28b5b8af91ffd2623e995e20aee56510db49001a";
+    nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/cab778239e705082fe97bb4990e0d24c50924c04";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
@@ -142,11 +142,12 @@
       });
 
     treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
-    pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
+    # pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
+    pkgs-frozen = import inputs.nixpkgs-unstable-frozen {system = "x86_64-linux";};
 
     commonSpecialArgs = system: {
-      inherit inputs self pkgs-unstable;
-      # inherit nixpkgs-unstable-frozen;
+      inherit inputs self;
+      inherit pkgs-frozen;
       lib = nixpkgs.lib.extend (final: _prev: {
         my = import ./modules/myLib.nix {
           pkgs = nixpkgs.legacyPackages.${system};
