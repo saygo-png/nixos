@@ -155,7 +155,7 @@
           }
 
           source ${p10k}/powerlevel10k/powerlevel10k.zsh-theme
-          source ${lib.my.relativeToRoot "resources/zsh/p10k-prompt.zsh"}
+          source ${inputs.extras-nixos}/p10k-prompt.zsh
 
           source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
           source ${notify}/zsh-auto-notify/auto-notify.plugin.zsh
