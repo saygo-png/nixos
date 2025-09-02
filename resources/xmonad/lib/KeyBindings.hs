@@ -38,7 +38,7 @@ myKeys conf@(XConfig{XMonad.modMask = modm}) =
       ((modm, xK_space), safeSpawn "rofi" ["-show", "drun"])
     , ((mod1Mask, xK_Tab), safeSpawn "rofi" ["-show", "window"])
     , ((mod1Mask, xK_Tab), safeSpawn "rofi" ["-show", "window"])
-    , ((modm, xK_p), safeSpawn "xkb-switch-rofi" [])
+    , ((modm, xK_p), safeSpawn "xkb-switch-keyboard" [])
     , ((modm .|. shiftMask, xK_d), safeSpawn "d3-autocast-menu" [])
     , ((modm .|. shiftMask, xK_space), safeSpawn "rofi" ["-show", "run"])
     , ((modm .|. mod1Mask, xK_x), spawn "xkill")

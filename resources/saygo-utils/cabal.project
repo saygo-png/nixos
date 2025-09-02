@@ -1,0 +1,8 @@
+packages: .
+
+optimization: 2
+split-sections: True
+executable-stripping: True
+documentation: False
+tests: False
+benchmarks: False

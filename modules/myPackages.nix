@@ -68,17 +68,13 @@
       };
     })
 
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/convertlink") {})
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/timezones") {})
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/ow") {})
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/saygo-utils") {})
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/convertlink") {})
 
     # Shell {{{
 
     (pkgs.writeShellScriptBin "hyprland-next-visible-client.bash"
       (builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprland-next-visible-client.bash")))
-
-    (pkgs.writeShellScriptBin "monitor-toggle"
-      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/monitor-toggle.bash")))
 
     (pkgs.writeScriptBin "nr"
       ''
@@ -113,12 +109,6 @@
           popd > /dev/null
         fi
       '';
-    })
-
-    (pkgs.writeShellApplication {
-      name = "xkb-switch-rofi";
-      runtimeInputs = with pkgs; [coreutils xkb-switch rofi-wayland];
-      text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/xkb-switch-rofi.bash");
     })
 
     (pkgs.writeShellApplication {

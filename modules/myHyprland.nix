@@ -2,17 +2,9 @@
   lib,
   pkgs,
   config,
-  extraLib,
   conUsername,
   ...
-}: let
-  hyprctl-switch-rofi = extraLib.writeAnyShellApplication {
-    name = "hyprctl-switch-rofi";
-    shellPackage = pkgs.dash;
-    runtimeInputs = [pkgs.coreutils pkgs.rofi-wayland];
-    text = builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprctl-switch-rofi.dash");
-  };
-in {
+}: {
   imports = lib.my.withModules ["myWaylandBase.nix"];
 
   programs.hyprland.enable = true;
@@ -32,7 +24,6 @@ in {
     waybar-hyprland = wrapWaybarWithConfig waybar-config "hyprland";
   in [
     waybar-hyprland
-    hyprctl-switch-rofi
     pkgs.hyprland-protocols
     pkgs.hyprpicker # Color picker
   ];
@@ -250,7 +241,7 @@ in {
 
           "$mainMod SHIFT, f, [f]ake fullscreen, fullscreenstate, -1, 2"
 
-          "$mainMod, p, Switch keyboard layout, exec, ${lib.getExe hyprctl-switch-rofi}"
+          "$mainMod, p, Switch keyboard layout, exec, hyprctl-switch-keyboard"
 
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
           "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"

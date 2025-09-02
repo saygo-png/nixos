@@ -3,6 +3,7 @@ import Data.Time
 import Data.Time.Zones
 import Data.Time.Zones.All
 import Options.Applicative
+import Universum
 
 timezones :: [TZLabel]
 timezones =
@@ -13,8 +14,8 @@ timezones =
 
 parserInfo :: ParserInfo ()
 parserInfo =
-  info (helper <*> pure ()) $
-    progDesc "List times in multiple timezones"
+  info (helper <*> pass)
+    $ progDesc "List times in multiple timezones"
 
 main :: IO ()
 main = do

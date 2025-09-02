@@ -1,5 +1,0 @@
-This is a collection of imperative things needed to replicate my system state.
-It's not ideal that i have this, but there are limitations to what nix
-currently offers
-
-change Carlas engine to jack — continuous rack

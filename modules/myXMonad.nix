@@ -10,7 +10,7 @@
   ];
 
   environment.systemPackages = [
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/haskell/xmonad") {})
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/xmonad") {})
   ];
 
   home-manager.users.${conUsername} = {
