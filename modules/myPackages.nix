@@ -72,10 +72,6 @@
     (pkgs.callPackage (lib.my.relativeToRoot "resources/convertlink") {})
 
     # Shell {{{
-
-    (pkgs.writeShellScriptBin "hyprland-next-visible-client.bash"
-      (builtins.readFile (lib.my.relativeToRoot "resources/scripts/hyprland-next-visible-client.bash")))
-
     (pkgs.writeScriptBin "nr"
       ''
         #!${lib.getExe pkgs.zsh}
