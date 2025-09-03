@@ -21,13 +21,36 @@
       antialias = true;
       hinting = {
         enable = true;
-        style = "slight";
-        autohint = true;
+        style = "full";
+        autohint = false;
       };
       subpixel = {
         rgba = "none";
         lcdfilter = "default";
       };
+      localConf = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+        <fontconfig>
+          <match target="font">
+            <test name="family" compare="contains">
+              <string>Courier Prime</string>
+            </test>
+            <edit name="hinting" mode="assign">
+              <bool>true</bool>
+            </edit>
+            <edit name="autohint" mode="assign">
+              <bool>true</bool>
+            </edit>
+            <edit name="hintstyle" mode="assign">
+              <const>hintfull</const>
+            </edit>
+            <edit name="antialias" mode="assign">
+              <bool>true</bool>
+            </edit>
+          </match>
+        </fontconfig>
+      '';
     };
   }; # }}}
 
@@ -87,8 +110,8 @@
     sizes = {
       popups = lib.mkDefault 12;
       desktop = lib.mkDefault 12;
-      terminal = lib.mkDefault 12;
       applications = lib.mkDefault 12;
+      terminal = 13;
     };
   };
 
