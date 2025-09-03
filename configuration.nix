@@ -7,6 +7,7 @@
   inputs,
   conHome,
   options,
+  nixvim-pkgs,
   conUsername,
   ...
 }: {
@@ -220,111 +221,112 @@
   programs.gnupg.agent.enableSSHSupport = true;
 
   # System packages.
-  environment.systemPackages = with pkgs; [
-    cups
+  environment.systemPackages = with pkgs;
+    [
+      cups
 
-    # Audio
-    tap-plugins
-    ( # Patch package so it doesn't spam menu entries
-      pkgs.runCommand "lsp-plugins-no-xdg-menu" {}
-      ''
-        cp -R ${pkgs.lsp-plugins} $out
-        chown -R $(id -u):$(id -g) $out/share/applications
-        chmod -R 777 $out/share/applications
-        rm -f $out/share/applications/*.desktop
-      ''
-    )
-    zam-plugins
-    airwindows-lv2
-    molot-lite
-    eq10q
+      # Audio
+      tap-plugins
+      ( # Patch package so it doesn't spam menu entries
+        pkgs.runCommand "lsp-plugins-no-xdg-menu" {}
+        ''
+          cp -R ${pkgs.lsp-plugins} $out
+          chown -R $(id -u):$(id -g) $out/share/applications
+          chmod -R 777 $out/share/applications
+          rm -f $out/share/applications/*.desktop
+        ''
+      )
+      zam-plugins
+      airwindows-lv2
+      molot-lite
+      eq10q
 
-    # Nix.
-    nh # Nix helper
-    alejandra # Nix formatter
-    nix-tree # Reverse dependency search
-    nix-output-monitor # Pretty nix build output
+      # Nix.
+      nh # Nix helper
+      alejandra # Nix formatter
+      nix-tree # Reverse dependency search
+      nix-output-monitor # Pretty nix build output
 
-    # All the archive garbage.
-    xz
-    zip
-    gzip
-    lzip
-    bzip2
-    p7zip
-    unzip
-    gnutar
-    unrar-free
-    atool # Unified CLI for all of these
+      # All the archive garbage.
+      xz
+      zip
+      gzip
+      lzip
+      bzip2
+      p7zip
+      unzip
+      gnutar
+      unrar-free
+      atool # Unified CLI for all of these
 
-    # Camera files support.
-    gphoto2fs
+      # Camera files support.
+      gphoto2fs
 
-    # CLI.
-    eza
-    deno
-    bonk
-    entr
-    ncdu
-    vlock
-    pipenv
-    rclone
-    busybox
-    exiftool
-    python3
-    alsa-utils
-    moar # Pager
-    jq # Json parser
-    termdown # Timer
-    gcc # C compiling
-    wget # Downloader
-    tokei # Line counter
-    udiskie # Auto mount
-    cbonsai # pretty tree
-    gnumake # C compiling
-    file # File identifier
-    zoxide # Cd alternative
-    devenv # Dev environments
-    udftools # Udf filesystem
-    htop-vim # TUI task manager
-    pulsemixer # Volume control
-    ripgrep # Multithreaded grep
-    xdg-utils # Includes xdg-open
-    imagemagick # Image identifier
-    ffmpeg # Video and magic editor
-    gmic # Image processing language
-    libnotify # Notifications (notify-send)
-    python312Packages.ptpython # Python repl
-    ntfs3g # ntfs filesystem interop (windows fs)
+      # CLI.
+      eza
+      deno
+      bonk
+      entr
+      ncdu
+      vlock
+      pipenv
+      rclone
+      busybox
+      exiftool
+      python3
+      alsa-utils
+      moar # Pager
+      jq # Json parser
+      termdown # Timer
+      gcc # C compiling
+      wget # Downloader
+      tokei # Line counter
+      udiskie # Auto mount
+      cbonsai # pretty tree
+      gnumake # C compiling
+      file # File identifier
+      zoxide # Cd alternative
+      devenv # Dev environments
+      udftools # Udf filesystem
+      htop-vim # TUI task manager
+      pulsemixer # Volume control
+      ripgrep # Multithreaded grep
+      xdg-utils # Includes xdg-open
+      imagemagick # Image identifier
+      ffmpeg # Video and magic editor
+      gmic # Image processing language
+      libnotify # Notifications (notify-send)
+      python312Packages.ptpython # Python repl
+      ntfs3g # ntfs filesystem interop (windows fs)
 
-    # GUI.
-    foliate
-    krita # Painting
-    anki # Flashcards
-    libreoffice # office
-    nsxiv # Image viewer
-    simplescreenrecorder
-    godot_4 # Game engine
-    sayonara # Music player
-    inkscape # Vector graphics
-    keepassxc # Password manager
-    qbittorrent # Torrent client
-    resources # GUI task manager
-    localsend # Send via local network
-    xdragon # drag items from terminal
-    tor-browser
+      # GUI.
+      foliate
+      krita # Painting
+      anki # Flashcards
+      libreoffice # office
+      nsxiv # Image viewer
+      simplescreenrecorder
+      godot_4 # Game engine
+      sayonara # Music player
+      inkscape # Vector graphics
+      keepassxc # Password manager
+      qbittorrent # Torrent client
+      resources # GUI task manager
+      localsend # Send via local network
+      xdragon # drag items from terminal
+      tor-browser
 
-    # Writing.
-    typst
-    asciidoctor
-    pandoc # document converter
-
-    # Haskell.
-    stack
-    cabal-install
-    ghc # Haskell compiler for the LSP
-    haskell-language-server # Haskell LSP
-  ];
+      # Writing.
+      typst
+      asciidoctor
+      pandoc # document converter
+    ]
+    ++ [
+      # Haskell.
+      nixvim-pkgs.stack
+      nixvim-pkgs.cabal-install
+      nixvim-pkgs.ghc # Haskell compiler for the LSP
+    ];
 
   # }}}
 

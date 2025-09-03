@@ -133,9 +133,11 @@
 
     treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
     pkgs-frozen = eachSystem (pkgs: import inputs.nixpkgs-unstable-frozen {inherit (pkgs) system;});
+    nixvim-pkgs = eachSystem (pkgs: import inputs.my-neovim.inputs.nixvim.inputs.nixpkgs {inherit (pkgs) system;});
 
     commonSpecialArgs = system: {
       inherit inputs self;
+      nixvim-pkgs = nixvim-pkgs.${system};
       pkgs-frozen = pkgs-frozen.${system};
       lib = nixpkgs.lib.extend (final: _prev: {
         my = import ./modules/myLib.nix {
