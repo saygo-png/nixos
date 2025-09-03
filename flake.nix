@@ -6,6 +6,8 @@
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/cab778239e705082fe97bb4990e0d24c50924c04";
 
+    my-neovim.url = "github:saygo-png/neovim-config";
+
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     impermanence.url = "github:nix-community/impermanence";
@@ -35,10 +37,6 @@
     extras-nixos = {
       url = "github:saygo-png/extrasNixos";
       flake = false;
-    };
-
-    my-neovim = {
-      url = "github:saygo-png/neovim-config";
     };
 
     cookiecutter-templates = {
