@@ -86,7 +86,6 @@
     };
 
     # Zsh plugins {{{
-
     zsh-autosuggestions = {
       url = "github:zsh-users/zsh-autosuggestions";
       flake = false;
@@ -106,11 +105,9 @@
       url = "github:MichaelAquilina/zsh-auto-notify";
       flake = false;
     };
-
     # }}}
 
     # Small utilities {{{
-
     format-udf = {
       url = "github:JElchison/format-udf";
       flake = false;
@@ -120,7 +117,6 @@
       url = "github:ThePrimeagen/vmrss";
       flake = false;
     };
-
     # }}}
   };
 
@@ -133,18 +129,14 @@
   } @ inputs: let
     lib = nixpkgs.lib // home-manager.lib;
     eachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
-    pkgsFor = lib.genAttrs (import systems) (system:
-      import nixpkgs {
-        inherit system;
-      });
+    pkgsFor = lib.genAttrs (import systems) (system: import nixpkgs {inherit system;});
 
     treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
-    # pkgs-unstable = import inputs.nixpkgs-unstable {system = "x86_64-linux";};
-    pkgs-frozen = import inputs.nixpkgs-unstable-frozen {system = "x86_64-linux";};
+    pkgs-frozen = eachSystem (pkgs: import inputs.nixpkgs-unstable-frozen {inherit (pkgs) system;});
 
     commonSpecialArgs = system: {
       inherit inputs self;
-      inherit pkgs-frozen;
+      pkgs-frozen = pkgs-frozen.${system};
       lib = nixpkgs.lib.extend (final: _prev: {
         my = import ./modules/myLib.nix {
           pkgs = nixpkgs.legacyPackages.${system};
