@@ -39,7 +39,6 @@
 
     my-neovim = {
       url = "github:saygo-png/neovim-config";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     cookiecutter-templates = {
