@@ -9,7 +9,7 @@ description:     Utilities for my NixOS config
 tested-with:     GHC ==9.8.4
 
 common common-options
-  build-depends: base, shh, universum, aeson, optparse-applicative, time, tz, bytestring, path, cassava, path-io, safe
+  build-depends: base, shh, universum, aeson, optparse-applicative, time, tz, bytestring, path, cassava, path-io, safe, vector
   default-language: GHC2021
   ghc-options: -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-missing-safe-haskell-mode -Wno-missing-exported-signatures -Wno-missing-local-signatures -Wno-unused-packages
                -threaded -rtsopts -with-rtsopts=-N
@@ -38,3 +38,7 @@ executable timezones
 executable owt
   import: common-options
   main-is: src/owt.hs
+
+executable free-space
+  import: common-options
+  main-is: src/free-space.hs

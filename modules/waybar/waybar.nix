@@ -25,8 +25,8 @@
 
       "custom/disk_root" = {
         format = bg-text-color "d" + "{}";
-        interval = 30;
-        exec = "df -h --output=avail / | tail -1 | tr -d ' '";
+        interval = 120;
+        exec = "free-space";
       };
 
       cpu = {
