@@ -1,7 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module Main (main) where
-
 import Data.ByteString.Lazy qualified as BL
 import Data.Char (toLower)
 import Data.Csv (encode)
