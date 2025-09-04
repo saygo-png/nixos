@@ -42,8 +42,8 @@
 
       network = {
         format-wifi = "<span color='#589df6'></span> <span color='gray'>{essid}</span> {frequency} <span color='#589df6'>{signaldBm} dB</span> <span color='#589df6'>⇵</span> {bandwidthUpBits}/{bandwidthDownBits}";
-        format-ethernet = "{ifname}";
-        format-linked = "{ifname} (No IP)";
+        format-ethernet = "connected";
+        format-linked = "connected (No IP)";
         format-disconnected = "disconnected";
         tooltip = true;
         interval = 5;
@@ -67,7 +67,7 @@
           phone = "p";
           portable = "pp";
           car = "c";
-          default = ["a" "aa" "aaa"];
+          default = ["v" "vv" "vvv"];
         };
         on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
         on-click-right = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
