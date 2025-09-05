@@ -6,7 +6,7 @@
   inherit (config.lib.stylix.colors) withHashtag;
   color-span = content: color: ''<span color="${color}">${content}</span>'';
 
-  bg-text-color = content: color-span content withHashtag.base04;
+  bg-text-color = content: color-span content withHashtag.base03;
   base0B = content: color-span content withHashtag.base0B;
   sharedConfig = {
     # Choose the order of the modules
@@ -55,7 +55,7 @@
       };
 
       pulseaudio = {
-        format = bg-text-color "{icon}" + "{volume}%";
+        format = bg-text-color "{icon}" + base0B "{volume}" + "%";
         format-muted = bg-text-color "M" + "{format_source}";
         format-bluetooth = "{icon}{volume}% {format_source}";
         format-bluetooth-muted = bg-text-color "MB" + "{format_source}";
@@ -65,9 +65,9 @@
           handsfree = "";
           headset = "hs";
           phone = "p";
-          portable = "pp";
+          portable = "po";
           car = "c";
-          default = ["v" "vv" "vvv"];
+          default = ["v" "v" "v"];
         };
         on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
         on-click-right = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
@@ -85,7 +85,7 @@
           warning = 20;
           critical = 10;
         };
-        format-icons = ["" "" "" "" ""];
+        format-icons = ["b" "b" "b" "b" "b"];
       };
 
       "battery#bat2" = {
