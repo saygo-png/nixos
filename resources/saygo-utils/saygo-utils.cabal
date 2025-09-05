@@ -42,3 +42,7 @@ executable owt
 executable free-space
   import: common-options
   main-is: src/free-space.hs
+
+executable tmux-mem
+  import: common-options
+  main-is: src/tmux-mem.hs

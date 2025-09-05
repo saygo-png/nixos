@@ -6,31 +6,6 @@
 }: {
   environment.systemPackages = [
     pkgs.tmux-sessionizer # Tmux session manager
-    (pkgs.writers.writeHaskellBin "tmux-mem-haskell"
-      {libraries = [pkgs.haskellPackages.bytestring];}
-      # Haskell
-      ''
-        import Data.ByteString.Char8 qualified as C8
-        import Data.Char (isDigit)
-        import Data.List (find)
-        import Data.Maybe (fromMaybe)
-        import Text.Printf (printf)
-        import Text.Read (readMaybe)
-
-        main :: IO ()
-        main = do
-          meminfo <- C8.readFile "/proc/meminfo"
-          let freeRam = extractNumber $ matchLineWith $ C8.lines meminfo
-          putStrLn $ printf "MemF %.1fG" freeRam
-
-        matchLineWith :: [C8.ByteString] -> C8.ByteString
-        matchLineWith = fromMaybe C8.empty . find (C8.isPrefixOf target)
-          where
-            target = C8.pack "MemAvailable:"
-
-        extractNumber :: C8.ByteString -> Double
-        extractNumber = maybe 0 (/ 1048576) . readMaybe . C8.unpack . C8.filter isDigit
-      '')
   ];
 
   home-manager.users.${conUsername} = {config, ...}: {
@@ -109,7 +84,7 @@
         set-option -sg status-left-style default
         set-option -sg status-right-style default
         set-option -sg status-style fg=green,bg=default
-        set-option -sg status-right "#(tmux-mem-haskell) %Y-%m-%d (%Ob %a) %H:%M"
+        set-option -sg status-right "#(tmux-mem) %Y-%m-%d (%Ob %a) %H:%M"
 
         # y and p as in vim.
         set-option -sg set-clipboard on
