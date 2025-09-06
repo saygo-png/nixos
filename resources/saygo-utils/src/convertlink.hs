@@ -13,9 +13,9 @@ data Options = Options {path :: FilePath, write :: Bool, recurse :: Bool}
 optionsParser :: Parser Options
 optionsParser =
   Options
-    <$> argument str ( help "Symlink that will get converted" <> metavar "SYMLINK" <> action "file")
-    <*> switch ( long "write" <> short 'w' <> help "Give owner write permissions to the resulting file")
-    <*> switch ( long "recursive" <> short 'r' <> help "Convert symlinks in a directory recursively")
+    <$> argument str (help "Symlink that will get converted" <> metavar "SYMLINK" <> action "file")
+    <*> switch (long "write" <> short 'w' <> help "Give owner write permissions to the resulting file")
+    <*> switch (long "recursive" <> short 'r' <> help "Convert symlinks in a directory recursively")
 
 parserInfo :: ParserInfo Options
 parserInfo = info (helper <*> optionsParser) (progDesc "Convert a symlink to the file its pointing to")
