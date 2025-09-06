@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   config,
   conUsername,
@@ -34,7 +35,22 @@
     127.0.0.1 sr3.hydra.agoragames.com
   '';
 
-  home-manager.users.${conUsername} = _: {
+  home-manager.users.${conUsername} = {config, lib, ...}: {
+    home.activation.copyConfigFilesToSteamEnv = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      # Copy files to steam directory
+      set +e
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (
+          path: file: let
+            prefix = "/home/${conUsername}/";
+            steamPath = prefix + ".local/share/steam-home/" + (lib.removePrefix prefix path);
+          in ''
+            run mkdir -p "$(dirname "${steamPath}")" || true
+            run ln -sf "${file.source}" "${steamPath}" || true
+          ''
+        )
+        config.home.file)}
+    '';
+
     programs.mangohud = {
       enable = true;
       enableSessionWide = false;
@@ -81,7 +97,7 @@
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-      
+
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
