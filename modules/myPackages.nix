@@ -69,7 +69,6 @@
     })
 
     (pkgs.callPackage (lib.my.relativeToRoot "resources/saygo-utils") {})
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/convertlink") {})
 
     # Shell {{{
     (pkgs.writeScriptBin "nr"
