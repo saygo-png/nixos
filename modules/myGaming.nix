@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   config,
   conUsername,
@@ -35,7 +34,11 @@
     127.0.0.1 sr3.hydra.agoragames.com
   '';
 
-  home-manager.users.${conUsername} = {config, lib, ...}: {
+  home-manager.users.${conUsername} = {
+    config,
+    lib,
+    ...
+  }: {
     home.activation.copyConfigFilesToSteamEnv = lib.hm.dag.entryAfter ["writeBoundary"] ''
       # Copy files to steam directory
       set +e
@@ -97,7 +100,7 @@
     (
       pkgs.writeShellScriptBin
       "sgamescope" # [s]team [gamescope]
-
+      
       ''
         gamescope \
           -w ${builtins.toString config.const.screenWidth} \
