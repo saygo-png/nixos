@@ -98,10 +98,7 @@
         elif [[ -f ./flake.nix ]]; then
           nix repl .
         else
-          # use flake repl if not in a nix project
-          pushd ${conFlakePath} > /dev/null
-          nix repl --arg host '"${conHost}"' --file ./repl.nix "$@"
-          popd > /dev/null
+          nix repl --arg host '"${conHost}"' --file ${conFlakePath}/repl.nix "$@"
         fi
       '';
     })

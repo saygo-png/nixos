@@ -5,17 +5,17 @@
 # https://github.com/iynaix/dotfiles/blob/main/repl.nix
 {host ? "pc"}: let
   inherit (builtins) getFlake;
-  flake = getFlake (toString ./.);
+  flake = getFlake "/home/samsepi0l/nixos/";
+  mainHost = flake.nixosConfigurations.${host};
 
   hosts = builtins.attrNames flake.nixosConfigurations;
 in
   rec {
     inherit flake;
     inherit (flake) inputs self;
-    inherit (flake.inputs) nixpkgs;
-    inherit (flake.nixosConfigurations.${host}) lib;
+    inherit (mainHost) lib pkgs;
 
-    c = flake.nixosConfigurations.${host}.config;
+    c = mainHost.config;
 
     # Aliases to quickly get the configs of my defined systems
     config = builtins.listToAttrs (map (name: {
