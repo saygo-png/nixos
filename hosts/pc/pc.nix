@@ -201,14 +201,15 @@
   services.borgmatic = {
     enable = true;
     configurations.persist = {
+      exclude_caches = true;
+      source_directories = ["/persist"];
+      unknown_unencrypted_repo_access_is_ok = true;
       repositories = [
         {
           path = "/media/backup/backup.borg";
           label = "local";
         }
       ];
-      exclude_caches = true;
-      source_directories = ["/persist"];
       commands = [
         {
           before = "repository";
