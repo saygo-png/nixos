@@ -27,9 +27,11 @@
       };
     };
 
-    home.shellAliases = {"neov" = "neovide";};
-    home.sessionVariables = {EDITOR = "nvim";};
-    home.packages = [pkgs.tree-sitter];
+    home = {
+      shellAliases = {"neov" = "neovide";};
+      sessionVariables = {EDITOR = "nvim";};
+      packages = [pkgs.tree-sitter];
+    };
 
     stylix.targets.nixvim.enable = false;
   };
