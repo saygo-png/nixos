@@ -57,11 +57,11 @@ in {
         "builds"
         "Documents"
         "Downloads"
-        "Games"
         "Music"
         "nixos"
         "Pictures"
         "Sync"
+        "Games/persisted"
         "Videos"
       ];
       cache = {
@@ -70,6 +70,8 @@ in {
           ".local/state/lazygit"
           ".local/state/wireplumber"
           ".local/state/mpv"
+
+          "Games/cache"
 
           ".local/share/devenv"
           ".local/share/direnv"
