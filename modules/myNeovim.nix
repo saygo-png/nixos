@@ -10,6 +10,10 @@
     inputs.my-neovim.packages.${pkgs.system}.neovim
   ];
 
+  custom.persist.home.cache.directories = [
+    ".config/nvim/after/syntax"
+  ];
+
   home-manager.users.${conUsername} = {
     programs.neovide = {
       enable = true;
