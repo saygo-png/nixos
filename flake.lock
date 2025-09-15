@@ -552,11 +552,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1757364661,
-        "narHash": "sha256-iBB4zpGHq2AEnWgHCja56ZKCHG0MZhnao3OXMokZ0lY=",
+        "lastModified": 1757936190,
+        "narHash": "sha256-weygR5Yt4plsE3GX8lt9YOc5tp+vzsY5icnal/NSdeU=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "c592a4ee9ffec5ec0b5d80d1530793a866337daa",
+        "rev": "6579e0f98f251d02bd7c853c9cce8f0acda68524",
         "type": "github"
       },
       "original": {
