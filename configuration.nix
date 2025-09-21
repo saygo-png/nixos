@@ -955,18 +955,21 @@
         enable = true;
         settings = {
           scrolling.multiplier = 5;
-          window.dynamic_title = true;
-          cursor.style.blinking = "on";
-          window.dynamic_padding = true;
-          cursor.unfocused_hollow = false;
-          cursor.style.shape = "Underline";
-          selection.save_to_clipboard = false;
-          scrolling.history = 1000;
-          window.padding = {
-            x = 8;
-            y = 8;
+          window = {
+            dynamic_title = true;
+            dynamic_padding = true;
+            padding = {
+              x = 4;
+              y = 4;
+            };
           };
-          font.offset.y = 3; # Line spacing
+          cursor = {
+            style.blinking = "on";
+            unfocused_hollow = false;
+            style.shape = "Underline";
+          };
+          selection.save_to_clipboard = false;
+          scrolling.history = 5000;
           keyboard.bindings = let
             mkBind = key: mods: action: {inherit key mods action;};
             mkBindC = key: mods: chars: {inherit key mods chars;};
@@ -1233,3 +1236,4 @@
   # }}}
 }
 ## vim:foldmethod=marker
+
