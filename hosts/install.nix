@@ -19,7 +19,7 @@
         initialHashedPassword = "$y$j9T$vhbFbUi1uMXLH4qgYx13I1$dMmxiKFP4l236qd7ipfwmH.0PUnSehayI4jdRQmnzL0";
         hashedPasswordFile = "/etc/password.hash";
         isNormalUser = true;
-        extraGroups = ["wheel" "networkmanager" "video"]; # Enable ‘sudo’ for the user.
+        extraGroups = ["wheel" "networkmanager" "video" "audio"]; # Enable ‘sudo’ for the user.
       };
       root = {
         initialHashedPassword = "$y$j9T$vhbFbUi1uMXLH4qgYx13I1$dMmxiKFP4l236qd7ipfwmH.0PUnSehayI4jdRQmnzL0";
