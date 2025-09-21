@@ -911,7 +911,6 @@
             "disk"
             "battery"
             "poweradapter"
-            "locale"
             "break"
             "colors"
           ];
