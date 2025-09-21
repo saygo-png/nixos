@@ -81,24 +81,19 @@
   hardware = {
     amdgpu = {
       amdvlk.enable = false;
-      initrd.enable = true;
       opencl.enable = true;
     };
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        libdrm
-        libva
         vaapiVdpau
-        libvdpau-va-gl
-      ];
-      extraPackages32 = with pkgs; [
-        libva
-        libvdpau-va-gl
       ];
     };
   };
+
+  # Force RADV though this should already be the default.
+  environment.variables.AMD_VULKAN_ICD = "RADV";
 
   # autologin
   services.getty.autologinUser = "${conUsername}";
