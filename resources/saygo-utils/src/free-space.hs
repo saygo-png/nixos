@@ -16,14 +16,7 @@ main = do
   bytes <- fromIntegral <$> getFreeSpace "/"
   putStrLn . getShortHand . getAppropriateUnits $ ByteValue bytes Bytes
 
-data ByteUnit where
-  Bytes :: ByteUnit
-  KibiBytes :: ByteUnit
-  MebiBytes :: ByteUnit
-  GibiBytes :: ByteUnit
-  TebiBytes :: ByteUnit
-  PebiBytes :: ByteUnit
-  ExbiBytes :: ByteUnit
+data ByteUnit = Bytes | KibiBytes | MebiBytes | GibiBytes | TebiBytes | PebiBytes | ExbiBytes
 
 data ByteValue where
   ByteValue :: Float -> ByteUnit -> ByteValue
