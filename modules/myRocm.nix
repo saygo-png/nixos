@@ -12,6 +12,10 @@
     "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
   ];
 
+  nixpkgs.overlays = [
+    (_: prev: {blender = prev.blender-hip;})
+  ];
+
   nixpkgs.config.rocmSupport = true;
 
   hardware = {
