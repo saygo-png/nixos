@@ -71,17 +71,9 @@
     })
   ];
 
-  custom.persist = {
-    home = {
-      cache = {
-        directories = [
-          ".config/vesktop/sessionData"
-        ];
-        files = [
-          ".config/vesktop/state.json"
-        ];
-      };
-    };
+  custom.persist.home.cache = {
+    directories = [".config/vesktop/sessionData"];
+    files = [".config/vesktop/state.json"];
   };
 
   home-manager.users.${conUsername} = _: {
@@ -114,7 +106,9 @@
         gruvboxTheme = "gruvbox";
       in {
         useSystem = true;
+        themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css"; # IFD?
         settings = {
+          enabledThemes = ["${gruvboxTheme}.css"];
           plugins = {
             WhoReacted.enabled = true;
             VoiceMessages.enabled = true;
@@ -125,9 +119,7 @@
             NoDevtoolsWarning.enabled = true;
             NoOnboardingDelay.enabled = true;
           };
-          enabledThemes = ["${gruvboxTheme}.css"];
         };
-        themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css";
       };
     };
   };

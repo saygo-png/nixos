@@ -12,9 +12,7 @@
   security.polkit.enable = lib.mkDefault true;
 
   # NixOS is retarded and turns on lightdm by default.
-  services.xserver.displayManager = {
-    lightdm.enable = false;
-  };
+  services.xserver.displayManager.lightdm.enable = false;
 
   nixpkgs.overlays = [
     (_: prev: {
