@@ -32,7 +32,7 @@ in {
   ];
 
   home-manager.users.${conUsername} = {config, ...}: {
-    # Removes .keep file from creating ~/.librewolf and ~/.mozzilla
+    # Removes .keep file from creating ~/.librewolf and ~/.mozilla
     home.file.".librewolf/native-messaging-hosts".enable = lib.mkForce false;
     home.file.".mozilla/native-messaging-hosts".enable = lib.mkForce false;
 
