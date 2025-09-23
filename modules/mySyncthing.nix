@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   conHome,
   conUsername,
@@ -14,89 +15,64 @@ in {
     openDefaultPorts = true;
     overrideDevices = true;
     overrideFolders = true;
-    settings.options.relaysEnabled = false;
-    settings.devices = {
-      nixos = {
-        addresses = [
-          "tcp://192.168.1.11:22000"
-        ];
-        id = "PSTKO2I-QKU64OB-LMEOEGC-LTAVJHU-O6SCT4V-2GQ7QI2-KARS3FJ-VSZ4ZAT";
+    settings = {
+      options.relaysEnabled = false;
+      devices = lib.mapAttrs (_: v: v // {addresses = ["tcp://192.168.1.11:22000"];}) {
+        nixos.id = "PSTKO2I-QKU64OB-LMEOEGC-LTAVJHU-O6SCT4V-2GQ7QI2-KARS3FJ-VSZ4ZAT";
+        phone.id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
+        thinkpad.id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
       };
-      phone = {
-        addresses = [
-          "tcp://192.168.1.10:22000"
-        ];
-        id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
-      };
-      thinkpad = {
-        addresses = [
-          "tcp://192.168.1.13:22000 "
-        ];
-        id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
-      };
-    };
-    settings.folders = let
-      allDevices = builtins.attrNames syncthingCfg.settings.devices;
-      home = config.home-manager.users.${conUsername}.home.homeDirectory;
-    in {
-      Sync = {
-        path = "${home}/Sync";
-        id = "default";
-        type = "sendreceive";
-        versioning = null;
-        devices = allDevices;
-      };
+      folders = let
+        allDevices = builtins.attrNames syncthingCfg.settings.devices;
+        home = config.home-manager.users.${conUsername}.home.homeDirectory;
+      in {
+        Sync = {
+          path = "${home}/Sync";
+          id = "default";
+          type = "sendreceive";
+          versioning = null;
+          devices = allDevices;
+        };
 
-      Games = {
-        path = "${home}/Games";
-        id = "5mfmg-kwfkf";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "thinkpad"
-          "nixos"
-        ];
-      };
+        Games = {
+          path = "${home}/Games";
+          id = "5mfmg-kwfkf";
+          type = "sendreceive";
+          versioning = null;
+          devices = ["thinkpad" "nixos"];
+        };
 
-      builds = {
-        path = "${home}/builds";
-        id = "builds";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "thinkpad"
-          "nixos"
-        ];
-      };
+        builds = {
+          path = "${home}/builds";
+          id = "builds";
+          type = "sendreceive";
+          versioning = null;
+          devices = ["thinkpad" "nixos"];
+        };
 
-      Music = {
-        path = "${home}/Music";
-        id = "Music";
-        type = "sendreceive";
-        versioning = null;
-        devices = allDevices;
-      };
+        Music = {
+          path = "${home}/Music";
+          id = "Music";
+          type = "sendreceive";
+          versioning = null;
+          devices = allDevices;
+        };
 
-      gnupg = {
-        path = "${home}/.local/share/gnupg";
-        id = "fxmdx-ymklb";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "nixos"
-          "thinkpad"
-        ];
-      };
+        gnupg = {
+          path = "${home}/.local/share/gnupg";
+          id = "fxmdx-ymklb";
+          type = "sendreceive";
+          versioning = null;
+          devices = ["nixos" "thinkpad"];
+        };
 
-      "mc instances" = {
-        path = "${home}/.local/share/PrismLauncher";
-        id = "ahybq-dbssj";
-        type = "sendreceive";
-        versioning = null;
-        devices = [
-          "nixos"
-          "thinkpad"
-        ];
+        "mc instances" = {
+          path = "${home}/.local/share/PrismLauncher";
+          id = "ahybq-dbssj";
+          type = "sendreceive";
+          versioning = null;
+          devices = ["nixos" "thinkpad"];
+        };
       };
     };
   };
