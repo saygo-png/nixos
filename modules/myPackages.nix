@@ -171,14 +171,6 @@
     })
 
     (pkgs.writeShellApplication {
-      name = "pasteimg";
-      runtimeInputs = with pkgs; [xclip coreutils];
-      text = ''
-        xclip -selection clipboard -t image/png -o | tee "$1" >/dev/null
-      '';
-    })
-
-    (pkgs.writeShellApplication {
       name = "myAutostart.sh";
       runtimeInputs = with pkgs; [xorg.xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
       text = ''
