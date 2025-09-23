@@ -7,9 +7,11 @@
   cursorPkg = pkgs.capitaine-cursors-themed;
   cursorSize = 32;
 in {
-  stylix.cursor.name = cursorName;
-  stylix.cursor.package = cursorPkg;
-  stylix.cursor.size = cursorSize;
+  stylix.cursor = {
+    name = cursorName;
+    package = cursorPkg;
+    size = cursorSize;
+  };
 
   home-manager.users.${conUsername} = {
     home.pointerCursor = {

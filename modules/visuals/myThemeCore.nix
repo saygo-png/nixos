@@ -10,18 +10,9 @@
     gnome-themes-extra
     gtk-engine-murrine
 
-    # Sass thing for themes
-    sassc
-
     kdePackages.qtsvg # Icons for dolphin
     kdePackages.qtwayland # qt6
     libsForQt5.qt5.qtwayland
-
-    # fix kirigami apps look
-    # for example in filelight, without it the app looks weird
-    # https://github.com/NixOS/nixpkgs/pull/202990#issuecomment-1328068486
-    kdePackages.qqc2-desktop-style # qt6
-    libsForQt5.qqc2-desktop-style
 
     # Some KDE applications such as Dolphin try to fall back to Breeze
     # theme icons. Lets make sure they're also found.
@@ -48,41 +39,32 @@
       pkgs.noto-fonts-cjk-serif
       pkgs.nerd-fonts.symbols-only
     ];
-    fontconfig = {
-      defaultFonts = {
-        serif = ["${config.stylix.fonts.serif.name}" "${config.stylix.fonts.emoji.name}"];
-        sansSerif = ["${config.stylix.fonts.sansSerif.name}" "${config.stylix.fonts.emoji.name}"];
-        monospace = ["${config.stylix.fonts.monospace.name}" "${config.stylix.fonts.emoji.name}"];
-      };
+    fontconfig.defaultFonts = lib.mapAttrs (_: v: [v] ++ ["${config.stylix.fonts.emoji.name}"]) {
+      serif = config.stylix.fonts.serif.name;
+      sansSerif = config.stylix.fonts.sansSerif.name;
+      monospace = config.stylix.fonts.monospace.name;
     };
-  }; # }}}
+  };
+  stylix = {
+    enable = true;
+    autoEnable = true;
 
-  # Stylix {{{
-  stylix.enable = true;
-  stylix.autoEnable = true;
+    # This option is seemingly broken and makes a non fitting ugly theme
+    targets.chromium.enable = false;
+  };
 
-  xdg.portal.enable = true;
-  xdg.portal.xdgOpenUsePortal = false;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
-
-  stylix.targets.chromium.enable = false; # This option is seemingly broken and makes a non fitting ugly theme
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = false;
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+  };
 
   # Fixes some themeing/cursor issues.
   programs.dconf.enable = lib.mkDefault true;
 
   home-manager.users.${conUsername} = {
-    home.sessionVariables = {
-      # This i think fixes some warns/slow launches on some qt apps
-      QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.libsForQt5.qt5.qtbase.bin}/lib/qt-${pkgs.libsForQt5.qt5.qtbase.version}/plugins/platforms";
-    };
-
     xdg.configFile."wallpaper.png".source = config.stylix.image;
-
-    gtk = {
-      enable = true;
-    };
-    qt = lib.mkDefault {
-      enable = true;
-    };
+    gtk.enable = true;
+    qt.enable = lib.mkDefault true;
   };
 }

@@ -89,19 +89,14 @@
         runHook postInstall
       '';
     };
+    courierSet = {
+      name = "Courier Prime";
+      package = courier-patched;
+    };
   in {
-    monospace = {
-      name = "Courier Prime";
-      package = courier-patched;
-    };
-    sansSerif = {
-      name = "Courier Prime";
-      package = courier-patched;
-    };
-    serif = {
-      name = "Courier Prime";
-      package = courier-patched;
-    };
+    monospace = courierSet;
+    sansSerif = courierSet;
+    serif = courierSet;
     emoji = {
       name = "Symbols Nerd Font";
       package = pkgs.nerd-fonts.symbols-only;
