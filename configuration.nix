@@ -126,54 +126,53 @@
     extraLayouts.plfi = {
       languages = ["pol"];
       symbolsFile = builtins.toFile "plfi" ''
-        default partial alphanumeric_keys
-        xkb_symbols "basic" {
-            include "latin"
-            name[Group1]="Polish-Fin";
+                default partial alphanumeric_keys
+                xkb_symbols "basic" {
+                    include "latin"
+                    name[Group1]="Polish-Fin";
+        key <AE01> { [         1,     exclam,     notequal,   exclamdown ] };
+                    key <AE02> { [         2,         at,  twosuperior, questiondown ] };
+                    key <AE04> { [         4,     dollar,         cent,   onequarter ] };
+                    key <AE05> { [         5,    percent,     EuroSign,        U2030 ] };
+                    key <AE06> { [         6, asciicircum,     onehalf,   logicaland ] };
+                    key <AE07> { [         7,  ampersand,      section,        U2248 ] };
+                    key <AE08> { [         8,   asterisk, periodcentered, threequarters ] };
+                    key <AE09> { [         9,  parenleft, guillemotleft,   plusminus ] };
+                    key <AE10> { [         0, parenright, guillemotright,     degree ] };
+                    key <AE11> { [     minus, underscore,       endash,       emdash ] };
 
-            key <AE01> { [         1,     exclam,     notequal,   exclamdown ] };
-            key <AE02> { [         2,         at,  twosuperior, questiondown ] };
-            key <AE04> { [         4,     dollar,         cent,   onequarter ] };
-            key <AE05> { [         5,    percent,     EuroSign,        U2030 ] };
-            key <AE06> { [         6, asciicircum,     onehalf,   logicaland ] };
-            key <AE07> { [         7,  ampersand,      section,        U2248 ] };
-            key <AE08> { [         8,   asterisk, periodcentered, threequarters ] };
-            key <AE09> { [         9,  parenleft, guillemotleft,   plusminus ] };
-            key <AE10> { [         0, parenright, guillemotright,     degree ] };
-            key <AE11> { [     minus, underscore,       endash,       emdash ] };
+                    key <AD01> { [         q,          Q,     Greek_pi,  Greek_OMEGA ] };
+                    key <AD02> { [         w,          W,           oe,           OE ] };
+                    key <AD03> { [         e,          E,      eogonek,      Eogonek ] };
+                    key <AD04> { [         r,          R,    copyright,   registered ] };
+                    key <AD05> { [         t,          T,       ssharp,    trademark ] };
+                    key <AD08> { [         i,          I,   rightarrow,        U2194 ] };
+                    key <AD09> { [         o,          O,        U00F6,        U00D6 ] };
 
-            key <AD01> { [         q,          Q,     Greek_pi,  Greek_OMEGA ] };
-            key <AD02> { [         w,          W,           oe,           OE ] };
-            key <AD03> { [         e,          E,      eogonek,      Eogonek ] };
-            key <AD04> { [         r,          R,    copyright,   registered ] };
-            key <AD05> { [         t,          T,       ssharp,    trademark ] };
-            key <AD08> { [         i,          I,   rightarrow,        U2194 ] };
-            key <AD09> { [         o,          O,        U00F6,        U00D6 ] };
+                    key <AC01> { [         a,          A,        U00E4,        U00C4 ] };
+                    key <AC02> { [         s,          S,       sacute,       Sacute ] };
+                    key <AC04> { [         f,          F,           ae,           AE ] };
+                    key <AC06> { [         h,          H, rightsinglequotemark, U2022 ] };
+                    key <AC07> { [         j,          J,        schwa,        SCHWA ] };
+                    key <AC08> { [         k,          K,     ellipsis,  dead_stroke ] };
+                    key <TLDE> { [     grave, asciitilde,      notsign,    logicalor ] };
 
-            key <AC01> { [         a,          A,        U00E4,        U00C4 ] };
-            key <AC02> { [         s,          S,       sacute,       Sacute ] };
-            key <AC04> { [         f,          F,           ae,           AE ] };
-            key <AC06> { [         h,          H, rightsinglequotemark, U2022 ] };
-            key <AC07> { [         j,          J,        schwa,        SCHWA ] };
-            key <AC08> { [         k,          K,     ellipsis,  dead_stroke ] };
-            key <TLDE> { [     grave, asciitilde,      notsign,    logicalor ] };
+                    key <AB01> { [         z,          Z,    zabovedot,    Zabovedot ] };
+                    key <AB02> { [         x,          X,       zacute,       Zacute ] };
+                    key <AB03> { [         c,          C,       cacute,       Cacute ] };
+                    key <AB04> { [         v,          V, doublelowquotemark, leftsinglequotemark ] };
+                    key <AB05> { [         b,          B, rightdoublequotemark, leftdoublequotemark ] };
+                    key <AB06> { [         n,          N,       nacute,       Nacute ] };
+                    key <AB07> { [         m,          M,           mu,     infinity ] };
+                    key <AB08> { [     comma,       less, lessthanequal,    multiply ] };
+                    key <AB09> { [    period,    greater, greaterthanequal, division ] };
 
-            key <AB01> { [         z,          Z,    zabovedot,    Zabovedot ] };
-            key <AB02> { [         x,          X,       zacute,       Zacute ] };
-            key <AB03> { [         c,          C,       cacute,       Cacute ] };
-            key <AB04> { [         v,          V, doublelowquotemark, leftsinglequotemark ] };
-            key <AB05> { [         b,          B, rightdoublequotemark, leftdoublequotemark ] };
-            key <AB06> { [         n,          N,       nacute,       Nacute ] };
-            key <AB07> { [         m,          M,           mu,     infinity ] };
-            key <AB08> { [     comma,       less, lessthanequal,    multiply ] };
-            key <AB09> { [    period,    greater, greaterthanequal, division ] };
+                    key <SPCE> { [     space,      space, nobreakspace, nobreakspace ] };
 
-            key <SPCE> { [     space,      space, nobreakspace, nobreakspace ] };
+                    include "kpdl(comma)"
 
-            include "kpdl(comma)"
-
-            include "level3(ralt_switch)"
-        };
+                    include "level3(ralt_switch)"
+                };
       '';
       description = "Polish finnish layout";
     };
@@ -252,7 +251,6 @@
       zip
       gzip
       lzip
-      bzip2
       p7zip
       unzip
       gnutar
@@ -269,9 +267,7 @@
       entr
       ncdu
       vlock
-      pipenv
       rclone
-      busybox
       exiftool
       python3
       alsa-utils
@@ -293,8 +289,6 @@
       ripgrep # Multithreaded grep
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
-      ffmpeg # Video and magic editor
-      gmic # Image processing language
       libnotify # Notifications (notify-send)
       python312Packages.ptpython # Python repl
       ntfs3g # ntfs filesystem interop (windows fs)
@@ -303,7 +297,6 @@
       foliate
       krita # Painting
       anki # Flashcards
-      libreoffice # office
       nsxiv # Image viewer
       simplescreenrecorder
       godot_4 # Game engine
@@ -311,7 +304,7 @@
       inkscape # Vector graphics
       keepassxc # Password manager
       qbittorrent # Torrent client
-      resources # GUI task manager
+      mission-center # GUI task manager
       localsend # Send via local network
       xdragon # drag items from terminal
       tor-browser
@@ -319,7 +312,6 @@
       # Writing.
       typst
       asciidoctor
-      pandoc # document converter
     ]
     ++ [
       # Haskell.
@@ -340,11 +332,6 @@
   ];
 
   # Envvar, envars. User ones go into home manager.
-  environment.sessionVariables = {
-    NH_FLAKE = config.const.flakePath; # For nix helper.
-  };
-
-  # This allows for programs to see audio plugins
   environment.variables = let
     homeConfig = config.home-manager.users.${conUsername};
     makePluginPath = format:
@@ -355,12 +342,15 @@
       ])
       + ":${homeConfig.xdg.dataHome}/.${format}";
   in {
+    # This allows for programs to see audio plugins
     DSSI_PATH = makePluginPath "dssi";
     LADSPA_PATH = makePluginPath "ladspa";
     LV2_PATH = makePluginPath "lv2";
     LXVST_PATH = makePluginPath "lxvst";
     VST_PATH = makePluginPath "vst";
     VST3_PATH = makePluginPath "vst3";
+
+    NH_FLAKE = config.const.flakePath; # For nix helper.
   };
 
   system.stateVersion = "24.05"; # Don't change.
@@ -379,26 +369,20 @@
   nix = {
     channel.enable = false;
     settings = {
-      warn-dirty = true;
       experimental-features = ["nix-command" "flakes"];
       trusted-users = ["${conUsername}"];
     };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
-    # registry.nixpkgs-unstable.flake = self.inputs.nixpkgs-unstable;
-    nixPath = [
-      "nixpkgs=${self.inputs.nixpkgs}"
-      # "nixpkgs-unstable=${self.inputs.nixpkgs-unstable}"
-    ];
+    nixPath = ["nixpkgs=${self.inputs.nixpkgs}"];
   };
 
   programs.command-not-found.enable = false;
+  programs.nix-index-database.comma.enable = true;
   programs.nix-index = {
     enableZshIntegration = false;
     enableFishIntegration = false;
     enableBashIntegration = false;
   };
-  programs.nix-index-database.comma.enable = true;
-
   programs.nix-ld.enable = true;
   ## If needed, you can add missing libraries here. nix-index-database is your friend to
   ## find the name of the package from the error message:
@@ -410,18 +394,11 @@
 
   ###### Services ###### {{{
 
-  # Printing.
-  services.printing.enable = true;
-  services.printing.cups-pdf.enable = true;
-
   # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
 
   # Automount.
   services.udisks2.enable = true;
-  services.udev.extraRules = ''
-    ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM_SHARED}="1"
-  '';
 
   services.libinput.enable = true;
   services.xserver.autoRepeatDelay = 170;
@@ -597,12 +574,11 @@
           "mdate" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch -- --option substitute false";
-          "listinstalledpackages" = "nix-store --query --requisites /run/current-system | cut -d- -f2- | sort -u";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/Pictures/audiocaptures/recording.wav";
           "search" = "sudo echo 'got sudo' && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
 
-        sessionVariables = {
+        sessionVariables = rec {
           # Default programs.
           PAGER = "moar";
           BROWSER = "librewolf";
@@ -610,8 +586,8 @@
           EDITOR = lib.mkDefault "vi";
           SHELL = lib.getExe pkgs.zsh;
 
-          VISUAL = config.home.sessionVariables.EDITOR;
-          SUDO_EDITOR = config.home.sessionVariables.EDITOR;
+          VISUAL = EDITOR;
+          SUDO_EDITOR = EDITOR;
 
           # Unreal engine .net cli tool turn off telemetry.
           DOTNET_CLI_TELEMETRY_OPTOUT = "true";
@@ -620,7 +596,7 @@
           SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0;
 
           # Systemd is retarded and doesn't use normal pager variable :DDDDD
-          SYSTEMD_PAGER = config.home.sessionVariables.PAGER;
+          SYSTEMD_PAGER = PAGER;
         };
       };
 
