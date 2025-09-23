@@ -255,8 +255,8 @@
 
           "$mainMod, b, Open [b]rowser, exec, hyprctl dispatch exec '[workspace 2 silent] $BROWSER'"
 
-          "$mainMod, Space, Program launcher, exec, pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show drun"
-          "$mainMod SHIFT, Space, Program launcher, exec, pkill ${lib.getExe pkgs.rofi-wayland} || ${lib.getExe pkgs.rofi-wayland} -show run"
+          "$mainMod, Space, Program launcher, exec, pkill rofi || rofi -show drun"
+          "$mainMod SHIFT, Space, Program launcher, exec, pkill rofi || rofi -show run"
 
           "$mainMod, c, [c]olor picker, exec, ${lib.getExe pkgs.hyprpicker} -a"
 
@@ -271,7 +271,7 @@
           "$mainMod, r, [r]ecord, exec, hyprcorder.sh"
           "$mainMod SHIFT, r, [r]ecord area, exec, hyprcorder.sh -a"
 
-          "$ALT, Tab, Open program menu, exec, ${lib.getExe pkgs.rofi-wayland} -show window"
+          "$ALT, Tab, Open program menu, exec, rofi -show window"
 
           "$mainMod, h, Move focus right, movefocus, l"
           "$mainMod, l, Move focus left, movefocus, r"
