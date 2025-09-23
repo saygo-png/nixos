@@ -152,9 +152,9 @@
 
     (pkgs.writeShellApplication {
       name = "fzfcd";
-      runtimeInputs = with pkgs; [fzf fd coreutils];
+      runtimeInputs = with pkgs; [fzf fd coreutils eza];
       text = ''
-        dir=$(fd --hidden --type directory --type file --maxdepth 15 . | fzf)
+        dir=$(fd --hidden --type directory --type file --maxdepth 15 . | fzf --preview "eza --tree --color=always {}")
 
         if [ -z "$dir" ]; then
          exit 1
