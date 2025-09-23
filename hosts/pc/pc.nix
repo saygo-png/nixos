@@ -76,16 +76,11 @@
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
   hardware = {
-    amdgpu = {
-      amdvlk.enable = false;
-      opencl.enable = true;
-    };
+    amdgpu.amdvlk.enable = false;
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [
-        vaapiVdpau
-      ];
+      extraPackages = [pkgs.vaapiVdpau];
     };
   };
 
