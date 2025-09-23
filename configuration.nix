@@ -257,9 +257,6 @@
       unrar-free
       atool # Unified CLI for all of these
 
-      # Camera files support.
-      gphoto2fs
-
       # CLI.
       eza
       deno
@@ -839,9 +836,7 @@
         columnString = " | ";
         rowString = "-";
         picker = pkgs.fzf;
-        systemdIntegration = {
-          remindFrequency = "*:0/10:00";
-        };
+        systemdIntegration.remindFrequency = "*:0/10:00";
       };
 
       programs.btop = {
@@ -1210,3 +1205,4 @@
   # }}}
 }
 ## vim:foldmethod=marker
+

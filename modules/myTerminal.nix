@@ -33,9 +33,7 @@
       xdg = {
         terminal-exec = {
           enable = true;
-          settings = {
-            default = [desktopFile];
-          };
+          settings.default = [desktopFile];
         };
 
         configFile."Thunar/uca.xml".text =

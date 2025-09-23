@@ -15,7 +15,6 @@
     nixpkgs.config.allowUnfreePredicate = let
       allowedUnfreePkgsList = map lib.getName config.custom.allowedUnfreePkgs;
     in
-      pkg:
-        builtins.elem (lib.getName pkg) allowedUnfreePkgsList;
+      pkg: builtins.elem (lib.getName pkg) allowedUnfreePkgsList;
   };
 }
