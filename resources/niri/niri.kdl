@@ -9,6 +9,12 @@ overview {
   backdrop-color "#0e0f03"
 }
 
+// Make the wallpaper stationary, rather than moving with workspaces.
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
+
 input {
   keyboard {
     xkb {
@@ -36,6 +42,9 @@ workspace "m"
 layout {
   gaps 2
 
+
+  // Make the wallpaper stationary, rather than moving with workspaces.
+  background-color "transparent"
   // When to center a column when changing focus, options are:
   // - "never", default behavior, focusing an off-screen column will keep at the left
   //   or right edge of the screen.
