@@ -73,7 +73,6 @@ in {
 
           "Games/cache"
 
-          ".local/share/devenv"
           ".local/share/direnv"
           ".local/share/nix"
           ".local/share/org.localsend.localsend_app"
