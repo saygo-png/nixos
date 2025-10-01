@@ -279,7 +279,6 @@
       gnumake # C compiling
       file # File identifier
       zoxide # Cd alternative
-      devenv # Dev environments
       udftools # Udf filesystem
       htop-vim # TUI task manager
       pulsemixer # Volume control
@@ -790,7 +789,6 @@
         ignores = [
           ".git"
           ".cache"
-          "devenv"
           "direnv"
           ".direnv"
           "lilipod"
