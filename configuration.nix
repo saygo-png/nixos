@@ -409,6 +409,7 @@
     useUserPackages = true;
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # home-manager breaks without it.
+    overwriteBackup = true;
     users.${conUsername} = {
       lib,
       config,
