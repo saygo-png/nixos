@@ -21,7 +21,7 @@
       antialias = true;
       hinting = {
         enable = true;
-        style = "full";
+        style = "slight";
         autohint = false;
       };
       subpixel = {
