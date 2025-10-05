@@ -404,7 +404,9 @@
   # }}}
 
   ##### Home Manager ###### {{{
-  home-manager = {
+  home-manager = let
+    color = config.lib.stylix.colors.withHashtag;
+  in {
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {inherit inputs;};
@@ -607,7 +609,6 @@
 
       stylix.targets.zathura.enable = false;
       programs.zathura = let
-        color = config.lib.stylix.colors.withHashtag;
         inherit (config.stylix) fonts;
       in {
         enable = true;
@@ -708,6 +709,7 @@
             overrideGpg = true;
             commit.signOff = true;
             branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
+            paging.pager = "delta --dark --paging=never";
           };
           customCommands = [
             {
@@ -889,12 +891,26 @@
 
       programs.git = {
         enable = true;
+        delta = {
+          enable = true;
+          options = {
+            syntax-theme = "none";
+            hunk-header-style = "omit";
+            file-style = "omit";
+            diff-output.line-numbers = true;
+            keep-plus-minus-markers = true;
+
+            plus-style = ''"#98971a" normal'';
+            plus-emph-style = ''"#b8bb26" bold normal'';
+
+            minus-style = ''"#cc241d" normal'';
+            minus-emph-style = ''"#fb4934" bold normal'';
+          };
+        };
         aliases = {
           aa = "add -A"; # [A]dd [A]ll
           amend = "commit -a --amend";
           undo = "reset HEAD~1 --mixed";
-          dlog = "-c diff.external=difft log --ext-diff";
-          dshow = "-c diff.external=difft show --ext-diff";
           deleteGitignored = ''rm --cached ''${git ls-files -i -c --exclude-from=.gitignore}'';
           prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
         };
@@ -905,8 +921,12 @@
           rerere.enabled = true;
           branch.autosetupmerge = true;
           merge.tool = "${lib.getExe pkgs.meld}";
-          core.excludesfile = "~/.gitignore_global";
+          core = {
+            excludesfile = "~/.gitignore_global";
+            interactive.diffFilter = "delta";
+          };
           init.defaultBranch = "origin";
+          diff.colorMoved = "default";
           user = {
             signingKey = "86B6FCCC3563C00B";
             name = "saygo-png";
@@ -915,7 +935,6 @@
           push = {
             autoSetupRemote = true;
             useForceIfIncludes = true;
-            default = "upstream";
           };
         };
       };
@@ -998,7 +1017,6 @@
         };
         theme = let
           inherit (config.lib.formats.rasi) mkLiteral;
-          color = config.lib.stylix.colors.withHashtag;
         in
           lib.mkForce {
             "*" = {
