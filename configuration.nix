@@ -571,6 +571,7 @@
           "cbonsai" = "cbonsai --screensaver";
           "pmem" = "vmrss"; # [p]rocess [mem]ory
           "mdate" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
+          "cinst" = "cabal install --overwrite-policy=always";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch -- --option substitute false";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/Pictures/audiocaptures/recording.wav";
