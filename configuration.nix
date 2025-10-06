@@ -597,6 +597,7 @@
           # Systemd is retarded and doesn't use normal pager variable :DDDDD
           SYSTEMD_PAGER = PAGER;
         };
+        sessionPath = ["${config.home.homeDirectory}/.local/bin"];
       };
 
       # Wayland, X, etc. support for session variables.
