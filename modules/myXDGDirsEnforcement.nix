@@ -97,6 +97,7 @@ in {
           ".cache/tealdeer"
 
           ".config/nix"
+          ".config/cabal" # For some reason cabal seems to put artifacts here?
           ".config/librewolf-${conUsername}"
         ];
       };
