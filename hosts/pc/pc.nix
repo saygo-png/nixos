@@ -76,16 +76,12 @@
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
   hardware = {
-    amdgpu.amdvlk.enable = false;
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = [pkgs.vaapiVdpau];
     };
   };
-
-  # Force RADV though this should already be the default.
-  environment.variables.AMD_VULKAN_ICD = "RADV";
 
   # autologin
   services.getty.autologinUser = "${conUsername}";
