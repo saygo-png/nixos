@@ -367,6 +367,7 @@
     settings = {
       experimental-features = ["nix-command" "flakes"];
       trusted-users = ["${conUsername}"];
+      flake-registry = ""; # THIS IS HORRIBLE DEFAULT BEHAVIOUR
     };
     registry.nixpkgs.flake = self.inputs.nixpkgs;
     nixPath = ["nixpkgs=${self.inputs.nixpkgs}"];
