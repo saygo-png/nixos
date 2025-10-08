@@ -6,7 +6,18 @@
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/cab778239e705082fe97bb4990e0d24c50924c04";
 
-    my-neovim.url = "github:saygo-png/neovim-config";
+    my-neovim = {
+      url = "github:saygo-png/neovim-config";
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        systems.follows = "systems";
+      };
+    };
+
+    systems = {
+      url = "path:./systems.nix";
+      flake = false;
+    };
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
@@ -14,7 +25,9 @@
 
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
     };
 
     home-manager = {
@@ -25,12 +38,30 @@
     drugtracker2 = {
       # url = "git+file:///home/samsepi0l/builds/drugTracker2?ref=compile-time-json-config";
       url = "github:saygo-png/drugTracker2";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
     };
 
     stylix = {
       url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+
+        nur.follows = "";
+        base16-fish.follows = "";
+        base16-helix.follows = "";
+        base16-vim.follows = "";
+        firefox-gnome-theme.follows = "";
+        tinted-foot.follows = "";
+        tinted-kitty.follows = "";
+        tinted-schemes.follows = "";
+        tinted-tmux.follows = "";
+        tinted-zed.follows = "";
+      };
     };
 
     # Mine {{{
@@ -259,3 +290,4 @@
   };
 }
 ## vim:foldmethod=marker
+
