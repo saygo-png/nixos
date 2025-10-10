@@ -5,7 +5,7 @@
   conUsername,
   ...
 }: {
-  imports = lib.my.withModules ["myWaylandBase.nix"];
+  imports = lib.my.withModules ["waylandBase.nix"];
 
   programs.hyprland.enable = true;
 

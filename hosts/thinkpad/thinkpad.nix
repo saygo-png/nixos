@@ -28,8 +28,8 @@
       )
     ]
     ++ lib.my.withModules [
-      "myPulseaudio.nix"
-      # "myMullvad.nix"
+      "pulseaudio.nix"
+      # "mullvad.nix"
     ];
 
   services.sanoid = {

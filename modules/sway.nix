@@ -4,7 +4,7 @@
   conUsername,
   ...
 }: {
-  imports = lib.my.withModules ["myWaylandBase.nix"];
+  imports = lib.my.withModules ["waylandBase.nix"];
 
   home-manager.users.${conUsername} = {
     osConfig,

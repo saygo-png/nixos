@@ -4,7 +4,7 @@
   ...
 }: {
   imports = lib.my.withModules [
-    "myFlameshot.nix"
+    "flameshot.nix"
     "waybar/waybar.nix"
   ];
 

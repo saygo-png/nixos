@@ -25,7 +25,7 @@
         };
       })
     ]
-    ++ lib.my.withModules ["myPipewire.nix"];
+    ++ lib.my.withModules ["pipewire.nix"];
 
   services.sanoid = {
     enable = true;

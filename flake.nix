@@ -166,7 +166,7 @@
       nixvim-pkgs = nixvim-pkgs.${system};
       pkgs-frozen = pkgs-frozen.${system};
       lib = nixpkgs.lib.extend (final: _prev: {
-        my = import ./modules/myLib.nix {
+        my = import ./modules/lib.nix {
           pkgs = nixpkgs.legacyPackages.${system};
           lib = final;
         };
@@ -174,7 +174,7 @@
     };
 
     commonModules = [
-      ./modules/myConstants.nix
+      ./modules/constants.nix
       inputs.disko.nixosModules.disko
       inputs.impermanence.nixosModules.impermanence
       (_: {
@@ -190,7 +190,7 @@
         config,
         pkgs,
         ...
-      }: {_module.args.extraLib = import ./modules/myExtraLib.nix {inherit config pkgs lib;};})
+      }: {_module.args.extraLib = import ./modules/extraLib.nix {inherit config pkgs lib;};})
     ];
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);

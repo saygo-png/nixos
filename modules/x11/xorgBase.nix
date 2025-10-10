@@ -32,8 +32,8 @@
       })
     ]
     ++ lib.my.withModules [
-      "x11/myPicom.nix"
-      "myFlameshot.nix"
+      "x11/picom.nix"
+      "flameshot.nix"
     ];
 
   # Enable the X11 windowing system.

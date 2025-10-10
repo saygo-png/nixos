@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    (lib.my.relativeToRoot "modules/x11/myXorgBase.nix")
+    (lib.my.relativeToRoot "modules/x11/xorgBase.nix")
   ];
 
   environment.systemPackages = [

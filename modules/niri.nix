@@ -7,7 +7,7 @@
 }: let
   inherit (import (lib.my.relativeToRoot "modules/waybar/lib.nix") lib pkgs) wrapWaybarWithConfig;
 in {
-  imports = lib.my.withModules ["myWaylandBase.nix"];
+  imports = lib.my.withModules ["waylandBase.nix"];
 
   nixpkgs.overlays = [
     (_: prev: {
