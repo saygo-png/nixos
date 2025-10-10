@@ -69,6 +69,7 @@
   ###### Essential or basic. ###### {{{
 
   services.dbus.implementation = "broker";
+  services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
 
   documentation = {
     dev.enable = true;
