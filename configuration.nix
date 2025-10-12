@@ -625,7 +625,7 @@
           scroll-page-aware = true;
           statusbar-home-tilde = true;
 
-          font = "${fonts.serif.name} ${builtins.toString fonts.sizes.terminal}";
+          font = "${fonts.serif.name} ${toString fonts.sizes.terminal}";
           recolor = false;
           recolor-keephue = false;
 

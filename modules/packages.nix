@@ -188,7 +188,7 @@
             "$@"&
           fi
         }
-        xrandr -r ${builtins.toString config.const.refreshRate}
+        xrandr -r ${toString config.const.refreshRate}
         run "polkit-kde-authentication-agent-1" &
         run "xmousepasteblock" &
         run "xssproxy" &
@@ -212,7 +212,7 @@
       text = ''
         # This script is called on startup to remap keys.
         # Decrease key repeat delay and increase key repeat rate.
-        xset r rate ${builtins.toString config.services.xserver.autoRepeatDelay} ${builtins.toString config.services.xserver.autoRepeatInterval}
+        xset r rate ${toString config.services.xserver.autoRepeatDelay} ${toString config.services.xserver.autoRepeatInterval}
         # Turn off caps lock if on since there is no longer a key for it.
         xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
         # Disable touchpad

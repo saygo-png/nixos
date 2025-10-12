@@ -135,8 +135,8 @@
           "type:keyboard" = {
             xkb_layout = "pl";
             xkb_options = osConfig.services.xserver.xkb.options;
-            repeat_delay = builtins.toString osConfig.services.xserver.autoRepeatDelay;
-            repeat_rate = builtins.toString osConfig.services.xserver.autoRepeatInterval;
+            repeat_delay = toString osConfig.services.xserver.autoRepeatDelay;
+            repeat_rate = toString osConfig.services.xserver.autoRepeatInterval;
           };
         };
         gaps = {
@@ -145,9 +145,9 @@
           smartBorders = "on";
         };
         output = let
-          width = builtins.toString osConfig.const.screenWidth;
-          height = builtins.toString osConfig.const.screenHeight;
-          refreshRate = builtins.toString osConfig.const.refreshRate;
+          width = toString osConfig.const.screenWidth;
+          height = toString osConfig.const.screenHeight;
+          refreshRate = toString osConfig.const.refreshRate;
         in {
           HDMI-A-2 = {
             resolution = "${width}x${height}@${refreshRate}Hz";

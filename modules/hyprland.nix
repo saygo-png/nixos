@@ -243,8 +243,8 @@
 
           "$mainMod, p, Switch keyboard layout, exec, hyprctl-switch-keyboard"
 
-          "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${builtins.toString gaps_in}"
-          "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${builtins.toString gaps_out}"
+          "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_in ${toString gaps_in}"
+          "$mainMod, a, g[a]ps on, exec, hyprctl keyword general:gaps_out ${toString gaps_out}"
           "$mainMod SHIFT, a, g[a]ps off, exec, hyprctl keyword general:gaps_in 0"
           "$mainMod SHIFT, a, g[a]ps off, exec, hyprctl keyword general:gaps_out 0"
 
