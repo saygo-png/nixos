@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   conUsername,
   ...
 }: {
@@ -15,7 +14,6 @@
     ];
   };
 
-  # Allowed unfree packages
   custom.allowedUnfreePkgs = [
     pkgs.steam
     pkgs.steam-run
@@ -48,9 +46,15 @@
         config.home.file)}
     '';
 
-    programs.mangohud = {
-      enable = true;
-      enableSessionWide = false;
+    programs = {
+      lutris = {
+        enable = true;
+        protonPackages = [pkgs.proton-ge-bin];
+      };
+      mangohud = {
+        enable = true;
+        enableSessionWide = false;
+      };
     };
   };
 
@@ -81,11 +85,4 @@
     # see comment in include/linux/mm.h in the kernel tree.
     "vm.max_map_count" = 2147483642;
   };
-  environment.systemPackages = [
-    # Game launcher
-    pkgs.lutris
-    pkgs.winetricks
-    pkgs.wineWowPackages.waylandFull
-    pkgs.steam-run
-  ];
 }
