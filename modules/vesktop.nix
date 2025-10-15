@@ -61,7 +61,7 @@
             '';
 
           rsvg-convert = lib.getExe' pkgs.librsvg "rsvg-convert";
-          oldPngIconSize = builtins.toString 1024;
+          oldPngIconSize = toString 1024;
         in ''
           echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/icon.png
           echo ${escapeShellArg spinnerCss} >> static/views/style.css
@@ -90,7 +90,7 @@
       enable = true;
       settings = {
         appBadge = false;
-        arRPC = true;
+        arRPC = false;
         enableSplashScreen = true;
         customTitleBar = false;
         disableMinSize = true;
@@ -105,18 +105,16 @@
       vencord = let
         gruvboxTheme = "gruvbox";
       in {
-        useSystem = true;
+        useSystem = false;
         themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css"; # IFD?
         settings = {
           enabledThemes = ["${gruvboxTheme}.css"];
           plugins = {
             WhoReacted.enabled = true;
-            VoiceMessages.enabled = true;
             NoServerEmojis.enabled = true;
             ForceOwnerCrown.enabled = true;
             NoUnblockToJump.enabled = true;
             NoBlockedMessages.enabled = true;
-            NoDevtoolsWarning.enabled = true;
             NoOnboardingDelay.enabled = true;
           };
         };
