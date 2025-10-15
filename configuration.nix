@@ -38,7 +38,9 @@
       "xdgDirsEnforcement.nix"
 
       "mpv.nix"
+      "git.nix"
       "iamb.nix"
+      "rofi.nix"
       "tmux.nix"
       "qcalc.nix"
       "dolphin.nix"
@@ -57,14 +59,10 @@
     ];
   # }}}
 
-  ###### Custom ###### {{{
-
   custom.defaultTerminal = {
     package = pkgs.alacritty;
     desktopFile = "alacritty.desktop";
   };
-
-  # }}}
 
   ###### Essential or basic. ###### {{{
 
@@ -106,19 +104,19 @@
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_NAME = "pl_PL.UTF-8";
-      LC_TIME = "pl_PL.UTF-8";
-      LC_CTYPE = "pl_PL.UTF-8";
-      LC_PAPER = "pl_PL.UTF-8";
-      LC_ADDRESS = "pl_PL.UTF-8";
-      LC_COLLATE = "pl_PL.UTF-8";
-      LC_NUMERIC = "pl_PL.UTF-8";
-      LC_MONETARY = "pl_PL.UTF-8";
-      LC_TELEPHONE = "pl_PL.UTF-8";
-      LC_MEASUREMENT = "pl_PL.UTF-8";
-      LC_IDENTIFICATION = "pl_PL.UTF-8";
-    };
+    extraLocaleSettings = lib.genAttrs [
+      "LC_NAME"
+      "LC_TIME"
+      "LC_CTYPE"
+      "LC_PAPER"
+      "LC_ADDRESS"
+      "LC_COLLATE"
+      "LC_NUMERIC"
+      "LC_MONETARY"
+      "LC_TELEPHONE"
+      "LC_MEASUREMENT"
+      "LC_IDENTIFICATION"
+    ] (lib.const "pl_PL.UTF-8");
   };
 
   services.xserver.xkb = {
@@ -324,9 +322,7 @@
   programs.dconf.enable = true;
 
   # Create media folder in root
-  systemd.tmpfiles.rules = [
-    "d /media 0755 root root"
-  ];
+  systemd.tmpfiles.rules = ["d /media 0755 root root"];
 
   # Envvar, envars. User ones go into home manager.
   environment.variables = let
@@ -338,19 +334,21 @@
         "/etc/profiles/per-user/$USER/lib"
       ])
       + ":${homeConfig.xdg.dataHome}/.${format}";
-  in {
-    # This allows for programs to see audio plugins
-    DSSI_PATH = makePluginPath "dssi";
-    LADSPA_PATH = makePluginPath "ladspa";
-    LV2_PATH = makePluginPath "lv2";
-    LXVST_PATH = makePluginPath "lxvst";
-    VST_PATH = makePluginPath "vst";
-    VST3_PATH = makePluginPath "vst3";
+  in
+    lib.mapAttrs (_: makePluginPath) {
+      # This allows for programs to see audio plugins
+      LV2_PATH = "lv2";
+      VST_PATH = "vst";
+      DSSI_PATH = "dssi";
+      VST3_PATH = "vst3";
+      LXVST_PATH = "lxvst";
+      LADSPA_PATH = "ladspa";
+    }
+    // {
+      NH_FLAKE = config.const.flakePath; # For nix helper.
+    };
 
-    NH_FLAKE = config.const.flakePath; # For nix helper.
-  };
-
-  system.stateVersion = "24.05"; # Don't change.
+  system.stateVersion = "24.05";
 
   # }}}
 
@@ -382,9 +380,9 @@
     enableBashIntegration = false;
   };
   programs.nix-ld.enable = true;
-  ## If needed, you can add missing libraries here. nix-index-database is your friend to
-  ## find the name of the package from the error message:
-  ## https://github.com/nix-community/nix-index-database
+  # If needed, you can add missing libraries here. nix-index-database is your friend to
+  # find the name of the package from the error message:
+  # https://github.com/nix-community/nix-index-database
   programs.nix-ld.libraries =
     options.programs.nix-ld.libraries.default;
 
@@ -417,7 +415,6 @@
     users.${conUsername} = {
       lib,
       config,
-      osConfig,
       ...
     }: {
       imports = [
@@ -609,7 +606,6 @@
       # Development, internal.
       programs.zoxide.enable = true;
       programs.home-manager.enable = true;
-      programs.git-credential-oauth.enable = true;
 
       stylix.targets.zathura.enable = false;
       programs.zathura = let
@@ -705,41 +701,12 @@
         };
       };
 
-      programs.lazygit = {
-        enable = true;
-        settings = {
-          gui.border = "single";
-          git = {
-            overrideGpg = true;
-            commit.signOff = true;
-            branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
-            paging.pager = "delta --dark --paging=never";
-          };
-          customCommands = [
-            {
-              key = "f";
-              command = "git difftool -y {{.SelectedLocalCommit.Sha}} -- {{.SelectedCommitFile.Name}}";
-              context = "commitFiles";
-              description = "Compare (difftool) with local copy";
-            }
-            {
-              key = "F";
-              command = "git pull --rebase --autostash {{ SelectedLocalBranch.Name }}";
-              context = "localBranches";
-              output = "log";
-            }
-          ];
-        };
-      };
-
       programs.tealdeer = {
         enable = true;
         enableAutoUpdates = true;
-        settings = {
-          display = {
-            compact = false;
-            use_pager = true;
-          };
+        settings.display = {
+          compact = false;
+          use_pager = true;
         };
       };
 
@@ -793,6 +760,7 @@
       programs.fd = {
         enable = true;
         hidden = true;
+        extraOptions = ["--glob"];
         ignores = [
           ".git"
           ".cache"
@@ -809,9 +777,6 @@
           "nix/profiles"
           "node_modules"
           "cargo/registry"
-        ];
-        extraOptions = [
-          "--glob"
         ];
       };
 
@@ -893,56 +858,6 @@
         };
       };
 
-      programs.git = {
-        enable = true;
-        delta = {
-          enable = true;
-          options = {
-            syntax-theme = "none";
-            hunk-header-style = "omit";
-            file-style = "omit";
-            diff-output.line-numbers = true;
-            keep-plus-minus-markers = true;
-
-            plus-style = ''"#98971a" normal'';
-            plus-emph-style = ''"#b8bb26" bold normal'';
-
-            minus-style = ''"#cc241d" normal'';
-            minus-emph-style = ''"#fb4934" bold normal'';
-          };
-        };
-        aliases = {
-          aa = "add -A"; # [A]dd [A]ll
-          amend = "commit -a --amend";
-          undo = "reset HEAD~1 --mixed";
-          deleteGitignored = ''rm --cached ''${git ls-files -i -c --exclude-from=.gitignore}'';
-          prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
-        };
-        extraConfig = {
-          color.ui = "auto";
-          pull.rebase = true;
-          commit.gpgsign = true;
-          rerere.enabled = true;
-          branch.autosetupmerge = true;
-          merge.tool = "${lib.getExe pkgs.meld}";
-          core = {
-            excludesfile = "~/.gitignore_global";
-            interactive.diffFilter = "delta";
-          };
-          init.defaultBranch = "origin";
-          diff.colorMoved = "default";
-          user = {
-            signingKey = "86B6FCCC3563C00B";
-            name = "saygo-png";
-            email = "saygo.mail@proton.me";
-          };
-          push = {
-            autoSetupRemote = true;
-            useForceIfIncludes = true;
-          };
-        };
-      };
-
       programs.alacritty = {
         enable = true;
         settings = {
@@ -950,10 +865,7 @@
           window = {
             dynamic_title = true;
             dynamic_padding = true;
-            padding = {
-              x = 4;
-              y = 4;
-            };
+            padding = lib.genAttrs ["x" "y"] (lib.const 4);
           };
           cursor = {
             style.blinking = "on";
@@ -976,215 +888,6 @@
           ];
         };
       };
-
-      # rofi {{{
-      programs.rofi = {
-        enable = true;
-        extraConfig = {
-          sort = true;
-          padding = 10;
-          scrollbar = true;
-          show-match = true;
-          matching = "fuzzy";
-          show-icons = false;
-          auto-select = false;
-          run-command = "{cmd}";
-          fixed-num-lines = true;
-          sorting-method = "fzf";
-          disable-history = false;
-          modi = "window,run,drun";
-          separator-style = "dash";
-          drun-show-actions = false;
-          window-format = "{w} {c}  {t}";
-          font = let
-            inherit (builtins) toString;
-            inherit (config.stylix) fonts;
-          in "${fonts.monospace.name} ${toString (fonts.sizes.terminal + 1)}";
-
-          # Bindings, I use empty strings to remove bind conflicts.
-          kb-remove-to-eol = "";
-          kb-row-up = "Control+k";
-
-          kb-accept-entry = "Return";
-          kb-row-down = "Control+j";
-
-          kb-mode-complete = "";
-          kb-mode-next = "Control+l";
-
-          kb-remove-char-forward = "";
-          kb-clear-line = "Control+d";
-
-          kb-remove-char-back = "BackSpace";
-          kb-mode-previous = "Control+h";
-
-          kb-cancel = "Escape,Control+q";
-        };
-        theme = let
-          inherit (config.lib.formats.rasi) mkLiteral;
-        in
-          lib.mkForce {
-            "*" = {
-              highlight = "bold";
-              border-color = mkLiteral "#${osConfig.const.accentColor}";
-              gruvbox-dark-fg0 = mkLiteral "${color.base06}";
-              gruvbox-dark-fg1 = mkLiteral "${color.base05}";
-              gruvbox-dark-gray = mkLiteral "${color.base04}";
-              gruvbox-dark-red-dark = mkLiteral "${color.base09}";
-              gruvbox-dark-red-light = mkLiteral "${color.base08}";
-              gruvbox-dark-yellow-dark = mkLiteral "${color.base0A}";
-              gruvbox-dark-yellow-light = mkLiteral "${color.base0C}";
-              gruvbox-dark-bg0 = mkLiteral "${color.base00}";
-              gruvbox-dark-bg3 = mkLiteral "${color.base01}";
-              selected-normal-background = mkLiteral "${color.base0B}";
-
-              normal-background = mkLiteral "@background";
-              gruvbox-dark-bg0-soft = mkLiteral "@background";
-              alternate-normal-background = mkLiteral "@background";
-              background-color = mkLiteral "@background";
-              background = mkLiteral "@gruvbox-dark-bg0";
-              foreground = mkLiteral "@gruvbox-dark-fg1";
-              separatorcolor = mkLiteral "@border-color";
-              normal-foreground = mkLiteral "@foreground";
-              active-foreground = mkLiteral "@background";
-              scrollbar-handle = mkLiteral "@border-color";
-              urgent-foreground = mkLiteral "@background";
-              alternate-normal-foreground = mkLiteral "@foreground";
-              urgent-background = mkLiteral "@gruvbox-dark-red-dark";
-              active-background = mkLiteral "@gruvbox-dark-yellow-dark";
-              selected-normal-foreground = mkLiteral "@background";
-              alternate-urgent-foreground = mkLiteral "@gruvbox-dark-fg1";
-              selected-active-foreground = mkLiteral "@active-foreground";
-              selected-urgent-foreground = mkLiteral "@urgent-foreground";
-              alternate-active-background = mkLiteral "@active-background";
-              alternate-active-foreground = mkLiteral "@active-foreground";
-              alternate-urgent-background = mkLiteral "@urgent-background";
-              selected-urgent-background = mkLiteral "@gruvbox-dark-red-light";
-              selected-active-background = mkLiteral "@gruvbox-dark-yellow-light";
-            };
-            "window" = {
-              padding = 5;
-              border = 0;
-              background-color = mkLiteral "@background";
-            };
-            "mainbox" = {
-              border = 0;
-              padding = 0;
-            };
-            "message" = {
-              padding = mkLiteral "1px";
-              border = mkLiteral "2px 0 0";
-              border-color = mkLiteral "@background";
-            };
-            "textbox" = {
-              highlight = mkLiteral "@highlight";
-              text-color = mkLiteral "@foreground";
-            };
-            "listview" = {
-              spacing = mkLiteral "0px";
-              padding = mkLiteral "0px 0 0";
-              border = mkLiteral "0px solid 0 0";
-              border-color = mkLiteral "@background";
-            };
-            "element" = {
-              border = 0;
-              padding = mkLiteral "2px";
-            };
-            "inputbar" = {
-              spacing = 2;
-              padding = mkLiteral "2px";
-              text-color = mkLiteral "@normal-foreground";
-              children = mkLiteral "[prompt, textbox-prompt-sep, entry, case-indicator]";
-            };
-            "case-indicator, entry, prompt, button" = {
-              spacing = 0;
-              text-color = mkLiteral "@normal-foreground";
-            };
-            "case-indicator" = {
-              spacing = 0;
-              text-color = mkLiteral "@normal-foreground";
-            };
-            "entry" = {
-              spacing = 0;
-              text-color = mkLiteral "@normal-foreground";
-            };
-            "prompt" = {
-              spacing = 0;
-              text-color = mkLiteral "@normal-foreground";
-            };
-            "button" = {
-              spacing = 0;
-              text-color = mkLiteral "@normal-foreground";
-            };
-            "textbox-prompt-sep" = {
-              str = ":";
-              expand = false;
-              margin = mkLiteral "0 0.2em 0.3em 0";
-              text-color = mkLiteral "@normal-foreground";
-            };
-            "element.normal.normal" = {
-              text-color = mkLiteral "@normal-foreground";
-              background-color = mkLiteral "@normal-background";
-            };
-            "element.normal.urgent" = {
-              text-color = mkLiteral "@urgent-foreground";
-              background-color = mkLiteral "@urgent-background";
-            };
-            "element.normal.active" = {
-              text-color = mkLiteral "@active-foreground";
-              background-color = mkLiteral "@active-background";
-            };
-            "element.selected.normal" = {
-              text-color = mkLiteral "@selected-normal-foreground";
-              background-color = mkLiteral "@selected-normal-background";
-            };
-            "element.selected.urgent" = {
-              text-color = mkLiteral "@selected-urgent-foreground";
-              background-color = mkLiteral "@selected-urgent-background";
-            };
-            "element.selected.active" = {
-              text-color = mkLiteral "@selected-active-foreground";
-              background-color = mkLiteral "@selected-active-background";
-            };
-            "element.alternate.normal" = {
-              text-color = mkLiteral "@alternate-normal-foreground";
-              background-color = mkLiteral "@alternate-normal-background";
-            };
-            "element.alternate.urgent" = {
-              text-color = mkLiteral "@alternate-urgent-foreground";
-              background-color = mkLiteral "@alternate-urgent-background";
-            };
-            "element.alternate.active" = {
-              text-color = mkLiteral "@alternate-active-foreground";
-              background-color = mkLiteral "@alternate-active-background";
-            };
-            "scrollbar" = {
-              border = 0;
-              padding = 0;
-              handle-width = mkLiteral "8px";
-              width = mkLiteral "4px";
-              handle-color = mkLiteral "@normal-background";
-            };
-            "mode-switcher" = {
-              border = mkLiteral "2px 0 0";
-              border-color = mkLiteral "@normal-background";
-            };
-            "button.selected" = {
-              text-color = mkLiteral "@selected-normal-foreground";
-              background-color = mkLiteral "@selected-normal-background";
-            };
-            "element-icon" = {
-              text-color = mkLiteral "inherit";
-              background-color = mkLiteral "inherit";
-            };
-            "element-text" = {
-              text-color = mkLiteral "inherit";
-              background-color = mkLiteral "inherit";
-            };
-          };
-      };
-      # }}}
-
-      # Extra Configs {{{
 
       xdg.configFile."yapf/style" = {
         text = ''
@@ -1219,8 +922,6 @@
         respectful = false;
         indent-wheres = true;
       };
-
-      # }}}
     };
   };
   # }}}

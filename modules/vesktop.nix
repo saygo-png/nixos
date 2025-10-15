@@ -71,19 +71,14 @@
     })
   ];
 
-  custom.persist.home.cache = {
-    directories = [".config/vesktop/sessionData"];
-    files = [".config/vesktop/state.json"];
-  };
+  custom.persist.home.cache.directories = [".config/vesktop/sessionData"];
 
   home-manager.users.${conUsername} = _: {
     stylix.targets.vesktop.enable = false;
-    xdg.configFile."vesktop/settings.json" = {
+    xdg.configFile."vesktop/state.json" = {
       force = true;
       text = builtins.toJSON {
-        discordBranch = "stable";
-        minimizeToTray = false;
-        arRPC = false;
+        firstLaunch = false;
       };
     };
     programs.vesktop = {
