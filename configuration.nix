@@ -43,6 +43,7 @@
       "rofi.nix"
       "tmux.nix"
       "qcalc.nix"
+      "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
       "prismlauncher.nix"
