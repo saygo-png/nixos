@@ -207,7 +207,6 @@ in {
                 default_active_color = withHashtag.base08;
                 default_selection_color = withHashtag.base0A;
                 configured_pages = let
-                  # Helper functions {{{
                   disabledList = l: lib.genAttrs l (_: 0);
                   stylesheetProcessorCssList = l: lib.genAttrs l (_: 1);
                   simpleCssList = l: lib.genAttrs l (_: 2);
@@ -219,7 +218,6 @@ in {
                       (simpleCssList s.simpleCss)
                       (stylesheetProcessorCssList s.stylesheetProcessor)
                     ];
-                  # }}}
                 in
                   pageSettings {
                     invert = [];
@@ -232,6 +230,9 @@ in {
                       "whitescreen.org"
                       "pstream.org"
                       "hackage.haskell.org"
+                      "twitch.tv"
+                      "duckduckgo.com"
+                      "saygo-png.github.io/white-page/"
                     ];
                     simpleCss = [];
                     stylesheetProcessor = [];
