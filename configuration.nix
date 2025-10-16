@@ -8,6 +8,7 @@
   conHome,
   options,
   nixvim-pkgs,
+  pkgs-frozen,
   conUsername,
   ...
 }: {
@@ -238,7 +239,7 @@
       zam-plugins
       airwindows-lv2
       molot-lite
-      eq10q
+      pkgs-frozen.eq10q
 
       # Nix.
       nh # Nix helper
@@ -361,6 +362,7 @@
   environment.etc."flake-src".source = lib.my.relativeToRoot ".";
 
   nixpkgs.config.allowUnfree = lib.mkForce false;
+  nixpkgs.config.allowBrokenPredicate = pkg: builtins.elem (lib.getName pkg) ["universum"];
 
   nix = {
     channel.enable = false;
