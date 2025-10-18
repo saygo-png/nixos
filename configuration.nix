@@ -350,7 +350,7 @@
       NH_FLAKE = config.const.flakePath; # For nix helper.
     };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 
   # }}}
 
@@ -555,7 +555,7 @@
       home = {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
-        stateVersion = "24.05"; # Don't change.
+        stateVersion = "25.05";
 
         shellAliases = {
           "ls" = "eza";
