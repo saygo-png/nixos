@@ -245,7 +245,7 @@ in {
           # {{{
           enable = true;
           force = true;
-          default = "ddg";
+          default = "google";
           engines = {
             bing.metadata.hidden = true;
             google.metadata.hidden = true;
