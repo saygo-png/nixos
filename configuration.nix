@@ -30,9 +30,11 @@
       "hyprland.nix"
       "niri.nix"
 
+
       "gaming.nix"
       "stupid.nix"
       "packages.nix"
+      "constants.nix"
       "templates.nix"
       "audioEffects.nix"
       "impermanence.nix"
@@ -371,8 +373,8 @@
       trusted-users = ["${conUsername}"];
       flake-registry = ""; # THIS IS HORRIBLE DEFAULT BEHAVIOUR
     };
-    registry.nixpkgs.flake = self.inputs.nixpkgs;
-    nixPath = ["nixpkgs=${self.inputs.nixpkgs}"];
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
   };
 
   programs.command-not-found.enable = false;

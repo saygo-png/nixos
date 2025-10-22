@@ -1,5 +1,5 @@
 {
-  description = "Nixos config flake";
+  description = "NixOS config flake";
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
@@ -25,9 +25,7 @@
 
     disko = {
       url = "github:nix-community/disko";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -150,10 +148,11 @@
     self,
     nixpkgs,
     systems,
-    home-manager,
     ...
   } @ inputs: let
-    lib = nixpkgs.lib // home-manager.lib;
+    inherit (nixpkgs) lib;
+    inherit (builtins) filter;
+
     eachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
     pkgsFor = lib.genAttrs (import systems) (system: import nixpkgs {inherit system;});
 
@@ -165,25 +164,22 @@
       inherit inputs self;
       nixvim-pkgs = nixvim-pkgs.${system};
       pkgs-frozen = pkgs-frozen.${system};
-      lib = nixpkgs.lib.extend (final: _prev: {
+      lib = lib.extend (final: _: {
         my = import ./modules/lib.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = nixpkgs.${system};
           lib = final;
         };
       });
     };
 
     commonModules = [
-      ./modules/constants.nix
       inputs.disko.nixosModules.disko
       inputs.impermanence.nixosModules.impermanence
-      (_: {
-        options = {
-          warnings = lib.mkOption {
-            apply = builtins.filter (w: !(lib.hasInfix "If multiple of these password options are set at the same time" w));
-          };
+      {
+        options.warnings = lib.mkOption {
+          apply = filter (w: !(lib.hasInfix "If multiple of these password options are set at the same time" w));
         };
-      })
+      }
 
       ({
         lib,
@@ -192,102 +188,60 @@
         ...
       }: {_module.args.extraLib = import ./modules/extraLib.nix {inherit config pkgs lib;};})
     ];
+
+    mkSystem = name: uniqueModules:
+      lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs =
+          {
+            conHost = name;
+            conUsername = "samsepi0l";
+            conHome = "/home/samsepi0l";
+            conFlakePath = "/home/samsepi0l/nixos";
+          }
+          // (commonSpecialArgs system);
+        modules =
+          [
+            ./configuration.nix
+            (./hosts + "/${name}/${name}.nix")
+            (./hosts + "/${name}/disko-config.nix")
+            (./hosts + "/${name}/hardware-configuration.nix")
+          ]
+          ++ commonModules
+          ++ uniqueModules;
+      };
+
+    mkInstall = host:
+      lib.nixosSystem {
+        inherit (host.pkgs) system;
+        specialArgs =
+          host._module.specialArgs // {conHost = "install-" + host._module.specialArgs.conHost;};
+
+        modules =
+          [
+            (./hosts + "/${host._module.specialArgs.conHost}/install/install.nix")
+            (./hosts + "/${host._module.specialArgs.conHost}/hardware-configuration.nix")
+            (./hosts + "/${host._module.specialArgs.conHost}/disko-config.nix")
+          ]
+          ++ commonModules;
+      };
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
+    nixosConfigurations = rec {
+      install-pc = mkInstall pc;
+      pc = mkSystem "pc" [
+        inputs.nixos-hardware.nixosModules.common-pc
+        inputs.nixos-hardware.nixosModules.common-pc-ssd
+        inputs.nixos-hardware.nixosModules.common-cpu-amd
+        inputs.nixos-hardware.nixosModules.common-gpu-amd
+      ];
 
-    nixosConfigurations.pc = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs =
-        {
-          conHost = "pc";
-          conUsername = "samsepi0l";
-          conHome = "/home/samsepi0l";
-          conFlakePath = "/home/samsepi0l/nixos";
-        }
-        // (commonSpecialArgs system);
-      modules =
-        [
-          ./configuration.nix
-          ./hosts/pc/pc.nix
-          ./hosts/pc/disko-config.nix
-
-          ./hosts/pc/hardware-configuration-pc.nix
-
-          inputs.nixos-hardware.nixosModules.common-pc
-          inputs.nixos-hardware.nixosModules.common-pc-ssd
-          inputs.nixos-hardware.nixosModules.common-cpu-amd
-          inputs.nixos-hardware.nixosModules.common-gpu-amd
-        ]
-        ++ commonModules;
+      install-thinkpad = mkInstall thinkpad;
+      thinkpad = mkSystem "thinkpad" [
+        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
+        inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+      ];
     };
-    # install-pc {{{
-    # My configurations are so bulky that i struggle with installing them from a
-    # usb without OOM errors. This is a minimal host to be deployed on the
-    # install target disk. It follows the partitioning schema of corresponding
-    # host, which allows for a seamless switch to it.
-    nixosConfigurations.install-pc = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs =
-        {
-          conHost = "install-pc";
-          conUsername = "samsepi0l";
-          conHome = "/home/samsepi0l";
-        }
-        // (commonSpecialArgs system);
-
-      modules =
-        [
-          ./hosts/pc/install/install.nix
-          ./hosts/pc/hardware-configuration-pc.nix
-          ./hosts/pc/disko-config.nix
-        ]
-        ++ commonModules;
-    }; # }}}
-
-    nixosConfigurations.thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs =
-        {
-          conHost = "thinkpad";
-          conUsername = "samsepi0l";
-          conHome = "/home/samsepi0l";
-          conFlakePath = "/home/samsepi0l/nixos";
-        }
-        // (commonSpecialArgs system);
-
-      modules =
-        [
-          ./configuration.nix
-          ./hosts/thinkpad/thinkpad.nix
-          ./hosts/thinkpad/disko-config.nix
-          ./hosts/thinkpad/hardware-configuration-thinkpad.nix
-          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x270
-          inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-        ]
-        ++ commonModules;
-    };
-
-    # install-thinkpad {{{
-    nixosConfigurations.install-thinkpad = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs =
-        {
-          conHost = "install-thinkpad";
-          conUsername = "samsepi0l";
-          conHome = "/home/samsepi0l";
-        }
-        // (commonSpecialArgs system);
-
-      modules =
-        [
-          ./hosts/thinkpad/disko-config.nix
-          ./hosts/thinkpad/install/install.nix
-          ./hosts/thinkpad/hardware-configuration-thinkpad.nix
-        ]
-        ++ commonModules;
-    }; # }}}
   };
 }
-## vim:foldmethod=marker
-
