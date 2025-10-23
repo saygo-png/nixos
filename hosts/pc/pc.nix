@@ -3,6 +3,7 @@
   pkgs,
   config,
   conHome,
+  pkgs-frozen,
   conUsername,
   ...
 }: {
@@ -73,7 +74,18 @@
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
-  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+  boot = {
+    kernelPackages = pkgs-frozen.linuxPackages_xanmod_latest;
+    kernelPatches = [
+      {
+        name = "optimize-for-my-machine";
+        patch = null;
+        extraConfig = ''
+          MZEN y
+        '';
+      }
+    ];
+  };
 
   hardware = {
     graphics = {
