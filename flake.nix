@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/cab778239e705082fe97bb4990e0d24c50924c04";
+    nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/d7f52a7a640bc54c7bb414cca603835bf8dd4b10";
 
     my-neovim = {
       url = "github:saygo-png/neovim-config";

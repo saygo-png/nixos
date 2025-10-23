@@ -8,7 +8,6 @@
   conHome,
   options,
   nixvim-pkgs,
-  pkgs-frozen,
   conUsername,
   ...
 }: {
@@ -241,7 +240,7 @@
       zam-plugins
       airwindows-lv2
       molot-lite
-      pkgs-frozen.eq10q
+      pkgs.eq10q
 
       # Nix.
       nh # Nix helper
@@ -271,7 +270,7 @@
       exiftool
       python3
       alsa-utils
-      moar # Pager
+      moor # Pager
       jq # Json parser
       termdown # Timer
       gcc # C compiling
@@ -584,7 +583,7 @@
 
         sessionVariables = rec {
           # Default programs.
-          PAGER = "moar";
+          PAGER = "moor";
           BROWSER = "librewolf";
           OPENER = "xdg-open";
           EDITOR = lib.mkDefault "vi";
