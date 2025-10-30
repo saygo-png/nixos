@@ -262,6 +262,7 @@
       exiftool
       moreutils
       alsa-utils
+      hydra-check
       moor # Pager
       jq # Json parser
       gcc # C compiling
