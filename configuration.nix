@@ -383,16 +383,16 @@
     enableFishIntegration = false;
     enableBashIntegration = false;
   };
-  programs.nix-ld.enable = true;
-  # If needed, you can add missing libraries here. nix-index-database is your friend to
-  # find the name of the package from the error message:
-  # https://github.com/nix-community/nix-index-database
-  programs.nix-ld.libraries =
-    options.programs.nix-ld.libraries.default;
 
   # }}}
 
   ###### Services ###### {{{
+  # programs.nix-ld.enable = true;
+  # # If needed, you can add missing libraries here. nix-index-database is your friend to
+  # # find the name of the package from the error message:
+  # # https://github.com/nix-community/nix-index-database
+  # programs.nix-ld.libraries =
+  #   options.programs.nix-ld.libraries.default;
 
   # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
