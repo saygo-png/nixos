@@ -258,6 +258,7 @@
       ncdu
       vlock
       rclone
+      ddcutil
       python3
       exiftool
       moreutils
