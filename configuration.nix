@@ -263,7 +263,6 @@
       alsa-utils
       moor # Pager
       jq # Json parser
-      termdown # Timer
       gcc # C compiling
       wget # Downloader
       tokei # Line counter
