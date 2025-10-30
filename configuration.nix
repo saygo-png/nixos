@@ -260,6 +260,7 @@
       rclone
       python3
       exiftool
+      moreutils
       alsa-utils
       moor # Pager
       jq # Json parser
