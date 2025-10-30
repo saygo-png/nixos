@@ -1,5 +1,4 @@
 {
-  ###### Imports ###### {{{
   lib,
   pkgs,
   self,
@@ -28,7 +27,6 @@
       # "xmonad.nix"
       "hyprland.nix"
       "niri.nix"
-
 
       "gaming.nix"
       "stupid.nix"
@@ -60,14 +58,11 @@
       "visuals/themeCore.nix"
       "visuals/kvantumBasedQt.nix"
     ];
-  # }}}
 
   custom.defaultTerminal = {
     package = pkgs.alacritty;
     desktopFile = "alacritty.desktop";
   };
-
-  ###### Essential or basic. ###### {{{
 
   services.dbus.implementation = "broker";
   services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
@@ -208,10 +203,6 @@
     Defaults insults
   '';
 
-  # }}}
-
-  ###### NixOS programs ###### {{{
-
   # Appimage support.
   programs.appimage = {
     enable = true;
@@ -267,8 +258,8 @@
       ncdu
       vlock
       rclone
-      exiftool
       python3
+      exiftool
       alsa-utils
       moor # Pager
       jq # Json parser
@@ -318,10 +309,6 @@
       nixvim-pkgs.ghc # Haskell compiler for the LSP
     ];
 
-  # }}}
-
-  ###### Miscellaneous ###### {{{
-
   programs.dconf.enable = true;
 
   # Create media folder in root
@@ -353,9 +340,7 @@
 
   system.stateVersion = "25.05";
 
-  # }}}
 
-  ##### NixOS ###### {{{
 
   # Keep trace of flake hash and flake for every gen in /etc
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
@@ -384,9 +369,6 @@
     enableBashIntegration = false;
   };
 
-  # }}}
-
-  ###### Services ###### {{{
   # programs.nix-ld.enable = true;
   # # If needed, you can add missing libraries here. nix-index-database is your friend to
   # # find the name of the package from the error message:
@@ -405,9 +387,7 @@
   services.xserver.autoRepeatInterval = 45;
   services.libinput.mouse.middleEmulation = false;
   services.libinput.mouse.accelProfile = "adaptive";
-  # }}}
 
-  ##### Home Manager ###### {{{
   home-manager = let
     color = config.lib.stylix.colors.withHashtag;
   in {
@@ -421,9 +401,7 @@
       config,
       ...
     }: {
-      imports = [
-        inputs.drugtracker2.homeManagerModules.default
-      ];
+      imports = [inputs.drugtracker2.homeManagerModules.default];
 
       # Prevent default apps from being changed
       xdg = {
@@ -928,7 +906,4 @@
       };
     };
   };
-  # }}}
 }
-## vim:foldmethod=marker
-
