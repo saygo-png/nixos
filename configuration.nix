@@ -29,8 +29,9 @@
 
       "gaming.nix"
       "stupid.nix"
+      "zathura.nix"
+      "mimeapps.nix"
       "packages.nix"
-      "constants.nix"
       "templates.nix"
       "audioEffects.nix"
       "impermanence.nix"
@@ -63,9 +64,6 @@
     desktopFile = "alacritty.desktop";
   };
 
-  services.dbus.implementation = "broker";
-  services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
-
   documentation = {
     dev.enable = true;
     info.enable = false;
@@ -79,9 +77,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  services.xserver.wacom.enable = true;
-
-  environment.binsh = lib.getExe pkgs.dash;
+  # Enable sysrq fully
+  boot.kernel.sysctl."kernel.sysrq" = 1;
 
   # Faster boot
   boot.initrd.systemd.network.wait-online.enable = false;
@@ -89,13 +86,12 @@
 
   networking.hostName = config.const.host;
 
-  # Enable sysrq fully
-  boot.kernel.sysctl."kernel.sysrq" = 1;
-
   # DNS
   networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];
 
   networking.firewall.enable = true;
+
+  environment.binsh = lib.getExe pkgs.dash;
 
   time.timeZone = "Europe/Warsaw";
 
@@ -121,55 +117,9 @@
     options = "caps:escape,grp:sclk_toggle";
     extraLayouts.plfi = {
       languages = ["pol"];
-      symbolsFile = builtins.toFile "plfi" ''
-                default partial alphanumeric_keys
-                xkb_symbols "basic" {
-                    include "latin"
-                    name[Group1]="Polish-Fin";
-        key <AE01> { [         1,     exclam,     notequal,   exclamdown ] };
-                    key <AE02> { [         2,         at,  twosuperior, questiondown ] };
-                    key <AE04> { [         4,     dollar,         cent,   onequarter ] };
-                    key <AE05> { [         5,    percent,     EuroSign,        U2030 ] };
-                    key <AE06> { [         6, asciicircum,     onehalf,   logicaland ] };
-                    key <AE07> { [         7,  ampersand,      section,        U2248 ] };
-                    key <AE08> { [         8,   asterisk, periodcentered, threequarters ] };
-                    key <AE09> { [         9,  parenleft, guillemotleft,   plusminus ] };
-                    key <AE10> { [         0, parenright, guillemotright,     degree ] };
-                    key <AE11> { [     minus, underscore,       endash,       emdash ] };
-
-                    key <AD01> { [         q,          Q,     Greek_pi,  Greek_OMEGA ] };
-                    key <AD02> { [         w,          W,           oe,           OE ] };
-                    key <AD03> { [         e,          E,      eogonek,      Eogonek ] };
-                    key <AD04> { [         r,          R,    copyright,   registered ] };
-                    key <AD05> { [         t,          T,       ssharp,    trademark ] };
-                    key <AD08> { [         i,          I,   rightarrow,        U2194 ] };
-                    key <AD09> { [         o,          O,        U00F6,        U00D6 ] };
-
-                    key <AC01> { [         a,          A,        U00E4,        U00C4 ] };
-                    key <AC02> { [         s,          S,       sacute,       Sacute ] };
-                    key <AC04> { [         f,          F,           ae,           AE ] };
-                    key <AC06> { [         h,          H, rightsinglequotemark, U2022 ] };
-                    key <AC07> { [         j,          J,        schwa,        SCHWA ] };
-                    key <AC08> { [         k,          K,     ellipsis,  dead_stroke ] };
-                    key <TLDE> { [     grave, asciitilde,      notsign,    logicalor ] };
-
-                    key <AB01> { [         z,          Z,    zabovedot,    Zabovedot ] };
-                    key <AB02> { [         x,          X,       zacute,       Zacute ] };
-                    key <AB03> { [         c,          C,       cacute,       Cacute ] };
-                    key <AB04> { [         v,          V, doublelowquotemark, leftsinglequotemark ] };
-                    key <AB05> { [         b,          B, rightdoublequotemark, leftdoublequotemark ] };
-                    key <AB06> { [         n,          N,       nacute,       Nacute ] };
-                    key <AB07> { [         m,          M,           mu,     infinity ] };
-                    key <AB08> { [     comma,       less, lessthanequal,    multiply ] };
-                    key <AB09> { [    period,    greater, greaterthanequal, division ] };
-
-                    key <SPCE> { [     space,      space, nobreakspace, nobreakspace ] };
-
-                    include "kpdl(comma)"
-
-                    include "level3(ralt_switch)"
-                };
-      '';
+      symbolsFile =
+        builtins.toFile "plfi"
+        (builtins.readFile (lib.my.relativeToRoot "resources/polish-finnish-layout.xkb"));
       description = "Polish finnish layout";
     };
   };
@@ -202,14 +152,27 @@
     Defaults insults
   '';
 
-  # Appimage support.
-  programs.appimage = {
-    enable = true;
-    binfmt = true;
-  };
+  programs = {
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
 
-  programs.gnupg.agent.enable = true;
-  programs.gnupg.agent.enableSSHSupport = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+
+    dconf.enable = true;
+
+    command-not-found.enable = false;
+    nix-index-database.comma.enable = true;
+    nix-index = {
+      enableZshIntegration = false;
+      enableFishIntegration = false;
+      enableBashIntegration = false;
+    };
+  };
 
   # System packages.
   environment.systemPackages = with pkgs;
@@ -310,8 +273,6 @@
       nixvim-pkgs.ghc # Haskell compiler for the LSP
     ];
 
-  programs.dconf.enable = true;
-
   # Create media folder in root
   systemd.tmpfiles.rules = ["d /media 0755 root root"];
 
@@ -371,19 +332,11 @@
     channel.enable = false;
     settings = {
       experimental-features = ["nix-command" "flakes"];
-      trusted-users = ["${conUsername}"];
+      trusted-users = lib.singleton "${conUsername}";
       flake-registry = ""; # THIS IS HORRIBLE DEFAULT BEHAVIOUR
     };
     registry.nixpkgs.flake = inputs.nixpkgs;
-    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
-  };
-
-  programs.command-not-found.enable = false;
-  programs.nix-index-database.comma.enable = true;
-  programs.nix-index = {
-    enableZshIntegration = false;
-    enableFishIntegration = false;
-    enableBashIntegration = false;
+    nixPath = lib.singleton "nixpkgs=${inputs.nixpkgs}";
   };
 
   # programs.nix-ld.enable = true;
@@ -399,15 +352,17 @@
   # Automount.
   services.udisks2.enable = true;
 
+  services.dbus.implementation = "broker";
+  services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
+
   services.libinput.enable = true;
+  services.xserver.wacom.enable = true;
   services.xserver.autoRepeatDelay = 170;
   services.xserver.autoRepeatInterval = 45;
   services.libinput.mouse.middleEmulation = false;
   services.libinput.mouse.accelProfile = "adaptive";
 
-  home-manager = let
-    color = config.lib.stylix.colors.withHashtag;
-  in {
+  home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {inherit inputs;};
@@ -421,139 +376,11 @@
     }: {
       imports = [inputs.drugtracker2.homeManagerModules.default];
 
-      # Prevent default apps from being changed
-      xdg = {
-        configFile."mimeapps.list".force = true;
-        mimeApps = {
-          enable = true;
-          associations.added = config.xdg.mimeApps.defaultApplications;
-          defaultApplications = let
-            inherit (osConfig.environment.variables) EDITOR;
-            inherit (osConfig.environment.variables) BROWSER;
-            fileBrowser = "org.kde.dolphin.desktop";
-            imageViewer = "nsxiv.desktop";
-            pdfViewer = "org.pwmt.zathura.desktop";
-            videoPlayer = "mpv.desktop";
-            terminal = "Alacritty.desktop";
-          in {
-            "text/plain" = "${EDITOR}.desktop";
-            "text/rhtml" = "${EDITOR}.desktop";
-            "text/x-tex" = "${EDITOR}.desktop";
-            "text/x-java" = "${EDITOR}.desktop";
-            "text/x-ruby" = "${EDITOR}.desktop";
-            "text/x-cmake" = "${EDITOR}.desktop";
-            "text/markdown" = "${EDITOR}.desktop";
-            "text/x-python" = "${EDITOR}.desktop";
-            "text/x-readme" = "${EDITOR}.desktop";
-            "text/x-markdown" = "${EDITOR}.desktop";
-            "application/json" = "${EDITOR}.desktop";
-            "application/x-ruby" = "${EDITOR}.desktop";
-            "application/x-yaml" = "${EDITOR}.desktop";
-            "application/x-docbook+xml" = "${EDITOR}.desktop";
-            "application/x-shellscript" = "${EDITOR}.desktop";
-
-            "image/bmp" = imageViewer;
-            "image/gif" = imageViewer;
-            "image/jpg" = imageViewer;
-            "image/jxl" = imageViewer;
-            "image/png" = imageViewer;
-            "image/avif" = imageViewer;
-            "image/heif" = imageViewer;
-            "image/jpeg" = imageViewer;
-            "image/tiff" = imageViewer;
-            "image/webp" = imageViewer;
-            "image/x-eps" = imageViewer;
-            "image/x-ico" = imageViewer;
-            "image/x-psd" = imageViewer;
-            "image/x-tga" = imageViewer;
-            "image/x-icns" = imageViewer;
-            "image/x-webp" = imageViewer;
-            "image/svg+xml" = imageViewer;
-            "image/x-xbitmap" = imageViewer;
-            "image/x-xpixmap" = imageViewer;
-            "image/x-portable-bitmap" = imageViewer;
-            "image/x-portable-pixmap" = imageViewer;
-            "image/x-portable-graymap" = imageViewer;
-
-            "image/vnd.djvu" = pdfViewer;
-            "application/pdf" = pdfViewer;
-
-            "video/dv" = videoPlayer;
-            "video/3gp" = videoPlayer;
-            "video/avi" = videoPlayer;
-            "video/fli" = videoPlayer;
-            "video/flv" = videoPlayer;
-            "video/mp4" = videoPlayer;
-            "video/ogg" = videoPlayer;
-            "video/3gpp" = videoPlayer;
-            "video/divx" = videoPlayer;
-            "video/mp2t" = videoPlayer;
-            "video/mpeg" = videoPlayer;
-            "video/webm" = videoPlayer;
-            "video/3gpp2" = videoPlayer;
-            "video/x-avi" = videoPlayer;
-            "video/x-flv" = videoPlayer;
-            "video/x-m4v" = videoPlayer;
-            "video/x-ogm" = videoPlayer;
-            "video/mp4v-es" = videoPlayer;
-            "video/msvideo" = videoPlayer;
-            "video/x-mpeg2" = videoPlayer;
-            "video/vnd.divx" = videoPlayer;
-            "video/x-ms-asf" = videoPlayer;
-            "video/x-ms-wmv" = videoPlayer;
-            "video/x-ms-wmx" = videoPlayer;
-            "video/x-theora" = videoPlayer;
-            "video/quicktime" = videoPlayer;
-            "video/x-msvideo" = videoPlayer;
-            "video/x-ogm+ogg" = videoPlayer;
-            "video/x-matroska" = videoPlayer;
-            "video/vnd.mpegurl" = videoPlayer;
-            "video/x-theora+ogg" = videoPlayer;
-            "application/x-matroska" = videoPlayer;
-            "video/vnd.rn-realvideo" = videoPlayer;
-
-            "audio/aac" = videoPlayer;
-            "audio/mp4" = videoPlayer;
-            "audio/ogg" = videoPlayer;
-            "audio/mpeg" = videoPlayer;
-            "audio/x-mp3" = videoPlayer;
-            "audio/x-wav" = videoPlayer;
-            "audio/vorbis" = videoPlayer;
-            "audio/x-flac" = videoPlayer;
-            "audio/mpegurl" = videoPlayer;
-            "audio/x-scpls" = videoPlayer;
-            "audio/x-speex" = videoPlayer;
-            "audio/x-ms-wma" = videoPlayer;
-            "audio/x-vorbis" = videoPlayer;
-            "audio/x-mpegurl" = videoPlayer;
-            "audio/x-oggflac" = videoPlayer;
-            "audio/x-musepack" = videoPlayer;
-            "audio/x-vorbis+ogg" = videoPlayer;
-            "audio/x-pn-realaudio" = videoPlayer;
-            "audio/vnd.rn-realaudio" = videoPlayer;
-
-            "inode/directory" = fileBrowser;
-            "terminal" = terminal;
-            "text/html" = "${BROWSER}.desktop";
-            "x-scheme-handler/ftp" = "${BROWSER}.desktop";
-            "application/xhtml+xml" = "${BROWSER}.desktop";
-            "x-scheme-handler/http" = "${BROWSER}.desktop";
-            "x-scheme-handler/https" = "${BROWSER}.desktop";
-            "x-scheme-handler/chrome" = "${BROWSER}.desktop";
-            "application/x-extension-htm" = "${BROWSER}.desktop";
-            "application/x-extension-xht" = "${BROWSER}.desktop";
-            "application/x-extension-html" = "${BROWSER}.desktop";
-            "application/x-extension-shtml" = "${BROWSER}.desktop";
-            "application/x-extension-xhtml" = "${BROWSER}.desktop";
-          };
-        };
-      };
-
       home = {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
         inherit (osConfig.system) stateVersion;
-        sessionPath = ["${config.home.homeDirectory}/.local/bin"];
+        sessionPath = lib.singleton "${config.home.homeDirectory}/.local/bin";
         shellAliases = {
           "ls" = "eza";
           "cp" = "cp -v";
@@ -562,7 +389,6 @@
           "ll" = "eza -l";
           "lla" = "eza -la";
           "pkill" = "pkill -f";
-          "countlines" = "tokei";
           "f" = ''cd "$(fzfcd)"'';
           "shutdown" = "poweroff";
           "lock" = "sudo vlock -nas";
@@ -578,79 +404,7 @@
         };
       };
 
-      # Development, internal.
       programs.zoxide.enable = true;
-      programs.home-manager.enable = true;
-
-      stylix.targets.zathura.enable = false;
-      programs.zathura = let
-        inherit (config.stylix) fonts;
-      in {
-        enable = true;
-        options = {
-          selection-clipboard = "clipboard";
-          guioptions = "s";
-          adjust-open = "width";
-          statusbar-h-padding = 0;
-          statusbar-v-padding = 0;
-          scroll-page-aware = true;
-          statusbar-home-tilde = true;
-
-          font = "${fonts.serif.name} ${toString fonts.sizes.terminal}";
-          recolor = false;
-          recolor-keephue = false;
-
-          notification-error-bg = "${color.base00}"; # bg
-          notification-error-fg = "${color.base08}"; # bright:red
-          notification-warning-bg = "${color.base00}"; # bg
-          notification-warning-fg = "${color.base0A}"; # bright:yellow
-          notification-bg = "${color.base00}"; # bg
-          notification-fg = "${color.base0B}"; # bright:green
-
-          completion-bg = "${color.base02}"; # bg2
-          completion-fg = "${color.base05}"; # fg
-          completion-group-bg = "${color.base01}"; # bg1
-          completion-group-fg = "${color.base03}"; # gray
-          completion-highlight-bg = "${color.base0B}"; # bright:blue
-          completion-highlight-fg = "${color.base02}"; # bg2
-
-          # Define the color in index mode
-          index-bg = "${color.base02}"; # bg2
-          index-fg = "${color.base05}"; # fg
-          index-active-bg = "${color.base0B}"; # bright:blue
-          index-active-fg = "${color.base02}"; # bg2
-
-          inputbar-bg = "${color.base01}"; # bg
-          inputbar-fg = "${color.base05}"; # fg
-
-          statusbar-bg = "${color.base00}"; # bg2
-          statusbar-fg = "${color.base05}"; # fg
-
-          highlight-color = "${color.base0A}80"; # bright:yellow
-          highlight-active-color = "${color.base09}80"; # bright:orange
-
-          default-bg = "${color.base00}"; # bg
-          default-fg = "${color.base05}"; # fg
-          render-loading = true;
-          render-loading-bg = "${color.base00}"; # bg
-          render-loading-fg = "${color.base05}"; # fg
-
-          # Recolor book content's color
-          recolor-lightcolor = "${color.base00}"; # bg
-          recolor-darkcolor = "${color.base05}"; # fg
-        };
-        extraConfig = ''
-          unmap +
-          unmap _
-          map = zoom_in
-          map - zoom_out
-          map <C-j> zoom_in
-          map <C-k> zoom_out
-
-          map <C-r> reload
-          map i toggle_statusbar;
-        '';
-      };
 
       services.dunst = {
         enable = true;
@@ -687,23 +441,21 @@
 
       programs.yazi = {
         enable = true;
-        keymap = {
-          mgr.prepend_keymap = [
-            {
-              on = ["d"];
-              run = ["remove --permanently"];
-              desc = "remove permanently";
-            }
-            {
-              on = ["b"];
-              run = [
-                # https://github.com/sxyazi/yazi/discussions/327
-                ''shell '${pkgs.ripdrag}/bin/ripdrag "$@" -x -n 2>/dev/null &' --confirm''
-              ];
-              desc = "Drag and drop selection";
-            }
-          ];
-        };
+        keymap.mgr.prepend_keymap = [
+          {
+            on = ["d"];
+            run = ["remove --permanently"];
+            desc = "remove permanently";
+          }
+          {
+            on = ["b"];
+            run = [
+              # https://github.com/sxyazi/yazi/discussions/327
+              ''shell '${pkgs.ripdrag}/bin/ripdrag "$@" -x -n 2>/dev/null &' --confirm''
+            ];
+            desc = "Drag and drop selection";
+          }
+        ];
         settings = {
           preview.tab_size = 2;
           mgr = {
@@ -712,23 +464,19 @@
             sort_by = "natural";
             sort_dir_first = true;
           };
-          opener = {
-            extract = [
-              {
-                run = ''aunpack "$@"'';
-                desc = "Extract here";
-              }
-            ];
-          };
-          plugin = {
-            # Disable image previews
-            prepend_previewers = [
-              {
-                mime = "image/*";
-                run = "noop";
-              }
-            ];
-          };
+          opener.extract = [
+            {
+              run = ''aunpack "$@"'';
+              desc = "Extract here";
+            }
+          ];
+          # Disable image previews
+          plugin.prepend_previewers = [
+            {
+              mime = "image/*";
+              run = "noop";
+            }
+          ];
         };
       };
 
@@ -800,37 +548,35 @@
 
       programs.fastfetch = {
         enable = true;
-        settings = {
-          modules = [
-            "title"
-            "separator"
-            "os"
-            "host"
-            "kernel"
-            "uptime"
-            "packages"
-            "shell"
-            "display"
-            "de"
-            "wm"
-            "wmtheme"
-            "theme"
-            "icons"
-            "font"
-            "cursor"
-            "terminal"
-            "terminalfont"
-            "cpu"
-            "gpu"
-            "memory"
-            "swap"
-            "disk"
-            "battery"
-            "poweradapter"
-            "break"
-            "colors"
-          ];
-        };
+        settings.modules = [
+          "title"
+          "separator"
+          "os"
+          "host"
+          "kernel"
+          "uptime"
+          "packages"
+          "shell"
+          "display"
+          "de"
+          "wm"
+          "wmtheme"
+          "theme"
+          "icons"
+          "font"
+          "cursor"
+          "terminal"
+          "terminalfont"
+          "cpu"
+          "gpu"
+          "memory"
+          "swap"
+          "disk"
+          "battery"
+          "poweradapter"
+          "break"
+          "colors"
+        ];
       };
 
       programs.alacritty = {
@@ -864,35 +610,33 @@
         };
       };
 
-      xdg.configFile."yapf/style" = {
-        text = ''
-          [style]
-            indent_width = 2
-            use_tabs = False
-            column_limit = 100
-            based_on_style = google
-            coalesce_brackets = True
-            spaces_before_comment = 1
-            join_multiple_lines = True
-            continuation_indent_width = 2
-            allow_multiline_lambdas = True
-            dedent_closing_brackets = True
-            continuation_align_style = SPACE
-            spaces_around_power_operator = False
-            split_before_bitwise_operator = True
-            allow_multiline_dictionary_keys = True
-            each_dict_entry_on_separate_line = False
-            blank_line_before_class_docstring = False
-            blank_lines_around_top_level_definition = 1
-            blank_line_before_nested_class_or_def = False
-            spaces_around_default_or_named_assign = False
-            align_closing_bracket_with_visual_indent = True
-            no_spaces_around_selected_binary_operators = *,/
-            space_between_ending_comma_and_closing_bracket = False
-        '';
-      };
+      xdg.configFile."yapf/style".text = ''
+        [style]
+          indent_width = 2
+          use_tabs = False
+          column_limit = 100
+          based_on_style = google
+          coalesce_brackets = True
+          spaces_before_comment = 1
+          join_multiple_lines = True
+          continuation_indent_width = 2
+          allow_multiline_lambdas = True
+          dedent_closing_brackets = True
+          continuation_align_style = SPACE
+          spaces_around_power_operator = False
+          split_before_bitwise_operator = True
+          allow_multiline_dictionary_keys = True
+          each_dict_entry_on_separate_line = False
+          blank_line_before_class_docstring = False
+          blank_lines_around_top_level_definition = 1
+          blank_line_before_nested_class_or_def = False
+          spaces_around_default_or_named_assign = False
+          align_closing_bracket_with_visual_indent = True
+          no_spaces_around_selected_binary_operators = *,/
+          space_between_ending_comma_and_closing_bracket = False
+      '';
 
-      xdg.configFile."fourmolu.yaml".source = (pkgs.formats.yaml {}).generate "fourmoluExtraConfigDIY" {
+      xdg.configFile."fourmolu.yaml".source = (pkgs.formats.yaml {}).generate "fourmoluConfig" {
         indentation = 2;
         respectful = false;
         indent-wheres = true;

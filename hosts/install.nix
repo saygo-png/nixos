@@ -1,10 +1,13 @@
 # Shared minimal install config
 {
+  lib,
   pkgs,
   config,
   conUsername,
   ...
 }: {
+  imports = lib.my.withModules ["constants.nix"];
+
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   boot.loader.systemd-boot.enable = true;
@@ -29,9 +32,9 @@
   };
 
   environment.systemPackages = with pkgs; [
+    nh
     neovim
     busybox
-    git
   ];
 
   system.stateVersion = "25.05";

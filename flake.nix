@@ -62,7 +62,6 @@
       };
     };
 
-    # Mine {{{
     extras-nixos = {
       url = "github:saygo-png/extrasNixos";
       flake = false;
@@ -77,7 +76,6 @@
       url = "github:saygo-png/ZLEqualizer-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # }}}
 
     gruvbox-kvantum = {
       url = "github:sachnr/gruvbox-kvantum-themes";
@@ -109,7 +107,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Zsh plugins {{{
     zsh-autosuggestions = {
       url = "github:zsh-users/zsh-autosuggestions";
       flake = false;
@@ -129,9 +126,7 @@
       url = "github:MichaelAquilina/zsh-auto-notify";
       flake = false;
     };
-    # }}}
 
-    # Small utilities {{{
     format-udf = {
       url = "github:JElchison/format-udf";
       flake = false;
@@ -141,7 +136,6 @@
       url = "github:ThePrimeagen/vmrss";
       flake = false;
     };
-    # }}}
   };
 
   outputs = {
@@ -153,23 +147,18 @@
     inherit (nixpkgs) lib;
     inherit (builtins) filter;
 
-    eachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
-    pkgsFor = lib.genAttrs (import systems) (system: import nixpkgs {inherit system;});
+    eachSystem = lib.genAttrs (import systems);
+    pkgsFor = eachSystem (system: import nixpkgs {inherit system;});
 
-    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
-    pkgs-frozen = eachSystem (pkgs: import inputs.nixpkgs-unstable-frozen {inherit (pkgs) system;});
-    nixvim-pkgs = eachSystem (pkgs: import inputs.my-neovim.inputs.nixvim.inputs.nixpkgs {inherit (pkgs) system;});
+    pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
+    nixvim-pkgs = eachSystem (system: import inputs.my-neovim.inputs.nixvim.inputs.nixpkgs {inherit system;});
+    treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
     commonSpecialArgs = system: {
       inherit inputs self;
       nixvim-pkgs = nixvim-pkgs.${system};
       pkgs-frozen = pkgs-frozen.${system};
-      lib = lib.extend (final: _: {
-        my = import ./modules/lib.nix {
-          pkgs = nixpkgs.${system};
-          lib = final;
-        };
-      });
+      lib = lib.extend (final: _: {my = import ./modules/lib.nix {lib = final;};});
     };
 
     commonModules = [
@@ -199,7 +188,7 @@
             conHome = "/home/samsepi0l";
             conFlakePath = "/home/samsepi0l/nixos";
           }
-          // (commonSpecialArgs system);
+          // commonSpecialArgs system;
         modules =
           [
             ./configuration.nix
@@ -207,27 +196,28 @@
             (./hosts + "/${name}/disko-config.nix")
             (./hosts + "/${name}/hardware-configuration.nix")
           ]
-          ++ commonModules
-          ++ uniqueModules;
+          ++ commonModules ++ uniqueModules;
       };
 
-    mkInstall = host:
+    mkInstall = host: let
+      hostName = host._module.specialArgs.conHost;
+    in
       lib.nixosSystem {
         inherit (host.pkgs) system;
-        specialArgs =
-          host._module.specialArgs // {conHost = "install-" + host._module.specialArgs.conHost;};
-
+        specialArgs = host._module.specialArgs // {conHost = "install-${hostName}";};
         modules =
           [
-            (./hosts + "/${host._module.specialArgs.conHost}/install/install.nix")
-            (./hosts + "/${host._module.specialArgs.conHost}/hardware-configuration.nix")
-            (./hosts + "/${host._module.specialArgs.conHost}/disko-config.nix")
+            (./hosts + "/${hostName}/install.nix")
+            (./hosts + "/${hostName}/hardware-configuration.nix")
+            (./hosts + "/${hostName}/disko-config.nix")
           ]
           ++ commonModules;
       };
   in {
-    formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
-    checks = eachSystem (pkgs: {formatting = treefmtEval.${pkgs.system}.config.build.check self;});
+    formatter = eachSystem (system: treefmtEval.${system}.config.build.wrapper);
+
+    checks = eachSystem (system: {formatting = treefmtEval.${system}.config.build.check self;});
+
     nixosConfigurations = rec {
       install-pc = mkInstall pc;
       pc = mkSystem "pc" [
