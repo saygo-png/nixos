@@ -14,6 +14,8 @@
     ".config/nvim/after/syntax"
   ];
 
+  environment.variables.EDITOR = "nvim";
+
   home-manager.users.${conUsername} = {
     programs.neovide = {
       enable = true;
@@ -28,8 +30,7 @@
     };
 
     home = {
-      shellAliases = {"neov" = "neovide";};
-      sessionVariables = {EDITOR = "nvim";};
+      shellAliases."neov" = "neovide";
       packages = [pkgs.tree-sitter];
     };
 

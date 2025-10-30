@@ -5,7 +5,6 @@
   config,
   inputs,
   conHome,
-  options,
   nixvim-pkgs,
   conUsername,
   ...
@@ -336,13 +335,29 @@
       LXVST_PATH = "lxvst";
       LADSPA_PATH = "ladspa";
     }
-    // {
+    // rec {
       NH_FLAKE = config.const.flakePath; # For nix helper.
+      # Default programs.
+      PAGER = "moor";
+      BROWSER = "librewolf";
+      OPENER = "xdg-open";
+      EDITOR = lib.mkDefault "vi";
+      SHELL = lib.getExe pkgs.zsh;
+
+      VISUAL = EDITOR;
+      SUDO_EDITOR = EDITOR;
+
+      # Unreal engine .net cli tool turn off telemetry.
+      DOTNET_CLI_TELEMETRY_OPTOUT = "true";
+
+      # Without this, games that use SDL will minimize when focus is lost
+      SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0;
+
+      # Systemd is retarded and doesn't use normal pager variable :DDDDD
+      SYSTEMD_PAGER = PAGER;
     };
 
   system.stateVersion = "25.05";
-
-
 
   # Keep trace of flake hash and flake for every gen in /etc
   system.extraSystemBuilderCmds = "ln -s ${self.sourceInfo.outPath} $out/src";
@@ -400,6 +415,7 @@
     overwriteBackup = true;
     users.${conUsername} = {
       lib,
+      osConfig,
       config,
       ...
     }: {
@@ -412,8 +428,8 @@
           enable = true;
           associations.added = config.xdg.mimeApps.defaultApplications;
           defaultApplications = let
-            inherit (config.home.sessionVariables) EDITOR;
-            inherit (config.home.sessionVariables) BROWSER;
+            inherit (osConfig.environment.variables) EDITOR;
+            inherit (osConfig.environment.variables) BROWSER;
             fileBrowser = "org.kde.dolphin.desktop";
             imageViewer = "nsxiv.desktop";
             pdfViewer = "org.pwmt.zathura.desktop";
@@ -536,8 +552,8 @@
       home = {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
-        stateVersion = "25.05";
-
+        inherit (osConfig.system) stateVersion;
+        sessionPath = ["${config.home.homeDirectory}/.local/bin"];
         shellAliases = {
           "ls" = "eza";
           "cp" = "cp -v";
@@ -560,32 +576,7 @@
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/Pictures/audiocaptures/recording.wav";
           "search" = "sudo echo 'got sudo' && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
         };
-
-        sessionVariables = rec {
-          # Default programs.
-          PAGER = "moor";
-          BROWSER = "librewolf";
-          OPENER = "xdg-open";
-          EDITOR = lib.mkDefault "vi";
-          SHELL = lib.getExe pkgs.zsh;
-
-          VISUAL = EDITOR;
-          SUDO_EDITOR = EDITOR;
-
-          # Unreal engine .net cli tool turn off telemetry.
-          DOTNET_CLI_TELEMETRY_OPTOUT = "true";
-
-          # Without this, games that use SDL will minimize when focus is lost
-          SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0;
-
-          # Systemd is retarded and doesn't use normal pager variable :DDDDD
-          SYSTEMD_PAGER = PAGER;
-        };
-        sessionPath = ["${config.home.homeDirectory}/.local/bin"];
       };
-
-      # Wayland, X, etc. support for session variables.
-      systemd.user.sessionVariables = config.home.sessionVariables;
 
       # Development, internal.
       programs.zoxide.enable = true;
