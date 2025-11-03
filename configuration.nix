@@ -259,7 +259,6 @@
       qbittorrent # Torrent client
       mission-center # GUI task manager
       localsend # Send via local network
-      xdragon # drag items from terminal
       tor-browser
 
       # Writing.
