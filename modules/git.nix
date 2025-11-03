@@ -35,32 +35,27 @@
         };
       };
 
+      delta = {
+        enable = true;
+        enableGitIntegration = true;
+        options = {
+          syntax-theme = "none";
+          hunk-header-style = "omit";
+          file-style = "omit";
+          diff-output.line-numbers = true;
+          keep-plus-minus-markers = true;
+
+          plus-style = ''"#98971a" normal'';
+          plus-emph-style = ''"#b8bb26" bold normal'';
+
+          minus-style = ''"#cc241d" normal'';
+          minus-emph-style = ''"#fb4934" bold normal'';
+        };
+      };
+
       git = {
         enable = true;
-        delta = {
-          enable = true;
-          options = {
-            syntax-theme = "none";
-            hunk-header-style = "omit";
-            file-style = "omit";
-            diff-output.line-numbers = true;
-            keep-plus-minus-markers = true;
-
-            plus-style = ''"#98971a" normal'';
-            plus-emph-style = ''"#b8bb26" bold normal'';
-
-            minus-style = ''"#cc241d" normal'';
-            minus-emph-style = ''"#fb4934" bold normal'';
-          };
-        };
-        aliases = {
-          aa = "add -A"; # [A]dd [A]ll
-          amend = "commit -a --amend";
-          undo = "reset HEAD~1 --mixed";
-          deleteGitignored = ''rm --cached ''${git ls-files -i -c --exclude-from=.gitignore}'';
-          prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
-        };
-        extraConfig = {
+        settings = {
           color.ui = "auto";
           pull.rebase = true;
           commit.gpgsign = true;
@@ -72,6 +67,7 @@
           core = {
             excludesfile = "~/.gitignore_global";
             interactive.diffFilter = "delta";
+            editor = "nvim";
           };
           user = {
             signingKey = "86B6FCCC3563C00B";
@@ -81,6 +77,13 @@
           push = {
             autoSetupRemote = true;
             useForceIfIncludes = true;
+          };
+          alias = {
+            aa = "add -A"; # [A]dd [A]ll
+            amend = "commit -a --amend";
+            undo = "reset HEAD~1 --mixed";
+            deleteGitignored = ''rm --cached ''${git ls-files -i -c --exclude-from=.gitignore}'';
+            prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
           };
         };
       };
