@@ -7,7 +7,16 @@
 }: let
   syncthingCfg = config.services.syncthing;
 in {
-  # File synchronization.
+  custom.persist = {
+    home = {
+      cache = {
+        directories = [
+          ".config/syncthing"
+        ];
+      };
+    };
+  };
+
   services.syncthing = {
     enable = true;
     dataDir = conHome;
