@@ -129,7 +129,6 @@
     font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd $USERNAME’.
   users = {
     mutableUsers = false;
     users = {
@@ -177,8 +176,6 @@
   # System packages.
   environment.systemPackages = with pkgs;
     [
-      cups
-
       # Audio
       tap-plugins
       ( # Patch package so it doesn't spam menu entries
