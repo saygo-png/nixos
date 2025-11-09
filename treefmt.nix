@@ -8,7 +8,6 @@
   programs.alejandra.enable = true;
   programs.deadnix.enable = true;
   programs.fourmolu.enable = true;
-  programs.statix.enable = true;
 
   settings.formatter = {
     fourmolu = {
