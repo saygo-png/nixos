@@ -91,7 +91,7 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = [pkgs.vaapiVdpau];
+      extraPackages = [pkgs.libva-vdpau-driver];
     };
   };
 
