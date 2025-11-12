@@ -14,14 +14,6 @@
   # NixOS is retarded and turns on lightdm by default.
   services.xserver.displayManager.lightdm.enable = false;
 
-  nixpkgs.overlays = [
-    (_: prev: {
-      flameshot = prev.flameshot.override (_: {
-        enableWlrSupport = true;
-      });
-    })
-  ];
-
   environment.systemPackages = with pkgs; [
     swaybg
     flameshot
