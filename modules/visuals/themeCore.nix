@@ -34,9 +34,9 @@
       pkgs.roboto
       pkgs.noto-fonts
       pkgs.jetbrains-mono
-      pkgs.noto-fonts-emoji
       pkgs.noto-fonts-cjk-sans
       pkgs.noto-fonts-cjk-serif
+      pkgs.noto-fonts-color-emoji
       pkgs.nerd-fonts.symbols-only
     ];
     fontconfig.defaultFonts = lib.mapAttrs (_: v: [v] ++ ["${config.stylix.fonts.emoji.name}"]) {
