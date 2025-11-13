@@ -16,15 +16,15 @@
           inherit (lib.strings) escapeShellArg;
 
           patchFile = builtins.toFile "patch.txt" ''
-            46,51c46
-            <         <img
-            <             draggable="false"
-            <             src="../shiggy.gif"
-            <             alt="shiggy"
-            <             role="presentation"
-            <         />
+            56c56
+            <         <img draggable="false" src="vesktop://assets/splash" alt="" role="presentation" />
             ---
             >         <span class="loader"></span>
+            69c69
+            < </script>
+            \ No newline at end of file
+            ---
+            > </script>
           '';
 
           newIconSvg =
@@ -63,7 +63,7 @@
           rsvg-convert = lib.getExe' pkgs.librsvg "rsvg-convert";
           oldPngIconSize = toString 1024;
         in ''
-          echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/icon.png
+          echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray.png
           echo ${escapeShellArg spinnerCss} >> static/views/style.css
           patch static/views/splash.html ${patchFile}
         '';
