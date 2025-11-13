@@ -16,7 +16,9 @@
             overrideGpg = true;
             commit.signOff = true;
             branchLogCmd = "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium --oneline {{branchName}} --";
-            paging.pager = "delta --dark --paging=never";
+            pagers = [
+              { pager = "delta --dark --paging=never"; }
+            ];
           };
           customCommands = [
             {
