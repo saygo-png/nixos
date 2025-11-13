@@ -237,6 +237,7 @@
       htop-vim # TUI task manager
       pulsemixer # Volume control
       ripgrep # Multithreaded grep
+      fourmolu # Haskell formatter
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
       libnotify # Notifications (notify-send)
