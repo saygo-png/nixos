@@ -157,12 +157,12 @@
           source ${p10k}/powerlevel10k/powerlevel10k.zsh-theme
           source ${inputs.extras-nixos}/p10k-prompt.zsh
 
-          source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
           source ${notify}/zsh-auto-notify/auto-notify.plugin.zsh
           export AUTO_NOTIFY_CANCEL_ON_SIGINT=1
           export AUTO_NOTIFY_WHITELIST=("nh" "nix" "nbuild" "nix-build" "nix-shell" "git" "cabal" "cp" "rclone" "borg" "borgmatic")
           source ${clipboard}/zsh-system-clipboard/zsh-system-clipboard.zsh
           source ${autosuggestions}/zsh-autosuggestions/zsh-autosuggestions.zsh
+          source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         '';
     };
   };
