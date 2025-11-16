@@ -16,6 +16,8 @@
 
   # Provides autocompletion for system programs for zsh.
   environment.pathsToLink = ["/share/zsh"];
+  environment.variables.SHELL = lib.getExe pkgs.zsh;
+
   home-manager.users.${conUsername} = {config, ...}: {
     home.shellAliases = {"nix-shell" = "nix-shell --run zsh";};
     programs.yazi.enableZshIntegration = true;

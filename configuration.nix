@@ -42,6 +42,7 @@
       "iamb.nix"
       "rofi.nix"
       "tmux.nix"
+      "fish.nix"
       "qcalc.nix"
       "nixSearch.nix"
       "dolphin.nix"
