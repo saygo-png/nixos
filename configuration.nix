@@ -221,6 +221,7 @@
       ddcutil
       python3
       exiftool
+      hyperfine
       moreutils
       alsa-utils
       hydra-check
