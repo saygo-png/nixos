@@ -14,7 +14,11 @@
     ".config/nvim/after/syntax"
   ];
 
-  environment.variables.EDITOR = "nvim";
+  environment.variables = rec {
+    EDITOR = "nvim";
+    VISUAL = EDITOR;
+    SUDO_EDITOR = EDITOR;
+  };
 
   home-manager.users.${conUsername} = {
     programs.neovide = {
