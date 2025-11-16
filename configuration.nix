@@ -211,8 +211,9 @@
 
       # CLI.
       eza
-      deno
+      vis
       bonk
+      deno
       entr
       ncdu
       vlock
@@ -236,8 +237,8 @@
       udftools # Udf filesystem
       htop-vim # TUI task manager
       pulsemixer # Volume control
-      ripgrep # Multithreaded grep
       fourmolu # Haskell formatter
+      ripgrep # Multithreaded grep
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
       libnotify # Notifications (notify-send)
@@ -299,7 +300,7 @@
       PAGER = "moor";
       BROWSER = "librewolf";
       OPENER = "xdg-open";
-      EDITOR = lib.mkDefault "vi";
+      EDITOR = lib.mkDefault (lib.getExe' pkgs.vis "vis");
       SHELL = lib.getExe pkgs.zsh;
 
       VISUAL = EDITOR;
