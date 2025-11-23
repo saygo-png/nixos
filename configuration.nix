@@ -85,6 +85,10 @@
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
 
+  # Some programs ignore SIGTERM (notably "winedevice.exe") causing
+  # a timeout until SIGKILL. This shortens this window.
+  systemd.user.extraConfig = "DefaultTimeoutStopSec=10s";
+
   networking.hostName = config.const.host;
 
   # DNS
