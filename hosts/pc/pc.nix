@@ -26,7 +26,10 @@
         };
       })
     ]
-    ++ lib.my.withModules ["pipewire.nix"];
+    ++ lib.my.withModules [
+      "pipewire.nix"
+      "kernel/pc.nix"
+    ];
 
   services.sanoid = {
     enable = true;
@@ -74,18 +77,6 @@
 
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
-  boot = {
-    kernelPackages = pkgs-frozen.linuxPackages_xanmod_latest;
-    kernelPatches = [
-      {
-        name = "optimize-for-my-machine";
-        patch = null;
-        extraConfig = ''
-          MZEN y
-        '';
-      }
-    ];
-  };
 
   hardware = {
     graphics = {
