@@ -5,14 +5,11 @@
   ...
 }: {
   programs.fish.enable = true;
-  environment = {
-    pathsToLink = ["/share/fish"];
-    # variables.SHELL = lib.getExe pkgs.fish;
-  };
+  environment.pathsToLink = ["/share/fish"];
 
   stylix.targets.fish.enable = false;
 
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = {
     stylix.targets.fish.enable = false;
     programs.alacritty.settings.terminal.shell = lib.getExe pkgs.fish;
     programs.yazi.enableFishIntegration = true;
@@ -25,6 +22,12 @@
           set -g fish_transient_prompt 1
           set -g __fish_git_prompt_show_informative_status 1
           fish_vi_key_bindings
+
+          # hjkl in completion menu
+          bind -M insert \cj down-line
+          bind -M insert \ck up-line
+          bind -M insert \ch backward-char
+          bind -M insert \cl forward-char
 
           function fish_default_mode_prompt --description "Display vi prompt mode"
             switch $fish_bind_mode
@@ -47,8 +50,7 @@
           end
 
           # This is used for vi mode but I don't like it
-          function fish_mode_prompt
-          end
+          function fish_mode_prompt; end
 
           function fish_prompt --description 'Write out the prompt'
             set -l last_pipestatus $pipestatus
@@ -87,6 +89,7 @@
             set -l prompt_status (__fish_print_pipestatus "[" "]" "|" "$status_color" "$statusb_color" $last_pipestatus)
 
 
+            # waiting for https://github.com/fish-shell/fish-shell/issues/11875
             if contains -- --final-rendering $argv
               echo ""
               echo -n -s (fish_default_mode_prompt)
