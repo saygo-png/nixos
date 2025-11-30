@@ -11,7 +11,7 @@
     {
       inherit (pkgs-frozen.linuxKernel.kernels.linux_xanmod_latest) version src;
       configfile = lib.my.relativeToRoot "modules/kernel/pc.config";
-      modDirVersion = "6.16.10-saygo-xanmod1";
+      modDirVersion = "6.17.8-saygo-xanmod1";
     }).overrideAttrs (old: {
     nativeBuildInputs = old.nativeBuildInputs ++ [pkgs.lz4];
     passthru =
@@ -27,8 +27,8 @@
       };
   });
 in {
-boot = {
-  kernelPackages = pkgs.linuxPackagesFor customKernel;
-  initrd.allowMissingModules = true;
-};
+  boot = {
+    kernelPackages = pkgs.linuxPackagesFor customKernel;
+    initrd.allowMissingModules = true;
+  };
 }
