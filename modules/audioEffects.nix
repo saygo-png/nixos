@@ -10,27 +10,23 @@
     inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
   ];
 
-  environment.etc."/pipewire/pipewire.conf.d/10-default-null-sink.conf".text =
-    /*
-    JSON-SPA
-    */
-    ''
-      context.objects = [
-        {
-          factory = adapter
-          args = {
-            factory.name = support.null-audio-sink
-            node.name = "virtual_mic"
-            media.class = Audio/Source/Virtual
-            node.description = "Virtual microphone device"
-            audio.position = [ FL FR ]
-            audio.channels = "2"
-            monitor.channel-volumes = true
-            monitor.passthrough = true
-          }
-        }
-      ]
-    '';
+  services.pipewire.extraConfig.pipewire."10-default-null-sink" = {
+    "context.objects" = [
+      {
+        factory = "adapter";
+        args = {
+          "factory.name" = "support.null-audio-sink";
+          "node.name" = "virtual_mic";
+          "media.class" = "Audio/Source/Virtual";
+          "node.description" = "Virtual microphone device";
+          "audio.position" = ["FL" "FR"];
+          "audio.channels" = "2";
+          "monitor.channel-volumes" = true;
+          "monitor.passthrough" = true;
+        };
+      }
+    ];
+  };
 
   services.pipewire.wireplumber.extraConfig."99-autoconnect" = {
     "wireplumber.components" = [
