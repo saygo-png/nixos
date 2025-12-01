@@ -151,11 +151,14 @@
     };
   };
 
-  security.sudo.extraConfig = ''
-    Defaults timestamp_timeout=-1
-    Defaults passwd_timeout=0
-    Defaults insults
-  '';
+  security.sudo = {
+    package = pkgs.sudo.override {withInsults = true;};
+    extraConfig = ''
+      Defaults timestamp_timeout=-1
+      Defaults passwd_timeout=0
+      Defaults insults
+    '';
+  };
 
   programs = {
     appimage = {
