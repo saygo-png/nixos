@@ -45,7 +45,7 @@
           # Interrupt (ctrl + c)
           (mkBindChar "C" "Control|Shift" "\\u0003")
 
-          (mkBindCmd "K" "Control" (lib.getExe resetAndClearScript))
+          (mkBindCmd "Delete" "Control" (lib.getExe resetAndClearScript))
         ];
       };
     };
