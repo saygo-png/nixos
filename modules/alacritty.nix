@@ -26,8 +26,7 @@
           mkBindChar = key: mods: chars: {inherit key mods chars;};
           mkBindCmd = key: mods: command: {inherit key mods command;};
           resetAndClearScript =
-            pkgs.writeScriptBin "resetAndClear"
-            # sh
+            pkgs.writeShellScriptBin "resetAndClear"
             ''
               #!${lib.getExe pkgs.dash}
               if [ -z "$ALACRITTY_LOG" ]; then exit 1; fi

@@ -29,6 +29,8 @@
           bind -M insert \ch backward-char
           bind -M insert \cl forward-char
 
+          bind -M insert \cp clear-screen
+
           function fish_default_mode_prompt --description "Display vi prompt mode"
             switch $fish_bind_mode
             case default
