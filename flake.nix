@@ -203,7 +203,7 @@
       hostName = host._module.specialArgs.conHost;
     in
       lib.nixosSystem {
-        inherit (host.pkgs) system;
+        inherit (host.pkgs.stdenv.hostPlatform) system;
         specialArgs = host._module.specialArgs // {conHost = "install-${hostName}";};
         modules =
           [

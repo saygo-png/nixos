@@ -128,7 +128,7 @@ in {
         extensions = {
           force = true;
           packages = let
-            addons = inputs.firefox-addons.packages.${pkgs.system};
+            addons = inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
           in [
             addons.single-file
             addons.sponsorblock

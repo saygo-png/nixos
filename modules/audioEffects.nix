@@ -7,7 +7,7 @@
 }: {
   environment.systemPackages = [
     pkgs.carla
-    inputs.zlequalizer.packages.${pkgs.system}.zlequalizer
+    inputs.zlequalizer.packages.${pkgs.stdenv.hostPlatform.system}.zlequalizer
   ];
 
   services.pipewire.extraConfig.pipewire."10-default-null-sink" = {

@@ -7,7 +7,7 @@
   ...
 }: {
   environment.systemPackages = [
-    inputs.my-neovim.packages.${pkgs.system}.neovim
+    inputs.my-neovim.packages.${pkgs.stdenv.hostPlatform.system}.neovim
   ];
 
   custom.persist.home.cache.directories = [
