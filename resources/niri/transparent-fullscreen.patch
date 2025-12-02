@@ -1,22 +1,55 @@
 diff --git a/src/layout/tile.rs b/src/layout/tile.rs
-index dea2a77..e61e551 100644
+index beaa981..610cc0d 100644
 --- a/src/layout/tile.rs
 +++ b/src/layout/tile.rs
-@@ -1024,17 +1024,6 @@ impl<W: LayoutElement> Tile<W> {
+@@ -1227,49 +1227,6 @@ impl<W: LayoutElement> Tile<W> {
              .chain(rounded_corner_damage)
              .chain(window_surface.into_iter().flatten());
- 
--        let elem = self.is_fullscreen.then(|| {
--            SolidColorRenderElement::from_buffer(
--                &self.fullscreen_backdrop,
--                location,
--                1.,
--                Kind::Unspecified,
--            )
--            .into()
+
+-        let elem = (fullscreen_progress > 0.).then(|| {
+-            let alpha = fullscreen_progress as f32;
+-
+-            // During the un/fullscreen animation, render a border element in order to use the
+-            // animated corner radius.
+-            if fullscreen_progress < 1. && has_border_shader {
+-                let border_width = self.visual_border_width().unwrap_or(0.);
+-                let radius = rules
+-                    .geometry_corner_radius
+-                    .map_or(CornerRadius::default(), |radius| {
+-                        radius.expanded_by(border_width as f32)
+-                    })
+-                    .scaled_by(1. - expanded_progress as f32);
+-
+-                let size = self.fullscreen_backdrop.size();
+-                let color = self.fullscreen_backdrop.color();
+-                BorderRenderElement::new(
+-                    size,
+-                    Rectangle::from_size(size),
+-                    GradientInterpolation::default(),
+-                    Color::from_color32f(color),
+-                    Color::from_color32f(color),
+-                    0.,
+-                    Rectangle::from_size(size),
+-                    0.,
+-                    radius,
+-                    scale.x as f32,
+-                    alpha,
+-                )
+-                .with_location(location)
+-                .into()
+-            } else {
+-                SolidColorRenderElement::from_buffer(
+-                    &self.fullscreen_backdrop,
+-                    location,
+-                    alpha,
+-                    Kind::Unspecified,
+-                )
+-                .into()
+-            }
 -        });
 -        let rv = rv.chain(elem);
 -
-         let elem = self.effective_border_width().map(|width| {
+         let elem = self.visual_border_width().map(|width| {
              self.border
                  .render(renderer, location + Point::from((width, width)))
+
