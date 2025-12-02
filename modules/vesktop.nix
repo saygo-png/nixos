@@ -61,9 +61,12 @@
             '';
 
           rsvg-convert = lib.getExe' pkgs.librsvg "rsvg-convert";
-          oldPngIconSize = toString 1024;
+          oldPngIconSize = toString 64;
         in ''
           echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray.png
+          echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray/tray.png
+          echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray/trayTemplate.png
+          echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray/trayUnread.png
           echo ${escapeShellArg spinnerCss} >> static/views/style.css
           patch static/views/splash.html ${patchFile}
         '';
