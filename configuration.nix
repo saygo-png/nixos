@@ -201,11 +201,13 @@
       molot-lite
       pkgs.eq10q
 
+      inputs.nom.packages.${pkgs.system}.default
+
       # Nix.
       nh # Nix helper
       alejandra # Nix formatter
       nix-tree # Reverse dependency search
-      nix-output-monitor # Pretty nix build output
+      # nix-output-monitor # Pretty nix build output
 
       # All the archive garbage.
       xz
