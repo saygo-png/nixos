@@ -42,6 +42,8 @@ workspace "m"
 layout {
   gaps 2
 
+  fullscreen-backdrop-color "transparent"
+
 
   // Make the wallpaper stationary, rather than moving with workspaces.
   background-color "transparent"

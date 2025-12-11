@@ -15,7 +15,7 @@ in {
         patches =
           (old.patches or [])
           ++ [
-            (lib.my.relativeToRoot "resources/niri/transparent-fullscreen.patch")
+            (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
           ];
       });
     })

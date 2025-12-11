@@ -1,0 +1,156 @@
+diff --git a/docs/wiki/Configuration:-Layout.md b/docs/wiki/Configuration:-Layout.md
+index 836ac439..2f32d14d 100644
+--- a/docs/wiki/Configuration:-Layout.md
++++ b/docs/wiki/Configuration:-Layout.md
+@@ -12,6 +12,7 @@ layout {
+     empty-workspace-above-first
+     default-column-display "tabbed"
+     background-color "#003300"
++    fullscreen-backdrop-color "#000000FF"
+ 
+     preset-column-widths {
+         proportion 0.33333
+@@ -482,7 +483,7 @@ layout {
+ 
+ ### `insert-hint`
+ 
+-<sup>Since: 0.1.10</sup> 
++<sup>Since: 0.1.10</sup>
+ 
+ Settings for the window insert position hint during an interactive window move.
+ 
+@@ -559,3 +560,19 @@ layout {
+ ```
+ 
+ You can also set the color per-output [in the output config](./Configuration:-Outputs.md#layout-config-overrides).
++
++### `fullscreen-backdrop-color`
++
++<sup>Since: 25.12</sup>
++
++Set the default backdrop color that niri draws behind fullscreen windows.
++
++> [!TIP]
++> This can be set to `"transparent"`, or just a transparent color, to enable transparency for
++> fullscreen windows.
++
++```kdl
++layout {
++    fullscreen-backdrop-color "#000000FF"
++}
++```
+diff --git a/niri-config/src/layout.rs b/niri-config/src/layout.rs
+index f84528bd..78b7f7e9 100644
+--- a/niri-config/src/layout.rs
++++ b/niri-config/src/layout.rs
+@@ -2,7 +2,8 @@ use knuffel::errors::DecodeError;
+ use niri_ipc::{ColumnDisplay, SizeChange};
+ 
+ use crate::appearance::{
+-    Border, FocusRing, InsertHint, Shadow, TabIndicator, DEFAULT_BACKGROUND_COLOR,
++    Border, FocusRing, InsertHint, Shadow, TabIndicator, DEFAULT_BACKDROP_COLOR,
++    DEFAULT_BACKGROUND_COLOR,
+ };
+ use crate::utils::{expect_only_children, Flag, MergeWith};
+ use crate::{BorderRule, Color, FloatOrInt, InsertHintPart, ShadowRule, TabIndicatorPart};
+@@ -24,6 +25,7 @@ pub struct Layout {
+     pub gaps: f64,
+     pub struts: Struts,
+     pub background_color: Color,
++    pub fullscreen_backdrop_color: Color,
+ }
+ 
+ impl Default for Layout {
+@@ -52,6 +54,7 @@ impl Default for Layout {
+                 PresetSize::Proportion(2. / 3.),
+             ],
+             background_color: DEFAULT_BACKGROUND_COLOR,
++            fullscreen_backdrop_color: DEFAULT_BACKDROP_COLOR,
+         }
+     }
+ }
+@@ -78,6 +81,7 @@ impl MergeWith<LayoutPart> for Layout {
+             default_column_display,
+             struts,
+             background_color,
++            fullscreen_backdrop_color,
+         );
+ 
+         if let Some(x) = part.default_column_width {
+@@ -126,6 +130,8 @@ pub struct LayoutPart {
+     pub struts: Option<Struts>,
+     #[knuffel(child)]
+     pub background_color: Option<Color>,
++    #[knuffel(child)]
++    pub fullscreen_backdrop_color: Option<Color>,
+ }
+ 
+ #[derive(knuffel::Decode, Debug, Clone, Copy, PartialEq)]
+diff --git a/niri-config/src/lib.rs b/niri-config/src/lib.rs
+index 28e54e6b..01ac1fe2 100644
+--- a/niri-config/src/lib.rs
++++ b/niri-config/src/lib.rs
+@@ -1401,6 +1401,12 @@ mod tests {
+                     b: 0.25,
+                     a: 1.0,
+                 },
++                fullscreen_backdrop_color: Color {
++                    r: 0.15,
++                    g: 0.15,
++                    b: 0.15,
++                    a: 1.0,
++                },
+             },
+             prefer_no_csd: true,
+             cursor: Cursor {
+diff --git a/src/layout/tile.rs b/src/layout/tile.rs
+index beaa981f..376d4224 100644
+--- a/src/layout/tile.rs
++++ b/src/layout/tile.rs
+@@ -6,6 +6,7 @@ use niri_config::{Color, CornerRadius, GradientInterpolation};
+ use niri_ipc::WindowLayout;
+ use smithay::backend::renderer::element::{Element, Kind};
+ use smithay::backend::renderer::gles::GlesRenderer;
++use smithay::backend::renderer::Color32F;
+ use smithay::utils::{Logical, Point, Rectangle, Scale, Size};
+ 
+ use super::focus_ring::{FocusRing, FocusRingRenderElement};
+@@ -54,7 +55,7 @@ pub struct Tile<W: LayoutElement> {
+     /// right away, to avoid black backdrop flicker before the window has had a chance to resize.
+     sizing_mode: SizingMode,
+ 
+-    /// The black backdrop for fullscreen windows.
++    /// The backdrop for fullscreen windows.
+     fullscreen_backdrop: SolidColorBuffer,
+ 
+     /// Whether the tile should float upon unfullscreening.
+@@ -184,6 +185,7 @@ impl<W: LayoutElement> Tile<W> {
+         let focus_ring_config = options.layout.focus_ring.merged_with(&rules.focus_ring);
+         let shadow_config = options.layout.shadow.merged_with(&rules.shadow);
+         let sizing_mode = window.sizing_mode();
++        let fullscreen_backdrop_color = options.layout.fullscreen_backdrop_color;
+ 
+         Self {
+             window,
+@@ -191,7 +193,7 @@ impl<W: LayoutElement> Tile<W> {
+             focus_ring: FocusRing::new(focus_ring_config),
+             shadow: Shadow::new(shadow_config),
+             sizing_mode,
+-            fullscreen_backdrop: SolidColorBuffer::new((0., 0.), [0., 0., 0., 1.]),
++            fullscreen_backdrop: SolidColorBuffer::new((0., 0.), fullscreen_backdrop_color),
+             restore_to_floating: false,
+             floating_window_size: None,
+             floating_pos: None,
+@@ -225,6 +227,11 @@ impl<W: LayoutElement> Tile<W> {
+         if self.options.layout.preset_window_heights != options.layout.preset_window_heights {
+             self.floating_preset_height_idx = None;
+         }
++        // Update backdrop colour
++        let new_color = Color32F::from(options.layout.fullscreen_backdrop_color);
++        if new_color != self.fullscreen_backdrop.color() {
++            self.fullscreen_backdrop.set_color(new_color);
++        }
+ 
+         self.view_size = view_size;
+         self.scale = scale;
+
