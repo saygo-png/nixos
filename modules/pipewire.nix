@@ -12,35 +12,37 @@
     jack.enable = true;
     pulse.enable = true;
     alsa.support32Bit = true;
+
     # Increase latency a bit to stop crackles
     extraConfig = let
-      iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits = 2048;
+      quantum = rec {
+        rate = 48000;
+        max = default * 2;
+        default = 512;
+        min = default / 2;
+      };
     in {
       pipewire."92-latency" = {
         "context.properties" = {
-          "default.clock.quantum" = iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits;
-          "default.clock.min-quantum" = iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits;
-          "default.clock.max-quantum" = iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits;
-          "default.clock.quantum-limit" = iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits;
+          "default.clock.quantum" = quantum.default;
+          "default.clock.min-quantum" = quantum.min;
+          "default.clock.max-quantum" = quantum.max;
         };
       };
-
+      #
       pipewire-pulse."92-latency".context = {
         modules = [
           {
             name = "libpipewire-module-protocol-pulse";
-            args = {
-              pulse.min.req = "${toString iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits}/48000";
-              pulse.default.req = "${toString iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits}/48000";
-              pulse.max.req = "${toString iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits}/48000";
-              pulse.min.quantum = "${toString iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits}/48000";
-              pulse.max.quantum = "${toString iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits}/48000";
+            args = let
+              quantumStr = lib.mapAttrs (_: v: "${toString v}/${toString quantum.rate}") quantum;
+            in {
+              pulse.default.req = quantumStr.default;
+              pulse.min.quantum = quantumStr.min;
+              pulse.max.quantum = quantumStr.max;
             };
           }
         ];
-        stream.properties = {
-          node.latency = "${toString iJustWantThisNumberToBeMyQuantumIDoNotCareAboutAnyMixMaxValuesOrLimits}/48000";
-        };
       };
     };
   };
