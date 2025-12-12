@@ -355,14 +355,14 @@
         fi
 
         if [ $# -eq 0 ]; then
-          wl-screenrec --audio -m 24 -b "1 MB" -f "$filename" &
+          wl-screenrec -b "3 MB" -m 24 -f "$filename" --audio &
         else
           dim="$(slurp)"
           if [ -z "$dim" ]; then
             notify "No area selected"
             exit 2
           fi
-          wl-screenrec -b "1 MB" -m 24 -f "$filename" -g "$dim" &
+          wl-screenrec -b "3 MB" -m 24 -f "$filename" -g "$dim" &
         fi
 
         if pgrep wl-screenrec &>/dev/null; then

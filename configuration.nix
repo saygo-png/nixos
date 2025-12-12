@@ -259,6 +259,7 @@
 
       # GUI.
       foliate
+      pitivi
       krita # Painting
       anki # Flashcards
       nsxiv # Image viewer
