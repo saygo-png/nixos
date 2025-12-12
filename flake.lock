@@ -41,11 +41,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765270797,
-        "narHash": "sha256-qw9iaIIz8D+lwsTO28VOaZBAJG97jH4+ci2pe7ZJR6Q=",
+        "lastModified": 1765326679,
+        "narHash": "sha256-fTLX9kDwLr9Y0rH/nG+h1XG5UU+jBcy0PFYn5eneRX8=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "8e68aa819d6a9964c8ac45172e68b943b597c52a",
+        "rev": "d64e5cdca35b5fad7c504f615357a7afe6d9c49e",
         "type": "github"
       },
       "original": {
@@ -56,6 +56,7 @@
     },
     "drugtracker2": {
       "inputs": {
+        "niceHaskell": "niceHaskell",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -67,11 +68,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1760004269,
-        "narHash": "sha256-1VC1AjyjQP0zPRSpr+NR4ZgleF0dJmkSEa0p6TaE0rs=",
+        "lastModified": 1765509810,
+        "narHash": "sha256-4wtnlrWVP69P4CK5itYRo4w1m1u8OVjqbdD6YseaDoU=",
         "owner": "saygo-png",
         "repo": "drugTracker2",
-        "rev": "7cde89cb5c2bcf57c4b84d83b7bc0845f299fbc4",
+        "rev": "475dd3ae8ae0de822f969dd770471e4cced32af9",
         "type": "github"
       },
       "original": {
@@ -104,11 +105,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1765253041,
-        "narHash": "sha256-D4/vwhvX26KW3gux9CCiJ87zc5UOiLTFlfG3+5h0VRI=",
+        "lastModified": 1765489453,
+        "narHash": "sha256-wLSrwiYr7ck5jN56lJp8YzWuLk5dpRd1v+8Ta7ru608=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "687d6eb2a8503afdeaaf9e230fb72f880daa7252",
+        "rev": "c3e6306094f23d57c40f7fba007303fba4db0ba9",
         "type": "gitlab"
       },
       "original": {
@@ -346,11 +347,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765217760,
-        "narHash": "sha256-BVVyAodLcAD8KOtR3yCStBHSE0WAH/xQWH9f0qsxbmk=",
+        "lastModified": 1765480374,
+        "narHash": "sha256-HlbvQAqLx7WqZFFQZ8nu5UUJAVlXiV/kqKbyueA8srw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "e5b1f87841810fc24772bf4389f9793702000c9b",
+        "rev": "39cb677ed9e908e90478aa9fe5f3383dfc1a63f3",
         "type": "github"
       },
       "original": {
@@ -396,6 +397,35 @@
       "original": {
         "owner": "saygo-png",
         "repo": "neovim-config",
+        "type": "github"
+      }
+    },
+    "niceHaskell": {
+      "inputs": {
+        "nixpkgs": [
+          "drugtracker2",
+          "nixpkgs"
+        ],
+        "systems": [
+          "drugtracker2",
+          "systems"
+        ],
+        "treefmt-nix": [
+          "drugtracker2",
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1765413805,
+        "narHash": "sha256-093PAoUCiKySMWGiQrN8UOYgcF71sVkiYquHMMAXZng=",
+        "owner": "saygo-png",
+        "repo": "nice-nixpkgs-haskell",
+        "rev": "9866b9f5b6670d433594d5a2cd15a89dd463f512",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saygo-png",
+        "repo": "nice-nixpkgs-haskell",
         "type": "github"
       }
     },
@@ -626,11 +656,11 @@
         "tinted-zed": []
       },
       "locked": {
-        "lastModified": 1765047449,
-        "narHash": "sha256-VQcqjJ2g0kT9TW4ENwA2HBQJzfbCUd5s1Wm3K+R2QZY=",
+        "lastModified": 1765474444,
+        "narHash": "sha256-sDG+c73xEnIw1pFNRWffKDnTWiTuyZiEP+Iub0D3mWA=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "bd00e01aab676aee88e6cc5c9238b4a5a7d6639a",
+        "rev": "dd14de4432a94e93e10d0159f1d411487e435e1e",
         "type": "github"
       },
       "original": {
