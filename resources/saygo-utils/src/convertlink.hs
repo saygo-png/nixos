@@ -36,7 +36,8 @@ convertlink opts = do
     (True, False, _) -> convertLinkAndWrite opts.path opts.write
     (False, False, _) -> printf "convertlink: %s is not a symlink or a directory\n" opts.path
     (False, True, False) -> printf "convertlink: -r not specified; omitting directory %s\n" opts.path
-    (_, True, True) -> recursiveConvert [opts.path] opts.write >> pass
+    (True, True, True) -> convertLinkAndWrite opts.path opts.write >> recursiveConvert [opts.path] opts.write >> pass
+    (False, True, True) -> recursiveConvert [opts.path] opts.write >> pass
 
 convertLinkAndWrite :: FilePath -> Bool -> IO ()
 convertLinkAndWrite filepath write = do
