@@ -2,6 +2,7 @@
   lib,
   pkgs,
   inputs,
+  system,
   config,
   conUsername,
   ...
@@ -128,7 +129,7 @@ in {
         extensions = {
           force = true;
           packages = let
-            addons = inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
+            addons = inputs.firefox-addons.packages.${system};
           in [
             addons.single-file
             addons.sponsorblock

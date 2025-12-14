@@ -1,5 +1,6 @@
 # Largely based on https://bennett.dev/auto-link-pipewire-ports-wireplumber/ by Bennett Hardwick
 {
+  system,
   inputs,
   pkgs,
   lib,
@@ -7,7 +8,7 @@
 }: {
   environment.systemPackages = [
     pkgs.carla
-    inputs.zlequalizer.packages.${pkgs.stdenv.hostPlatform.system}.zlequalizer
+    inputs.zlequalizer.packages.${system}.zlequalizer
   ];
 
   services.pipewire.extraConfig.pipewire."10-default-null-sink" = {

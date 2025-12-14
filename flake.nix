@@ -157,7 +157,7 @@
     treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
     commonSpecialArgs = system: {
-      inherit inputs self;
+      inherit inputs self system;
       nixvim-pkgs = nixvim-pkgs.${system};
       pkgs-frozen = pkgs-frozen.${system};
       lib = lib.extend (final: _: {my = import ./modules/lib.nix {lib = final;};});
