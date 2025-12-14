@@ -344,7 +344,7 @@
           notify-send "$@"
           echo "$@"
         }
-        dir="${conHome}/Pictures/screencaptures"
+        dir="${conHome}/Videos/screencaptures"
         [ -d "$dir" ] || mkdir -p "$dir"
         filename="$dir/$(date +%y.%m.%d-%H:%M).mp4"
 

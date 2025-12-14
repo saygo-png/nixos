@@ -118,8 +118,8 @@ in {
         extraConfig = {
           MY_MISC_DIR = "${homeConfig.homeDirectory}/Misc";
           MY_SCREENSHOTS_DIR = "${homeConfig.homeDirectory}/Pictures/screenshots";
-          MY_SCREENCAPTURES_DIR = "${homeConfig.homeDirectory}/Pictures/screencaptures";
-          MY_AUDIOCAPTURES_DIR = "${homeConfig.homeDirectory}/Pictures/audiocaptures";
+          MY_SCREENCAPTURES_DIR = "${homeConfig.homeDirectory}/Videos/screencaptures";
+          MY_AUDIOCAPTURES_DIR = "${homeConfig.homeDirectory}/Documents/audiocaptures";
         };
       };
     };
