@@ -6,3 +6,4 @@ executable-stripping: True
 documentation: False
 tests: False
 benchmarks: False
+allow-newer: shh:base, shh:template-haskell

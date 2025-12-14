@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/117cc7f94e8072499b0a7aa4c52084fa4e11cc9b";
 
     nom.url = "git+file:///home/samsepi0l/builds/nix-output-monitor?ref=optparse-2";
@@ -19,6 +18,15 @@
     systems = {
       url = "path:./systems.nix";
       flake = false;
+    };
+
+    niceHaskell = {
+      url = "github:saygo-png/nice-nixpkgs-haskell";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+        treefmt-nix.follows = "treefmt-nix";
+      };
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
@@ -42,6 +50,7 @@
         treefmt-nix.follows = "treefmt-nix";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
+        niceHaskell.follows = "niceHaskell";
       };
     };
 

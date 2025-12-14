@@ -56,7 +56,9 @@
     },
     "drugtracker2": {
       "inputs": {
-        "niceHaskell": "niceHaskell",
+        "niceHaskell": [
+          "niceHaskell"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -403,24 +405,21 @@
     "niceHaskell": {
       "inputs": {
         "nixpkgs": [
-          "drugtracker2",
           "nixpkgs"
         ],
         "systems": [
-          "drugtracker2",
           "systems"
         ],
         "treefmt-nix": [
-          "drugtracker2",
           "treefmt-nix"
         ]
       },
       "locked": {
-        "lastModified": 1765413805,
-        "narHash": "sha256-093PAoUCiKySMWGiQrN8UOYgcF71sVkiYquHMMAXZng=",
+        "lastModified": 1765693627,
+        "narHash": "sha256-fkYZ5oGMqnhArn4ad2P/64CE3+dJRVjU4Uz13EnjQN4=",
         "owner": "saygo-png",
         "repo": "nice-nixpkgs-haskell",
-        "rev": "9866b9f5b6670d433594d5a2cd15a89dd463f512",
+        "rev": "20b3a8ced4ee1c651df4fb10aadc673e2150ef0f",
         "type": "github"
       },
       "original": {
@@ -617,6 +616,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "my-neovim": "my-neovim",
+        "niceHaskell": "niceHaskell",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",

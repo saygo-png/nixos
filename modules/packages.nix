@@ -3,6 +3,7 @@
   pkgs,
   config,
   inputs,
+  system,
   conHome,
   conHost,
   conFlakePath,
@@ -68,7 +69,8 @@
       };
     })
 
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/saygo-utils") {})
+    (pkgs.callPackage (lib.my.relativeToRoot "resources/saygo-utils")
+      {niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};})
 
     # Shell {{{
     (pkgs.writeScriptBin "nr"

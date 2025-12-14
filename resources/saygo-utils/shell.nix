@@ -1,6 +1,9 @@
 {pkgs ? import <nixpkgs> {}}:
 pkgs.mkShell {
-  packages = with pkgs; [
-    (callPackage ./default.nix {})
+  packages = let
+    ghcPackages = pkgs.haskell.packages.ghc984;
+  in [
+    ghcPackages.haskell-language-server
+    ghcPackages.ghc
   ];
 }
