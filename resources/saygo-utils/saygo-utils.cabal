@@ -9,7 +9,7 @@ description:     Utilities for my NixOS config
 tested-with:     GHC ==9.8.4
 
 common common-options
-  build-depends: base, shh, universum, aeson, optparse-applicative, time, tz, bytestring, path, cassava, path-io, safe, vector, Cabal, directory, filepath, unix
+  build-depends: base, Chart, Chart-diagrams, shh, universum, aeson, optparse-applicative, time, tz, bytestring, path, cassava, path-io, safe, vector, Cabal, directory, filepath, unix, gi-notify
   default-language: GHC2021
   ghc-options: -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-missing-safe-haskell-mode -Wno-missing-exported-signatures -Wno-missing-local-signatures -Wno-unused-packages
                -threaded -rtsopts -with-rtsopts=-N
@@ -50,3 +50,11 @@ executable tmux-mem
 executable convertlink
   import: common-options
   main-is: src/convertlink.hs
+
+executable saygo-record
+  import: common-options
+  main-is: src/saygo-record.hs
+
+executable githubloc
+  import: common-options
+  main-is: src/githubloc.hs
