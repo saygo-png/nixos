@@ -49,8 +49,9 @@
       };
       scripts = [
         pkgs.mpvScripts.uosc
-        pkgs.mpvScripts.acompressor
         pkgs.mpvScripts.autoload
+        pkgs.mpvScripts.videoclip
+        # pkgs.mpvScripts.acompressor
       ];
     };
   };
