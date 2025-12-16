@@ -11,7 +11,7 @@ import Graphics.Rendering.Chart.Easy hiding (Vector, argument)
 import Options.Applicative
 import Universum
 
-data Options = Options {repoName :: String, csvFile :: FilePath}
+data Options = Options {repoName :: String, csvFile :: FilePath, balance :: Bool}
 
 data Entry = Entry
   { time :: UTCTime
@@ -23,6 +23,12 @@ data Entry = Entry
 data LocEntry = LocEntry
   { time :: UTCTime
   , linesOfCode :: Int
+  }
+  deriving stock (Show)
+
+data BalanceEntry = BalanceEntry
+  { time :: UTCTime
+  , balance :: Int
   }
   deriving stock (Show)
 
@@ -42,15 +48,31 @@ main :: IO ()
 main = do
   opts <- execParser parserInfo
   csvData <- stripUtf8Bom <$> BL.readFile opts.csvFile
-  case Csv.decodeByName csvData :: Either String (Csv.Header, Vector Entry) of
-    Left err -> putStrLn err
-    Right (_, vector) -> do
+  vector <- case Csv.decodeByName csvData :: Either String (Csv.Header, Vector Entry) of
+    Left err -> die err
+    Right (_, vector) -> pure vector
+
+  case opts of
+    Options{balance = True} -> do
+      let balanceVec = toBalance vector
+          balanceLine =
+            def
+              { _plot_lines_values = [toList $ map (\e -> (e.time, e.balance)) balanceVec]
+              , _plot_lines_title = "Lines added + removed"
+              }
+          layout =
+            def
+              { _layout_title = "Balance history for " <> opts.repoName
+              , _layout_plots = [toPlot balanceLine]
+              }
+
+      _ <- Chart.renderableToFile def "githubBalanceChart.svg" $ toRenderable layout
+      putTextLn "Balance chart created!"
+    _ -> do
       absoluteLoc <- case toAbsoluteLoc 0 vector of
         Nothing -> die "Csv has no entries!"
         Just loc -> pure loc
-      print absoluteLoc
-
-      let price1 =
+      let locLine =
             def
               { _plot_lines_values = [toList $ map (\e -> (e.time, e.linesOfCode)) absoluteLoc]
               , _plot_lines_title = "Lines of code"
@@ -58,15 +80,18 @@ main = do
           layout =
             def
               { _layout_title = "Lines of code history for " <> opts.repoName
-              , _layout_plots = [toPlot price1]
+              , _layout_plots = [toPlot locLine]
               }
 
-      _ <- Chart.renderableToFile def "githubLinesOfCodeChart.png" $ toRenderable layout
-      pass
+      _ <- Chart.renderableToFile def "githubLinesOfCodeChart.svg" $ toRenderable layout
+      putTextLn "Lines of code chart created!"
 
 -- https://github.com/haskell-hvr/cassava/issues/106
 stripUtf8Bom :: BL.ByteString -> BL.ByteString
 stripUtf8Bom bs = fromMaybe bs (BL.stripPrefix "\239\187\191" bs)
+
+toBalance :: Vector Entry -> Vector BalanceEntry
+toBalance = map (\e -> BalanceEntry{time = e.time, balance = e.additions + e.deletions})
 
 toAbsoluteLoc :: Int -> Vector Entry -> Maybe (Vector LocEntry)
 toAbsoluteLoc linesOfCode vector
@@ -93,3 +118,4 @@ parserInfo = info (helper <*> optionsParser) (progDesc "Convert Github's \"Code 
       Options
         <$> argument str (metavar "REPO_NAME" <> help "Name of the github repo, purely visual")
         <*> argument str (metavar "CSV_FILE" <> help "Github's \"Code Frequency\" csv file")
+        <*> switch (long "balance" <> help "Whether to create a balance chart instead")
