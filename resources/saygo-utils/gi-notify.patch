@@ -1,0 +1,21 @@
+diff --git a/gi-notify.cabal b/gi-notify.cabal
+index 6ac0e11..1cbbb7d 100644
+--- a/gi-notify.cabal
++++ b/gi-notify.cabal
+@@ -19,6 +19,7 @@ custom-setup
+                      haskell-gi >= 0.26.9 && < 0.27,
+                      gi-gdkpixbuf == 2.0.*,
+                      gi-gobject == 2.0.*,
++                     gi-gio,
+                      gi-glib == 2.0.*
+
+ library
+@@ -34,6 +35,7 @@ library
+                      haskell-gi-overloading < 1.1,
+                      gi-gdkpixbuf == 2.0.*,
+                      gi-gobject == 2.0.*,
++                     gi-gio,
+                      gi-glib == 2.0.*,
+                      bytestring >= 0.10 && < 1,
+                      containers >= 0.5 && < 1,
+

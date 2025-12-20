@@ -70,7 +70,10 @@
     })
 
     (pkgs.callPackage (lib.my.relativeToRoot "resources/saygo-utils")
-      {niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};})
+      {
+        niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
+        myLib = lib.my;
+      })
 
     # Shell {{{
     (pkgs.writeScriptBin "nr"
