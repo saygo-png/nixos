@@ -36,18 +36,23 @@
             case default
               set_color --bold green
               echo '<'
+              set_color normal
             case insert
               set_color --bold green
               echo '>'
+              set_color normal
             case replace_one
               set_color --bold green
               echo '/'
+              set_color normal
             case replace
               set_color --bold cyan
               echo '^'
+              set_color normal
             case visual
               set_color --bold magenta
               echo '*'
+              set_color normal
             end
           end
 
@@ -90,10 +95,7 @@
             set -l statusb_color (set_color $bold_flag $fish_color_status)
             set -l prompt_status (__fish_print_pipestatus "[" "]" "|" "$status_color" "$statusb_color" $last_pipestatus)
 
-
-            # waiting for https://github.com/fish-shell/fish-shell/issues/11875
             if contains -- --final-rendering $argv
-              echo ""
               echo -n -s (fish_default_mode_prompt)
             else
               echo -n -s \
