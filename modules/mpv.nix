@@ -35,6 +35,7 @@
         sub-shadow-offset = 2;
         sub-visibility = "yes";
         sub-ass-line-spacing = 1;
+        save-watch-history = true;
         sub-ass-hinting = "normal";
         sub-ass-override = "force";
         save-position-on-quit = true;
