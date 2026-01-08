@@ -4,11 +4,12 @@
   inputs,
   config,
   conUsername,
+  pkgs-frozen,
   ...
 }: {
   nixpkgs.overlays = [
-    (_final: prev: {
-      vesktop = prev.vesktop.overrideAttrs (oldAttrs: {
+    (_final: _prev: {
+      vesktop = pkgs-frozen.vesktop.overrideAttrs (oldAttrs: {
         preConfigurePhases = (oldAttrs.preConfigurePhases or []) ++ ["myPatchImages"];
 
         myPatchImages = let

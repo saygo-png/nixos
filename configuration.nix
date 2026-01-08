@@ -7,6 +7,7 @@
   conHome,
   nixvim-pkgs,
   conUsername,
+  pkgs-frozen,
   ...
 }: {
   imports =
@@ -265,7 +266,7 @@
       nsxiv # Image viewer
       simplescreenrecorder
       godot_4 # Game engine
-      sayonara # Music player
+      pkgs-frozen.sayonara # Music player
       inkscape # Vector graphics
       keepassxc # Password manager
       qbittorrent # Torrent client
