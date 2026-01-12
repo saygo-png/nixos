@@ -452,7 +452,9 @@
         };
       };
 
-      programs.yazi = {
+      programs.yazi = let
+        saneSeparator = "";
+      in {
         enable = true;
         keymap.mgr.prepend_keymap = [
           {
@@ -469,6 +471,34 @@
             desc = "Drag and drop selection";
           }
         ];
+        initLua =
+          #Lua
+          ''
+            function Entity:padding() return "${saneSeparator}" end
+            function Linemode:padding() return "${saneSeparator}" end
+          '';
+        theme = {
+          status = {
+            sep_left = {
+              open = saneSeparator;
+              close = saneSeparator;
+            };
+            sep_right = {
+              open = saneSeparator;
+              close = saneSeparator;
+            };
+          };
+          tabs = {
+            sep_inner = {
+              open = saneSeparator;
+              close = saneSeparator;
+            };
+            sep_outer = {
+              open = saneSeparator;
+              close = saneSeparator;
+            };
+          };
+        };
         settings = {
           preview.tab_size = 2;
           mgr = {
