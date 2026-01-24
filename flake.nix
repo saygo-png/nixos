@@ -31,7 +31,13 @@
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
-    impermanence.url = "github:nix-community/impermanence";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs = {
+        nixpkgs.follows = "";
+        home-manager.follows = "";
+      };
+    };
 
     disko = {
       url = "github:nix-community/disko";
