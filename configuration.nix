@@ -259,6 +259,7 @@
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
+      telegram-desktop
       foliate
       pitivi
       krita # Painting
