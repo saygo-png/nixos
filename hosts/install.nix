@@ -10,7 +10,7 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.limine.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = config.const.host; # Define your hostname.
