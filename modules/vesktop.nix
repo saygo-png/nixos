@@ -88,7 +88,7 @@
       enable = true;
       settings = {
         appBadge = false;
-        arRPC = false;
+        arRPC = true;
         enableSplashScreen = true;
         customTitleBar = false;
         disableMinSize = true;
