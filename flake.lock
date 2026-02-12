@@ -21,11 +21,11 @@
     "cookiecutter-templates": {
       "flake": false,
       "locked": {
-        "lastModified": 1766490976,
-        "narHash": "sha256-jDkKUio/ymvV31jk1u/0m0irsmCeRjynkLeQOP/upRc=",
+        "lastModified": 1770056010,
+        "narHash": "sha256-blv+9pCGcdE+o71fcHQ9+Yh472c/zOpidoLB1g+t2SE=",
         "owner": "saygo-png",
         "repo": "cookiecutter-templates",
-        "rev": "16282fc85e428a25d4772c81c055ebc826b0d859",
+        "rev": "581e9b51705524ecd25a0fb48fc4fd9d33e8e829",
         "type": "github"
       },
       "original": {
@@ -70,11 +70,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767895430,
-        "narHash": "sha256-ZYXrHNOGyStd5Rk+Q3xe66twFSajU41eZ03J7fVPxUc=",
+        "lastModified": 1769873649,
+        "narHash": "sha256-n3BhT8cb9elX/GY0Y6SReUe8AUc6KN+X9td9rzBvFIM=",
         "owner": "saygo-png",
         "repo": "drugTracker2",
-        "rev": "0b62fbddc0fdcca5b38bd509c33489a1ab9a3ee4",
+        "rev": "f0c49d45e6ddf765b5f9d428f7937b6638900b6b",
         "type": "github"
       },
       "original": {
@@ -393,11 +393,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769275764,
-        "narHash": "sha256-zlk12oexvkCG8J1ITi7HsaYoikAkQCZkJ0Pc2PXzOwE=",
+        "lastModified": 1770874052,
+        "narHash": "sha256-J3vGNHzV6OVX+a6+KP/J614BDnxQ4mglaPu/O21iQIs=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "6bc41dba22db678f6b8a392879ab5fcb4e3782d1",
+        "rev": "98c5005383ebfd1ba67fe5807257ebb34d541de9",
         "type": "github"
       },
       "original": {
