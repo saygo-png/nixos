@@ -7,7 +7,7 @@
 
     nom.url = "git+file:///home/samsepi0l/builds/nix-output-monitor?ref=optparse-2";
 
-    my-neovim = {
+    neovim-config = {
       url = "github:saygo-png/neovim-config";
       inputs = {
         treefmt-nix.follows = "treefmt-nix";
@@ -168,7 +168,7 @@
     pkgsFor = eachSystem (system: import nixpkgs {inherit system;});
 
     pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
-    nixvim-pkgs = eachSystem (system: import inputs.my-neovim.inputs.nixvim.inputs.nixpkgs {inherit system;});
+    nixvim-pkgs = eachSystem (system: import inputs.neovim-config.inputs.nixvim.inputs.nixpkgs {inherit system;});
     treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
     commonSpecialArgs = system: {

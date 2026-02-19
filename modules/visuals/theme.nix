@@ -118,7 +118,7 @@
   };
 
   home-manager.users.${conUsername} = {
-    stylix.iconTheme = {
+    stylix.icons = {
       enable = true;
       package = pkgs.gruvbox-plus-icons;
       dark = "Gruvbox-Plus-Dark";

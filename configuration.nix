@@ -3,11 +3,11 @@
   pkgs,
   self,
   config,
+  system,
   inputs,
   conHome,
   nixvim-pkgs,
   conUsername,
-  pkgs-frozen,
   ...
 }: {
   imports =
@@ -202,7 +202,7 @@
       molot-lite
       pkgs.eq10q
 
-      inputs.nom.packages.${pkgs.system}.default
+      inputs.nom.packages.${system}.default
 
       # Nix.
       nh # Nix helper
@@ -330,7 +330,7 @@
       SYSTEMD_PAGER = PAGER;
     };
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "26.05";
 
   # Keep trace of flake hash and flake for every gen in /etc
   system.systemBuilderCommands = "ln -s ${self.sourceInfo.outPath} $out/src";
@@ -456,6 +456,7 @@
         saneSeparator = "";
       in {
         enable = true;
+        shellWrapperName = "yy";
         keymap.mgr.prepend_keymap = [
           {
             on = ["d"];

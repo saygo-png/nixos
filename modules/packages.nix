@@ -185,7 +185,7 @@
 
     (pkgs.writeShellApplication {
       name = "myAutostart.sh";
-      runtimeInputs = with pkgs; [xorg.xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
+      runtimeInputs = with pkgs; [xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
       text = ''
         run() {
           if ! pgrep -f "$1" ;
@@ -213,7 +213,7 @@
 
     (pkgs.writeShellApplication {
       name = "remaps";
-      runtimeInputs = with pkgs; [coreutils xdotool xcape xorg.setxkbmap xorg.xset];
+      runtimeInputs = with pkgs; [coreutils xdotool xcape setxkbmap xset];
       text = ''
         # This script is called on startup to remap keys.
         # Decrease key repeat delay and increase key repeat rate.
@@ -221,7 +221,7 @@
         # Turn off caps lock if on since there is no longer a key for it.
         xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
         # Disable touchpad
-        ${lib.getExe pkgs.xorg.xinput} disable 'SynPS/2 Synaptics TouchPad'
+        ${lib.getExe pkgs.xinput} disable 'SynPS/2 Synaptics TouchPad'
       '';
     })
 

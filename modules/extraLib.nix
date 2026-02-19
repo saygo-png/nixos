@@ -19,7 +19,7 @@
       startx-wrapper-if = lib.mkIf config.services.xserver.displayManager.startx.enable [
         (pkgs.writeShellApplication {
           name = "startx-${wmExe}";
-          runtimeInputs = [pkgs.xorg.xinit];
+          runtimeInputs = [pkgs.xinit];
           text = ''
             XINITRC=${xinitrcFile} startx
           '';

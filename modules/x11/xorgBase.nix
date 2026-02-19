@@ -54,7 +54,7 @@
   nixpkgs.overlays = [
     (final: prev: {
       xorgWrapperForSx = prev.writeShellScriptBin "Xorg" ''
-        exec ${prev.xorg.xorgserver}/bin/X ${toString config.services.xserver.displayManager.xserverArgs} "$@"
+        exec ${prev.xorgserver}/bin/X ${toString config.services.xserver.displayManager.xserverArgs} "$@"
       '';
 
       sx = prev.sx.overrideAttrs (_oldAttrs: {
