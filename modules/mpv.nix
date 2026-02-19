@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   conUsername,
   ...
@@ -52,7 +51,6 @@
         pkgs.mpvScripts.uosc
         pkgs.mpvScripts.autoload
         pkgs.mpvScripts.videoclip
-        # pkgs.mpvScripts.acompressor
       ];
     };
   };

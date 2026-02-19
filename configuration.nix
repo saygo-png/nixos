@@ -267,7 +267,6 @@
       nsxiv # Image viewer
       simplescreenrecorder
       godot_4 # Game engine
-      pkgs-frozen.sayonara # Music player
       inkscape # Vector graphics
       keepassxc # Password manager
       qbittorrent # Torrent client
