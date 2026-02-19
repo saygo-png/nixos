@@ -147,7 +147,7 @@ in {
               force = true;
               settings = let
                 customLists = [
-                  "https://raw.githubusercontent.com/gijsdev/ublock-hide-yt-shorts/master/list.txt"
+                  "https://raw.githubusercontent.com/i5heu/ublock-hide-yt-shorts/master/list.txt"
                   "https://raw.githubusercontent.com/DandelionSprout/adfilt/master/BrowseWebsitesWithoutLoggingIn.txt"
                 ];
               in {
@@ -180,6 +180,7 @@ in {
                     "curben-phishing"
                     "ublock-annoyances"
                     "ublock-quick-fixes"
+                    "ublock-experimental"
                     "adguard-spyware-url"
                     "easylist-annoyances"
                     "easylist-newsletters"
