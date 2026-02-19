@@ -75,23 +75,16 @@
         myLib = lib.my;
       })
 
-    # Shell {{{
     (pkgs.writeScriptBin "nr"
       ''
-        #!${lib.getExe pkgs.zsh}
-
-        # Parametrized alias.
-        # $@ is an array of all arguments quoted, (w) operates on words,
-        # ":1:1" offsets the array by 1, and limits the range to 1 , ":2" offsets the array
-
-        nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+        #!${lib.getExe pkgs.bash}
+        nix run "nixpkgs#$1" -- ''${@:2}
       '')
 
     (pkgs.writeScriptBin "snr"
       ''
-        #!${lib.getExe pkgs.zsh}
-
-        sudo nix run "nixpkgs#''${(w)@:1:1}" -- ''${(w)@:2}
+        #!${lib.getExe pkgs.bash}
+        sudo nix run "nixpkgs#$1" -- ''${@:2}
       '')
 
     (pkgs.writeShellApplication {
@@ -114,14 +107,6 @@
       checkPhase = ""; # Dont shellcheck
       bashOptions = []; # Dont add extra options
       text = builtins.readFile "${inputs.format-udf}/format-udf.sh";
-    })
-
-    (pkgs.writeShellApplication {
-      name = "vmrss";
-      runtimeInputs = with pkgs; [coreutils bc];
-      checkPhase = ""; # Dont shellcheck
-      bashOptions = []; # Dont add extra options
-      text = builtins.readFile "${inputs.vmrss}/vmrss";
     })
 
     (pkgs.writeShellApplication {
@@ -377,6 +362,5 @@
         fi
       '';
     })
-    # }}}
   ];
 }

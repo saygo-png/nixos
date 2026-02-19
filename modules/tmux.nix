@@ -28,7 +28,7 @@
     programs.tmux = {
       baseIndex = 1;
       enable = true;
-      shell = "${lib.getExe pkgs.zsh}"; # Full path is needed here
+      shell = "${lib.getExe pkgs.fish}"; # Full path is needed here
       keyMode = "vi";
       prefix = "C-a";
       tmuxinator.enable = true;

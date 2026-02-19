@@ -124,33 +124,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zsh-autosuggestions = {
-      url = "github:zsh-users/zsh-autosuggestions";
-      flake = false;
-    };
-
     powerlevel10k = {
       url = "github:romkatv/powerlevel10k";
       flake = false;
     };
 
-    zsh-system-clipboard = {
-      url = "github:kutsan/zsh-system-clipboard";
-      flake = false;
-    };
-
-    zsh-auto-notify = {
-      url = "github:MichaelAquilina/zsh-auto-notify";
-      flake = false;
-    };
-
     format-udf = {
       url = "github:JElchison/format-udf";
-      flake = false;
-    };
-
-    vmrss = {
-      url = "github:ThePrimeagen/vmrss";
       flake = false;
     };
   };
@@ -186,13 +166,6 @@
           apply = filter (w: !(lib.hasInfix "If multiple of these password options are set at the same time" w));
         };
       }
-
-      ({
-        lib,
-        config,
-        pkgs,
-        ...
-      }: {_module.args.extraLib = import ./modules/extraLib.nix {inherit config pkgs lib;};})
     ];
 
     mkSystem = name: uniqueModules:

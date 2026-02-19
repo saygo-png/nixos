@@ -49,15 +49,6 @@
   # Wifi
   networking.networkmanager.enable = true;
 
-  # Remove screentearing on x11
-  environment.etc."X11/xorg.conf.d/20-intel.conf".text = ''
-    Section "Device"
-    Identifier "Intel Graphics"
-    Driver "i915"
-    Option "TearFree" "true"
-    EndSection
-  '';
-
   # Function keys
   programs.light.enable = true;
   hardware.acpilight.enable = true;

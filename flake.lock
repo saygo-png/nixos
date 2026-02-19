@@ -86,11 +86,11 @@
     "extras-nixos": {
       "flake": false,
       "locked": {
-        "lastModified": 1756810931,
-        "narHash": "sha256-0N+7I0VgwC14fu2KuDZCBVw0copCpS7JtabJ90/yLfM=",
+        "lastModified": 1771522114,
+        "narHash": "sha256-vM0PffV+cYBnrNk8vXn2phjErfKaoGo4at7LLuIcNGc=",
         "owner": "saygo-png",
         "repo": "extrasNixos",
-        "rev": "9d133a90e530ab0a5b50ccdbb067924f3aa72a1a",
+        "rev": "d51aaed3845ada39d94e95ddf38f2f0f23bf15c3",
         "type": "github"
       },
       "original": {
@@ -647,11 +647,7 @@
         "stylix": "stylix",
         "systems": "systems_2",
         "treefmt-nix": "treefmt-nix",
-        "vmrss": "vmrss",
-        "zlequalizer": "zlequalizer",
-        "zsh-auto-notify": "zsh-auto-notify",
-        "zsh-autosuggestions": "zsh-autosuggestions",
-        "zsh-system-clipboard": "zsh-system-clipboard"
+        "zlequalizer": "zlequalizer"
       }
     },
     "stylix": {
@@ -737,22 +733,6 @@
         "type": "github"
       }
     },
-    "vmrss": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1702010674,
-        "narHash": "sha256-trJbiyixZrbDHUCXCsxcywcgKnf8/WLM0EvLHFXDAZ8=",
-        "owner": "ThePrimeagen",
-        "repo": "vmrss",
-        "rev": "7eac021c8e12fa7e53af7f2e2e02e47b2cb38211",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ThePrimeagen",
-        "repo": "vmrss",
-        "type": "github"
-      }
-    },
     "zlequalizer": {
       "inputs": {
         "nixpkgs": [
@@ -770,54 +750,6 @@
       "original": {
         "owner": "saygo-png",
         "repo": "ZLEqualizer-nix",
-        "type": "github"
-      }
-    },
-    "zsh-auto-notify": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1750669386,
-        "narHash": "sha256-s3TBAsXOpmiXMAQkbaS5de0t0hNC1EzUUb0ZG+p9keE=",
-        "owner": "MichaelAquilina",
-        "repo": "zsh-auto-notify",
-        "rev": "b51c934d88868e56c1d55d0a2a36d559f21cb2ee",
-        "type": "github"
-      },
-      "original": {
-        "owner": "MichaelAquilina",
-        "repo": "zsh-auto-notify",
-        "type": "github"
-      }
-    },
-    "zsh-autosuggestions": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1750781703,
-        "narHash": "sha256-KmkXgK1J6iAyb1FtF/gOa0adUnh1pgFsgQOUnNngBaE=",
-        "owner": "zsh-users",
-        "repo": "zsh-autosuggestions",
-        "rev": "85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "zsh-users",
-        "repo": "zsh-autosuggestions",
-        "type": "github"
-      }
-    },
-    "zsh-system-clipboard": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1758984882,
-        "narHash": "sha256-dnWQEWa/Cxwopgj2teCpWhqX4Imx1PB7fHAa8djg8P4=",
-        "owner": "kutsan",
-        "repo": "zsh-system-clipboard",
-        "rev": "5f1d497ee3c215a967c0e6b9a772e73c40332d52",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kutsan",
-        "repo": "zsh-system-clipboard",
         "type": "github"
       }
     }
