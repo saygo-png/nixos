@@ -266,7 +266,7 @@
       anki # Flashcards
       nsxiv # Image viewer
       simplescreenrecorder
-      godot_4 # Game engine
+      godot-mono # Game engine
       inkscape # Vector graphics
       keepassxc # Password manager
       qbittorrent # Torrent client
