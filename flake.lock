@@ -362,6 +362,85 @@
         "type": "github"
       }
     },
+    "hyprlang": {
+      "inputs": {
+        "hyprutils": [
+          "hyprqt6engine",
+          "hyprutils"
+        ],
+        "nixpkgs": [
+          "hyprqt6engine",
+          "nixpkgs"
+        ],
+        "systems": [
+          "hyprqt6engine",
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1756810301,
+        "narHash": "sha256-wgZ3VW4VVtjK5dr0EiK9zKdJ/SOqGIBXVG85C3LVxQA=",
+        "owner": "hyprwm",
+        "repo": "hyprlang",
+        "rev": "3d63fb4a42c819f198deabd18c0c2c1ded1de931",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprwm",
+        "repo": "hyprlang",
+        "type": "github"
+      }
+    },
+    "hyprqt6engine": {
+      "inputs": {
+        "hyprlang": "hyprlang",
+        "hyprutils": "hyprutils",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759750919,
+        "narHash": "sha256-HrRqfAxcuTjwXm6y2ShKgPJmUWaf8t050WlrAmGjsls=",
+        "owner": "hyprwm",
+        "repo": "hyprqt6engine",
+        "rev": "7f5d00163e681e523e97ddb058bc1198fa5780d6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprwm",
+        "repo": "hyprqt6engine",
+        "type": "github"
+      }
+    },
+    "hyprutils": {
+      "inputs": {
+        "nixpkgs": [
+          "hyprqt6engine",
+          "nixpkgs"
+        ],
+        "systems": [
+          "hyprqt6engine",
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1756117388,
+        "narHash": "sha256-oRDel6pNl/T2tI+nc/USU9ZP9w08dxtl7hiZxa0C/Wc=",
+        "owner": "hyprwm",
+        "repo": "hyprutils",
+        "rev": "b2ae3204845f5f2f79b4703b441252d8ad2ecfd0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprwm",
+        "repo": "hyprutils",
+        "type": "github"
+      }
+    },
     "impermanence": {
       "inputs": {
         "home-manager": [],
@@ -635,6 +714,7 @@
         "gruvbox-kvantum": "gruvbox-kvantum",
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
+        "hyprqt6engine": "hyprqt6engine",
         "impermanence": "impermanence",
         "neovim-config": "neovim-config",
         "niceHaskell": "niceHaskell",
@@ -644,10 +724,40 @@
         "nixpkgs-unstable-frozen": "nixpkgs-unstable-frozen",
         "nom": "nom",
         "powerlevel10k": "powerlevel10k",
+        "saywallpaper": "saywallpaper",
         "stylix": "stylix",
         "systems": "systems_2",
         "treefmt-nix": "treefmt-nix",
         "zlequalizer": "zlequalizer"
+      }
+    },
+    "saywallpaper": {
+      "inputs": {
+        "niceHaskell": [
+          "niceHaskell"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ],
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772178625,
+        "narHash": "sha256-qHXv+xrg6QUHFl072XxptDgqyGBhkGGyZ8MQd7SvvCM=",
+        "owner": "saygo-png",
+        "repo": "Saywallpaper",
+        "rev": "3027e99419e255f8669c3aabe73df4aac9efc3c8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saygo-png",
+        "repo": "Saywallpaper",
+        "type": "github"
       }
     },
     "stylix": {

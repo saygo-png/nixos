@@ -35,7 +35,6 @@ in {
     waybar-niri = wrapWaybarWithConfig waybar-config "niri";
   in [
     waybar-niri
-    pkgs.swaybg
     pkgs.xwayland-satellite
   ];
 

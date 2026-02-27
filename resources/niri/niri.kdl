@@ -74,7 +74,7 @@ layout {
   }
 }
 
-spawn-at-startup "swaybg" "-m" "center" "-i" "/home/samsepi0l/.config/wallpaper.png"
+spawn-at-startup "saywallpaper" "-i" "/home/samsepi0l/.config/wallpaper.raw"
 spawn-at-startup "waybar-niri"
 spawn-at-startup "alacritty"
 spawn-at-startup "librewolf"
@@ -324,6 +324,7 @@ binds {
 
   Mod+T { toggle-column-tabbed-display; }
 
+  Mod+M { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
   Print { spawn "flameshot" "gui"; }
 
   // Applications such as remote-desktop clients and software KVM switches may

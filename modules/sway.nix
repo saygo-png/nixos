@@ -27,7 +27,7 @@
         modifier = "Mod4";
         window.titlebar = false;
         startup = [
-          {command = "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image}";}
+          {command = "saywallpaper -i /home/samsepi0l/.config/wallpaper.raw";}
           {command = "${config.home.sessionVariables.TERMINAL}";}
         ];
         bars = [

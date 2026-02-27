@@ -64,6 +64,19 @@
 
   home-manager.users.${conUsername} = {
     xdg.configFile."wallpaper.png".source = config.stylix.image;
+
+    # This is used for Saywallpaper
+    xdg.configFile."wallpaper.raw".source = let
+      rawWallPkg =
+        pkgs.runCommand "make raw wallpaper" {nativeBuildInputs = [pkgs.imagemagick];}
+        ''
+          magick "${config.stylix.image}" -gravity Center -crop 1920x1080+0+0 +repage wallpaper_cropped.png
+          magick wallpaper_cropped.png -depth 8 bgra:wallpaper.raw
+          mkdir $out
+          mv wallpaper.raw $out
+        '';
+    in "${rawWallPkg}/wallpaper.raw";
+
     gtk.enable = true;
     qt.enable = lib.mkDefault true;
   };

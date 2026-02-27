@@ -73,7 +73,7 @@
         # Autostart.
         exec-once = [
           "${lib.getExe' pkgs.kdePackages.polkit-kde-agent-1 "polkit-kde-authentication-agent-1"} &"
-          "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image} &"
+          "saywallpaper -i /home/samsepi0l/.config/wallpaper.raw &"
           "waybar-hyprland &"
           "udiskie &"
           "hyprctl dispatch exec '[workspace 2 silent] vesktop' &"

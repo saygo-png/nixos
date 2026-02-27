@@ -10,6 +10,9 @@
   ...
 }: {
   environment.systemPackages = [
+
+    inputs.saywallpaper.packages.${pkgs.stdenv.hostPlatform.system}.saywallpaper
+
     (pkgs.stdenv.mkDerivation {
       pname = "hordes-kiosk";
       version = "1.0.0";
@@ -74,6 +77,7 @@
         niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
         myLib = lib.my;
       })
+
 
     (pkgs.writeScriptBin "nr"
       ''
@@ -332,34 +336,68 @@
           notify-send "$@"
           echo "$@"
         }
+
+        SINK_NAME="combined_record"
         dir="${conHome}/Videos/screencaptures"
         [ -d "$dir" ] || mkdir -p "$dir"
         filename="$dir/$(date +%y.%m.%d-%H:%M).mp4"
 
+        setup_audio() {
+          pw-cli create-node adapter '{ factory.name=support.null-audio-sink node.name=combined_record node.description="Combined Record" media.class=Audio/Source/Virtual object.linger=true audio.position="[ FL, FR ]" }'
+
+          # Wait for node to appear in wpctl
+          echo "Waiting for combined_record node..."
+          for i in $(seq 1 20); do
+            sleep 0.3
+            NODE_ID=$(wpctl status | grep -i "combined record" | awk -F " " '{ print $2}' | sed 's/\.//' | grep -E -o '[0-9]+')
+            if [ -n "$NODE_ID" ]; then
+              echo "Node ready, id: $NODE_ID"
+              echo "$NODE_ID" >/tmp/wl-screenrec-pw-node
+              break
+            fi
+            if [ "$i" -eq 20 ]; then
+              notify "Audio setup failed: combined_record node never appeared"
+              exit 1
+            fi
+          done
+
+          # Link desktop audio monitor into our virtual source
+          pw-link "alsa_output.pci-0000_0a_00.6.analog-stereo:monitor_FL" "Combined Record:input_FL"
+          pw-link "alsa_output.pci-0000_0a_00.6.analog-stereo:monitor_FR" "Combined Record:input_FR"
+
+          # Link virtual mic into our virtual source
+          pw-link "virtual_mic:capture_FL" "Combined Record:input_FL"
+          pw-link "virtual_mic:capture_FR" "Combined Record:input_FR"
+        }
+
+        cleanup_audio() {
+          if [ -f /tmp/wl-screenrec-pw-node ]; then
+            NODE_ID=$(cat /tmp/wl-screenrec-pw-node)
+            pw-cli destroy "$NODE_ID"
+            rm /tmp/wl-screenrec-pw-node
+          fi
+        }
+
         if pgrep wl-screenrec &>/dev/null; then
           kill -s SIGINT $(pgrep wl-screenrec) && notify "wl-screenrec stopped"
+          cleanup_audio
           pushd "$dir" || exit 2
           ripdrag "$(find . -maxdepth 1 -type f -printf '%T@\t%Tc %6k Ki\t%P\n' | sort -n | cut -f 3- | tail -n1)"
           popd || exit 2
           exit 0
         fi
 
-        if [ $# -eq 0 ]; then
-          wl-screenrec -b "3 MB" -m 24 -f "$filename" --audio &
-        else
-          dim="$(slurp)"
-          if [ -z "$dim" ]; then
-            notify "No area selected"
-            exit 2
-          fi
-          wl-screenrec -b "3 MB" -m 24 -f "$filename" -g "$dim" &
-        fi
+        NODE_ID=$(wpctl status | grep -i "combined record" | awk -F " " '{ print $2}' | sed 's/\.//' | grep -E -o '[0-9]+')
+        if [ -z "$NODE_ID" ]; then setup_audio; fi
+        wl-screenrec -b "3 MB" -m 24 -f "$filename" --audio --audio-device "$SINK_NAME" &
 
         if pgrep wl-screenrec &>/dev/null; then
           notify "wl-screenrec started"
         else
           notify "wl-screenrec failed to start"
+          cleanup_audio
         fi
+
       '';
     })
   ];

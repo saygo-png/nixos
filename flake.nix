@@ -60,6 +60,16 @@
       };
     };
 
+    saywallpaper = {
+      url = "github:saygo-png/Saywallpaper";
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+        niceHaskell.follows = "niceHaskell";
+      };
+    };
+
     stylix = {
       url = "github:danth/stylix";
       inputs = {
