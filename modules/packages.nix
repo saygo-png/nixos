@@ -10,9 +10,6 @@
   ...
 }: {
   environment.systemPackages = [
-
-    inputs.saywallpaper.packages.${pkgs.stdenv.hostPlatform.system}.saywallpaper
-
     (pkgs.stdenv.mkDerivation {
       pname = "hordes-kiosk";
       version = "1.0.0";

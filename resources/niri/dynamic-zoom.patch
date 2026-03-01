@@ -1,0 +1,1317 @@
+From 4a9f4d7f902390c371c5f5047aa57df487ccdb3f Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sat, 3 Jan 2026 23:55:01 +0000
+Subject: [PATCH 1/8] config: add overview zoom presets and bounds
+
+Add configurable zoom presets and bounds to the overview configuration:
+- zoom_presets: optional list of zoom levels for cycling
+- min_zoom: minimum zoom level (default: 0.05)
+- max_zoom: maximum zoom level (default: 0.75)
+- zoom_step: step size for zoom adjustments (default: 0.1)
+
+Config syntax:
+  overview {
+      zoom-presets 0.5 0.25 0.1
+      min-zoom 0.05
+      max-zoom 0.75
+      zoom-step 0.1
+  }
+---
+ niri-config/src/misc.rs | 34 +++++++++++++++++++++++++++++++---
+ src/layout/mod.rs       |  2 +-
+ 2 files changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/niri-config/src/misc.rs b/niri-config/src/misc.rs
+index 66a200ca35..97a7fe2420 100644
+--- a/niri-config/src/misc.rs
++++ b/niri-config/src/misc.rs
+@@ -118,11 +118,19 @@ impl MergeWith<ClipboardPart> for Clipboard {
+     }
+ }
+
+-#[derive(Debug, Clone, Copy, PartialEq)]
++#[derive(Debug, Clone, PartialEq)]
+ pub struct Overview {
+     pub zoom: f64,
+     pub backdrop_color: Color,
+     pub workspace_shadow: WorkspaceShadow,
++    /// Optional zoom presets for cycling. If None/empty, zoom cycling is disabled.
++    pub zoom_presets: Option<Vec<f64>>,
++    /// Minimum zoom level for scroll adjustment (default: 0.05)
++    pub min_zoom: f64,
++    /// Maximum zoom level for scroll adjustment (default: 0.75)
++    pub max_zoom: f64,
++    /// Zoom step for scroll-based zoom adjustment (default: 0.1)
++    pub zoom_step: f64,
+ }
+
+ impl Default for Overview {
+@@ -131,11 +139,20 @@ impl Default for Overview {
+             zoom: 0.5,
+             backdrop_color: DEFAULT_BACKDROP_COLOR,
+             workspace_shadow: WorkspaceShadow::default(),
++            zoom_presets: None,
++            min_zoom: 0.05,
++            max_zoom: 0.75,
++            zoom_step: 0.1,
+         }
+     }
+ }
+
+-#[derive(knuffel::Decode, Debug, Clone, Copy, PartialEq)]
++/// Wrapper for parsing zoom presets from KDL arguments.
++/// Usage: `zoom-presets 0.5 0.25 0.1`
++#[derive(knuffel::Decode, Debug, Clone, PartialEq)]
++pub struct ZoomPresets(#[knuffel(arguments)] pub Vec<f64>);
++
++#[derive(knuffel::Decode, Debug, Clone, PartialEq)]
+ pub struct OverviewPart {
+     #[knuffel(child, unwrap(argument))]
+     pub zoom: Option<FloatOrInt<0, 1>>,
+@@ -143,12 +160,23 @@ pub struct OverviewPart {
+     pub backdrop_color: Option<Color>,
+     #[knuffel(child)]
+     pub workspace_shadow: Option<WorkspaceShadowPart>,
++    #[knuffel(child)]
++    pub zoom_presets: Option<ZoomPresets>,
++    #[knuffel(child, unwrap(argument))]
++    pub min_zoom: Option<FloatOrInt<0, 1>>,
++    #[knuffel(child, unwrap(argument))]
++    pub max_zoom: Option<FloatOrInt<0, 1>>,
++    #[knuffel(child, unwrap(argument))]
++    pub zoom_step: Option<FloatOrInt<0, 1>>,
+ }
+
+ impl MergeWith<OverviewPart> for Overview {
+     fn merge_with(&mut self, part: &OverviewPart) {
+-        merge!((self, part), zoom, workspace_shadow);
++        merge!((self, part), zoom, workspace_shadow, min_zoom, max_zoom, zoom_step);
+         merge_clone!((self, part), backdrop_color);
++        if let Some(presets) = &part.zoom_presets {
++            self.zoom_presets = Some(presets.0.clone());
++        }
+     }
+ }
+
+diff --git a/src/layout/mod.rs b/src/layout/mod.rs
+index 010fe65b7c..31d7e56af0 100644
+--- a/src/layout/mod.rs
++++ b/src/layout/mod.rs
+@@ -610,7 +610,7 @@ impl Options {
+             layout: config.layout.clone(),
+             animations: config.animations.clone(),
+             gestures: config.gestures,
+-            overview: config.overview,
++            overview: config.overview.clone(),
+             disable_resize_throttling: config.debug.disable_resize_throttling,
+             disable_transactions: config.debug.disable_transactions,
+             deactivate_unfocused_windows: config.debug.deactivate_unfocused_windows,
+
+From 76cb58e2117fb1fad0943dbc7f029de18eae1db8 Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sun, 4 Jan 2026 00:01:31 +0000
+Subject: [PATCH 2/8] ipc: add overview zoom actions
+
+Add new actions for controlling overview zoom level:
+- OverviewZoomCycle: cycle through configured zoom presets
+- OverviewZoomIn: increase zoom (optional step parameter)
+- OverviewZoomOut: decrease zoom (optional step parameter)
+- OverviewSetZoom: set specific zoom level
+---
+ niri-config/src/binds.rs |  8 ++++++++
+ niri-ipc/src/lib.rs      | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+
+diff --git a/niri-config/src/binds.rs b/niri-config/src/binds.rs
+index 378ae8edc4..d1b0025e93 100644
+--- a/niri-config/src/binds.rs
++++ b/niri-config/src/binds.rs
+@@ -357,6 +357,10 @@ pub enum Action {
+     ToggleOverview,
+     OpenOverview,
+     CloseOverview,
++    OverviewZoomCycle,
++    OverviewZoomIn(#[knuffel(argument)] Option<f64>),
++    OverviewZoomOut(#[knuffel(argument)] Option<f64>),
++    OverviewSetZoom(#[knuffel(argument)] f64),
+     #[knuffel(skip)]
+     ToggleWindowUrgent(u64),
+     #[knuffel(skip)]
+@@ -688,6 +692,10 @@ impl From<niri_ipc::Action> for Action {
+             niri_ipc::Action::ToggleOverview {} => Self::ToggleOverview,
+             niri_ipc::Action::OpenOverview {} => Self::OpenOverview,
+             niri_ipc::Action::CloseOverview {} => Self::CloseOverview,
++            niri_ipc::Action::OverviewZoomCycle {} => Self::OverviewZoomCycle,
++            niri_ipc::Action::OverviewZoomIn { step } => Self::OverviewZoomIn(step),
++            niri_ipc::Action::OverviewZoomOut { step } => Self::OverviewZoomOut(step),
++            niri_ipc::Action::OverviewSetZoom { level } => Self::OverviewSetZoom(level),
+             niri_ipc::Action::ToggleWindowUrgent { id } => Self::ToggleWindowUrgent(id),
+             niri_ipc::Action::SetWindowUrgent { id } => Self::SetWindowUrgent(id),
+             niri_ipc::Action::UnsetWindowUrgent { id } => Self::UnsetWindowUrgent(id),
+diff --git a/niri-ipc/src/lib.rs b/niri-ipc/src/lib.rs
+index 5226dda4c3..34f7f336aa 100644
+--- a/niri-ipc/src/lib.rs
++++ b/niri-ipc/src/lib.rs
+@@ -893,6 +893,34 @@ pub enum Action {
+     OpenOverview {},
+     /// Close the Overview.
+     CloseOverview {},
++    /// Cycle to the next zoom preset in overview.
++    ///
++    /// No-op if not in overview or no presets configured.
++    OverviewZoomCycle {},
++    /// Zoom in the overview (increase zoom value = less zoomed out).
++    ///
++    /// No-op if not in overview.
++    OverviewZoomIn {
++        /// Custom step amount. If not provided, uses the configured zoom-step.
++        #[cfg_attr(feature = "clap", arg(long))]
++        step: Option<f64>,
++    },
++    /// Zoom out the overview (decrease zoom value = more zoomed out).
++    ///
++    /// No-op if not in overview.
++    OverviewZoomOut {
++        /// Custom step amount. If not provided, uses the configured zoom-step.
++        #[cfg_attr(feature = "clap", arg(long))]
++        step: Option<f64>,
++    },
++    /// Set a specific zoom level in the overview.
++    ///
++    /// No-op if not in overview.
++    OverviewSetZoom {
++        /// The zoom level to set (0.0 to 1.0).
++        #[cfg_attr(feature = "clap", arg())]
++        level: f64,
++    },
+     /// Toggle urgent status of a window.
+     ToggleWindowUrgent {
+         /// Id of the window to toggle urgent.
+
+From 42cea21ee043a6637e3536f5f63573afc330cd2c Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sun, 4 Jan 2026 00:13:31 +0000
+Subject: [PATCH 3/8] layout: add runtime overview zoom state
+
+Add per-monitor runtime zoom state for dynamic overview zoom:
+- overview_zoom: current zoom level (may differ from config)
+- overview_zoom_preset_idx: index for cycling through presets
+
+Add helper methods on Monitor:
+- reset_overview_zoom(): reset to config default
+- cycle_overview_zoom(): cycle through presets
+- adjust_overview_zoom(): adjust by delta with bounds
+- set_overview_zoom(): set specific level with bounds
+
+Update compute_overview_zoom() to accept target zoom parameter.
+---
+ src/layout/mod.rs     |  6 +++---
+ src/layout/monitor.rs | 43 +++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 44 insertions(+), 5 deletions(-)
+
+diff --git a/src/layout/mod.rs b/src/layout/mod.rs
+index 31d7e56af0..a896129e43 100644
+--- a/src/layout/mod.rs
++++ b/src/layout/mod.rs
+@@ -2321,7 +2321,7 @@ impl<W: LayoutElement> Layout<W> {
+
+     pub fn overview_zoom(&self) -> f64 {
+         let progress = self.overview_progress.as_ref().map(|p| p.value());
+-        compute_overview_zoom(&self.options, progress)
++        compute_overview_zoom(self.options.overview.zoom, progress)
+     }
+
+     #[cfg(test)]
+@@ -4923,9 +4923,9 @@ impl<W: LayoutElement> Default for MonitorSet<W> {
+     }
+ }
+
+-fn compute_overview_zoom(options: &Options, overview_progress: Option<f64>) -> f64 {
++fn compute_overview_zoom(target_zoom: f64, overview_progress: Option<f64>) -> f64 {
+     // Clamp to some sane values.
+-    let zoom = options.overview.zoom.clamp(0.0001, 0.75);
++    let zoom = target_zoom.clamp(0.0001, 0.75);
+
+     if let Some(p) = overview_progress {
+         (1. - p * (1. - zoom)).max(0.0001)
+diff --git a/src/layout/monitor.rs b/src/layout/monitor.rs
+index f935773e92..37ff96da66 100644
+--- a/src/layout/monitor.rs
++++ b/src/layout/monitor.rs
+@@ -79,6 +79,10 @@ pub struct Monitor<W: LayoutElement> {
+     pub(super) overview_open: bool,
+     /// Progress of the overview zoom animation, 1 is fully in overview.
+     overview_progress: Option<OverviewProgress>,
++    /// Current overview zoom level (runtime, may differ from config default).
++    overview_zoom: f64,
++    /// Current index in zoom presets for cycling.
++    overview_zoom_preset_idx: usize,
+     /// Clock for driving animations.
+     pub(super) clock: Clock,
+     /// Configurable properties of the layout as received from the parent layout.
+@@ -340,6 +344,8 @@ impl<W: LayoutElement> Monitor<W> {
+             insert_hint_render_loc: None,
+             overview_open: false,
+             overview_progress: None,
++            overview_zoom: options.overview.zoom,
++            overview_zoom_preset_idx: 0,
+             workspace_switch: None,
+             clock,
+             base_options,
+@@ -1371,7 +1377,40 @@ impl<W: LayoutElement> Monitor<W> {
+
+     pub fn overview_zoom(&self) -> f64 {
+         let progress = self.overview_progress.as_ref().map(|p| p.value());
+-        compute_overview_zoom(&self.options, progress)
++        compute_overview_zoom(self.overview_zoom, progress)
++    }
++
++    /// Get the current target overview zoom level (before animation interpolation).
++    pub fn overview_zoom_target(&self) -> f64 {
++        self.overview_zoom
++    }
++
++    /// Reset zoom to config default - call when overview closes.
++    pub fn reset_overview_zoom(&mut self, default_zoom: f64) {
++        self.overview_zoom = default_zoom;
++        self.overview_zoom_preset_idx = 0;
++    }
++
++    /// Cycle to next zoom preset (instant, no animation).
++    pub fn cycle_overview_zoom(&mut self, presets: &[f64]) {
++        if presets.is_empty() {
++            return;
++        }
++        self.overview_zoom_preset_idx = (self.overview_zoom_preset_idx + 1) % presets.len();
++        self.overview_zoom = presets[self.overview_zoom_preset_idx];
++    }
++
++    /// Adjust zoom by delta, clamped to bounds (instant).
++    pub fn adjust_overview_zoom(&mut self, delta: f64, min: f64, max: f64) {
++        self.overview_zoom = (self.overview_zoom + delta).clamp(min, max);
++        // Reset preset index since we're now at a custom level.
++        self.overview_zoom_preset_idx = 0;
++    }
++
++    /// Set specific zoom level, clamped to bounds (instant).
++    pub fn set_overview_zoom(&mut self, level: f64, min: f64, max: f64) {
++        self.overview_zoom = level.clamp(min, max);
++        self.overview_zoom_preset_idx = 0;
+     }
+
+     pub(super) fn set_overview_progress(&mut self, progress: Option<&super::OverviewProgress>) {
+@@ -1450,7 +1489,7 @@ impl<W: LayoutElement> Monitor<W> {
+                 // - first_y = to * from_height - switch_anim.value() * from_height - to * current_height
+                 // - first_y = -switch_anim.value() * from_height + to * (from_height - current_height)
+                 let from = progress_anim.from();
+-                let from_zoom = compute_overview_zoom(&self.options, Some(from));
++                let from_zoom = compute_overview_zoom(self.options.overview.zoom, Some(from));
+                 let from_ws_height_with_gap = self.workspace_size_with_gap(from_zoom).h;
+
+                 let zoom = self.overview_zoom();
+
+From e7ece3e40aa8c71fffe5d8810c5d3ff8dbbb3287 Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sun, 4 Jan 2026 00:16:00 +0000
+Subject: [PATCH 4/8] input: handle overview zoom actions
+
+Add handlers for the new overview zoom actions:
+- OverviewZoomCycle: cycle through configured zoom presets
+- OverviewZoomIn: increase zoom by step amount
+- OverviewZoomOut: decrease zoom by step amount
+- OverviewSetZoom: set specific zoom level
+
+All actions are no-op when overview is not open.
+Zoom changes apply to all monitors and trigger redraw.
+---
+ src/input/mod.rs | 66 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+
+diff --git a/src/input/mod.rs b/src/input/mod.rs
+index 5e055e6e8a..b3d120b8d7 100644
+--- a/src/input/mod.rs
++++ b/src/input/mod.rs
+@@ -2253,6 +2253,72 @@ impl State {
+                     self.niri.queue_redraw_all();
+                 }
+             }
++            Action::OverviewZoomCycle => {
++                if !self.niri.layout.is_overview_open() {
++                    return;
++                }
++
++                let presets = match &self.niri.config.borrow().overview.zoom_presets {
++                    Some(p) if !p.is_empty() => p.clone(),
++                    _ => return,
++                };
++
++                for monitor in self.niri.layout.monitors_mut() {
++                    monitor.cycle_overview_zoom(&presets);
++                }
++
++                self.niri.queue_redraw_all();
++            }
++            Action::OverviewZoomIn(step) => {
++                if !self.niri.layout.is_overview_open() {
++                    return;
++                }
++
++                let config = self.niri.config.borrow();
++                let step = step.unwrap_or(config.overview.zoom_step);
++                let min = config.overview.min_zoom;
++                let max = config.overview.max_zoom;
++                drop(config);
++
++                for monitor in self.niri.layout.monitors_mut() {
++                    monitor.adjust_overview_zoom(step, min, max);
++                }
++
++                self.niri.queue_redraw_all();
++            }
++            Action::OverviewZoomOut(step) => {
++                if !self.niri.layout.is_overview_open() {
++                    return;
++                }
++
++                let config = self.niri.config.borrow();
++                let step = step.unwrap_or(config.overview.zoom_step);
++                let min = config.overview.min_zoom;
++                let max = config.overview.max_zoom;
++                drop(config);
++
++                for monitor in self.niri.layout.monitors_mut() {
++                    monitor.adjust_overview_zoom(-step, min, max);
++                }
++
++                self.niri.queue_redraw_all();
++            }
++            Action::OverviewSetZoom(level) => {
++                if !self.niri.layout.is_overview_open() {
++                    return;
++                }
++
++                let config = self.niri.config.borrow();
++                let min = config.overview.min_zoom;
++                let max = config.overview.max_zoom;
++                drop(config);
++
++                for monitor in self.niri.layout.monitors_mut() {
++                    monitor.set_overview_zoom(level, min, max);
++                }
++
++                self.niri.queue_redraw_all();
++            }
+             Action::ToggleWindowUrgent(id) => {
+                 let window = self
+                     .niri
+
+From 40e0782e1034d29ee1bb2fb023026dbb93756ed4 Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sun, 4 Jan 2026 00:23:00 +0000
+Subject: [PATCH 5/8] layout: reset overview zoom to config default on close
+
+---
+ src/layout/mod.rs | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/layout/mod.rs b/src/layout/mod.rs
+index a896129e43..0fff8694ee 100644
+--- a/src/layout/mod.rs
++++ b/src/layout/mod.rs
+@@ -4542,6 +4542,14 @@ impl<W: LayoutElement> Layout<W> {
+     pub fn toggle_overview(&mut self) {
+         self.overview_open = !self.overview_open;
+
++        // Reset zoom to config default when closing overview.
++        if !self.overview_open {
++            let default_zoom = self.options.overview.zoom;
++            for monitor in self.monitors_mut() {
++                monitor.reset_overview_zoom(default_zoom);
++            }
++        }
++
+         let from = self.overview_progress.take().map_or(0., |p| p.value());
+         let to = if self.overview_open { 1. } else { 0. };
+
+
+From 3dc6a93455c95dab98fccf8c57cca3588bf3e0f3 Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sun, 4 Jan 2026 07:39:22 +0000
+Subject: [PATCH 6/8] layout: use runtime zoom for overview rendering
+
+---
+ src/layout/mod.rs     | 7 ++++++-
+ src/layout/monitor.rs | 2 +-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/layout/mod.rs b/src/layout/mod.rs
+index 0fff8694ee..46c0cf2a00 100644
+--- a/src/layout/mod.rs
++++ b/src/layout/mod.rs
+@@ -2321,7 +2321,12 @@ impl<W: LayoutElement> Layout<W> {
+
+     pub fn overview_zoom(&self) -> f64 {
+         let progress = self.overview_progress.as_ref().map(|p| p.value());
+-        compute_overview_zoom(self.options.overview.zoom, progress)
++        // Use runtime zoom from active monitor, falling back to config default
++        let target_zoom = self
++            .active_monitor_ref()
++            .map(|m| m.overview_zoom_target())
++            .unwrap_or(self.options.overview.zoom);
++        compute_overview_zoom(target_zoom, progress)
+     }
+
+     #[cfg(test)]
+diff --git a/src/layout/monitor.rs b/src/layout/monitor.rs
+index 37ff96da66..66e66b6629 100644
+--- a/src/layout/monitor.rs
++++ b/src/layout/monitor.rs
+@@ -1489,7 +1489,7 @@ impl<W: LayoutElement> Monitor<W> {
+                 // - first_y = to * from_height - switch_anim.value() * from_height - to * current_height
+                 // - first_y = -switch_anim.value() * from_height + to * (from_height - current_height)
+                 let from = progress_anim.from();
+-                let from_zoom = compute_overview_zoom(self.options.overview.zoom, Some(from));
++                let from_zoom = compute_overview_zoom(self.overview_zoom, Some(from));
+                 let from_ws_height_with_gap = self.workspace_size_with_gap(from_zoom).h;
+
+                 let zoom = self.overview_zoom();
+
+From 92d045226f66ead472dfe02aee22208fbcb21f76 Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Sun, 4 Jan 2026 08:43:41 +0000
+Subject: [PATCH 7/8] docs: add overview dynamic zoom documentation
+
+Document the new overview zoom controls:
+- zoom-presets, min-zoom, max-zoom, zoom-step config options
+- overview-zoom-cycle, overview-zoom-in, overview-zoom-out,
+  overview-set-zoom actions
+
+This code has been created with LLM assistance
+---
+ docs/wiki/Configuration:-Key-Bindings.md  | 31 ++++++++++++++++
+ docs/wiki/Configuration:-Miscellaneous.md | 44 +++++++++++++++++++++++
+ docs/wiki/Overview.md                     | 30 ++++++++++++++++
+ 3 files changed, 105 insertions(+)
+
+diff --git a/docs/wiki/Configuration:-Key-Bindings.md b/docs/wiki/Configuration:-Key-Bindings.md
+index 8fb0d16823..78734c4d91 100644
+--- a/docs/wiki/Configuration:-Key-Bindings.md
++++ b/docs/wiki/Configuration:-Key-Bindings.md
+@@ -405,3 +405,34 @@ binds {
+     Super+Alt+L allow-inhibiting=false { spawn "swaylock"; }
+ }
+ ```
++
++#### `overview-zoom-cycle`, `overview-zoom-in`, `overview-zoom-out`, `overview-set-zoom`
++
++Actions for dynamically adjusting the zoom level while in the [Overview](./Overview.md).
++These actions have no effect when the overview is closed.
++
++- `overview-zoom-cycle`: Cycle through the zoom levels defined in [`zoom-presets`](./Configuration:-Miscellaneous.md#zoom-presets). Does nothing if no presets are configured.
++- `overview-zoom-in`: Increase the zoom level (show workspaces larger) by `zoom-step`.
++- `overview-zoom-out`: Decrease the zoom level (show workspaces smaller) by `zoom-step`.
++- `overview-set-zoom`: Set a specific zoom level.
++
++Zoom changes apply instantly and reset to the config default when the overview closes.
++
++```kdl
++binds {
++    // Cycle through preset zoom levels
++    Mod+Z { overview-zoom-cycle; }
++
++    // Scroll to adjust zoom (Ctrl+Wheel, since Shift+Wheel scrolls horizontally)
++    Ctrl+WheelScrollUp   cooldown-ms=150 { overview-zoom-in; }
++    Ctrl+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
++
++    // Custom step size
++    Mod+Plus  { overview-zoom-in step=0.05; }
++    Mod+Minus { overview-zoom-out step=0.05; }
++
++    // Set a specific zoom level
++    Mod+1 { overview-set-zoom level=0.5; }
++    Mod+2 { overview-set-zoom level=0.25; }
++}
++```
+diff --git a/docs/wiki/Configuration:-Miscellaneous.md b/docs/wiki/Configuration:-Miscellaneous.md
+index 87f001a7d7..d244375d3e 100644
+--- a/docs/wiki/Configuration:-Miscellaneous.md
++++ b/docs/wiki/Configuration:-Miscellaneous.md
+@@ -240,6 +240,50 @@ overview {
+ }
+ ```
+
++#### `zoom-presets`
++
++Define a list of zoom levels to cycle through using the `overview-zoom-cycle` action.
++If not set or empty, the cycle action does nothing.
++
++```kdl
++overview {
++    zoom-presets 0.5 0.25 0.1
++}
++```
++
++#### `min-zoom`
++
++Minimum zoom level for `overview-zoom-out`.
++Defaults to `0.05`.
++
++```kdl
++overview {
++    min-zoom 0.05
++}
++```
++
++#### `max-zoom`
++
++Maximum zoom level for `overview-zoom-in`.
++Defaults to `0.75`.
++
++```kdl
++overview {
++    max-zoom 0.75
++}
++```
++
++#### `zoom-step`
++
++Amount to adjust zoom by when using `overview-zoom-in` or `overview-zoom-out`.
++Defaults to `0.1`.
++
++```kdl
++overview {
++    zoom-step 0.1
++}
++```
++
+ ### `xwayland-satellite`
+
+ <sup>Since: 25.08</sup>
+diff --git a/docs/wiki/Overview.md b/docs/wiki/Overview.md
+index f9bb94a3f5..1d1a59bcd8 100644
+--- a/docs/wiki/Overview.md
++++ b/docs/wiki/Overview.md
+@@ -54,6 +54,36 @@ overview {
+ }
+ ```
+
++### Dynamic Zoom
++
++You can dynamically adjust the zoom level while in the overview using key bindings or scroll actions.
++This lets you zoom in to focus on specific workspaces, or zoom out to get a broader view.
++
++Zoom changes apply instantly and reset to the config default when the overview closes.
++
++```kdl
++overview {
++    zoom 0.5
++
++    // Optional: preset levels for cycling
++    zoom-presets 0.5 0.25 0.1
++
++    // Optional: bounds for scroll-based zoom
++    min-zoom 0.05
++    max-zoom 0.75
++    zoom-step 0.1
++}
++
++binds {
++    // Cycle through zoom presets
++    Mod+Z { overview-zoom-cycle; }
++
++    // Scroll to adjust zoom (use Ctrl since Shift is reserved for horizontal scroll)
++    Ctrl+WheelScrollUp   cooldown-ms=150 { overview-zoom-in; }
++    Ctrl+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
++}
++```
++
+ To change the color behind the workspaces, use the `backdrop-color` setting:
+
+ ```kdl
+
+From d77389240064f225677e81cb35345a59c6bcf8e1 Mon Sep 17 00:00:00 2001
+From: barrulus <b@rry.im>
+Date: Fri, 23 Jan 2026 23:06:02 +0000
+Subject: [PATCH 8/8] overview: Replace zoom stepping with preset-based cycling
+
+Remove min-zoom, max-zoom, and zoom-step config options in favor of
+zoom-presets for cleaner API. Add overview-zoom animation config.
+---
+ docs/wiki/Configuration:-Animations.md    |  16 +++
+ docs/wiki/Configuration:-Key-Bindings.md  |  42 ++++----
+ docs/wiki/Configuration:-Miscellaneous.md |  33 ------
+ docs/wiki/Overview.md                     |  14 +--
+ niri-config/src/animations.rs             |  36 +++++++
+ niri-config/src/binds.rs                  |  14 ++-
+ niri-config/src/misc.rs                   |  17 +--
+ niri-ipc/src/lib.rs                       |  32 ++----
+ src/input/mod.rs                          |  47 ++++----
+ src/layout/monitor.rs                     | 124 ++++++++++++++++++----
+ 10 files changed, 218 insertions(+), 157 deletions(-)
+
+diff --git a/docs/wiki/Configuration:-Animations.md b/docs/wiki/Configuration:-Animations.md
+index 6441d33a46..5308c0fdae 100644
+--- a/docs/wiki/Configuration:-Animations.md
++++ b/docs/wiki/Configuration:-Animations.md
+@@ -59,6 +59,10 @@ animations {
+         spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+     }
+
++    overview-zoom {
++        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
++    }
++
+     recent-windows-close {
+         spring damping-ratio=1.0 stiffness=800 epsilon=0.001
+     }
+@@ -426,6 +430,18 @@ animations {
+ }
+ ```
+
++#### `overview-zoom`
++
++The zoom level change animation when using `overview-zoom-cycle` in the [Overview](./Overview.md).
++
++```kdl
++animations {
++    overview-zoom {
++        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
++    }
++}
++```
++
+ #### `recent-windows-close`
+
+ <sup>Since: 25.11</sup>
+diff --git a/docs/wiki/Configuration:-Key-Bindings.md b/docs/wiki/Configuration:-Key-Bindings.md
+index 4087d65be0..27ae902ca5 100644
+--- a/docs/wiki/Configuration:-Key-Bindings.md
++++ b/docs/wiki/Configuration:-Key-Bindings.md
+@@ -417,33 +417,37 @@ binds {
+ }
+ ```
+
+-#### `overview-zoom-cycle`, `overview-zoom-in`, `overview-zoom-out`, `overview-set-zoom`
++#### `overview-zoom-cycle`
+
+-Actions for dynamically adjusting the zoom level while in the [Overview](./Overview.md).
+-These actions have no effect when the overview is closed.
++Cycle through the zoom levels defined in [`zoom-presets`](./Configuration:-Miscellaneous.md#zoom-presets) while in the [Overview](./Overview.md).
++Does nothing if no presets are configured or if the overview is closed.
+
+-- `overview-zoom-cycle`: Cycle through the zoom levels defined in [`zoom-presets`](./Configuration:-Miscellaneous.md#zoom-presets). Does nothing if no presets are configured.
+-- `overview-zoom-in`: Increase the zoom level (show workspaces larger) by `zoom-step`.
+-- `overview-zoom-out`: Decrease the zoom level (show workspaces smaller) by `zoom-step`.
+-- `overview-set-zoom`: Set a specific zoom level.
+-
+-Zoom changes apply instantly and reset to the config default when the overview closes.
++Zoom changes are animated and reset to the config default when the overview closes.
+
+ ```kdl
+ binds {
+-    // Cycle through preset zoom levels
++    // Cycle forward through preset zoom levels
+     Mod+Z { overview-zoom-cycle; }
+
+-    // Scroll to adjust zoom (Ctrl+Wheel, since Shift+Wheel scrolls horizontally)
+-    Ctrl+WheelScrollUp   cooldown-ms=150 { overview-zoom-in; }
+-    Ctrl+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
++    // Cycle backward through preset zoom levels
++    Mod+Shift+Z { overview-zoom-cycle reverse=true; }
++}
++```
++
++#### `overview-zoom-in`, `overview-zoom-out`
+
+-    // Custom step size
+-    Mod+Plus  { overview-zoom-in step=0.05; }
+-    Mod+Minus { overview-zoom-out step=0.05; }
++Zoom in or out to the next preset in [`zoom-presets`](./Configuration:-Miscellaneous.md#zoom-presets) while in the [Overview](./Overview.md).
++Unlike `overview-zoom-cycle`, these actions move directionally based on zoom value rather than cycling through the preset list.
+
+-    // Set a specific zoom level
+-    Mod+1 { overview-set-zoom level=0.5; }
+-    Mod+2 { overview-set-zoom level=0.25; }
++- `overview-zoom-in`: moves to the next higher zoom value (workspaces appear larger)
++- `overview-zoom-out`: moves to the next lower zoom value (workspaces appear smaller)
++
++Does nothing if already at the highest/lowest preset, no presets are configured, or the overview is closed.
++
++```kdl
++binds {
++    // Scroll to zoom in/out in the overview
++    Mod+WheelScrollUp   cooldown-ms=150 { overview-zoom-in; }
++    Mod+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
+ }
+ ```
+diff --git a/docs/wiki/Configuration:-Miscellaneous.md b/docs/wiki/Configuration:-Miscellaneous.md
+index d244375d3e..1dedf6ef17 100644
+--- a/docs/wiki/Configuration:-Miscellaneous.md
++++ b/docs/wiki/Configuration:-Miscellaneous.md
+@@ -251,39 +251,6 @@ overview {
+ }
+ ```
+
+-#### `min-zoom`
+-
+-Minimum zoom level for `overview-zoom-out`.
+-Defaults to `0.05`.
+-
+-```kdl
+-overview {
+-    min-zoom 0.05
+-}
+-```
+-
+-#### `max-zoom`
+-
+-Maximum zoom level for `overview-zoom-in`.
+-Defaults to `0.75`.
+-
+-```kdl
+-overview {
+-    max-zoom 0.75
+-}
+-```
+-
+-#### `zoom-step`
+-
+-Amount to adjust zoom by when using `overview-zoom-in` or `overview-zoom-out`.
+-Defaults to `0.1`.
+-
+-```kdl
+-overview {
+-    zoom-step 0.1
+-}
+-```
+-
+ ### `xwayland-satellite`
+
+ <sup>Since: 25.08</sup>
+diff --git a/docs/wiki/Overview.md b/docs/wiki/Overview.md
+index 1d1a59bcd8..cf3bb00725 100644
+--- a/docs/wiki/Overview.md
++++ b/docs/wiki/Overview.md
+@@ -56,10 +56,11 @@ overview {
+
+ ### Dynamic Zoom
+
+-You can dynamically adjust the zoom level while in the overview using key bindings or scroll actions.
++You can dynamically adjust the zoom level while in the overview by cycling through preset values.
+ This lets you zoom in to focus on specific workspaces, or zoom out to get a broader view.
+
+-Zoom changes apply instantly and reset to the config default when the overview closes.
++Zoom changes are animated smoothly and reset to the config default when the overview closes.
++You can configure the animation in the [`animations` section](./Configuration:-Animations.md#overview-zoom).
+
+ ```kdl
+ overview {
+@@ -67,20 +68,11 @@ overview {
+
+     // Optional: preset levels for cycling
+     zoom-presets 0.5 0.25 0.1
+-
+-    // Optional: bounds for scroll-based zoom
+-    min-zoom 0.05
+-    max-zoom 0.75
+-    zoom-step 0.1
+ }
+
+ binds {
+     // Cycle through zoom presets
+     Mod+Z { overview-zoom-cycle; }
+-
+-    // Scroll to adjust zoom (use Ctrl since Shift is reserved for horizontal scroll)
+-    Ctrl+WheelScrollUp   cooldown-ms=150 { overview-zoom-in; }
+-    Ctrl+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
+ }
+ ```
+
+diff --git a/niri-config/src/animations.rs b/niri-config/src/animations.rs
+index 346b62517a..16d06e31c5 100644
+--- a/niri-config/src/animations.rs
++++ b/niri-config/src/animations.rs
+@@ -18,6 +18,7 @@ pub struct Animations {
+     pub exit_confirmation_open_close: ExitConfirmationOpenCloseAnim,
+     pub screenshot_ui_open: ScreenshotUiOpenAnim,
+     pub overview_open_close: OverviewOpenCloseAnim,
++    pub overview_zoom: OverviewZoomAnim,
+     pub recent_windows_close: RecentWindowsCloseAnim,
+ }
+
+@@ -36,6 +37,7 @@ impl Default for Animations {
+             exit_confirmation_open_close: Default::default(),
+             screenshot_ui_open: Default::default(),
+             overview_open_close: Default::default(),
++            overview_zoom: Default::default(),
+             recent_windows_close: Default::default(),
+         }
+     }
+@@ -70,6 +72,8 @@ pub struct AnimationsPart {
+     #[knuffel(child)]
+     pub overview_open_close: Option<OverviewOpenCloseAnim>,
+     #[knuffel(child)]
++    pub overview_zoom: Option<OverviewZoomAnim>,
++    #[knuffel(child)]
+     pub recent_windows_close: Option<RecentWindowsCloseAnim>,
+ }
+
+@@ -96,6 +100,7 @@ impl MergeWith<AnimationsPart> for Animations {
+             exit_confirmation_open_close,
+             screenshot_ui_open,
+             overview_open_close,
++            overview_zoom,
+             recent_windows_close,
+         );
+     }
+@@ -310,6 +315,22 @@ impl Default for OverviewOpenCloseAnim {
+     }
+ }
+
++#[derive(Debug, Clone, Copy, PartialEq)]
++pub struct OverviewZoomAnim(pub Animation);
++
++impl Default for OverviewZoomAnim {
++    fn default() -> Self {
++        Self(Animation {
++            off: false,
++            kind: Kind::Spring(SpringParams {
++                damping_ratio: 1.,
++                stiffness: 800,
++                epsilon: 0.0001,
++            }),
++        })
++    }
++}
++
+ #[derive(Debug, Clone, Copy, PartialEq)]
+ pub struct RecentWindowsCloseAnim(pub Animation);
+
+@@ -509,6 +530,21 @@ where
+     }
+ }
+
++impl<S> knuffel::Decode<S> for OverviewZoomAnim
++where
++    S: knuffel::traits::ErrorSpan,
++{
++    fn decode_node(
++        node: &knuffel::ast::SpannedNode<S>,
++        ctx: &mut knuffel::decode::Context<S>,
++    ) -> Result<Self, DecodeError<S>> {
++        let default = Self::default().0;
++        Ok(Self(Animation::decode_node(node, ctx, default, |_, _| {
++            Ok(false)
++        })?))
++    }
++}
++
+ impl<S> knuffel::Decode<S> for RecentWindowsCloseAnim
+ where
+     S: knuffel::traits::ErrorSpan,
+diff --git a/niri-config/src/binds.rs b/niri-config/src/binds.rs
+index 49f9d562f9..b5bd067e2b 100644
+--- a/niri-config/src/binds.rs
++++ b/niri-config/src/binds.rs
+@@ -361,10 +361,9 @@ pub enum Action {
+     ToggleOverview,
+     OpenOverview,
+     CloseOverview,
+-    OverviewZoomCycle,
+-    OverviewZoomIn(#[knuffel(argument)] Option<f64>),
+-    OverviewZoomOut(#[knuffel(argument)] Option<f64>),
+-    OverviewSetZoom(#[knuffel(argument)] f64),
++    OverviewZoomCycle(#[knuffel(property(name = "reverse"), default)] bool),
++    OverviewZoomIn,
++    OverviewZoomOut,
+     #[knuffel(skip)]
+     ToggleWindowUrgent(u64),
+     #[knuffel(skip)]
+@@ -700,10 +699,9 @@ impl From<niri_ipc::Action> for Action {
+             niri_ipc::Action::ToggleOverview {} => Self::ToggleOverview,
+             niri_ipc::Action::OpenOverview {} => Self::OpenOverview,
+             niri_ipc::Action::CloseOverview {} => Self::CloseOverview,
+-            niri_ipc::Action::OverviewZoomCycle {} => Self::OverviewZoomCycle,
+-            niri_ipc::Action::OverviewZoomIn { step } => Self::OverviewZoomIn(step),
+-            niri_ipc::Action::OverviewZoomOut { step } => Self::OverviewZoomOut(step),
+-            niri_ipc::Action::OverviewSetZoom { level } => Self::OverviewSetZoom(level),
++            niri_ipc::Action::OverviewZoomCycle { reverse } => Self::OverviewZoomCycle(reverse),
++            niri_ipc::Action::OverviewZoomIn {} => Self::OverviewZoomIn,
++            niri_ipc::Action::OverviewZoomOut {} => Self::OverviewZoomOut,
+             niri_ipc::Action::ToggleWindowUrgent { id } => Self::ToggleWindowUrgent(id),
+             niri_ipc::Action::SetWindowUrgent { id } => Self::SetWindowUrgent(id),
+             niri_ipc::Action::UnsetWindowUrgent { id } => Self::UnsetWindowUrgent(id),
+diff --git a/niri-config/src/misc.rs b/niri-config/src/misc.rs
+index 97a7fe2420..2590ddf1a4 100644
+--- a/niri-config/src/misc.rs
++++ b/niri-config/src/misc.rs
+@@ -125,12 +125,6 @@ pub struct Overview {
+     pub workspace_shadow: WorkspaceShadow,
+     /// Optional zoom presets for cycling. If None/empty, zoom cycling is disabled.
+     pub zoom_presets: Option<Vec<f64>>,
+-    /// Minimum zoom level for scroll adjustment (default: 0.05)
+-    pub min_zoom: f64,
+-    /// Maximum zoom level for scroll adjustment (default: 0.75)
+-    pub max_zoom: f64,
+-    /// Zoom step for scroll-based zoom adjustment (default: 0.1)
+-    pub zoom_step: f64,
+ }
+
+ impl Default for Overview {
+@@ -140,9 +134,6 @@ impl Default for Overview {
+             backdrop_color: DEFAULT_BACKDROP_COLOR,
+             workspace_shadow: WorkspaceShadow::default(),
+             zoom_presets: None,
+-            min_zoom: 0.05,
+-            max_zoom: 0.75,
+-            zoom_step: 0.1,
+         }
+     }
+ }
+@@ -162,17 +153,11 @@ pub struct OverviewPart {
+     pub workspace_shadow: Option<WorkspaceShadowPart>,
+     #[knuffel(child)]
+     pub zoom_presets: Option<ZoomPresets>,
+-    #[knuffel(child, unwrap(argument))]
+-    pub min_zoom: Option<FloatOrInt<0, 1>>,
+-    #[knuffel(child, unwrap(argument))]
+-    pub max_zoom: Option<FloatOrInt<0, 1>>,
+-    #[knuffel(child, unwrap(argument))]
+-    pub zoom_step: Option<FloatOrInt<0, 1>>,
+ }
+
+ impl MergeWith<OverviewPart> for Overview {
+     fn merge_with(&mut self, part: &OverviewPart) {
+-        merge!((self, part), zoom, workspace_shadow, min_zoom, max_zoom, zoom_step);
++        merge!((self, part), zoom, workspace_shadow);
+         merge_clone!((self, part), backdrop_color);
+         if let Some(presets) = &part.zoom_presets {
+             self.zoom_presets = Some(presets.0.clone());
+diff --git a/niri-ipc/src/lib.rs b/niri-ipc/src/lib.rs
+index fa1320d19e..c863a5ae84 100644
+--- a/niri-ipc/src/lib.rs
++++ b/niri-ipc/src/lib.rs
+@@ -917,31 +917,19 @@ pub enum Action {
+     /// Cycle to the next zoom preset in overview.
+     ///
+     /// No-op if not in overview or no presets configured.
+-    OverviewZoomCycle {},
+-    /// Zoom in the overview (increase zoom value = less zoomed out).
+-    ///
+-    /// No-op if not in overview.
+-    OverviewZoomIn {
+-        /// Custom step amount. If not provided, uses the configured zoom-step.
+-        #[cfg_attr(feature = "clap", arg(long))]
+-        step: Option<f64>,
++    OverviewZoomCycle {
++        /// Cycle in reverse direction (previous preset instead of next).
++        #[cfg_attr(feature = "clap", arg(short, long))]
++        reverse: bool,
+     },
+-    /// Zoom out the overview (decrease zoom value = more zoomed out).
++    /// Zoom in to the next higher zoom preset in overview.
+     ///
+-    /// No-op if not in overview.
+-    OverviewZoomOut {
+-        /// Custom step amount. If not provided, uses the configured zoom-step.
+-        #[cfg_attr(feature = "clap", arg(long))]
+-        step: Option<f64>,
+-    },
+-    /// Set a specific zoom level in the overview.
++    /// No-op if not in overview, no presets configured, or already at highest zoom.
++    OverviewZoomIn {},
++    /// Zoom out to the next lower zoom preset in overview.
+     ///
+-    /// No-op if not in overview.
+-    OverviewSetZoom {
+-        /// The zoom level to set (0.0 to 1.0).
+-        #[cfg_attr(feature = "clap", arg())]
+-        level: f64,
+-    },
++    /// No-op if not in overview, no presets configured, or already at lowest zoom.
++    OverviewZoomOut {},
+     /// Toggle urgent status of a window.
+     ToggleWindowUrgent {
+         /// Id of the window to toggle urgent.
+diff --git a/src/input/mod.rs b/src/input/mod.rs
+index cade930600..635f16f7c8 100644
+--- a/src/input/mod.rs
++++ b/src/input/mod.rs
+@@ -2284,68 +2284,59 @@ impl State {
+                     self.niri.queue_redraw_all();
+                 }
+             }
+-            Action::OverviewZoomCycle => {
++            Action::OverviewZoomCycle(reverse) => {
+                 if !self.niri.layout.is_overview_open() {
+                     return;
+                 }
+
+-                let presets = match &self.niri.config.borrow().overview.zoom_presets {
++                let config = self.niri.config.borrow();
++                let presets = match &config.overview.zoom_presets {
+                     Some(p) if !p.is_empty() => p.clone(),
+                     _ => return,
+                 };
+-
+-                for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.cycle_overview_zoom(&presets);
+-                }
+-
+-                self.niri.queue_redraw_all();
+-            }
+-            Action::OverviewZoomIn(step) => {
+-                if !self.niri.layout.is_overview_open() {
+-                    return;
+-                }
+-
+-                let config = self.niri.config.borrow();
+-                let step = step.unwrap_or(config.overview.zoom_step);
+-                let min = config.overview.min_zoom;
+-                let max = config.overview.max_zoom;
++                let anim_config = config.animations.overview_zoom.0;
+                 drop(config);
+
+                 for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.adjust_overview_zoom(step, min, max);
++                    monitor.cycle_overview_zoom(&presets, reverse, anim_config);
+                 }
+
+                 self.niri.queue_redraw_all();
+             }
+-            Action::OverviewZoomOut(step) => {
++            Action::OverviewZoomIn => {
+                 if !self.niri.layout.is_overview_open() {
+                     return;
+                 }
+
+                 let config = self.niri.config.borrow();
+-                let step = step.unwrap_or(config.overview.zoom_step);
+-                let min = config.overview.min_zoom;
+-                let max = config.overview.max_zoom;
++                let presets = match &config.overview.zoom_presets {
++                    Some(p) if !p.is_empty() => p.clone(),
++                    _ => return,
++                };
++                let anim_config = config.animations.overview_zoom.0;
+                 drop(config);
+
+                 for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.adjust_overview_zoom(-step, min, max);
++                    monitor.overview_zoom_in(&presets, anim_config);
+                 }
+
+                 self.niri.queue_redraw_all();
+             }
+-            Action::OverviewSetZoom(level) => {
++            Action::OverviewZoomOut => {
+                 if !self.niri.layout.is_overview_open() {
+                     return;
+                 }
+
+                 let config = self.niri.config.borrow();
+-                let min = config.overview.min_zoom;
+-                let max = config.overview.max_zoom;
++                let presets = match &config.overview.zoom_presets {
++                    Some(p) if !p.is_empty() => p.clone(),
++                    _ => return,
++                };
++                let anim_config = config.animations.overview_zoom.0;
+                 drop(config);
+
+                 for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.set_overview_zoom(level, min, max);
++                    monitor.overview_zoom_out(&presets, anim_config);
+                 }
+
+                 self.niri.queue_redraw_all();
+diff --git a/src/layout/monitor.rs b/src/layout/monitor.rs
+index 66e66b6629..588ca37684 100644
+--- a/src/layout/monitor.rs
++++ b/src/layout/monitor.rs
+@@ -79,8 +79,10 @@ pub struct Monitor<W: LayoutElement> {
+     pub(super) overview_open: bool,
+     /// Progress of the overview zoom animation, 1 is fully in overview.
+     overview_progress: Option<OverviewProgress>,
+-    /// Current overview zoom level (runtime, may differ from config default).
+-    overview_zoom: f64,
++    /// Target overview zoom level (runtime, may differ from config default).
++    overview_zoom_target: f64,
++    /// Animation for smooth zoom transitions.
++    overview_zoom_anim: Option<Animation>,
+     /// Current index in zoom presets for cycling.
+     overview_zoom_preset_idx: usize,
+     /// Clock for driving animations.
+@@ -344,7 +346,8 @@ impl<W: LayoutElement> Monitor<W> {
+             insert_hint_render_loc: None,
+             overview_open: false,
+             overview_progress: None,
+-            overview_zoom: options.overview.zoom,
++            overview_zoom_target: options.overview.zoom,
++            overview_zoom_anim: None,
+             overview_zoom_preset_idx: 0,
+             workspace_switch: None,
+             clock,
+@@ -1074,6 +1077,13 @@ impl<W: LayoutElement> Monitor<W> {
+             None => (),
+         }
+
++        // Check if zoom animation is done.
++        if let Some(anim) = &self.overview_zoom_anim {
++            if anim.is_done() {
++                self.overview_zoom_anim = None;
++            }
++        }
++
+         for ws in &mut self.workspaces {
+             ws.advance_animations();
+         }
+@@ -1083,6 +1093,7 @@ impl<W: LayoutElement> Monitor<W> {
+         self.workspace_switch
+             .as_ref()
+             .is_some_and(|s| s.is_animation_ongoing())
++            || self.overview_zoom_anim.is_some()
+             || self.workspaces.iter().any(|ws| ws.are_animations_ongoing())
+     }
+
+@@ -1375,42 +1386,115 @@ impl<W: LayoutElement> Monitor<W> {
+         self.workspace_size(zoom) + Size::from((0., gap))
+     }
+
++    /// Get the current animated overview zoom value for rendering.
++    fn overview_zoom_value(&self) -> f64 {
++        self.overview_zoom_anim
++            .as_ref()
++            .map_or(self.overview_zoom_target, |anim| anim.value())
++    }
++
+     pub fn overview_zoom(&self) -> f64 {
+         let progress = self.overview_progress.as_ref().map(|p| p.value());
+-        compute_overview_zoom(self.overview_zoom, progress)
++        compute_overview_zoom(self.overview_zoom_value(), progress)
+     }
+
+     /// Get the current target overview zoom level (before animation interpolation).
+     pub fn overview_zoom_target(&self) -> f64 {
+-        self.overview_zoom
++        self.overview_zoom_target
+     }
+
+     /// Reset zoom to config default - call when overview closes.
++    /// This is instant (no animation) since the overview is closing.
+     pub fn reset_overview_zoom(&mut self, default_zoom: f64) {
+-        self.overview_zoom = default_zoom;
++        self.overview_zoom_target = default_zoom;
++        self.overview_zoom_anim = None;
+         self.overview_zoom_preset_idx = 0;
+     }
+
+-    /// Cycle to next zoom preset (instant, no animation).
+-    pub fn cycle_overview_zoom(&mut self, presets: &[f64]) {
++    /// Cycle to next/previous zoom preset with animation.
++    pub fn cycle_overview_zoom(
++        &mut self,
++        presets: &[f64],
++        reverse: bool,
++        config: niri_config::Animation,
++    ) {
+         if presets.is_empty() {
+             return;
+         }
+-        self.overview_zoom_preset_idx = (self.overview_zoom_preset_idx + 1) % presets.len();
+-        self.overview_zoom = presets[self.overview_zoom_preset_idx];
++        let len = presets.len();
++        if reverse {
++            self.overview_zoom_preset_idx =
++                (self.overview_zoom_preset_idx + len - 1) % len;
++        } else {
++            self.overview_zoom_preset_idx = (self.overview_zoom_preset_idx + 1) % len;
++        }
++        let new_target = presets[self.overview_zoom_preset_idx];
++        self.animate_zoom_to(new_target, config);
+     }
+
+-    /// Adjust zoom by delta, clamped to bounds (instant).
+-    pub fn adjust_overview_zoom(&mut self, delta: f64, min: f64, max: f64) {
+-        self.overview_zoom = (self.overview_zoom + delta).clamp(min, max);
+-        // Reset preset index since we're now at a custom level.
+-        self.overview_zoom_preset_idx = 0;
++    /// Zoom in to the next higher zoom preset (less zoomed out).
++    pub fn overview_zoom_in(&mut self, presets: &[f64], config: niri_config::Animation) {
++        if presets.is_empty() {
++            return;
++        }
++
++        let current = self.overview_zoom_target;
++        // Find the smallest preset greater than current (zoom in = higher value)
++        let next = presets
++            .iter()
++            .copied()
++            .filter(|&p| p > current + 0.0001)
++            .min_by(|a, b| a.partial_cmp(b).unwrap());
++
++        if let Some(new_target) = next {
++            // Update preset index to match
++            if let Some(idx) = presets.iter().position(|&p| (p - new_target).abs() < 0.0001) {
++                self.overview_zoom_preset_idx = idx;
++            }
++            self.animate_zoom_to(new_target, config);
++        }
+     }
+
+-    /// Set specific zoom level, clamped to bounds (instant).
+-    pub fn set_overview_zoom(&mut self, level: f64, min: f64, max: f64) {
+-        self.overview_zoom = level.clamp(min, max);
+-        self.overview_zoom_preset_idx = 0;
++    /// Zoom out to the next lower zoom preset (more zoomed out).
++    pub fn overview_zoom_out(&mut self, presets: &[f64], config: niri_config::Animation) {
++        if presets.is_empty() {
++            return;
++        }
++
++        let current = self.overview_zoom_target;
++        // Find the largest preset smaller than current (zoom out = lower value)
++        let next = presets
++            .iter()
++            .copied()
++            .filter(|&p| p < current - 0.0001)
++            .max_by(|a, b| a.partial_cmp(b).unwrap());
++
++        if let Some(new_target) = next {
++            // Update preset index to match
++            if let Some(idx) = presets.iter().position(|&p| (p - new_target).abs() < 0.0001) {
++                self.overview_zoom_preset_idx = idx;
++            }
++            self.animate_zoom_to(new_target, config);
++        }
++    }
++
++    /// Start or retarget a zoom animation.
++    fn animate_zoom_to(&mut self, new_target: f64, config: niri_config::Animation) {
++        let current = self.overview_zoom_value();
++        self.overview_zoom_target = new_target;
++
++        if config.off || (current - new_target).abs() < 0.0001 {
++            // No animation needed.
++            self.overview_zoom_anim = None;
++        } else {
++            self.overview_zoom_anim = Some(Animation::new(
++                self.clock.clone(),
++                current,
++                new_target,
++                0.,
++                config,
++            ));
++        }
+     }
+
+     pub(super) fn set_overview_progress(&mut self, progress: Option<&super::OverviewProgress>) {
+@@ -1489,7 +1573,7 @@ impl<W: LayoutElement> Monitor<W> {
+                 // - first_y = to * from_height - switch_anim.value() * from_height - to * current_height
+                 // - first_y = -switch_anim.value() * from_height + to * (from_height - current_height)
+                 let from = progress_anim.from();
+-                let from_zoom = compute_overview_zoom(self.overview_zoom, Some(from));
++                let from_zoom = compute_overview_zoom(self.overview_zoom_value(), Some(from));
+                 let from_ws_height_with_gap = self.workspace_size_with_gap(from_zoom).h;
+
+                 let zoom = self.overview_zoom();

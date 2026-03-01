@@ -6,6 +6,7 @@ cursor {
 
 overview {
   zoom 0.5
+  zoom-presets 0.5 0.25 0.1
   backdrop-color "#0e0f03"
 }
 
@@ -33,6 +34,12 @@ input {
 
 output "DP-1" {
   mode "1920x1080"
+}
+
+animations {
+    overview-zoom {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
 }
 
 workspace "t"
@@ -164,6 +171,9 @@ binds {
   // in the end. To find an XKB name for a particular key, you may use a program
   // like wev.
   Mod+Shift+Slash { show-hotkey-overlay; }
+
+  Ctrl+WheelScrollUp cooldown-ms=150 { overview-zoom-in; }
+  Ctrl+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
 
   Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty"; }
   Mod+Space hotkey-overlay-title="Rofi" { spawn "rofi" "-show" "drun"; }
