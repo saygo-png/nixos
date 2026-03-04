@@ -176,35 +176,11 @@
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
-  home-manager.users.${conUsername} = {osConfig, ...}: {
+  home-manager.users.${conUsername} = {
     programs.foot.settings.main.pad = lib.mkForce "0x0center";
     programs.alacritty.settings.window.padding = lib.mkForce {
       x = 0;
       y = 0;
-    };
-
-    wayland.windowManager.hyprland.settings = {
-      general.border_size = lib.mkForce 2;
-      animations.enabled = false;
-      input.sensitivity = lib.strings.floatToString osConfig.const.accelSpeed;
-      input.accel_profile = lib.mkForce config.services.libinput.mouse.accelProfile;
-
-      device = [
-        {
-          name = "synps/2-synaptics-touchpad";
-          enabled = false;
-          accel_profile = "adaptive";
-          natural_scroll = true;
-          disable_while_typing = true;
-        }
-        {
-          name = "tpps/2-elan-trackpoint";
-          accel_profile = "adaptive";
-        }
-      ];
-      monitor = [
-        ", preferred, auto, 1"
-      ];
     };
   };
 }

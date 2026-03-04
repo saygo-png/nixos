@@ -22,7 +22,6 @@
       "constants.nix"
 
       # "sway.nix"
-      "hyprland.nix"
       "niri.nix"
 
       "gaming.nix"

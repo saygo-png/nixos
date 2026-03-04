@@ -23,14 +23,6 @@ executable xkb-switch-keyboard
   import: common-options
   main-is: src/xkb-switch-keyboard.hs
 
-executable hyprctl-switch-keyboard
-  import: common-options
-  main-is: src/hyprctl-switch-keyboard.hs
-
-executable hyprland-monitor-toggle
-  import: common-options
-  main-is: src/hyprland-monitor-toggle.hs
-
 executable timezones
   import: common-options
   main-is: src/timezones.hs
