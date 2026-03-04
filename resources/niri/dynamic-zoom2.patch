@@ -1,0 +1,238 @@
+diff --git a/docs/wiki/Configuration:-Key-Bindings.md b/docs/wiki/Configuration:-Key-Bindings.md
+index 375b5163..62d11fe7 100644
+--- a/docs/wiki/Configuration:-Key-Bindings.md
++++ b/docs/wiki/Configuration:-Key-Bindings.md
+@@ -436,7 +436,8 @@ The toggle state resets when niri restarts, and applies to newly hot-plugged tou
+ #### `overview-zoom-cycle`
+ 
+ Cycle through the zoom levels defined in [`zoom-presets`](./Configuration:-Miscellaneous.md#zoom-presets) while in the [Overview](./Overview.md).
+-Does nothing if no presets are configured or if the overview is closed.
++If the overview is closed, it will automatically open at the first preset.
++Does nothing if no presets are configured.
+ 
+ Zoom changes are animated and reset to the config default when the overview closes.
+ 
+@@ -455,10 +456,10 @@ binds {
+ Zoom in or out to the next preset in [`zoom-presets`](./Configuration:-Miscellaneous.md#zoom-presets) while in the [Overview](./Overview.md).
+ Unlike `overview-zoom-cycle`, these actions move directionally based on zoom value rather than cycling through the preset list.
+ 
+-- `overview-zoom-in`: moves to the next higher zoom value (workspaces appear larger)
+-- `overview-zoom-out`: moves to the next lower zoom value (workspaces appear smaller)
++- `overview-zoom-in`: moves to the next higher zoom value (workspaces appear larger); if already at the highest preset, automatically closes the overview
++- `overview-zoom-out`: moves to the next lower zoom value (workspaces appear smaller); if the overview is closed, automatically opens it at the highest preset
+ 
+-Does nothing if already at the highest/lowest preset, no presets are configured, or the overview is closed.
++Does nothing if no presets are configured. `overview-zoom-in` does nothing if the overview is already closed.
+ 
+ ```kdl
+ binds {
+diff --git a/docs/wiki/Overview.md b/docs/wiki/Overview.md
+index cf3bb007..daa4e74c 100644
+--- a/docs/wiki/Overview.md
++++ b/docs/wiki/Overview.md
+@@ -59,6 +59,10 @@ overview {
+ You can dynamically adjust the zoom level while in the overview by cycling through preset values.
+ This lets you zoom in to focus on specific workspaces, or zoom out to get a broader view.
+ 
++The zoom actions can also automatically open and close the overview:
++`overview-zoom-out` and `overview-zoom-cycle` will auto-open the overview if it is closed, and `overview-zoom-in` will auto-close the overview when zoomed in past the highest preset.
++This means you only need two binds (zoom-in and zoom-out) to fully control overview and zoom.
++
+ Zoom changes are animated smoothly and reset to the config default when the overview closes.
+ You can configure the animation in the [`animations` section](./Configuration:-Animations.md#overview-zoom).
+ 
+@@ -71,8 +75,9 @@ overview {
+ }
+ 
+ binds {
+-    // Cycle through zoom presets
+-    Mod+Z { overview-zoom-cycle; }
++    // Scroll to zoom in/out — also opens/closes the overview
++    Mod+WheelScrollUp   cooldown-ms=150 { overview-zoom-in; }
++    Mod+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
+ }
+ ```
+ 
+diff --git a/src/input/mod.rs b/src/input/mod.rs
+index f5165bac..c056af34 100644
+--- a/src/input/mod.rs
++++ b/src/input/mod.rs
+@@ -2302,10 +2302,6 @@ impl State {
+                 }
+             }
+             Action::OverviewZoomCycle(reverse) => {
+-                if !self.niri.layout.is_overview_open() {
+-                    return;
+-                }
+-
+                 let config = self.niri.config.borrow();
+                 let presets = match &config.overview.zoom_presets {
+                     Some(p) if !p.is_empty() => p.clone(),
+@@ -2314,8 +2310,17 @@ impl State {
+                 let anim_config = config.animations.overview_zoom.0;
+                 drop(config);
+ 
+-                for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.cycle_overview_zoom(&presets, reverse, anim_config);
++                if !self.niri.layout.is_overview_open() {
++                    // Auto-open overview at first preset.
++                    for monitor in self.niri.layout.monitors_mut() {
++                        monitor.set_zoom_target_no_anim(presets[0]);
++                        monitor.set_zoom_preset_idx(0);
++                    }
++                    self.niri.layout.open_overview();
++                } else {
++                    for monitor in self.niri.layout.monitors_mut() {
++                        monitor.cycle_overview_zoom(&presets, reverse, anim_config);
++                    }
+                 }
+ 
+                 self.niri.queue_redraw_all();
+@@ -2333,17 +2338,33 @@ impl State {
+                 let anim_config = config.animations.overview_zoom.0;
+                 drop(config);
+ 
+-                for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.overview_zoom_in(&presets, anim_config);
++                // Find the highest (max) preset value.
++                let max_preset = presets
++                    .iter()
++                    .copied()
++                    .max_by(|a, b| a.partial_cmp(b).unwrap())
++                    .unwrap();
++
++                // Check if all monitors are already at or above the highest preset.
++                let all_at_max = self
++                    .niri
++                    .layout
++                    .monitors()
++                    .all(|m| m.overview_zoom_target() >= max_preset - 0.0001);
++
++                if all_at_max {
++                    // Auto-close overview, preserving zoom so the close
++                    // animation transitions smoothly from the current level.
++                    self.niri.layout.close_overview_preserving_zoom();
++                } else {
++                    for monitor in self.niri.layout.monitors_mut() {
++                        monitor.overview_zoom_in(&presets, anim_config);
++                    }
+                 }
+ 
+                 self.niri.queue_redraw_all();
+             }
+             Action::OverviewZoomOut => {
+-                if !self.niri.layout.is_overview_open() {
+-                    return;
+-                }
+-
+                 let config = self.niri.config.borrow();
+                 let presets = match &config.overview.zoom_presets {
+                     Some(p) if !p.is_empty() => p.clone(),
+@@ -2352,8 +2373,27 @@ impl State {
+                 let anim_config = config.animations.overview_zoom.0;
+                 drop(config);
+ 
+-                for monitor in self.niri.layout.monitors_mut() {
+-                    monitor.overview_zoom_out(&presets, anim_config);
++                if !self.niri.layout.is_overview_open() {
++                    // Auto-open overview at the highest preset (least zoomed out).
++                    let max_preset = presets
++                        .iter()
++                        .copied()
++                        .max_by(|a, b| a.partial_cmp(b).unwrap())
++                        .unwrap();
++                    let max_idx = presets
++                        .iter()
++                        .position(|&p| (p - max_preset).abs() < 0.0001)
++                        .unwrap_or(0);
++
++                    for monitor in self.niri.layout.monitors_mut() {
++                        monitor.set_zoom_target_no_anim(max_preset);
++                        monitor.set_zoom_preset_idx(max_idx);
++                    }
++                    self.niri.layout.open_overview();
++                } else {
++                    for monitor in self.niri.layout.monitors_mut() {
++                        monitor.overview_zoom_out(&presets, anim_config);
++                    }
+                 }
+ 
+                 self.niri.queue_redraw_all();
+diff --git a/src/layout/mod.rs b/src/layout/mod.rs
+index 46c0cf2a..17e73288 100644
+--- a/src/layout/mod.rs
++++ b/src/layout/mod.rs
+@@ -4587,6 +4587,38 @@ impl<W: LayoutElement> Layout<W> {
+         true
+     }
+ 
++    /// Close the overview without resetting zoom level.
++    ///
++    /// Used when auto-closing from zoom-in so the close animation smoothly
++    /// transitions from the current zoom level instead of snapping to the
++    /// config default first.
++    pub fn close_overview_preserving_zoom(&mut self) -> bool {
++        if !self.overview_open {
++            return false;
++        }
++
++        self.overview_open = false;
++
++        // Reset only the preset index so the next open starts fresh,
++        // but keep the current zoom target/animation so the close
++        // animation doesn't snap.
++        for monitor in self.monitors_mut() {
++            monitor.reset_overview_zoom_preset_idx();
++        }
++
++        let from = self.overview_progress.take().map_or(0., |p| p.value());
++        self.overview_progress = Some(OverviewProgress::Animation(Animation::new(
++            self.clock.clone(),
++            from,
++            0.,
++            0.,
++            self.options.animations.overview_open_close.0,
++        )));
++
++        self.set_monitors_overview_state();
++        true
++    }
++
+     pub fn toggle_overview_to_workspace(&mut self, ws_idx: usize) {
+         let config = self.options.animations.overview_open_close.0;
+         if let Some(mon) = self.active_monitor() {
+diff --git a/src/layout/monitor.rs b/src/layout/monitor.rs
+index 69c74a26..6ef61735 100644
+--- a/src/layout/monitor.rs
++++ b/src/layout/monitor.rs
+@@ -1403,6 +1403,18 @@ impl<W: LayoutElement> Monitor<W> {
+         self.overview_zoom_target
+     }
+ 
++    /// Set zoom target without animation (for use before opening overview,
++    /// where the open animation handles the visual transition).
++    pub fn set_zoom_target_no_anim(&mut self, target: f64) {
++        self.overview_zoom_target = target;
++        self.overview_zoom_anim = None;
++    }
++
++    /// Set the preset cycling index.
++    pub fn set_zoom_preset_idx(&mut self, idx: usize) {
++        self.overview_zoom_preset_idx = idx;
++    }
++
+     /// Reset zoom to config default - call when overview closes.
+     /// This is instant (no animation) since the overview is closing.
+     pub fn reset_overview_zoom(&mut self, default_zoom: f64) {
+@@ -1411,6 +1423,10 @@ impl<W: LayoutElement> Monitor<W> {
+         self.overview_zoom_preset_idx = 0;
+     }
+ 
++    pub fn reset_overview_zoom_preset_idx(&mut self) {
++        self.overview_zoom_preset_idx = 0;
++    }
++
+     /// Cycle to next/previous zoom preset with animation.
+     pub fn cycle_overview_zoom(
+         &mut self,
+
