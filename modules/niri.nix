@@ -11,14 +11,24 @@ in {
 
   nixpkgs.overlays = [
     (_: prev: {
-      niri = prev.niri.overrideAttrs (old: {
-        patches =
-          (old.patches or [])
-          ++ [
-            (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
-            (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
-          ];
-      });
+      niri = let
+        niriBase = prev.niri.overrideAttrs (old: {
+          patches =
+            (old.patches or [])
+            ++ [
+              (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
+              (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
+              (lib.my.relativeToRoot "resources/niri/dynamic-zoom2.patch")
+            ];
+        });
+      in
+        prev.symlinkJoin {
+          name = "niri-patched-session";
+          paths = [niriBase];
+          postBuild = ''
+            sed -i "2a . /etc/profiles/per-user/${conUsername}/etc/profile.d/hm-session-vars.sh" "$out/bin/niri-session"
+          '';
+        };
     })
   ];
 
