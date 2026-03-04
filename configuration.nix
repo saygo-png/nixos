@@ -312,7 +312,6 @@
       BROWSER = "librewolf";
       OPENER = "xdg-open";
       EDITOR = lib.mkDefault (lib.getExe' pkgs.vis "vis");
-      SHELL = lib.getExe pkgs.bash;
 
       VISUAL = EDITOR;
       SUDO_EDITOR = EDITOR;
