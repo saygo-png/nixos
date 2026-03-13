@@ -28,7 +28,6 @@
     ]
     ++ lib.my.withModules [
       "pipewire.nix"
-      "kernel/pc.nix"
     ];
 
   services.sanoid = {

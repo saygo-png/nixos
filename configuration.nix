@@ -79,6 +79,8 @@
   # Enable sysrq fully
   boot.kernel.sysctl."kernel.sysrq" = 1;
 
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_stable;
+
   # Faster boot
   boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
