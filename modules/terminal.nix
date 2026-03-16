@@ -56,13 +56,13 @@
             </actions>
           '';
 
-        configFile."kdeglobals" = {
-          force = true;
-          text = ''
-            [General]
-            TerminalApplication=${termExe}
-          '';
-        };
+        # configFile."kdeglobals" = {
+        #   force = true;
+        #   text = ''
+        #     [General]
+        #     TerminalApplication=${termExe}
+        #   '';
+        # };
       };
 
       programs.rofi.terminal = lib.mkIf config.programs.rofi.enable termExe;
