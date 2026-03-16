@@ -2,48 +2,52 @@
   lib,
   inputs,
   conUsername,
+  system,
+  pkgs,
   ...
-}: {
+}: let
+  hyprqt6engine = inputs.hyprqt6engine.packages.${system}.hyprqt6engine;
+in {
   stylix.targets.qt.enable = false;
+  environment.systemPackages = [
+    pkgs.carla
+    pkgs.kdePackages.breeze
+    pkgs.kdePackages.breeze-icons
+    pkgs.kdePackages.qqc2-breeze-style
+    pkgs.kdePackages.kcolorscheme
+    hyprqt6engine
+
+    pkgs.hyprland-qt-support
+    pkgs.hyprland-qtutils
+  ];
+
+  environment.variables = {
+    QT_QPA_PLATFORMTHEME = "hyprqt6engine";
+    QT_PLUGIN_PATH = "${pkgs.qt6.qtbase}/${pkgs.qt6.qtbase.qtPluginPrefix}:${hyprqt6engine}/lib/qt-6";
+  };
   home-manager.users.${conUsername} = {config, ...}: {
     stylix.targets.qt.enable = false;
-
+    stylix.targets.kde.enable = false;
     qt = {
       enable = true;
-      style.name = "kvantum";
-      platformTheme.name = "qtct";
-    };
-
-    xdg.configFile = let
-      theme = "Gruvbox-Dark-Green";
-    in {
-      "Kvantum/kvantum.kvconfig".text = ''
-        [General]
-        theme=${theme}
-      '';
-
-      "Kvantum/${theme}".source = lib.my.getSafePath "${inputs.gruvbox-kvantum}/${theme}";
+      platformTheme.name = "hyprqt6engine";
+      style = {
+        name = "Breeze";
+        package = pkgs.kdePackages.breeze;
+      };
     };
 
     home = {
-      sessionVariables.QT_QPA_PLATFORMTHEME = "qt5ct";
-      file = let
-        baseConfig.Appearance = {
-          custom_palette = false;
-          style = "kvantum-Dark";
-          icon_theme = config.gtk.iconTheme.name;
-        };
-      in {
-        ".config/qt5ct/qt5ct.conf".text = lib.generators.toINI {} (baseConfig
-          // {
-            Fonts.fixed = "\"${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications},-1,5,50,0,0,0,0,0,Regular\"";
-            Fonts.general = "\"${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications},-1,5,50,0,0,0,0,0,Regular\"";
-          });
-        ".config/qt6ct/qt6ct.conf".text = lib.generators.toINI {} (baseConfig
-          // {
-            Fonts.fixed = "\"${config.stylix.fonts.monospace.name},${toString config.stylix.fonts.sizes.applications},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular\"";
-            Fonts.general = "\"${config.stylix.fonts.sansSerif.name},${toString config.stylix.fonts.sizes.applications},-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular\"";
-          });
+      file = {
+        ".config/hypr/hyprqt6engine.conf".text = ''
+          theme {
+            color_scheme = ${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors
+            style = Breeze
+            icon_theme = breeze-light
+            font_size = 13
+            font_fixed_size = 13
+          }
+        '';
       };
     };
   };
