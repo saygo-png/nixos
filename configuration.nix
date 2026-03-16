@@ -66,7 +66,7 @@
     dev.enable = true;
     info.enable = false;
     man = {
-      generateCaches = true;
+      cache.enable = false;
       man-db.enable = true;
     };
   };
