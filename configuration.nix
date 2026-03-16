@@ -199,8 +199,6 @@
       molot-lite
       pkgs.eq10q
 
-      inputs.nom.packages.${system}.default
-
       # Nix.
       nh # Nix helper
       alejandra # Nix formatter

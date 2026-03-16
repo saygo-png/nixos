@@ -5,8 +5,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/117cc7f94e8072499b0a7aa4c52084fa4e11cc9b";
 
-    nom.url = "git+file:///home/samsepi0l/builds/nix-output-monitor?ref=optparse-2";
-
     hyprqt6engine = {
       url = "github:hyprwm/hyprqt6engine";
       inputs = {
