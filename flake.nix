@@ -94,11 +94,6 @@
       flake = false;
     };
 
-    cookiecutter-templates = {
-      url = "github:saygo-png/cookiecutter-templates";
-      flake = false;
-    };
-
     zlequalizer = {
       url = "github:saygo-png/ZLEqualizer-nix";
       inputs.nixpkgs.follows = "nixpkgs";

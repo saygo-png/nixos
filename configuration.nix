@@ -29,7 +29,6 @@
       "zathura.nix"
       "mimeapps.nix"
       "packages.nix"
-      "templates.nix"
       "audioEffects.nix"
       "impermanence.nix"
       "xdgDirsEnforcement.nix"
@@ -245,6 +244,7 @@
       gnumake # C compiling
       file # File identifier
       zoxide # Cd alternative
+      cookiecutter # Templates
       udftools # Udf filesystem
       htop-vim # TUI task manager
       pulsemixer # Volume control

@@ -18,6 +18,9 @@
       interactiveShellInit =
         # Fish
         ''
+          # Abbreviations
+          abbr -a -- cookie-haskell-nix 'cookiecutter gh:saygo-png/cookiecutter-templates --directory haskell-nix'
+
           set fish_greeting
           set -g fish_transient_prompt 1
           set -g __fish_git_prompt_show_informative_status 1

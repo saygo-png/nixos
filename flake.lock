@@ -18,22 +18,6 @@
         "type": "github"
       }
     },
-    "cookiecutter-templates": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1770056010,
-        "narHash": "sha256-blv+9pCGcdE+o71fcHQ9+Yh472c/zOpidoLB1g+t2SE=",
-        "owner": "saygo-png",
-        "repo": "cookiecutter-templates",
-        "rev": "581e9b51705524ecd25a0fb48fc4fd9d33e8e829",
-        "type": "github"
-      },
-      "original": {
-        "owner": "saygo-png",
-        "repo": "cookiecutter-templates",
-        "type": "github"
-      }
-    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -473,11 +457,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771520367,
-        "narHash": "sha256-qqK8JEQOn8ytcNZjRUejsaGGDjTO9F8s8iWF9tns81k=",
+        "lastModified": 1773641071,
+        "narHash": "sha256-vOn0e7XVt9pWNrkG0nJ3NwiNM8Z1VFPXGJzmf2l46Y0=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "adbf624110a55ebb86b68e6c81213358aa1b1692",
+        "rev": "5efb4663cbc011098de7a317805516ccda6fcb40",
         "type": "github"
       },
       "original": {
@@ -704,7 +688,6 @@
     },
     "root": {
       "inputs": {
-        "cookiecutter-templates": "cookiecutter-templates",
         "disko": "disko",
         "drugtracker2": "drugtracker2",
         "extras-nixos": "extras-nixos",
