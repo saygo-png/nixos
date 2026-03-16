@@ -4,7 +4,6 @@
 
 import Distribution.Simple.Utils qualified as U
 import Distribution.Verbosity (normal)
-import GI.Notify qualified
 import Options.Applicative
 import Shh
 import System.Directory (pathIsSymbolicLink)
@@ -58,17 +57,17 @@ newtype Options = Options {audio :: Bool}
 
 main :: IO ()
 main = do
-  _ <- GI.Notify.init $ Just "saygo-record"
   saygoRecord =<< execParser parserInfo
 
 notify :: Text -> IO ()
 notify message = do
   putStrLn message
-  GI.Notify.notificationShow =<< GI.Notify.notificationNew "saygo-record" (Just message) Nothing
+  notifySend ["saygo-record"]
 
-wlScreenrec, ripdrag :: Cmd
+wlScreenrec, ripdrag, notifySend :: Cmd
 wlScreenrec = exe "wl-screenrec"
 ripdrag = exe "ripdrag"
+notifySend = exe "notify-send"
 
 parserInfo :: ParserInfo Options
 parserInfo = info (helper <*> optionsParser) (progDesc "Record the screen")

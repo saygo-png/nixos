@@ -7,6 +7,14 @@
 
     nom.url = "git+file:///home/samsepi0l/builds/nix-output-monitor?ref=optparse-2";
 
+    hyprqt6engine = {
+      url = "github:hyprwm/hyprqt6engine";
+      inputs = {
+        systems.follows = "systems";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     neovim-config = {
       url = "github:saygo-png/neovim-config";
       inputs = {
@@ -210,6 +218,35 @@
       };
   in {
     formatter = eachSystem (system: treefmtEval.${system}.config.build.wrapper);
+
+    packages = eachSystem (
+      system: {
+        saygo-utils =
+          pkgsFor.${system}.callPackage ./resources/saygo-utils
+          {niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};};
+      }
+    );
+
+    apps = eachSystem (
+      system:
+        lib.genAttrs [
+          "clean-nix-paths"
+          "convertlink"
+          "free-space"
+          "githubloc"
+          "niri-switch-keyboard"
+          "owt"
+          # "saygo-record" not finished
+          "timezones"
+          "tmux-mem"
+          "xkb-switch-keyboard"
+        ]
+        (binary: {
+          type = "app";
+          program = "${self.packages.${system}.saygo-utils}/bin/${binary}";
+          meta.description = "Utility";
+        })
+    );
 
     checks = eachSystem (system: {formatting = treefmtEval.${system}.config.build.check self;});
 

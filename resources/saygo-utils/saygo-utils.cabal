@@ -1,63 +1,180 @@
-cabal-version:   2.4
-name:            saygo-utils
-version:         0
-build-type:      Simple
-author:          saygo-png
-maintainer:      saygo-png <saygo.mail@proton.me>
-copyright:       2024 saygo-png
-description:     Utilities for my NixOS config
-tested-with:     GHC ==9.8.4
+cabal-version: 2.4
+name:          saygo-utils
+version:       0
+build-type:    Simple
+author:        saygo-png
+maintainer:    saygo-png <saygo.mail@proton.me>
+copyright:     2024 saygo-png
+description:   Utilities for my NixOS config
+tested-with:   GHC ==9.8.4
 
 common common-options2
-  build-depends: base, relude, bytestring, vector, directory
-  default-language: GHC2021
-  ghc-options: -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-missing-safe-haskell-mode -Wno-missing-exported-signatures -Wno-missing-local-signatures -Wno-unused-packages
-               -threaded -rtsopts -with-rtsopts=-N
-  default-extensions: NoImplicitPrelude NoFieldSelectors OverloadedRecordDot DuplicateRecordFields BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns PartialTypeSignatures PatternGuards PolyKinds RankNTypes ScopedTypeVariables StandaloneDeriving TupleSections TypeFamilies TypeSynonymInstances ViewPatterns DerivingStrategies RoleAnnotations OverloadedStrings
+  build-depends:
+    , base
+    , bytestring
+    , directory
+    , relude
+    , vector
+
+  default-language:   GHC2021
+  ghc-options:
+    -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe
+    -Wno-missing-import-lists -Wno-all-missed-specialisations
+    -Wno-missed-specialisations -Wno-missing-safe-haskell-mode
+    -Wno-missing-exported-signatures -Wno-missing-local-signatures
+    -Wno-unused-packages -threaded -rtsopts -with-rtsopts=-N
+
+  default-extensions:
+    BangPatterns
+    BinaryLiterals
+    ConstraintKinds
+    DataKinds
+    DefaultSignatures
+    DeriveDataTypeable
+    DeriveFoldable
+    DeriveFunctor
+    DeriveGeneric
+    DeriveTraversable
+    DerivingStrategies
+    DoAndIfThenElse
+    DuplicateRecordFields
+    EmptyDataDecls
+    ExistentialQuantification
+    FlexibleContexts
+    FlexibleInstances
+    FunctionalDependencies
+    GADTs
+    GeneralizedNewtypeDeriving
+    InstanceSigs
+    KindSignatures
+    LambdaCase
+    MultiParamTypeClasses
+    MultiWayIf
+    NamedFieldPuns
+    NoFieldSelectors
+    NoImplicitPrelude
+    OverloadedRecordDot
+    OverloadedStrings
+    PartialTypeSignatures
+    PatternGuards
+    PolyKinds
+    RankNTypes
+    RoleAnnotations
+    ScopedTypeVariables
+    StandaloneDeriving
+    TupleSections
+    TypeFamilies
+    TypeSynonymInstances
+    ViewPatterns
 
 common common-options
-  build-depends: base, Chart, Chart-diagrams, shh, universum, aeson, optparse-applicative, time, tz, bytestring, path, cassava, path-io, safe, vector, Cabal, directory, filepath, unix, gi-notify
-  default-language: GHC2021
-  ghc-options: -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-missing-safe-haskell-mode -Wno-missing-exported-signatures -Wno-missing-local-signatures -Wno-unused-packages
-               -threaded -rtsopts -with-rtsopts=-N
-  default-extensions: NoImplicitPrelude NoFieldSelectors OverloadedRecordDot DuplicateRecordFields BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns PartialTypeSignatures PatternGuards PolyKinds RankNTypes ScopedTypeVariables StandaloneDeriving TupleSections TypeFamilies TypeSynonymInstances ViewPatterns DerivingStrategies RoleAnnotations
+  build-depends:
+    , aeson
+    , base
+    , bytestring
+    , Cabal
+    , cassava
+    , Chart
+    , Chart-diagrams
+    , directory
+    , filepath
+    , optparse-applicative
+    , path
+    , path-io
+    , safe
+    , shh
+    , time
+    , tz
+    , universum
+    , unix
+    , vector
+
+  default-language:   GHC2021
+  ghc-options:
+    -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe
+    -Wno-missing-import-lists -Wno-all-missed-specialisations
+    -Wno-missed-specialisations -Wno-missing-safe-haskell-mode
+    -Wno-missing-exported-signatures -Wno-missing-local-signatures
+    -Wno-unused-packages -threaded -rtsopts -with-rtsopts=-N
+
+  default-extensions:
+    BangPatterns
+    BinaryLiterals
+    ConstraintKinds
+    DataKinds
+    DefaultSignatures
+    DeriveDataTypeable
+    DeriveFoldable
+    DeriveFunctor
+    DeriveGeneric
+    DeriveTraversable
+    DerivingStrategies
+    DoAndIfThenElse
+    DuplicateRecordFields
+    EmptyDataDecls
+    ExistentialQuantification
+    FlexibleContexts
+    FlexibleInstances
+    FunctionalDependencies
+    GADTs
+    GeneralizedNewtypeDeriving
+    InstanceSigs
+    KindSignatures
+    LambdaCase
+    MultiParamTypeClasses
+    MultiWayIf
+    NamedFieldPuns
+    NoFieldSelectors
+    NoImplicitPrelude
+    OverloadedRecordDot
+    PartialTypeSignatures
+    PatternGuards
+    PolyKinds
+    RankNTypes
+    RoleAnnotations
+    ScopedTypeVariables
+    StandaloneDeriving
+    TupleSections
+    TypeFamilies
+    TypeSynonymInstances
+    ViewPatterns
 
 executable niri-switch-keyboard
-  import: common-options
+  import:  common-options
   main-is: src/niri-switch-keyboard.hs
 
 executable xkb-switch-keyboard
-  import: common-options
+  import:  common-options
   main-is: src/xkb-switch-keyboard.hs
 
 executable timezones
-  import: common-options
+  import:  common-options
   main-is: src/timezones.hs
 
 executable owt
-  import: common-options
+  import:  common-options
   main-is: src/owt.hs
 
 executable free-space
-  import: common-options
+  import:  common-options
   main-is: src/free-space.hs
 
 executable tmux-mem
-  import: common-options
+  import:  common-options
   main-is: src/tmux-mem.hs
 
 executable convertlink
-  import: common-options
+  import:  common-options
   main-is: src/convertlink.hs
 
 executable saygo-record
-  import: common-options
+  import:  common-options
   main-is: src/saygo-record.hs
 
 executable githubloc
-  import: common-options
+  import:  common-options
   main-is: src/githubloc.hs
 
 executable clean-nix-paths
-  import: common-options2
+  import:  common-options2
   main-is: src/clean-nix-paths.hs
