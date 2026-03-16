@@ -8,6 +8,13 @@ copyright:       2024 saygo-png
 description:     Utilities for my NixOS config
 tested-with:     GHC ==9.8.4
 
+common common-options2
+  build-depends: base, relude, bytestring, vector, directory
+  default-language: GHC2021
+  ghc-options: -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe -Wno-missing-import-lists -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-missing-safe-haskell-mode -Wno-missing-exported-signatures -Wno-missing-local-signatures -Wno-unused-packages
+               -threaded -rtsopts -with-rtsopts=-N
+  default-extensions: NoImplicitPrelude NoFieldSelectors OverloadedRecordDot DuplicateRecordFields BangPatterns BinaryLiterals ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable DoAndIfThenElse EmptyDataDecls ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns PartialTypeSignatures PatternGuards PolyKinds RankNTypes ScopedTypeVariables StandaloneDeriving TupleSections TypeFamilies TypeSynonymInstances ViewPatterns DerivingStrategies RoleAnnotations OverloadedStrings
+
 common common-options
   build-depends: base, Chart, Chart-diagrams, shh, universum, aeson, optparse-applicative, time, tz, bytestring, path, cassava, path-io, safe, vector, Cabal, directory, filepath, unix, gi-notify
   default-language: GHC2021
@@ -50,3 +57,7 @@ executable saygo-record
 executable githubloc
   import: common-options
   main-is: src/githubloc.hs
+
+executable clean-nix-paths
+  import: common-options2
+  main-is: src/clean-nix-paths.hs

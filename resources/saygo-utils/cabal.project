@@ -1,5 +1,6 @@
 packages: .
 
+multi-repl: True
 optimization: 2
 split-sections: True
 executable-stripping: True
