@@ -35,7 +35,6 @@
 
       "mpv.nix"
       "git.nix"
-      "iamb.nix"
       "rofi.nix"
       "tmux.nix"
       "fish.nix"
