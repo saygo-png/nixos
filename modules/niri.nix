@@ -18,7 +18,6 @@ in {
             ++ [
               (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
               (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
-              (lib.my.relativeToRoot "resources/niri/dynamic-zoom2.patch")
             ];
         });
       in
