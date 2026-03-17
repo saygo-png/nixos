@@ -102,7 +102,7 @@ in {
     [
       ({config, ...}: {
         options = {
-          const = config.constLib.mkConstsFromSetInsanity {
+          const = config.constLib.mkConstsFromSet {
             waybarBase = sharedConfig;
           };
         };

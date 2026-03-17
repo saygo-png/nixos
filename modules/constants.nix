@@ -22,13 +22,9 @@
 
   # Take attribute set of values, apply mkConst to each value in the set
   mkConstsFromSet = setMap mkConst;
-
-  # Take attribute set of values, apply mkConstInsanity to each value in the set
-  mkConstsFromSetInsanity = setMap mkConst;
 in {
   options = {
-    constLib = mkConstsFromSetInsanity {
-      inherit mkConstsFromSetInsanity;
+    constLib = mkConstsFromSet {
       inherit mkConst;
       inherit mkConstsFromSet;
     };
