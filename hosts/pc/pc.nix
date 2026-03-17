@@ -3,7 +3,6 @@
   pkgs,
   config,
   conHome,
-  pkgs-frozen,
   conUsername,
   ...
 }: {

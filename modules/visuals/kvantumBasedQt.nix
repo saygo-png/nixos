@@ -1,5 +1,4 @@
 {
-  lib,
   inputs,
   conUsername,
   system,
@@ -25,7 +24,7 @@ in {
     QT_QPA_PLATFORMTHEME = "hyprqt6engine";
     QT_PLUGIN_PATH = "${pkgs.qt6.qtbase}/${pkgs.qt6.qtbase.qtPluginPrefix}:${hyprqt6engine}/lib/qt-6";
   };
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = { ...}: {
     stylix.targets.qt.enable = false;
     stylix.targets.kde.enable = false;
     qt = {
