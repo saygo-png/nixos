@@ -1,18 +1,21 @@
+{-# LANGUAGE OverloadedStrings #-}
+
+import Data.ByteString.Char8 (ByteString)
 import Data.ByteString.Char8 qualified as C8
-import Data.Char (isDigit)
+import Data.Char (isSpace)
+import Data.Maybe (fromJust)
+import Data.Word (Word64)
 import Text.Printf (printf)
-import Universum
+import Prelude
 
 main :: IO ()
-main = do
-  meminfo <- C8.readFile "/proc/meminfo"
-  let freeRam = extractNumber . matchLineWith . fromList $ C8.lines meminfo
-  putStrLn @Text . fromString $ printf "MemF %.1fG" freeRam
+main = printf "MemF %.1fG\n" . ramGB =<< C8.readFile "/proc/meminfo"
 
-matchLineWith :: Vector ByteString -> ByteString
-matchLineWith = fromMaybe C8.empty . find (C8.isPrefixOf target)
-  where
-    target = C8.pack "MemAvailable:"
+ramGB :: ByteString -> Double
+ramGB = (/ 1048576) . fromIntegral . parseKB . getLineByMarker "MemAvailable:"
 
-extractNumber :: ByteString -> Double
-extractNumber = maybe 0 (/ 1048576) . readMaybe . C8.unpack . C8.filter isDigit
+getLineByMarker :: ByteString -> ByteString -> ByteString
+getLineByMarker m = C8.drop (C8.length m) . snd . C8.breakSubstring m
+
+parseKB :: ByteString -> Word64
+parseKB = fst . fromJust . C8.readWord64 . C8.dropWhile isSpace

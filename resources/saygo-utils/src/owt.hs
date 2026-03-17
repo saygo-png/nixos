@@ -48,11 +48,11 @@ main = do
   case userInput of
     "a" -> do
       appendToCsv "ams"
-      putStrLn "Appended 'ams' to the CSV file."
+      putTextLn $ fromString "Appended 'ams' to the CSV file."
     "g" -> do
       appendToCsv "gen"
-      putStrLn "Appended 'gen' to the CSV file."
+      putTextLn $ fromString "Appended 'gen' to the CSV file."
     "q" -> do
-      putStrLn "Quitting the program."
+      putTextLn $ fromString "Quitting the program."
     _ -> do
-      putStrLn "Invalid input. Please enter 'a', 'g', or 'q'."
+      putTextLn $ fromString "Invalid input. Please enter 'a', 'g', or 'q'."

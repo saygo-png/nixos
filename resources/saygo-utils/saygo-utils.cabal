@@ -4,99 +4,24 @@ version:       0
 build-type:    Simple
 author:        saygo-png
 maintainer:    saygo-png <saygo.mail@proton.me>
-copyright:     2024 saygo-png
 description:   Utilities for my NixOS config
 tested-with:   GHC ==9.8.4
 
-common common-options2
-  build-depends:
-    , base
-    , bytestring
-    , directory
-    , relude
-    , vector
-
-  default-language:   GHC2021
+common warnings
   ghc-options:
     -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe
     -Wno-missing-import-lists -Wno-all-missed-specialisations
     -Wno-missed-specialisations -Wno-missing-safe-haskell-mode
     -Wno-missing-exported-signatures -Wno-missing-local-signatures
-    -Wno-unused-packages -threaded -rtsopts -with-rtsopts=-N
+    -Wno-unused-packages
 
-  default-extensions:
-    BangPatterns
-    BinaryLiterals
-    ConstraintKinds
-    DataKinds
-    DefaultSignatures
-    DeriveDataTypeable
-    DeriveFoldable
-    DeriveFunctor
-    DeriveGeneric
-    DeriveTraversable
-    DerivingStrategies
-    DoAndIfThenElse
-    DuplicateRecordFields
-    EmptyDataDecls
-    ExistentialQuantification
-    FlexibleContexts
-    FlexibleInstances
-    FunctionalDependencies
-    GADTs
-    GeneralizedNewtypeDeriving
-    InstanceSigs
-    KindSignatures
-    LambdaCase
-    MultiParamTypeClasses
-    MultiWayIf
-    NamedFieldPuns
-    NoFieldSelectors
-    NoImplicitPrelude
-    OverloadedRecordDot
-    OverloadedStrings
-    PartialTypeSignatures
-    PatternGuards
-    PolyKinds
-    RankNTypes
-    RoleAnnotations
-    ScopedTypeVariables
-    StandaloneDeriving
-    TupleSections
-    TypeFamilies
-    TypeSynonymInstances
-    ViewPatterns
+common threaded
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
 
 common common-options
-  build-depends:
-    , aeson
-    , base
-    , bytestring
-    , Cabal
-    , cassava
-    , Chart
-    , Chart-diagrams
-    , directory
-    , filepath
-    , optparse-applicative
-    , path
-    , path-io
-    , safe
-    , shh
-    , time
-    , tz
-    , universum
-    , unix
-    , vector
-
+  import:             warnings
+  build-depends:      base
   default-language:   GHC2021
-  ghc-options:
-    -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe
-    -Wno-missing-import-lists -Wno-all-missed-specialisations
-    -Wno-missed-specialisations -Wno-missing-safe-haskell-mode
-    -Wno-missing-exported-signatures -Wno-missing-local-signatures
-    -Wno-unused-packages -threaded -rtsopts -with-rtsopts=-N
-
   default-extensions:
     BangPatterns
     BinaryLiterals
@@ -140,41 +65,101 @@ common common-options
     ViewPatterns
 
 executable niri-switch-keyboard
-  import:  common-options
-  main-is: src/niri-switch-keyboard.hs
+  import:        common-options, threaded
+  main-is:       src/niri-switch-keyboard.hs
+  build-depends:
+    , shh
+    , universum
 
 executable xkb-switch-keyboard
-  import:  common-options
-  main-is: src/xkb-switch-keyboard.hs
+  import:        common-options, threaded
+  main-is:       src/xkb-switch-keyboard.hs
+  build-depends:
+    , shh
+    , universum
 
 executable timezones
-  import:  common-options
-  main-is: src/timezones.hs
+  import:        common-options, threaded
+  main-is:       src/timezones.hs
+  build-depends:
+    , bytestring
+    , optparse-applicative
+    , time
+    , tz
+    , universum
 
 executable owt
-  import:  common-options
-  main-is: src/owt.hs
+  import:        common-options, threaded
+  main-is:       src/owt.hs
+  build-depends:
+    , bytestring
+    , cassava
+    , optparse-applicative
+    , path
+    , path-io
+    , time
+    , universum
 
 executable free-space
-  import:  common-options
-  main-is: src/free-space.hs
+  import:        common-options, threaded
+  main-is:       src/free-space.hs
+  build-depends:
+    , Cabal
+    , directory
+    , filepath
+    , optparse-applicative
+    , shh
+    , universum
+    , unix
+    , vector
 
 executable tmux-mem
-  import:  common-options
-  main-is: src/tmux-mem.hs
+  import:        common-options
+  main-is:       src/tmux-mem.hs
+  build-depends:
+    , bytestring
+    , universum
 
 executable convertlink
-  import:  common-options
-  main-is: src/convertlink.hs
+  import:        common-options, threaded
+  main-is:       src/convertlink.hs
+  build-depends:
+    , Cabal
+    , directory
+    , filepath
+    , optparse-applicative
+    , shh
+    , universum
+    , unix
 
 executable saygo-record
-  import:  common-options
-  main-is: src/saygo-record.hs
+  import:        common-options, threaded
+  main-is:       src/saygo-record.hs
+  build-depends:
+    , Cabal
+    , directory
+    , filepath
+    , optparse-applicative
+    , shh
+    , universum
+    , unix
 
 executable githubloc
-  import:  common-options
-  main-is: src/githubloc.hs
+  import:        common-options, threaded
+  main-is:       src/githubloc.hs
+  build-depends:
+    , bytestring
+    , cassava
+    , Chart
+    , Chart-diagrams
+    , optparse-applicative
+    , time
+    , universum
+    , vector
 
 executable clean-nix-paths
-  import:  common-options2
-  main-is: src/clean-nix-paths.hs
+  import:        common-options, threaded
+  main-is:       src/clean-nix-paths.hs
+  build-depends:
+    , relude
+    , text
