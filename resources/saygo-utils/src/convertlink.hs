@@ -1,12 +1,17 @@
+{-# LANGUAGE OverloadedStrings #-}
+
+import Control.Exception (handleJust, try)
+import Data.Vector (Vector)
+import Data.Vector qualified as V
 import Distribution.Simple.Utils qualified as U
 import Distribution.Verbosity (normal)
 import Options.Applicative
-import System.Directory (pathIsSymbolicLink)
+import Relude
 import System.Directory qualified as D
 import System.FilePath
+import System.IO.Error (isDoesNotExistError)
 import System.Posix.Files
 import Text.Printf (printf)
-import Universum
 
 data Options = Options {path :: FilePath, write :: Bool, recurse :: Bool}
 
@@ -26,7 +31,7 @@ main = convertlink =<< execParser parserInfo
 convertlink :: Options -> IO ()
 convertlink opts = do
   filestatus <- getFileStatus opts.path
-  isSymlink <- pathIsSymbolicLink opts.path
+  isSymlink <- D.pathIsSymbolicLink opts.path
   let pointsToDir = isDirectory filestatus
 
   -- pointsToDir becomes isDir when isSymlink is false
@@ -36,49 +41,47 @@ convertlink opts = do
     (True, False, _) -> convertLinkAndWrite opts.path opts.write
     (False, False, _) -> printf "convertlink: %s is not a symlink or a directory\n" opts.path
     (False, True, False) -> printf "convertlink: -r not specified; omitting directory %s\n" opts.path
-    (True, True, True) -> convertLinkAndWrite opts.path opts.write >> recursiveConvert [opts.path] opts.write >> pass
-    (False, True, True) -> recursiveConvert [opts.path] opts.write >> pass
+    (True, True, True) -> convertLinkAndWrite opts.path opts.write >> recursiveConvert opts.path opts.write >> pass
+    (False, True, True) -> recursiveConvert opts.path opts.write >> pass
 
 convertLinkAndWrite :: FilePath -> Bool -> IO ()
-convertLinkAndWrite filepath write = do
-  convertSymlink filepath
-  printf "Converted symlink %s\n" filepath
-  when write $ do
-    currentMode <- fileMode <$> getFileStatus filepath
-    currentMode `unionFileModes` ownerWriteMode & setFileMode filepath
+convertLinkAndWrite symlink write =
+  handleJust (guard . isDoesNotExistError) pure $ do
+    fileFromSymlink <- readSymbolicLink symlink
+    fileStatus <- getFileStatus symlink
+    let pointsToDir = isDirectory fileStatus
+    removeLink symlink
+    if pointsToDir
+      then U.copyDirectoryRecursive normal fileFromSymlink symlink
+      else D.copyFile fileFromSymlink symlink
+    printf "Converted symlink %s\n" symlink
+    when write (fileMode fileStatus `unionFileModes` ownerWriteMode & setFileMode symlink)
+
+recursiveConvert :: FilePath -> Bool -> IO ()
+recursiveConvert root giveWrite = go $ V.singleton root
   where
-    convertSymlink :: FilePath -> IO ()
-    convertSymlink symlink = do
-      fileFromSymlink <- readSymbolicLink symlink
-      filestatus <- getFileStatus symlink
-      let pointsToDir = isDirectory filestatus
-      removeLink symlink
-      if pointsToDir
-        then
-          U.copyDirectoryRecursive normal fileFromSymlink symlink
-        else
-          D.copyFile fileFromSymlink symlink
+    go :: Vector FilePath -> IO ()
+    go fileList =
+      if null fileList
+        then pass
+        else do
+          (symlinks, directories) <- bimap join join . V.unzip <$> V.mapM findSymlinks fileList
+          mapM_ (`convertLinkAndWrite` giveWrite) symlinks
+          go (symlinks <> directories)
 
-recursiveConvert :: [FilePath] -> Bool -> IO [FilePath]
-recursiveConvert fileList giveWrite = do
-  symlinkList <- concatMapM findSymlinks fileList
-  if null symlinkList
-    then
-      pure fileList
-    else do
-      mapM_ (`convertLinkAndWrite` giveWrite) symlinkList
-      recursiveConvert symlinkList giveWrite
-
-findSymlinks :: FilePath -> IO [FilePath]
+findSymlinks :: FilePath -> IO (Vector FilePath, Vector FilePath)
 findSymlinks dir = do
-  result <- try $ D.listDirectory dir
+  putTextLn $ "searching in: " <> fromString dir
+  result <- try $ V.fromList <$> D.listDirectory dir
   case result of
-    Left (_ :: SomeException) -> pure []
+    Left (_ :: SomeException) -> pure mempty
     Right entries -> do
-      let fullPaths = map (dir </>) entries
-      print fullPaths
-      filterM check fullPaths
+      let fullPaths = V.map (dir </>) entries
+      (symlinks, otherFiles) <- partitionM D.pathIsSymbolicLink fullPaths
+      directories <- V.filterM (fmap isDirectory . getFileStatus) otherFiles
+      pure (symlinks, directories)
+
+partitionM :: (Monad m) => (a -> m Bool) -> Vector a -> m (Vector a, Vector a)
+partitionM f = fmap (V.partitionWith id) . V.mapM tag
   where
-    check :: FilePath -> IO Bool
-    check path = do
-      pathIsSymbolicLink path
+    tag x = bool (Right x) (Left x) <$> f x

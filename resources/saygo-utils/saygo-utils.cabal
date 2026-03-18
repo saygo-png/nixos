@@ -128,9 +128,10 @@ executable convertlink
     , directory
     , filepath
     , optparse-applicative
-    , shh
-    , universum
+    , relude
     , unix
+    , containers
+    , vector
 
 executable saygo-record
   import:        common-options, threaded
