@@ -10,12 +10,5 @@
     then throw "Path ${path} does not exist"
     else path;
 
-  # Whichkey register helper
-  nRegister = key: text: icon: {
-    __unkeyed = key;
-    group = text;
-    inherit icon;
-  };
-
   nWrapFunc = s: "function() ${s} end";
 }
