@@ -87,6 +87,9 @@
   # a timeout until SIGKILL. This shortens this window.
   systemd.user.extraConfig = "DefaultTimeoutStopSec=10s";
 
+  # Systemd in initrd
+  boot.initrd.systemd.enable = true;
+
   networking.hostName = config.const.host;
 
   # DNS
