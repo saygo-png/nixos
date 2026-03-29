@@ -1,10 +1,11 @@
 {
   lib,
+  pkgs,
   config,
   conUsername,
   ...
 }: {
-  # Refrence https://github.com/iynaix/dotfiles/blob/32e43c330cca0b52f584d0007fe64746994233b0/nixos/impermanence.nix
+  # Reference https://github.com/iynaix/dotfiles/blob/32e43c330cca0b52f584d0007fe64746994233b0/nixos/impermanence.nix
   options.custom = let
     assertNoHomeDirs = paths:
       assert (lib.assertMsg (!lib.any (lib.hasPrefix "/home") paths) "/home used in a root persist!"); paths;
@@ -84,23 +85,18 @@
       "/persist".neededForBoot = true;
     };
 
-    boot.initrd.postResumeCommands = lib.mkAfter ''
-      zfs rollback -r zroot/local/root@blank
-    '';
-
-    # FIX: replace above with this
-    # boot.initrd.systemd.services.rollback = {
-    #   description = "Rollback root filesystem to a pristine state on boot";
-    #   wantedBy = ["initrd.target"];
-    #   after = ["zfs-import-zroot.service"];
-    #   before = ["sysroot.mount"];
-    #   path = [pkgs.zfs];
-    #   unitConfig.DefaultDependencies = "no";
-    #   serviceConfig.Type = "oneshot";
-    #   script = ''
-    #     zfs rollback -r zroot/local/root@blank && echo ">> rollback complete <<" || echo "!! rollback failed !!"
-    #   '';
-    # };
+    boot.initrd.systemd.services.rollback = {
+      description = "Rollback root filesystem to a pristine state on boot";
+      wantedBy = ["initrd.target"];
+      after = ["zfs-import-zroot.service"];
+      before = ["sysroot.mount"];
+      path = [pkgs.zfs];
+      unitConfig.DefaultDependencies = "no";
+      serviceConfig.Type = "oneshot";
+      script = ''
+        zfs rollback -r zroot/local/root@blank && echo ">> rollback complete <<" || echo "!! rollback failed !!"
+      '';
+    };
 
     environment.persistence = let
       cfg = config.custom.persist;

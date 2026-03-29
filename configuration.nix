@@ -359,8 +359,11 @@
   # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
 
-  # Automount.
-  services.udisks2.enable = true;
+  # Automount component (does not automount by itself).
+  services.udisks2 = {
+    enable = true;
+    mountOnMedia = true;
+  };
 
   services.dbus.implementation = "broker";
   services.speechd.enable = false; # Pullls in nearly a gig and is useless to me

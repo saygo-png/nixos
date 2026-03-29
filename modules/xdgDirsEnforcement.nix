@@ -57,13 +57,12 @@ in {
         "Misc"
         "builds"
         "Documents"
-        "Downloads"
         "Music"
         "nixos"
         "Pictures"
         "Sync"
         "Games/persisted"
-        "Videos"
+        "Videos/backup"
       ];
       cache = {
         directories = [
@@ -73,6 +72,8 @@ in {
           ".local/state/mpv"
 
           "Games/cache"
+          "Videos/no-backup"
+          "Downloads"
 
           ".local/share/direnv"
           ".local/share/nix"

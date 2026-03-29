@@ -187,6 +187,7 @@
     configurations.persist = {
       exclude_caches = true;
       source_directories = ["/persist"];
+      exclude_patterns = ["*/.zfs/*"]; # Don't backup zfs snapshots
       unknown_unencrypted_repo_access_is_ok = true;
       repositories = [
         {
