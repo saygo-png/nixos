@@ -172,8 +172,8 @@ binds {
   // like wev.
   Mod+Shift+Slash { show-hotkey-overlay; }
 
-  Ctrl+WheelScrollUp cooldown-ms=150 { overview-zoom-in; }
-  Ctrl+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
+  Mod+WheelScrollUp cooldown-ms=150 { overview-zoom-in; }
+  Mod+WheelScrollDown cooldown-ms=150 { overview-zoom-out; }
 
   Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty"; }
   Mod+Space hotkey-overlay-title="Rofi" { spawn "rofi" "-show" "drun"; }
@@ -254,8 +254,6 @@ binds {
   Mod+Shift+I         { move-workspace-down; }
   Mod+Shift+O         { move-workspace-up; }
 
-  Mod+WheelScrollDown      cooldown-ms=250 { focus-workspace-down; }
-  Mod+WheelScrollUp        cooldown-ms=250 { focus-workspace-up; }
   Mod+Ctrl+WheelScrollDown cooldown-ms=250 { move-column-to-workspace-down; }
   Mod+Ctrl+WheelScrollUp   cooldown-ms=250 { move-column-to-workspace-up; }
 
