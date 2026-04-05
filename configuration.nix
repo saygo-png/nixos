@@ -267,7 +267,6 @@
       godot-mono # Game engine
       inkscape # Vector graphics
       keepassxc # Password manager
-      qbittorrent # Torrent client
       mission-center # GUI task manager
       localsend # Send via local network
       tor-browser

@@ -27,6 +27,8 @@
     ]
     ++ lib.my.withModules [
       "pipewire.nix"
+      "qbittorrent.nix"
+      "media-management.nix"
     ];
 
   services.sanoid = {
@@ -46,9 +48,6 @@
 
   networking.hostId = "a4e735aa";
 
-  # Open ports for qbittorrent
-  networking.firewall.allowedTCPPorts = [39578];
-  networking.firewall.allowedUDPPorts = [39578];
   services.fail2ban.enable = true;
 
   # Caps = escape, keyboard change key
