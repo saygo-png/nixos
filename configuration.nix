@@ -29,6 +29,7 @@
       "zathura.nix"
       "mimeapps.nix"
       "packages.nix"
+      "keyboard.nix"
       "audioEffects.nix"
       "impermanence.nix"
       "xdgDirsEnforcement.nix"
