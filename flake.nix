@@ -87,7 +87,6 @@
         base16-helix.follows = "";
         base16-vim.follows = "";
         firefox-gnome-theme.follows = "";
-        tinted-foot.follows = "";
         tinted-kitty.follows = "";
         tinted-schemes.follows = "";
         tinted-tmux.follows = "";
