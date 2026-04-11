@@ -61,6 +61,7 @@ in {
           "privacy.resistFingerprinting" = false;
 
           "webgl.disabled" = false;
+          "librewolf.webgl.prompt" = false;
           "media.ffmpeg.vaapi.enabled" = true;
 
           "privacy.clearOnShutdown_v2.cache" = false;
