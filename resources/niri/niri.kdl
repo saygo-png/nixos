@@ -51,7 +51,6 @@ layout {
 
   fullscreen-backdrop-color "transparent"
 
-
   // Make the wallpaper stationary, rather than moving with workspaces.
   background-color "transparent"
   // When to center a column when changing focus, options are:
@@ -190,7 +189,7 @@ binds {
 
   Mod+W repeat=false { toggle-overview; }
 
-  Mod+Q repeat=false { close-window; }
+  Mod+Shift+Q repeat=false { close-window; }
 
   Mod+Left  { focus-column-left; }
   Mod+Down  { focus-window-down; }
