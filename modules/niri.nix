@@ -3,6 +3,9 @@
   pkgs,
   config,
   conUsername,
+  inputs,
+  system,
+  conHome,
   ...
 }: let
   inherit (import (lib.my.relativeToRoot "modules/waybar/lib.nix") lib pkgs) wrapWaybarWithConfig;
@@ -70,17 +73,35 @@ in {
   };
 
   services.gnome.gnome-keyring.enable = true;
-  systemd.user.services.niri-flake-polkit = {
-    description = "PolicyKit Authentication Agent for Niri";
-    wantedBy = ["niri.service"];
-    after = ["graphical-session.target"];
-    partOf = ["graphical-session.target"];
-    serviceConfig = {
-      Type = "simple";
+  systemd.user.services = let
+    mkNiriService = {
+      ExecStart,
+      description,
+    }: {
+      inherit description;
+      wantedBy = ["niri.service"];
+      partOf = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        inherit ExecStart;
+        Restart = "on-failure";
+        RestartSec = "3s";
+        TimeoutStopSec = 10;
+      };
+    };
+  in {
+    niri-flake-polkit = mkNiriService {
+      description = "PolicyKit Authentication Agent for Niri";
       ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
-      Restart = "on-failure";
-      RestartSec = 1;
-      TimeoutStopSec = 10;
+    };
+    saywallpaper = mkNiriService {
+      description = "Saywallpaper wallpaper daemon for Niri";
+      ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
+    };
+    saybar = mkNiriService {
+      description = "Saybar status bar for Niri";
+      ExecStart = "${conHome}/.local/bin/saybar";
     };
   };
 

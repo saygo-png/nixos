@@ -80,8 +80,6 @@ layout {
   }
 }
 
-spawn-at-startup "saywallpaper" "-i" "/home/samsepi0l/.config/wallpaper.raw"
-spawn-at-startup "saybar"
 spawn-at-startup "alacritty"
 spawn-at-startup "librewolf"
 spawn-at-startup "vesktop"
