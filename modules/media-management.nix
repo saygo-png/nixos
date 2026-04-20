@@ -11,10 +11,11 @@
   services = {
     jellyfin = {
       enable = true;
+      openFirewall = true;
     };
 
     prowlarr = {
-      enable = true;
+      enable = false;
     };
   };
 }
