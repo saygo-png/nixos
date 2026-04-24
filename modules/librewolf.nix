@@ -92,6 +92,10 @@ in {
               url = "https://" + url;
             };
           in [
+            {
+              name = "YT shorts player to normal";
+              url = ''javascript:(function(){const match=window.location.href.match(/^https?:\/\/(www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]+)$/);if(match){window.location.href=%27https://www.youtube.com/watch?v=%27+match[2];}})();'';
+            }
             (mkBookmark "my issues" "github.com/saygo-png/nixos/issues")
             (mkBookmark "nixos options" "search.nixos.org/options?")
             (mkBookmark "nix packages" "search.nixos.org/packages")
