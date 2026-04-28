@@ -32,6 +32,15 @@
           bind -M insert \ch backward-char
           bind -M insert \cl forward-char
 
+          # search completion by default
+          bind -M insert tab '
+            if commandline --search-field >/dev/null
+              commandline -f complete
+            else
+              commandline -f complete-and-search
+            end
+          '
+
           bind -M insert \cp clear-screen
 
           function fish_default_mode_prompt --description "Display vi prompt mode"
