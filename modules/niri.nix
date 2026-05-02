@@ -20,7 +20,7 @@ in {
             (old.patches or [])
             ++ [
               (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
-              (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
+              # (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
             ];
         });
       in
@@ -73,35 +73,46 @@ in {
   };
 
   services.gnome.gnome-keyring.enable = true;
-  systemd.user.services = let
-    mkNiriService = {
-      ExecStart,
-      description,
-    }: {
-      inherit description;
-      wantedBy = ["niri.service"];
-      partOf = ["graphical-session.target"];
-      after = ["graphical-session.target"];
-      serviceConfig = {
-        Type = "simple";
-        inherit ExecStart;
-        Restart = "on-failure";
-        RestartSec = "3s";
-        TimeoutStopSec = 10;
+  systemd.user = {
+    # Override a section of service so that niri doesnt stop when the config changes.
+    units."niri.service" = {
+      overrideStrategy = "asDropin";
+      text = ''
+        [Service]
+        X-StopIfChanged=false
+        X-RestartIfChanged=false
+      '';
+    };
+    services = let
+      mkNiriService = {
+        ExecStart,
+        description,
+      }: {
+        inherit description;
+        wantedBy = ["niri.service"];
+        partOf = ["graphical-session.target"];
+        after = ["graphical-session.target"];
+        serviceConfig = {
+          Type = "simple";
+          inherit ExecStart;
+          Restart = "on-failure";
+          RestartSec = "3s";
+          TimeoutStopSec = 10;
+        };
       };
-    };
-  in {
-    niri-flake-polkit = mkNiriService {
-      description = "PolicyKit Authentication Agent for Niri";
-      ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
-    };
-    saywallpaper = mkNiriService {
-      description = "Saywallpaper wallpaper daemon for Niri";
-      ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
-    };
-    saybar = mkNiriService {
-      description = "Saybar status bar for Niri";
-      ExecStart = "${conHome}/.local/bin/saybar";
+    in {
+      niri-flake-polkit = mkNiriService {
+        description = "PolicyKit Authentication Agent for Niri";
+        ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
+      };
+      saywallpaper = mkNiriService {
+        description = "Saywallpaper wallpaper daemon for Niri";
+        ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
+      };
+      saybar = mkNiriService {
+        description = "Saybar status bar for Niri";
+        ExecStart = "${conHome}/.local/bin/saybar";
+      };
     };
   };
 

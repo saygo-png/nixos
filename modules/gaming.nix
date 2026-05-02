@@ -59,6 +59,13 @@
   };
 
   nixpkgs.overlays = [
+    # TODO: remove once it gets fixed
+    # https://github.com/NixOS/nixpkgs/issues/513245#issuecomment-4317696552
+    (_: prev: {
+      openldap = prev.openldap.overrideAttrs {
+        doCheck = !prev.stdenv.hostPlatform.isi686;
+      };
+    })
     (_: prev: {
       gamescope = prev.gamescope.overrideAttrs (_: {
         # https://github.com/ValveSoftware/gamescope/issues/1924#issuecomment-3725667842

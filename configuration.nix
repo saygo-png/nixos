@@ -45,7 +45,8 @@
       "mullvad.nix"
       "prismlauncher.nix"
       "vesktop.nix"
-      "incus.nix"
+      # https://github.com/lxc/incus/issues/2956 https://github.com/nixos/nixpkgs/issues/490996
+      # "incus.nix"
       "alacritty.nix"
       "librewolf.nix"
       "syncthing.nix"
@@ -223,7 +224,6 @@
       eza
       vis
       bonk
-      deno
       entr
       ncdu
       vlock

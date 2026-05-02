@@ -1608,4 +1608,3 @@ index 4873beeb6d..6ef617352b 100644
      /// Cycle to next/previous zoom preset with animation.
      pub fn cycle_overview_zoom(
          &mut self,
-
