@@ -45,8 +45,7 @@
       "mullvad.nix"
       "prismlauncher.nix"
       "vesktop.nix"
-      # https://github.com/lxc/incus/issues/2956 https://github.com/nixos/nixpkgs/issues/490996
-      # "incus.nix"
+      "incus.nix"
       "alacritty.nix"
       "librewolf.nix"
       "syncthing.nix"

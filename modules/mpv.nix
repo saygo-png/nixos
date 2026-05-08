@@ -5,10 +5,6 @@
 }: {
   home-manager.users.${conUsername} = {config, ...}: {
     programs.mpv = {
-      # TODO: https://github.com/NixOS/nixpkgs/issues/511900
-      package = pkgs.mpv.override {
-        youtubeSupport = false;
-      };
       enable = true;
       bindings = {
         l = "seek 20";
@@ -51,11 +47,11 @@
         sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
         watch-later-options-clr = true; # Dont save settings like brightness
       };
-      # TODO: https://github.com/NixOS/nixpkgs/issues/511900
-      # scripts = [
-      #   pkgs.mpvScripts.uosc
-      #   pkgs.mpvScripts.autoload
-      # ];
+      scripts = [
+        pkgs.mpvScripts.uosc
+        pkgs.mpvScripts.autoload
+        pkgs.mpvScripts.videoclip
+      ];
     };
   };
 }
