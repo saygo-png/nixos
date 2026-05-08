@@ -216,6 +216,7 @@
       p7zip
       unzip
       gnutar
+      ardour
       unrar-free
       atool # Unified CLI for all of these
 
