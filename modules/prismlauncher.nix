@@ -10,6 +10,7 @@
           pkgs.temurin-bin-8
           pkgs.temurin-bin-17
           pkgs.temurin-bin-21
+          pkgs.temurin-bin-25
         ];
       })
     ];
