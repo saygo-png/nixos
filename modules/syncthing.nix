@@ -30,6 +30,7 @@ in {
         nixos.id = "PSTKO2I-QKU64OB-LMEOEGC-LTAVJHU-O6SCT4V-2GQ7QI2-KARS3FJ-VSZ4ZAT";
         phone.id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
         thinkpad.id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
+        pixel8.id = "EBTJEDI-BV735LM-24RZ7AK-ODAVUMX-KK7IHA6-T2RDBXO-Y5YNCSC-U3TS5QK";
       };
       folders = let
         allDevices = builtins.attrNames syncthingCfg.settings.devices;
@@ -41,14 +42,6 @@ in {
           type = "sendreceive";
           versioning = null;
           devices = allDevices;
-        };
-
-        Games = {
-          path = "${home}/Games";
-          id = "5mfmg-kwfkf";
-          type = "sendreceive";
-          versioning = null;
-          devices = ["thinkpad" "nixos"];
         };
 
         builds = {
