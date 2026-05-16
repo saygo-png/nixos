@@ -11,8 +11,6 @@
     gtk-engine-murrine
 
     kdePackages.qtsvg # Icons for dolphin
-    kdePackages.qtwayland # qt6
-    libsForQt5.qt5.qtwayland
 
     # Some KDE applications such as Dolphin try to fall back to Breeze
     # theme icons. Lets make sure they're also found.
@@ -49,8 +47,13 @@
     enable = true;
     autoEnable = true;
 
-    # This option is seemingly broken and makes a non fitting ugly theme
-    targets.chromium.enable = false;
+    targets = {
+      # This option is seemingly broken and makes a non fitting ugly theme
+      chromium.enable = false;
+
+      # Causes inkscape recompile
+      gtksourceview.enable = false;
+    };
   };
 
   xdg.portal = {
