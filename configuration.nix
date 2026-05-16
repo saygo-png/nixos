@@ -216,7 +216,7 @@
       p7zip
       unzip
       gnutar
-      gpodder
+      kdePackages.kasts
       ardour
       unrar-free
       atool # Unified CLI for all of these
