@@ -328,7 +328,7 @@
       SYSTEMD_PAGER = PAGER;
     };
 
-  system.stateVersion = "26.05";
+  system.stateVersion = "26.11";
 
   # Keep trace of flake hash and flake for every gen in /etc
   system.systemBuilderCommands = "ln -s ${self.sourceInfo.outPath} $out/src";
@@ -393,7 +393,8 @@
       home = {
         username = "${conUsername}";
         homeDirectory = "${conHome}";
-        inherit (osConfig.system) stateVersion;
+        # inherit (osConfig.system) stateVersion;
+        stateVersion = "26.05"; # Home manager is behind nixos right now
         sessionPath = lib.singleton "${config.home.homeDirectory}/.local/bin";
         shellAliases = {
           "ls" = "eza";
