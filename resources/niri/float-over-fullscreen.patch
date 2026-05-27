@@ -1,0 +1,213 @@
+From 76571e894c567f23ae064c3bad08e513982c3355 Mon Sep 17 00:00:00 2001
+From: Zhai Can <bczhc0@126.com>
+Date: Fri, 15 May 2026 11:54:49 +0800
+Subject: [PATCH 1/2] window-rule: Add `float-above-fullscreen`
+
+This rule is used to prevent specific floating windows from being
+hidden when the workspace is occupied by a fullscreen window.
+---
+ niri-config/src/window_rule.rs |  2 ++
+ src/layout/floating.rs         |  5 ++++
+ src/layout/workspace.rs        | 45 ++++++++++++++++++++++------------
+ src/window/mod.rs              |  6 +++++
+ 4 files changed, 42 insertions(+), 16 deletions(-)
+
+diff --git a/niri-config/src/window_rule.rs b/niri-config/src/window_rule.rs
+index f2bc2ad157..14b46e6934 100644
+--- a/niri-config/src/window_rule.rs
++++ b/niri-config/src/window_rule.rs
+@@ -64,6 +64,8 @@ pub struct WindowRule {
+     #[knuffel(child, unwrap(argument))]
+     pub baba_is_float: Option<bool>,
+     #[knuffel(child, unwrap(argument))]
++    pub float_above_fullscreen: Option<bool>,
++    #[knuffel(child, unwrap(argument))]
+     pub block_out_from: Option<BlockOutFrom>,
+     #[knuffel(child, unwrap(argument))]
+     pub variable_refresh_rate: Option<bool>,
+diff --git a/src/layout/floating.rs b/src/layout/floating.rs
+index 075787fdf4..0a07b51acc 100644
+--- a/src/layout/floating.rs
++++ b/src/layout/floating.rs
+@@ -1062,6 +1062,7 @@ impl<W: LayoutElement> FloatingSpace<W> {
+         xray_pos: XrayPos,
+         view_rect: Rectangle<f64, Logical>,
+         focus_ring: bool,
++        base_visible: bool,
+         push: &mut dyn FnMut(FloatingSpaceRenderElement<R>),
+     ) {
+         let scale = Scale::from(self.scale);
+@@ -1076,6 +1077,10 @@ impl<W: LayoutElement> FloatingSpace<W> {
+
+         let active = self.active_window_id.clone();
+         for (tile, tile_pos) in self.tiles_with_render_positions() {
++            if !base_visible && tile.window().rules().float_above_fullscreen != Some(true) {
++                continue;
++            }
++
+             // For the active tile, draw the focus ring.
+             let focus_ring = focus_ring && Some(tile.window().id()) == active.as_ref();
+
+diff --git a/src/layout/workspace.rs b/src/layout/workspace.rs
+index 7448779722..7109b50857 100644
+--- a/src/layout/workspace.rs
++++ b/src/layout/workspace.rs
+@@ -1588,8 +1588,14 @@ impl<W: LayoutElement> Workspace<W> {
+         let scrolling = self.scrolling.tiles_with_render_positions();
+
+         let floating = self.floating.tiles_with_render_positions();
+-        let visible = self.is_floating_visible();
+-        let floating = floating.map(move |(tile, pos)| (tile, pos, visible));
++        let base_visible = self.is_floating_visible();
++        let floating = floating.map(move |(tile, pos)| {
++            if tile.window().rules().float_above_fullscreen == Some(true) {
++                (tile, pos, true)
++            } else {
++                (tile, pos, base_visible)
++            }
++        });
+
+         floating.chain(scrolling)
+     }
+@@ -1646,16 +1652,18 @@ impl<W: LayoutElement> Workspace<W> {
+         focus_ring: bool,
+         push: &mut dyn FnMut(WorkspaceRenderElement<R>),
+     ) {
+-        if !self.is_floating_visible() {
+-            return;
+-        }
++        let base_visible = self.is_floating_visible();
+
+         let view_rect = Rectangle::from_size(self.view_size);
+         let floating_focus_ring = focus_ring && self.floating_is_active();
+-        self.floating
+-            .render(ctx, xray_pos, view_rect, floating_focus_ring, &mut |elem| {
+-                push(elem.into())
+-            });
++        self.floating.render(
++            ctx,
++            xray_pos,
++            view_rect,
++            floating_focus_ring,
++            base_visible,
++            &mut |elem| push(elem.into()),
++        );
+     }
+
+     pub fn render_shadow<R: NiriRenderer>(
+@@ -1755,14 +1763,19 @@ impl<W: LayoutElement> Workspace<W> {
+
+     pub fn window_under(&self, pos: Point<f64, Logical>) -> Option<(&W, HitType)> {
+         // This logic is consistent with tiles_with_render_positions().
+-        if self.is_floating_visible() {
+-            if let Some(rv) = self
+-                .floating
++        let base_visible = self.is_floating_visible();
++        if let Some(rv) =
++            self.floating
+                 .tiles_with_render_positions()
+-                .find_map(|(tile, tile_pos)| HitType::hit_tile(tile, tile_pos, pos))
+-            {
+-                return Some(rv);
+-            }
++                .find_map(|(tile, tile_pos)| {
++                    if base_visible || tile.window().rules().float_above_fullscreen == Some(true) {
++                        HitType::hit_tile(tile, tile_pos, pos)
++                    } else {
++                        None
++                    }
++                })
++        {
++            return Some(rv);
+         }
+
+         self.scrolling.window_under(pos)
+diff --git a/src/window/mod.rs b/src/window/mod.rs
+index 14527cd242..4538472f50 100644
+--- a/src/window/mod.rs
++++ b/src/window/mod.rs
+@@ -108,6 +108,9 @@ pub struct ResolvedWindowRules {
+     /// Whether to bob this window up and down.
+     pub baba_is_float: Option<bool>,
+
++    /// Whether this floating window should render above fullscreen windows.
++    pub float_above_fullscreen: Option<bool>,
++
+     /// Whether to block out this window from certain render targets.
+     pub block_out_from: Option<BlockOutFrom>,
+
+@@ -290,6 +293,9 @@ impl ResolvedWindowRules {
+                 if let Some(x) = rule.baba_is_float {
+                     resolved.baba_is_float = Some(x);
+                 }
++                if let Some(x) = rule.float_above_fullscreen {
++                    resolved.float_above_fullscreen = Some(x);
++                }
+                 if let Some(x) = rule.block_out_from {
+                     resolved.block_out_from = Some(x);
+                 }
+
+From 93ad318f240397bc7d4bec370f17d4f472a8caf1 Mon Sep 17 00:00:00 2001
+From: Zhai Can <bczhc0@126.com>
+Date: Sat, 16 May 2026 06:43:13 +0800
+Subject: [PATCH 2/2] Docs for window-rule `float-above-fullscreen`
+
+---
+ docs/wiki/Configuration:-Window-Rules.md | 13 +++++++++++++
+ niri-config/src/lib.rs                   |  5 +++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/docs/wiki/Configuration:-Window-Rules.md b/docs/wiki/Configuration:-Window-Rules.md
+index f8fa215ec3..72481e9bb5 100644
+--- a/docs/wiki/Configuration:-Window-Rules.md
++++ b/docs/wiki/Configuration:-Window-Rules.md
+@@ -99,6 +99,7 @@ window-rule {
+     clip-to-geometry true
+     tiled-state true
+     baba-is-float true
++    float-above-fullscreen true
+
+     background-effect {
+         xray true
+@@ -928,6 +929,18 @@ https://github.com/user-attachments/assets/3f4cb1a4-40b2-4766-98b7-eec014c19509
+
+ </video>
+
++#### `float-above-fullscreen`
++
++<sup>Since: next release</sup>
++
++Make a floating window always visible when the current workspace is occupied by a fullscreen window.
++
++```kdl
++window-rule {
++    float-above-fullscreen false
++}
++```
++
+ #### `background-effect`
+
+ <sup>Since: 26.04</sup>
+diff --git a/niri-config/src/lib.rs b/niri-config/src/lib.rs
+index 909aeb80a5..e284e45231 100644
+--- a/niri-config/src/lib.rs
++++ b/niri-config/src/lib.rs
+@@ -904,6 +904,8 @@ mod tests {
+                 tab-indicator {
+                     active-color "#f00"
+                 }
++
++                float-above-fullscreen true
+             }
+
+             layer-rule {
+@@ -1856,6 +1858,9 @@ mod tests {
+                     geometry_corner_radius: None,
+                     clip_to_geometry: None,
+                     baba_is_float: None,
++                    float_above_fullscreen: Some(
++                        true,
++                    ),
+                     block_out_from: None,
+                     variable_refresh_rate: None,
+                     default_column_display: Some(

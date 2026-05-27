@@ -111,6 +111,7 @@ prefer-no-csd
 window-rule {
   match app-id=r#".*"#
   draw-border-with-background false
+  float-above-fullscreen true
   open-maximized true
 }
 
@@ -128,7 +129,6 @@ window-rule {
 
 window-rule {
   match app-id=r#"^org\.keepassxc\.KeePassXC$"#
-
   block-out-from "screen-capture"
 }
 
@@ -138,7 +138,13 @@ window-rule {
 }
 
 window-rule {
-    match app-id=r#"(firefox|LibreWolf)$"# title="^Picture-in-Picture$"
+    match app-id=r#"(firefox|librewolf)$"# title="^Picture-in-Picture$"
+    open-floating true
+    float-above-fullscreen true
+}
+
+window-rule {
+    match app-id=r#"(firefox|librewolf)$"# title="^Picture-in-Picture$"
     open-floating true
 }
 
