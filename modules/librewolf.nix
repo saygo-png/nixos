@@ -143,6 +143,25 @@ in {
             addons.close-tabs-shortcuts
             addons.return-youtube-dislikes
             addons.dark-background-light-text
+            (
+              inputs.firefox-addons.lib.${system}.buildFirefoxXpiAddon {
+                pname = "hide-youtube-fullscreen-controls";
+                version = "3.1.4";
+                addonId = "@hideyoutubecontrolls";
+                url = "https://addons.mozilla.org/firefox/downloads/file/4035480/hide_youtube_controls-3.1.4.xpi";
+                sha256 = "sha256-BA+LOwmuLlzlezwGVRt4ppml1IHGYuTjxKm6VKt59/U=";
+                meta = {
+                  homepage = "https://github.com/nralbrecht/youtube-hide-controls";
+                  description = "Hides the YouTube full screen controls";
+                  license = lib.licenses.mit;
+                  mozPermissions = [
+                    "storage"
+                    "*://*.youtube.com/*"
+                  ];
+                  platforms = lib.platforms.all;
+                };
+              }
+            )
           ];
           settings = let
             ublock-origin = "uBlock0@raymondhill.net";
