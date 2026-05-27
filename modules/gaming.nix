@@ -4,7 +4,10 @@
   ...
 }: {
   custom.persist.home = {
-    directories = [".local/share/lutris"];
+    directories = [
+      ".local/share/lutris"
+      ".local/share/applications" # For lutris menu entries
+    ];
     cache.directories = [
       ".cache/lutris"
 
