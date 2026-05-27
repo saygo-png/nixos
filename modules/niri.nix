@@ -74,15 +74,6 @@ in {
 
   services.gnome.gnome-keyring.enable = true;
   systemd.user = {
-    # Override a section of service so that niri doesnt stop when the config changes.
-    units."niri.service" = {
-      overrideStrategy = "asDropin";
-      text = ''
-        [Service]
-        X-StopIfChanged=false
-        X-RestartIfChanged=false
-      '';
-    };
     services = let
       mkNiriService = {
         ExecStart,

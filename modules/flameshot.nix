@@ -1,8 +1,17 @@
 {
   pkgs,
   conUsername,
+  pkgs-frozen,
   ...
 }: {
+  nixpkgs.overlays = [
+    (
+      _: _: {
+        flameshot = pkgs-frozen.flameshot;
+      }
+    )
+  ];
+
   environment.systemPackages = [
     pkgs.flameshot
 
