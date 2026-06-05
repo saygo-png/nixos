@@ -100,6 +100,14 @@ executable owt
     , time
     , universum
 
+executable ow-gen1-selector
+  import:        common-options, threaded
+  main-is:       src/ow-gen1-selector.hs
+  build-depends:
+    , optparse-applicative
+    , shh
+    , universum
+
 executable free-space
   import:        common-options, threaded
   main-is:       src/free-space.hs
@@ -125,12 +133,12 @@ executable convertlink
   main-is:       src/convertlink.hs
   build-depends:
     , Cabal
+    , containers
     , directory
     , filepath
     , optparse-applicative
     , relude
     , unix
-    , containers
     , vector
 
 executable saygo-record
