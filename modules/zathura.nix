@@ -13,7 +13,7 @@
       options = {
         selection-clipboard = "clipboard";
         guioptions = "s";
-        adjust-open = "width";
+        adjust-open = "page-fit";
         statusbar-h-padding = 0;
         statusbar-v-padding = 0;
         scroll-page-aware = true;
