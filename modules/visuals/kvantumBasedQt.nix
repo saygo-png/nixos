@@ -1,53 +1,58 @@
 {
-  inputs,
   conUsername,
-  system,
   pkgs,
+  lib,
   ...
-}: let
-  hyprqt6engine = inputs.hyprqt6engine.packages.${system}.hyprqt6engine;
-in {
+}: {
   stylix.targets.qt.enable = false;
+
+  nixpkgs.overlays = [
+    (_: prev: {
+      qt6ct = prev.qt6ct.overrideAttrs (oldAttrs: {
+        patches = (oldAttrs.patches or []) ++ [(lib.my.relativeToRoot "resources/qt6ct-0.11.patch")];
+        name = "qt6ct-kde";
+      });
+    })
+  ];
+
   environment.systemPackages = [
-    pkgs.carla
     pkgs.kdePackages.breeze
     pkgs.kdePackages.breeze-icons
     pkgs.kdePackages.qqc2-breeze-style
     pkgs.kdePackages.kcolorscheme
-    hyprqt6engine
-
-    pkgs.hyprland-qt-support
-    pkgs.hyprland-qtutils
+    pkgs.kdePackages.qt6ct
+    pkgs.kdePackages.plasma-integration
+    pkgs.kdePackages.qqc2-desktop-style
+    pkgs.kdePackages.kirigami
   ];
 
-  environment.variables = {
-    QT_QPA_PLATFORMTHEME = "hyprqt6engine";
-    QT_PLUGIN_PATH = "${pkgs.qt6.qtbase}/${pkgs.qt6.qtbase.qtPluginPrefix}:${hyprqt6engine}/lib/qt-6";
-  };
-  home-manager.users.${conUsername} = { ...}: {
+  qt.enable = true;
+  home-manager.users.${conUsername} = {...}: {
     stylix.targets.qt.enable = false;
     stylix.targets.kde.enable = false;
     qt = {
       enable = true;
-      platformTheme.name = "hyprqt6engine";
-      style = {
-        name = "Breeze";
-        package = pkgs.kdePackages.breeze;
+      platformTheme.name = "qtct";
+      qt6ctSettings = {
+        Appearance = {
+          style = "Breeze";
+          standard_dialogs = "xdgdesktopportal";
+        };
+        Fonts = {
+          fixed = ''"Courier Prime,12"'';
+          general = ''"Courier Prime,12"'';
+        };
       };
     };
-
-    home = {
-      file = {
-        ".config/hypr/hyprqt6engine.conf".text = ''
-          theme {
-            color_scheme = ${pkgs.kdePackages.breeze}/share/color-schemes/BreezeLight.colors
-            style = Breeze
-            icon_theme = breeze-light
-            font_size = 13
-            font_fixed_size = 13
-          }
-        '';
-      };
+    xdg.configFile = {
+      "kdeglobals".text = ''
+        [UiSettings]
+        ColorScheme=BreezeDark
+      '';
+      "dolphinrc".text = ''
+        [UiSettings]
+        ColorScheme=BreezeDark
+      '';
     };
   };
 }
