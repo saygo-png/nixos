@@ -40,6 +40,7 @@
       "tmux.nix"
       "fish.nix"
       "qcalc.nix"
+      "kasts.nix"
       "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
@@ -216,7 +217,6 @@
       p7zip
       unzip
       gnutar
-      kdePackages.kasts
       ardour
       unrar-free
       atool # Unified CLI for all of these
