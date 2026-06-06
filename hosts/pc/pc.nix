@@ -40,6 +40,12 @@
         weekly = 3;
         monthly = 1;
       };
+      "zroot/local/cache" = {
+        hourly = 50;
+        daily = 15;
+        weekly = 3;
+        monthly = 1;
+      };
     };
   };
 
