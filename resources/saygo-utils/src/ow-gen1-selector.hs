@@ -21,9 +21,9 @@ parserInfo = info (helper <*> argsParser) (progDesc "Block or unblock the ams1 O
   where
     argsParser =
       subparser
-        $ command "disable" (info (helper <*> pure CmdDisable) (progDesc "Enable blocking"))
+        $ command "disable" (info (helper <*> pure CmdDisable) (progDesc "Disable blocking"))
         <> command "enable" (info (helper <*> pure CmdEnable) (progDesc "Enable blocking"))
-        <> command "on" (info (helper <*> pure CmdEnable) (progDesc "Disable blocking"))
+        <> command "on" (info (helper <*> pure CmdEnable) (progDesc "Enable blocking"))
         <> command "off" (info (helper <*> pure CmdDisable) (progDesc "Disable blocking"))
 
 main :: IO ()
