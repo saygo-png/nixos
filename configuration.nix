@@ -35,6 +35,7 @@
       "xdgDirsEnforcement.nix"
 
       "mpv.nix"
+      "osu.nix"
       "git.nix"
       "rofi.nix"
       "tmux.nix"
