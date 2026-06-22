@@ -1,58 +1,9 @@
 {
   pkgs,
   conUsername,
-  pkgs-frozen,
   ...
 }: {
-  nixpkgs.overlays = [
-    (
-      _: _: {
-        flameshot = pkgs-frozen.flameshot;
-      }
-    )
-  ];
-
-  environment.systemPackages = [
-    pkgs.flameshot
-
-    (pkgs.writeShellApplication {
-      name = "flameshot_wrapper";
-      runtimeInputs = with pkgs; [flameshot xdotool];
-      text = ''
-        # This script is called instead of flameshot in awesome to fix an issue
-        # where calling flameshot would drop focus, even after taking a screenshot
-        focusedwindow_before=$(xdotool getactivewindow)
-        flameshot gui
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-      '';
-    })
-
-    (pkgs.writeShellApplication {
-      name = "flameshot_wrapper_ocr";
-      runtimeInputs = with pkgs; [flameshot xdotool tesseract];
-      text = ''
-        # This script does what flameshot_wrapper does, and
-        # copies the screenshoted text to your clipboard
-        focusedwindow_before=$(xdotool getactivewindow)
-        message=$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin+pol stdin stdout)
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-        notify-send "$message"
-        echo "$message" | xclip -r -sel clip
-      '';
-    })
-
-    (pkgs.writeShellApplication {
-      name = "flameshot_wrapper_ocr_trans";
-      runtimeInputs = with pkgs; [flameshot xdotool tesseract translate-shell libnotify];
-      text = ''
-        # This script does what flameshot_wrapper does, and
-        # translates the screenshotted text, sending a notification with the translation
-        focusedwindow_before=$(xdotool getactivewindow)
-        notify-send -t 3000 "$(flameshot gui -r -s | tesseract --psm 12 --oem 1 -l eng+rus+fin stdin stdout | trans -brief)"
-        [ "$focusedwindow_before" = "$(xdotool getactivewindow)" ] && xdotool windowfocus "$focusedwindow_before"
-      '';
-    })
-  ];
+  environment.systemPackages = [pkgs.flameshot];
   home-manager.users.${conUsername} = {config, ...}: {
     xdg.configFile."flameshot/flameshot.ini" = {
       text =

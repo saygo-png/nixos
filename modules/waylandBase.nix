@@ -17,7 +17,6 @@
 
   environment.systemPackages = with pkgs; [
     inputs.saywallpaper.packages.${pkgs.stdenv.hostPlatform.system}.saywallpaper
-    flameshot
     wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
   ];
 }

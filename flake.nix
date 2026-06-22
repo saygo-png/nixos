@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/3d4185a8764160890e0ba11c052a2aa913c1e073";
+    nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
 
     hyprqt6engine = {
       url = "github:hyprwm/hyprqt6engine";
@@ -35,7 +35,10 @@
       };
     };
 
-    nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware = {
+      url = "github:nixos/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     impermanence = {
       url = "github:nix-community/impermanence";

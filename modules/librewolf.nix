@@ -4,6 +4,7 @@
   inputs,
   system,
   config,
+  pkgs-frozen,
   conUsername,
   ...
 }: let
@@ -13,7 +14,8 @@
 in {
   nixpkgs.overlays = [
     (_final: prev: {
-      librewolf = prev.librewolf.overrideAttrs (oldAttrs: {
+      librewolf-unwrapped = pkgs-frozen.librewolf-unwrapped;
+      librewolf = pkgs-frozen.librewolf.overrideAttrs (oldAttrs: {
         # launch librewolf with user profile
         buildCommand =
           oldAttrs.buildCommand
