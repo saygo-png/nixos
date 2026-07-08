@@ -1,5 +1,6 @@
 {
   lib,
+  self,
   pkgs,
   config,
   inputs,
@@ -69,10 +70,7 @@
       };
     })
 
-    (pkgs.callPackage (lib.my.relativeToRoot "resources/saygo-utils")
-      {
-        niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
-      })
+    self.packages.${system}.saygo-utils
 
     (pkgs.writeScriptBin "nr"
       ''

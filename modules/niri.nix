@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  self,
   config,
   conUsername,
   inputs,
