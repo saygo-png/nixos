@@ -102,10 +102,12 @@ in {
         description = "Saywallpaper wallpaper daemon for Niri";
         ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
       };
-      saybar = mkNiriService {
-        description = "Saybar status bar for Niri";
-        ExecStart = "${conHome}/.local/bin/saybar";
-      };
+      saybar =
+        mkNiriService {
+          description = "Saybar status bar for Niri";
+          ExecStart = "${conHome}/.local/bin/saybar";
+        }
+        // {path = [self.packages.${system}.saygo-utils];};
     };
   };
 
