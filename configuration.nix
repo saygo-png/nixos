@@ -3,7 +3,6 @@
   pkgs,
   self,
   config,
-  system,
   inputs,
   conHome,
   nixvim-pkgs,

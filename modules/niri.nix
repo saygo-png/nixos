@@ -13,6 +13,8 @@
 in {
   imports = lib.my.withModules ["waylandBase.nix"];
 
+  programs.niri.enable = true;
+
   nixpkgs.overlays = [
     (_: prev: {
       niri = let
@@ -110,8 +112,6 @@ in {
         // {path = [self.packages.${system}.saygo-utils];};
     };
   };
-
-  programs.niri.enable = true;
 
   home-manager.users.${conUsername} = _: {
     services.polkit-gnome.enable = true;
