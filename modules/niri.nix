@@ -96,10 +96,6 @@ in {
         };
       };
     in {
-      niri-flake-polkit = mkNiriService {
-        description = "PolicyKit Authentication Agent for Niri";
-        ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
-      };
       saywallpaper = mkNiriService {
         description = "Saywallpaper wallpaper daemon for Niri";
         ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
