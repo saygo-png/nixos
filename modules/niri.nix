@@ -64,8 +64,9 @@ in {
       ];
       config = {
         niri = {
-          default = "gnome;gtk";
           "org.freedesktop.impl.portal.Access" = "gtk";
+          default = ["gnome" "gtk"];
+          "org.freedesktop.impl.portal.Screenshot" = "gnome";
           "org.freedesktop.impl.portal.Notification" = "gtk";
           "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
 

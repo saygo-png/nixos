@@ -25,9 +25,7 @@
           historyConfirmationToDelete=false
           saveAfterCopy=false
           saveAsFileExtension=png
-          disabledGrimWarning=true
-          useGrimAdapter=true
-          savePath=${config.home.homeDirectory}/Pictures/screenshots
+          savePath=${config.home.homeDirectory}/Pictures/Screenshots
           savePathFixed=true
           showDesktopNotification=true
           showHelp=false

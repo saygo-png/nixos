@@ -9,6 +9,9 @@
     "waybar/waybar.nix"
   ];
 
+  # Saves permission info from access portals.
+  custom.persist.home.directories = [".local/share/flatpak/db"];
+
   # Polkit (needed for window managers)
   security.polkit.enable = lib.mkDefault true;
 
