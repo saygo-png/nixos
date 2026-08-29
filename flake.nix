@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
+    nixpkgs-with-eq10q.url = "github:nixos/nixpkgs/05897eedf6c4b6b774c56a8047aeb99a8ded42c5";
 
     hyprqt6engine = {
       url = "github:hyprwm/hyprqt6engine";
@@ -161,6 +162,7 @@
     pkgsFor = eachSystem (system: import nixpkgs {inherit system;});
 
     pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
+    pkgs-eq10q = eachSystem (system: import inputs.nixpkgs-with-eq10q {inherit system;});
     nixvim-pkgs = eachSystem (system: import inputs.neovim-config.inputs.nixvim.inputs.nixpkgs {inherit system;});
     treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
@@ -168,6 +170,7 @@
       inherit inputs self system;
       nixvim-pkgs = nixvim-pkgs.${system};
       pkgs-frozen = pkgs-frozen.${system};
+      pkgs-eq10q = pkgs-eq10q.${system};
       lib = lib.extend (final: _: {my = import ./modules/lib.nix {lib = final;};});
     };
 
