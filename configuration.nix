@@ -45,6 +45,7 @@
       "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
+      # "virt-manager.nix"
       "prismlauncher.nix"
       "vesktop.nix"
       "incus.nix"
