@@ -6,14 +6,6 @@
     nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
     nixpkgs-with-eq10q.url = "github:nixos/nixpkgs/05897eedf6c4b6b774c56a8047aeb99a8ded42c5";
 
-    hyprqt6engine = {
-      url = "github:hyprwm/hyprqt6engine";
-      inputs = {
-        systems.follows = "systems";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-
     neovim-config = {
       url = "github:saygo-png/neovim-config";
       inputs = {
