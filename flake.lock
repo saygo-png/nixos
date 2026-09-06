@@ -637,11 +637,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773154930,
-        "narHash": "sha256-THRrD7ztaj0En7WJrubcyXjWkfJ8/nIdKhLkXaQ50kw=",
+        "lastModified": 1788271670,
+        "narHash": "sha256-QtGI8tnieWblguQyQrp1IzEXxH9giLnS29LoMZLHpjM=",
         "owner": "saygo-png",
         "repo": "Saywallpaper",
-        "rev": "23d0e8d47d4743526bbdbe5c197ae091a361ba96",
+        "rev": "483ddcdbd87f70491e5998d23c66852480df07c8",
         "type": "github"
       },
       "original": {
@@ -670,11 +670,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773149927,
-        "narHash": "sha256-7l8rP4UwaXBwhxq9t3APWc1WuSCgG2u7nJfxqHFpF5s=",
+        "lastModified": 1788213613,
+        "narHash": "sha256-WuqIo0aQftLfM7YyHagOcngboSjSGDOYatvUKcNL9KU=",
         "owner": "saygo-png",
         "repo": "saywayland",
-        "rev": "ec29b5b0d42a54fdf8ce1f5d0abfcb666efe54ee",
+        "rev": "5f92b451c51ed856c4724a6425ed9a5afa036751",
         "type": "github"
       },
       "original": {
