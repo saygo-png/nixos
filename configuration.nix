@@ -89,7 +89,7 @@
 
   # Some programs ignore SIGTERM (notably "winedevice.exe") causing
   # a timeout until SIGKILL. This shortens this window.
-  systemd.user.settings.Manager.DefaultTimeoutStopSec="10s";
+  systemd.user.settings.Manager.DefaultTimeoutStopSec = "10s";
 
   # Systemd in initrd
   boot.initrd.systemd.enable = true;
