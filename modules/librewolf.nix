@@ -13,7 +13,7 @@
   profileName = "librewolf-" + conUsername;
 in {
   nixpkgs.overlays = [
-    (_final: prev: {
+    (_final: _prev: {
       librewolf-unwrapped = pkgs-frozen.librewolf-unwrapped;
       librewolf = pkgs-frozen.librewolf.overrideAttrs (oldAttrs: {
         # launch librewolf with user profile
@@ -34,7 +34,7 @@ in {
     })
   ];
 
-  home-manager.users.${conUsername} = {config, ...}: {
+  home-manager.users.${conUsername} = {...}: {
     # Removes .keep file from creating ~/.librewolf and ~/.mozilla
     home.file.".librewolf/native-messaging-hosts".enable = lib.mkForce false;
     home.file.".mozilla/native-messaging-hosts".enable = lib.mkForce false;
@@ -144,7 +144,6 @@ in {
             addons.gruvbox-dark-theme
             addons.close-tabs-shortcuts
             addons.return-youtube-dislikes
-            addons.dark-background-light-text
             (
               inputs.firefox-addons.lib.${system}.buildFirefoxXpiAddon {
                 pname = "hide-youtube-fullscreen-controls";
@@ -167,7 +166,6 @@ in {
           ];
           settings = let
             ublock-origin = "uBlock0@raymondhill.net";
-            dark-background-light-text = "jid1-QoFqdK4qzUfGWQ@jetpack";
           in {
             ${ublock-origin} = {
               force = true;
@@ -221,50 +219,6 @@ in {
                     "adguard-mobile-app-banners"
                   ]
                   ++ customLists;
-              };
-            };
-            ${dark-background-light-text} = {
-              force = true;
-              settings = let
-                inherit (config.lib.stylix.colors) withHashtag;
-              in {
-                default_foreground_color = withHashtag.base05;
-                default_background_color = withHashtag.base00;
-                default_link_color = withHashtag.base0D;
-                default_visited_color = withHashtag.base0E;
-                default_active_color = withHashtag.base08;
-                default_selection_color = withHashtag.base0A;
-                configured_pages = let
-                  disabledList = l: lib.genAttrs l (_: 0);
-                  stylesheetProcessorCssList = l: lib.genAttrs l (_: 1);
-                  simpleCssList = l: lib.genAttrs l (_: 2);
-                  invertList = l: lib.genAttrs l (_: 3);
-                  pageSettings = s:
-                    lib.foldl lib.mergeAttrs {} [
-                      (invertList s.invert)
-                      (disabledList s.disabled)
-                      (simpleCssList s.simpleCss)
-                      (stylesheetProcessorCssList s.stylesheetProcessor)
-                    ];
-                in
-                  pageSettings {
-                    invert = [];
-                    disabled = [
-                      "allegro.pl"
-                      "github.com"
-                      "poczta.wp.pl"
-                      "vinted.pl"
-                      "reddit.com"
-                      "whitescreen.org"
-                      "pstream.org"
-                      "hackage.haskell.org"
-                      "twitch.tv"
-                      "duckduckgo.com"
-                      "saygo-png.github.io/white-page/"
-                    ];
-                    simpleCss = [];
-                    stylesheetProcessor = [];
-                  };
               };
             };
           };
