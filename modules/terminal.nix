@@ -65,7 +65,7 @@
         # };
       };
 
-      programs.rofi.terminal = lib.mkIf config.programs.rofi.enable termExe;
+      programs.rofi.settings.terminal = lib.mkIf config.programs.rofi.enable termExe;
       wayland.windowManager.sway.config.terminal = lib.mkIf config.windowManager.sway.enable termExe;
       xdg.desktopEntries = {
         nvim = {

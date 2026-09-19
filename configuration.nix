@@ -352,13 +352,6 @@
     nixPath = lib.singleton "nixpkgs=${inputs.nixpkgs}";
   };
 
-  # programs.nix-ld.enable = true;
-  # # If needed, you can add missing libraries here. nix-index-database is your friend to
-  # # find the name of the package from the error message:
-  # # https://github.com/nix-community/nix-index-database
-  # programs.nix-ld.libraries =
-  #   options.programs.nix-ld.libraries.default;
-
   # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
 
@@ -558,11 +551,11 @@
         defaultCommand = "fd --hidden --type f";
         defaultOptions = ["--no-height"];
 
-        fileWidgetCommand = "fd --hidden --type f";
-        fileWidgetOptions = ["--preview 'head {}'"];
+        fileWidget.command = "fd --hidden --type f";
+        fileWidget.options = ["--preview 'head {}'"];
 
-        changeDirWidgetCommand = "fd --hidden --type d";
-        changeDirWidgetOptions = ["--preview 'tree -C {} | head -200'"];
+        changeDirWidget.command = "fd --hidden --type d";
+        changeDirWidget.options = ["--preview 'tree -C {} | head -200'"];
 
         # Transparent fzf.
         colors = {

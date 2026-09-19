@@ -85,18 +85,19 @@
       "/persist".neededForBoot = true;
     };
 
-    boot.initrd.systemd.services.rollback = {
-      description = "Rollback root filesystem to a pristine state on boot";
-      wantedBy = ["initrd.target"];
-      after = ["zfs-import-zroot.service"];
-      before = ["sysroot.mount"];
-      path = [pkgs.zfs];
-      unitConfig.DefaultDependencies = "no";
-      serviceConfig.Type = "oneshot";
-      script = ''
-        zfs rollback -r zroot/local/root@blank && echo ">> rollback complete <<" || echo "!! rollback failed !!"
-      '';
-    };
+    # Temporarily disable purging
+    # boot.initrd.systemd.services.rollback = {
+    #   description = "Rollback root filesystem to a pristine state on boot";
+    #   wantedBy = ["initrd.target"];
+    #   after = ["zfs-import-zroot.service"];
+    #   before = ["sysroot.mount"];
+    #   path = [pkgs.zfs];
+    #   unitConfig.DefaultDependencies = "no";
+    #   serviceConfig.Type = "oneshot";
+    #   script = ''
+    #     zfs rollback -r zroot/local/root@blank && echo ">> rollback complete <<" || echo "!! rollback failed !!"
+    #   '';
+    # };
 
     environment.persistence = let
       cfg = config.custom.persist;

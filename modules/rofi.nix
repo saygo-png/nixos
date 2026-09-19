@@ -15,7 +15,7 @@
       l = config.lib.formats.rasi.mkLiteral;
     in {
       enable = true;
-      extraConfig = {
+      settings = {
         sort = true;
         padding = 10;
         scrollbar = true;
