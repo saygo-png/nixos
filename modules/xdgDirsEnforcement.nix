@@ -30,18 +30,22 @@ in {
     _JAVA_OPTIONS = "-Djava.util.prefs.userRoot=${homeConfig.xdg.configHome}/java";
   };
 
-  programs.steam.package = pkgs.steam.override (old: {
-    extraBwrapArgs =
-      (old.buildFHSEnv.extraBwrapArgs or [])
-      ++ [
-        "--bind $XDG_DATA_HOME/steam-home $HOME"
+  nixpkgs.overlays = [
+    (_final: prev: {
+      steam = prev.steam.override (old: {
+        extraBwrapArgs =
+          (old.buildFHSEnv.extraBwrapArgs or [])
+          ++ [
+            "--bind $XDG_DATA_HOME/steam-home $HOME"
 
-        "--unsetenv XDG_CACHE_HOME"
-        "--unsetenv XDG_CONFIG_HOME"
-        "--unsetenv XDG_DATA_HOME"
-        "--unsetenv XDG_STATE_HOME"
-      ];
-  });
+            "--unsetenv XDG_CACHE_HOME"
+            "--unsetenv XDG_CONFIG_HOME"
+            "--unsetenv XDG_DATA_HOME"
+            "--unsetenv XDG_STATE_HOME"
+          ];
+      });
+    })
+  ];
 
   custom.persist = {
     home = {

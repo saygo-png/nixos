@@ -42,7 +42,7 @@
     };
   };
 
-  users.users.${conUsername}.extraGroups = ["incus-admin"];
+  users.users.${conUsername}.extraGroups = ["incus"];
 
   networking.nftables.enable = true;
   networking.firewall.interfaces.incusbr0 = {
