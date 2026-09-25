@@ -45,6 +45,8 @@
       "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
+      "nsxiv.nix"
+      # "wireshark.nix"
       # "virt-manager.nix"
       "prismlauncher.nix"
       "vesktop.nix"
@@ -266,7 +268,6 @@
       pitivi
       krita # Painting
       anki # Flashcards
-      nsxiv # Image viewer
       simplescreenrecorder
       godot-mono # Game engine
       inkscape # Vector graphics
