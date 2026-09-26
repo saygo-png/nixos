@@ -34,6 +34,8 @@
       "impermanence.nix"
       "xdgDirsEnforcement.nix"
 
+      "nsxiv"
+
       "mpv.nix"
       "osu.nix"
       "git.nix"
@@ -45,7 +47,6 @@
       "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
-      "nsxiv.nix"
       # "wireshark.nix"
       # "virt-manager.nix"
       "prismlauncher.nix"

@@ -1,0 +1,60 @@
+--- a/config.def.h
++++ b/config.def.h
+@@ -26,8 +26,19 @@ static const bool TOP_STATUSBAR = false;
+  * (first/last value is used as min/max zoom level)
+  */
+ static const float zoom_levels[] = {
+-	 12.5,  25.0,  50.0,  75.0,
+-	100.0, 150.0, 200.0, 400.0, 800.0
++	  3.125,     3.51,     3.94,     4.42,     4.96,     5.57,
++	  6.25,      7.02,     7.87,     8.84,     9.92,    11.14,
++	  12.5,     14.03,    15.75,    17.68,    19.84,    22.27,
++	  25.0,     28.06,    31.50,    35.36,    39.69,    44.54,
++	  50.0,     56.12,    63.00,    70.71,    79.37,    89.09,
++	 100.0,    112.25,   125.99,   141.42,   158.74,   178.18,
++	 200.0,    224.49,   251.98,   282.84,   317.48,   356.36,
++	 400.0,    448.99,   503.97,   565.69,   634.96,   712.72,
++	 800.0,    897.97,  1007.94,  1131.37,  1269.92,  1425.44,
++	1600.0,   1795.94,  2015.87,  2262.74,  2539.84,  2850.88,
++	3200.0,   3591.88,  4031.75,  4525.48,  5079.68,  5701.75,
++	6400.0,   7183.76,  8063.50,  9050.97,  10159.36, 11403.50,
++	12800.0,  14367.52, 16127.01, 18101.94, 20318.72, 22807.00, 25600.0
+ };
+
+ /* default slideshow delay (in sec, overwritten via -S option): */
+@@ -82,10 +93,15 @@ static const bool TNS_FILTERS_IS_BLACKLIST = false;
+ #ifdef INCLUDE_THUMBS_CONFIG
+
+ /* thumbnail sizes in pixels (width == height): */
+-static const int thumb_sizes[] = { 32, 64, 96, 128, 160 };
++static const int thumb_sizes[] = {
++	  16,   24,   32,   48,   64,   96,
++	 128,  160,  192,  224,  256,  320,
++	 384,  448,  512,  640,  768,  896,
++	1024, 1280, 1536, 1792, 2048
++};
+
+ /* thumbnail size at startup, index into thumb_sizes[]: */
+-static const int THUMB_SIZE = 3;
++static const int THUMB_SIZE = 12;
+
+ #endif
+ #ifdef INCLUDE_MAPPINGS_CONFIG
+@@ -117,7 +133,7 @@ static const keymap_t keys[] = {
+ 	{ ControlMask,  XK_Up,            g_scroll_screen,      DIR_UP },
+ 	{ ControlMask,  XK_l,             g_scroll_screen,      DIR_RIGHT },
+ 	{ ControlMask,  XK_Right,         g_scroll_screen,      DIR_RIGHT },
+-	{ 0,            XK_plus,          g_zoom,               +1 },
++	{ 0,            XK_equal,         g_zoom,               +1 },
+ 	{ 0,            XK_KP_Add,        g_zoom,               +1 },
+ 	{ 0,            XK_minus,         g_zoom,               -1 },
+ 	{ 0,            XK_KP_Subtract,   g_zoom,               -1 },
+@@ -171,7 +187,7 @@ static const keymap_t keys[] = {
+ 	{ 0,            XK_K,             i_scroll_to_edge,     DIR_UP },
+ 	{ 0,            XK_L,             i_scroll_to_edge,     DIR_RIGHT },
+ 	{ 0,            XK_z,             i_scroll_to_center,   None },
+-	{ 0,            XK_equal,         i_set_zoom,           100 },
++	{ 0,            XK_plus,          i_set_zoom,           100 },
+ 	{ 0,            XK_w,             i_fit_to_win,         SCALE_DOWN },
+ 	{ 0,            XK_W,             i_fit_to_win,         SCALE_FIT },
+ 	{ 0,            XK_F,             i_fit_to_win,         SCALE_FILL },
