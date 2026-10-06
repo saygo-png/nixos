@@ -20,6 +20,9 @@
 
         "--indent-wheres"
         "true"
+
+        "--haddock-style"
+        "single-line"
       ];
     };
 

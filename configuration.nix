@@ -652,6 +652,7 @@
         indentation = 2;
         respectful = false;
         indent-wheres = true;
+        haddock-style = "single-line";
       };
     };
   };
