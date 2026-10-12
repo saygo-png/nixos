@@ -9,6 +9,12 @@
 
   stylix.targets.fish.enable = false;
 
+  custom.persist.home.cache = {
+    directories = [
+      ".local/share/fish"
+    ];
+  };
+
   home-manager.users.${conUsername} = {
     stylix.targets.fish.enable = false;
     programs.alacritty.settings.terminal.shell = lib.getExe pkgs.fish;
