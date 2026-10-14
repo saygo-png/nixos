@@ -65,6 +65,7 @@
     saywallpaper = {
       url = "github:saygo-png/Saywallpaper";
       inputs = {
+        sayland.inputs.git-hooks.follows = "";
         treefmt-nix.follows = "treefmt-nix";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
