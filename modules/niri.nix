@@ -97,16 +97,23 @@ in {
         };
       };
     in {
-      saywallpaper = mkNiriService {
-        description = "Saywallpaper wallpaper daemon for Niri";
-        ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
-      };
+      saywallpaper =
+        mkNiriService {
+          description = "Saywallpaper wallpaper daemon for Niri";
+          ExecStart = "${lib.getExe inputs.saywallpaper.packages.${system}.saywallpaper} -i ${conHome}/.config/wallpaper.raw";
+        }
+        // {
+          environment.WAYLAND_DEBUG = "1";
+        };
       saybar =
         mkNiriService {
           description = "Saybar status bar for Niri";
           ExecStart = "${conHome}/.local/bin/saybar";
         }
-        // {path = [self.packages.${system}.saygo-utils];};
+        // {
+          path = [self.packages.${system}.saygo-utils];
+          environment.WAYLAND_DEBUG = "1";
+        };
     };
   };
 

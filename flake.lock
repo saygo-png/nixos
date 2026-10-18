@@ -290,6 +290,7 @@
       "inputs": {
         "nixvim": "nixvim",
         "nvim-plugin-telescope-git-file-history": "nvim-plugin-telescope-git-file-history",
+        "simple-tree-sitter-haskell": "simple-tree-sitter-haskell",
         "systems": [
           "systems"
         ],
@@ -298,11 +299,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792003219,
-        "narHash": "sha256-P0lNDi2ZXAFrEy1IjcumUF5SjE82ogjkuLnJCGVT4RA=",
+        "lastModified": 1792088755,
+        "narHash": "sha256-5kujv7y+ObWCz2hPrIIeAa7YncT4gksuvhVA/pErxKM=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "af015e5065a6c239cd8fbd3eefa5de43ef63af3d",
+        "rev": "b81ab9e7023c138587c5917d9249829d79cd2d3a",
         "type": "github"
       },
       "original": {
@@ -588,6 +589,33 @@
         "type": "github"
       }
     },
+    "simple-tree-sitter-haskell": {
+      "inputs": {
+        "nixpkgs": [
+          "neovim-config",
+          "nixvim",
+          "nixpkgs"
+        ],
+        "systems": [
+          "neovim-config",
+          "systems"
+        ],
+        "tree-sitter-haskell": "tree-sitter-haskell"
+      },
+      "locked": {
+        "lastModified": 1792075092,
+        "narHash": "sha256-ESSdPM7IZeutqhFEKeM9sSj4Q+PCEQDSuFzcj2ZPjKs=",
+        "owner": "saygo-png",
+        "repo": "simple-tree-sitter-haskell",
+        "rev": "aa07b7a0bb27a6ef1af9ae294cadc0c83a8f672b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saygo-png",
+        "repo": "simple-tree-sitter-haskell",
+        "type": "github"
+      }
+    },
     "stylix": {
       "inputs": {
         "base16": "base16",
@@ -634,6 +662,22 @@
         "type": "path"
       },
       "parent": []
+    },
+    "tree-sitter-haskell": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790782639,
+        "narHash": "sha256-R4KAAaBoDUGuQtR2U+0xdB9iLclWBrm+/blqsCX5ZjQ=",
+        "owner": "tree-sitter",
+        "repo": "tree-sitter-haskell",
+        "rev": "97288e585b0bd44199720280d067fa35bacd81ff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tree-sitter",
+        "repo": "tree-sitter-haskell",
+        "type": "github"
+      }
     },
     "treefmt-nix": {
       "inputs": {
