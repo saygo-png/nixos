@@ -31,40 +31,28 @@ in {
         Sync = {
           path = "${home}/Sync";
           id = "default";
-          type = "sendreceive";
-          versioning = null;
           devices = allDevices;
         };
 
         builds = {
           path = "${home}/builds";
-          id = "builds";
-          type = "sendreceive";
-          versioning = null;
           devices = ["thinkpad" "nixos"];
         };
 
         Music = {
           path = "${home}/Music";
-          id = "Music";
-          type = "sendreceive";
-          versioning = null;
           devices = allDevices;
         };
 
         gnupg = {
           path = "${home}/.local/share/gnupg";
           id = "fxmdx-ymklb";
-          type = "sendreceive";
-          versioning = null;
           devices = ["nixos" "thinkpad"];
         };
 
         "mc instances" = {
           path = "${home}/.local/share/PrismLauncher";
           id = "ahybq-dbssj";
-          type = "sendreceive";
-          versioning = null;
           devices = ["nixos" "thinkpad"];
         };
       };
