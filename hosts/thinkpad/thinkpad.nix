@@ -133,22 +133,6 @@
     };
   };
 
-  # Fixes pipewire bug causing the camera to always be on
-  # draining battery for no reason.
-  # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2669
-  services.pipewire = {
-    wireplumber = {
-      enable = lib.mkForce false;
-      extraConfig = {
-        "10-disable-camera" = {
-          "wireplumber.profiles" = {
-            main."monitor.libcamera" = "disabled";
-          };
-        };
-      };
-    };
-  };
-
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
 
