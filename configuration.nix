@@ -362,6 +362,22 @@
     mountOnMedia = true;
   };
 
+  # Snapshots of the zfs datasets from hosts/disko-config.nix
+  services.sanoid = {
+    enable = true;
+    datasets = let
+      retention = {
+        hourly = 50;
+        daily = 15;
+        weekly = 3;
+        monthly = 1;
+      };
+    in {
+      "zroot/local/persist" = retention;
+      "zroot/local/cache" = retention;
+    };
+  };
+
   services.dbus.implementation = "broker";
   services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
 
