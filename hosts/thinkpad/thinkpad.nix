@@ -153,7 +153,6 @@
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   home-manager.users.${conUsername} = {
-    programs.foot.settings.main.pad = lib.mkForce "0x0center";
     programs.alacritty.settings.window.padding = lib.mkForce {
       x = 0;
       y = 0;
