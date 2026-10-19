@@ -57,7 +57,7 @@
     environment = {PIPEWIRE_LINK_PASSIVE = "true";};
     serviceConfig = {
       type = "exec";
-      ExecStart = lib.mkForce "${lib.getExe' pkgs.carla "carla-rack"} --no-gui %h/Documents/carla.carxp";
+      ExecStart = "${lib.getExe' pkgs.carla "carla-rack"} --no-gui %h/Documents/carla.carxp";
     };
   };
 }
