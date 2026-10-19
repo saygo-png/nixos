@@ -4,10 +4,7 @@
   inputs,
   ...
 }: {
-  imports = lib.my.withModules [
-    "flameshot.nix"
-    "waybar/waybar.nix"
-  ];
+  imports = lib.my.withModules ["flameshot.nix"];
 
   # Saves permission info from access portals.
   custom.persist.home.directories = [".local/share/flatpak/db"];

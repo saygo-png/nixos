@@ -2,15 +2,12 @@
   lib,
   pkgs,
   self,
-  config,
   conUsername,
   inputs,
   system,
   conHome,
   ...
-}: let
-  inherit (import (lib.my.relativeToRoot "modules/waybar/lib.nix") lib pkgs) wrapWaybarWithConfig;
-in {
+}: {
   imports = lib.my.withModules ["waylandBase.nix"];
 
   programs.niri.enable = true;
@@ -38,22 +35,7 @@ in {
     })
   ];
 
-  environment.systemPackages = let
-    waybar-config =
-      lib.attrsets.recursiveUpdate
-      config.const.waybarBase
-      {
-        mainBar = {
-          layer = "top";
-          modules-left = ["niri/workspaces" "niri/window"];
-        };
-      };
-
-    waybar-niri = wrapWaybarWithConfig waybar-config "niri";
-  in [
-    waybar-niri
-    pkgs.xwayland-satellite
-  ];
+  environment.systemPackages = [pkgs.xwayland-satellite];
 
   xdg = {
     portal = {
