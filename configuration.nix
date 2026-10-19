@@ -58,7 +58,6 @@
       "neovim.nix"
 
       "visuals/theme.nix"
-      "visuals/cursor.nix"
       "visuals/themeCore.nix"
       "visuals/kvantumBasedQt.nix"
     ];

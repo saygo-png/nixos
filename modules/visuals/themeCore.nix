@@ -41,6 +41,12 @@
     enable = true;
     autoEnable = true;
 
+    cursor = {
+      name = "Capitaine Cursors (Gruvbox)";
+      package = pkgs.capitaine-cursors-themed;
+      size = 32;
+    };
+
     targets = {
       # This option is seemingly broken and makes a non fitting ugly theme
       chromium.enable = false;
