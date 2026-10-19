@@ -61,9 +61,6 @@
     extraPortals = [pkgs.xdg-desktop-portal-gtk];
   };
 
-  # Fixes some themeing/cursor issues.
-  programs.dconf.enable = lib.mkDefault true;
-
   home-manager.users.${conUsername} = {
     xdg.configFile."wallpaper.png".source = config.stylix.image;
 

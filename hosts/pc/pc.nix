@@ -54,11 +54,6 @@
 
   networking.hostId = "a4e735aa";
 
-  services.fail2ban.enable = true;
-
-  # Caps = escape, keyboard change key
-  services.xserver.xkb.options = lib.mkForce "caps:escape,grp:sclk_toggle";
-
   # Gaming.
   services.xserver.xrandrHeads = [
     {

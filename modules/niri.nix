@@ -77,7 +77,6 @@ in {
     };
   };
 
-  services.gnome.gnome-keyring.enable = true;
   systemd.user = {
     services = let
       mkNiriService = {

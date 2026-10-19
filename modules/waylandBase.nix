@@ -12,9 +12,6 @@
   # Saves permission info from access portals.
   custom.persist.home.directories = [".local/share/flatpak/db"];
 
-  # Polkit (needed for window managers)
-  security.polkit.enable = lib.mkDefault true;
-
   # NixOS is retarded and turns on lightdm by default.
   services.xserver.displayManager.lightdm.enable = false;
 

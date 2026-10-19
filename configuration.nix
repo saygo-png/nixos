@@ -543,7 +543,6 @@
 
       programs.fzf = {
         enable = true;
-        tmux.enableShellIntegration = true;
 
         defaultCommand = "fd --hidden --type f";
         defaultOptions = ["--no-height"];
