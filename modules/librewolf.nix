@@ -228,95 +228,19 @@ in {
           enable = true;
           force = true;
           default = "google";
-          engines = {
+          engines = let
+            mkEngine = definedAliases: template: {
+              inherit definedAliases;
+              urls = [{inherit template;}];
+            };
+          in {
             bing.metadata.hidden = true;
             google.metadata.hidden = true;
-            ddg = {
-              definedAliases = [];
-              urls = [
-                {
-                  template = "https://duckduckgo.com";
-                  params = [
-                    {
-                      name = "q";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "NixOS Packages" = {
-              definedAliases = ["!np"];
-              urls = [
-                {
-                  template = "https://search.nixos.org/packages";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                    {
-                      name = "channel";
-                      value = "unstable";
-                    }
-                    {
-                      name = "type";
-                      value = "packages";
-                    }
-                  ];
-                }
-              ];
-            };
-            "NixOS Options" = {
-              definedAliases = ["!no"];
-              urls = [
-                {
-                  template = "https://search.nixos.org/options";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                    {
-                      name = "channel";
-                      value = "unstable";
-                    }
-                    {
-                      name = "type";
-                      value = "packages";
-                    }
-                  ];
-                }
-              ];
-            };
-            "Noogle.dev" = {
-              definedAliases = ["!ng" "!noogle"];
-              urls = [
-                {
-                  template = "https://noogle.dev/q";
-                  params = [
-                    {
-                      name = "term";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
-            "Home Manager Options" = {
-              definedAliases = ["!hm"];
-              urls = [
-                {
-                  template = "https://home-manager-options.extranix.com";
-                  params = [
-                    {
-                      name = "query";
-                      value = "{searchTerms}";
-                    }
-                  ];
-                }
-              ];
-            };
+            ddg = mkEngine [] "https://duckduckgo.com/?q={searchTerms}";
+            "NixOS Packages" = mkEngine ["!np"] "https://search.nixos.org/packages?channel=unstable&query={searchTerms}";
+            "NixOS Options" = mkEngine ["!no"] "https://search.nixos.org/options?channel=unstable&query={searchTerms}";
+            "Noogle.dev" = mkEngine ["!ng" "!noogle"] "https://noogle.dev/q?term={searchTerms}";
+            "Home Manager Options" = mkEngine ["!hm"] "https://home-manager-options.extranix.com/?query={searchTerms}";
           };
         }; # }}}
       };
