@@ -100,11 +100,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    gruvbox-kvantum = {
-      url = "github:sachnr/gruvbox-kvantum-themes";
-      flake = false;
-    };
-
     gruvbox-vesktop = {
       url = "github:shvedes/discord-gruvbox";
       flake = false;
@@ -128,11 +123,6 @@
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    powerlevel10k = {
-      url = "github:romkatv/powerlevel10k";
-      flake = false;
     };
 
     format-udf = {

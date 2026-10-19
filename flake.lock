@@ -215,22 +215,6 @@
         "type": "gitlab"
       }
     },
-    "gruvbox-kvantum": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1696096968,
-        "narHash": "sha256-u2J4Zf9HuMjNCt3qVpgEffkytl/t277FzOvWL8Nm8os=",
-        "owner": "sachnr",
-        "repo": "gruvbox-kvantum-themes",
-        "rev": "f47670be407c1f07c64890ad53884ee9977a7db1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sachnr",
-        "repo": "gruvbox-kvantum-themes",
-        "type": "github"
-      }
-    },
     "gruvbox-vesktop": {
       "flake": false,
       "locked": {
@@ -481,22 +465,6 @@
         "type": "github"
       }
     },
-    "powerlevel10k": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1788728414,
-        "narHash": "sha256-B2Sq/V455mlvMOAv+K7vEyZy53kVdo576ZAMcvbJXgk=",
-        "owner": "romkatv",
-        "repo": "powerlevel10k",
-        "rev": "d05a1b00f9a61f9578bf9dc19b8451942dde8734",
-        "type": "github"
-      },
-      "original": {
-        "owner": "romkatv",
-        "repo": "powerlevel10k",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "disko": "disko",
@@ -505,7 +473,6 @@
         "firefox-addons": "firefox-addons",
         "firefox-onebar": "firefox-onebar",
         "format-udf": "format-udf",
-        "gruvbox-kvantum": "gruvbox-kvantum",
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
@@ -516,7 +483,6 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable-frozen": "nixpkgs-unstable-frozen",
         "nixpkgs-with-eq10q": "nixpkgs-with-eq10q",
-        "powerlevel10k": "powerlevel10k",
         "saywallpaper": "saywallpaper",
         "stylix": "stylix",
         "systems": "systems",
