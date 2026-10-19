@@ -485,27 +485,16 @@
             function Entity:padding() return "${saneSeparator}" end
             function Linemode:padding() return "${saneSeparator}" end
           '';
-        theme = {
-          status = {
-            sep_left = {
-              open = saneSeparator;
-              close = saneSeparator;
-            };
-            sep_right = {
-              open = saneSeparator;
-              close = saneSeparator;
-            };
+        theme = let
+          sep = {
+            open = saneSeparator;
+            close = saneSeparator;
           };
-          tabs = {
-            sep_inner = {
-              open = saneSeparator;
-              close = saneSeparator;
-            };
-            sep_outer = {
-              open = saneSeparator;
-              close = saneSeparator;
-            };
-          };
+        in {
+          status.sep_left = sep;
+          status.sep_right = sep;
+          tabs.sep_inner = sep;
+          tabs.sep_outer = sep;
         };
         settings = {
           preview.tab_size = 2;
