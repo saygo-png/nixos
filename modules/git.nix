@@ -68,7 +68,6 @@
           diff.colorMoved = "default";
           core = {
             excludesfile = "~/.gitignore_global";
-            interactive.diffFilter = "delta";
             editor = "nvim";
           };
           user = {
