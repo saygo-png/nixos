@@ -12,7 +12,6 @@
         defaultApplications = let
           videoPlayer = "mpv.desktop";
           imageViewer = "nsxiv.desktop";
-          terminal = "Alacritty.desktop";
           pdfViewer = "org.pwmt.zathura.desktop";
           fileBrowser = "org.kde.dolphin.desktop";
           inherit (osConfig.environment.variables) EDITOR;
@@ -115,7 +114,6 @@
           "audio/vnd.rn-realaudio" = videoPlayer;
 
           "inode/directory" = fileBrowser;
-          "terminal" = terminal;
           "text/html" = "${BROWSER}.desktop";
           "x-scheme-handler/ftp" = "${BROWSER}.desktop";
           "application/xhtml+xml" = "${BROWSER}.desktop";
