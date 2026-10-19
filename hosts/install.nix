@@ -1,19 +1,13 @@
 # Shared minimal install config
 {
-  lib,
   pkgs,
-  config,
   conUsername,
   ...
 }: {
-  imports = lib.my.withModules ["constants.nix"];
-
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   boot.loader.limine.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = config.const.host; # Define your hostname.
 
   users = {
     mutableUsers = false;

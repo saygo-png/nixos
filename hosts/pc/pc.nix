@@ -12,8 +12,8 @@
     "media-management.nix"
   ];
 
+  networking.hostName = "pc";
   const = {
-    host = "pc";
     refreshRate = 144;
     screenWidth = 1920;
     screenHeight = 1080;

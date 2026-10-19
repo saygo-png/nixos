@@ -94,8 +94,6 @@
   # Systemd in initrd
   boot.initrd.systemd.enable = true;
 
-  networking.hostName = config.const.host;
-
   # DNS
   networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];
 

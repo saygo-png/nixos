@@ -3,7 +3,7 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {lib, ...}: {
   imports = [(lib.my.relativeToRoot "hosts/install.nix")];
-  const.host = "pc";
+  networking.hostName = "pc";
 
   networking.hostId = "a4e735aa";
 }

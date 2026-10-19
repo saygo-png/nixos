@@ -3,7 +3,7 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {lib, ...}: {
   imports = [(lib.my.relativeToRoot "hosts/install.nix")];
-  const.host = "thinkpad";
+  networking.hostName = "thinkpad";
 
   networking.hostId = "91b1153b";
   networking.networkmanager.enable = true;

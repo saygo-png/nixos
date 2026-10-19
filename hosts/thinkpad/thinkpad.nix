@@ -11,8 +11,8 @@
     # "mullvad.nix"
   ];
 
+  networking.hostName = "thinkpad";
   const = {
-    host = "thinkpad";
     refreshRate = 60;
     screenWidth = 1366;
     screenHeight = 768;
