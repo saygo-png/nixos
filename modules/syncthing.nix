@@ -7,15 +7,7 @@
 }: let
   syncthingCfg = config.services.syncthing;
 in {
-  custom.persist = {
-    home = {
-      cache = {
-        directories = [
-          ".config/syncthing"
-        ];
-      };
-    };
-  };
+  custom.persist.home.cache.directories = [".config/syncthing"];
 
   services.syncthing = {
     enable = true;

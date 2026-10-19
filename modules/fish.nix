@@ -9,11 +9,7 @@
 
   stylix.targets.fish.enable = false;
 
-  custom.persist.home.cache = {
-    directories = [
-      ".local/share/fish"
-    ];
-  };
+  custom.persist.home.cache.directories = [".local/share/fish"];
 
   home-manager.users.${conUsername} = {
     stylix.targets.fish.enable = false;
