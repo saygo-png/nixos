@@ -167,22 +167,18 @@ in {
             (?d)replay_pid*
             (?d).devenv*
             (?d)devenv.local.nix
-            (?d).direnv
             (?d).pre-commit-config.yaml
-            (?d).direnv
             (?d).lsp
             (?d)natives/
             (?d)/target
             (?d)/classes
             (?d)/checkouts
             (?d)pom.xml
-            (?d)node_modules/
             (?d).rebel_readline_history
             (?d)*.sync-conflict-*
             (?d).cpcache/
             (?d)**/public/js
             (?d)/node_modules
-            (?d)/target
             (?d)/yarn.lock
             (?d)/package-lock.json
             (?d)/.shadow-cljs
@@ -190,12 +186,9 @@ in {
             (?d)/.nrepl-port
             (?d)/.idea
             (?d).calva
-            (?d).lsp
             (?d).clj-kondo
-            (?d)pom.xml
             (?d)pom.xml.asc
             (?d)*.jar
-            (?d)*.class
             (?d)/lib/
             (?d)/classes/
             (?d)/target/
