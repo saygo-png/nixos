@@ -3,7 +3,6 @@
     root.directories = [
       "/srv"
       config.services.jellyfin.dataDir
-      config.services.prowlarr.dataDir
     ];
     root.cache.directories = [config.services.jellyfin.cacheDir];
   };
@@ -12,10 +11,6 @@
     jellyfin = {
       enable = true;
       openFirewall = true;
-    };
-
-    prowlarr = {
-      enable = false;
     };
   };
 }
