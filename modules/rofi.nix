@@ -127,22 +127,6 @@
           spacing = 0;
           text-color = l "@normal-foreground";
         };
-        "case-indicator" = {
-          spacing = 0;
-          text-color = l "@normal-foreground";
-        };
-        "entry" = {
-          spacing = 0;
-          text-color = l "@normal-foreground";
-        };
-        "prompt" = {
-          spacing = 0;
-          text-color = l "@normal-foreground";
-        };
-        "button" = {
-          spacing = 0;
-          text-color = l "@normal-foreground";
-        };
         "textbox-prompt-sep" = {
           str = ":";
           expand = false;
