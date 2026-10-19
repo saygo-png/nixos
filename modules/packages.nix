@@ -10,63 +10,20 @@
   ...
 }: {
   environment.systemPackages = [
-    (pkgs.stdenv.mkDerivation {
-      pname = "hordes-kiosk";
-      version = "1.0.0";
-
-      src = pkgs.writeText "hordes-kiosk.sh" ''
-        #!/bin/bash
-        exec ${lib.getExe pkgs.ungoogled-chromium} \
-          --no-first-run \
-          --disable-infobars \
-          --disable-session-crashed-bubble \
-          --disable-suggest-tab \
-          --disable-translate \
-          --disable-features=TranslateUI \
-          --no-default-browser-check \
-          --disable-software-rasterizer \
-          --disable-background-timer-throttling \
-          --disable-renderer-backgrounding \
-          --disable-backgrounding-occluded-windows \
-          --disable-features=VizDisplayCompositor \
-          --app=https://hordes.io
-      '';
-
-      dontUnpack = true;
-
-      nativeBuildInputs = [pkgs.makeWrapper];
-
-      installPhase = ''
-        runHook preInstall
-
-        # Install the script
-        mkdir -p $out/bin
-        cp $src $out/bin/hordes-kiosk
-        chmod +x $out/bin/hordes-kiosk
-
-        # Install desktop file
-        mkdir -p $out/share/applications
-        cat > $out/share/applications/hordes-kiosk.desktop << EOF
-        [Desktop Entry]
-        Type=Application
-        Name=Hordes.io Kiosk
-        Comment=Launch Hordes.io in fullscreen kiosk mode
-        Exec=$out/bin/hordes-kiosk
-        Terminal=false
-        Categories=Game;Network;
-        StartupNotify=true
-        MimeType=x-scheme-handler/http;x-scheme-handler/https;
-        EOF
-
-        runHook postInstall
-      '';
-
-      meta = with pkgs.lib; {
-        description = "Hordes.io game launcher in chromium kiosk mode";
-        homepage = "https://hordes.io";
-        license = licenses.mit;
-        platforms = platforms.linux;
-      };
+    (lib.my.mkChromiumKiosk pkgs {
+      name = "hordes-kiosk";
+      url = "https://hordes.io";
+      desktopName = "Hordes.io Kiosk";
+      comment = "Launch Hordes.io in fullscreen kiosk mode";
+      categories = ["Game" "Network"];
+      flags = [
+        "--disable-session-crashed-bubble"
+        "--disable-software-rasterizer"
+        "--disable-background-timer-throttling"
+        "--disable-renderer-backgrounding"
+        "--disable-backgrounding-occluded-windows"
+        "--disable-features=VizDisplayCompositor"
+      ];
     })
 
     self.packages.${system}.saygo-utils
