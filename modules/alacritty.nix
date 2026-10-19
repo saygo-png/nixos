@@ -28,7 +28,6 @@
           resetAndClearScript =
             pkgs.writeShellScriptBin "resetAndClear"
             ''
-              #!${lib.getExe pkgs.dash}
               if [ -z "$ALACRITTY_LOG" ]; then exit 1; fi
 
               TERM_PID="''${ALACRITTY_LOG//[^0-9]/}"
