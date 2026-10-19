@@ -29,23 +29,9 @@
 
   networking.hostId = "a4e735aa";
 
-  # Gaming.
-  services.xserver.xrandrHeads = [
-    {
-      output = "HDMI-2";
-      monitorConfig = ''
-        Modeline "1280x720_144.00"  198.75  1280 1384 1520 1760  720 723 728 786 -hsync +vsync
-      '';
-    }
-  ];
-
   # https://gitlab.freedesktop.org/drm/amd/-/issues/1500
   services.udev.extraRules = ''
     KERNEL=="card1", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="manual", ATTR{device/pp_power_profile_mode}="1"
-  '';
-
-  services.xserver.deviceSection = ''
-    Option "TearFree" "True"
   '';
 
   # Change cpu governor to performance for increased performance.

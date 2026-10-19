@@ -2,7 +2,6 @@
   lib,
   self,
   pkgs,
-  config,
   inputs,
   system,
   conHome,
@@ -166,44 +165,10 @@
     })
 
     (pkgs.writeShellApplication {
-      name = "myAutostart.sh";
-      runtimeInputs = with pkgs; [xrandr kdePackages.polkit-kde-agent-1 xmousepasteblock xssproxy];
-      text = ''
-        run() {
-          if ! pgrep -f "$1" ;
-          then
-            "$@"&
-          fi
-        }
-        xrandr -r ${toString config.const.refreshRate}
-        run "polkit-kde-authentication-agent-1" &
-        run "xmousepasteblock" &
-        run "xssproxy" &
-        run "udiskie" &
-        run "remaps" &
-        run "$TERMINAL" &
-      '';
-    })
-
-    (pkgs.writeShellApplication {
       name = "tree";
       runtimeInputs = [pkgs.eza];
       text = ''
         eza --group-directories-first --tree
-      '';
-    })
-
-    (pkgs.writeShellApplication {
-      name = "remaps";
-      runtimeInputs = with pkgs; [coreutils xdotool xcape setxkbmap xset];
-      text = ''
-        # This script is called on startup to remap keys.
-        # Decrease key repeat delay and increase key repeat rate.
-        xset r rate ${toString config.services.xserver.autoRepeatDelay} ${toString config.services.xserver.autoRepeatInterval}
-        # Turn off caps lock if on since there is no longer a key for it.
-        xset -q | grep -q "Caps Lock:\s*on" && xdotool key Caps_Lock
-        # Disable touchpad
-        ${lib.getExe pkgs.xinput} disable 'SynPS/2 Synaptics TouchPad'
       '';
     })
 
