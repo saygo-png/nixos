@@ -5,7 +5,6 @@
   config,
   inputs,
   nixvim-pkgs,
-  pkgs-eq10q,
   conUsername,
   conFlakePath,
   ...
@@ -201,7 +200,6 @@
       zam-plugins
       airwindows-lv2
       molot-lite
-      pkgs-eq10q.eq10q
 
       # Nix.
       nh # Nix helper
