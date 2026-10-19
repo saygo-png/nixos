@@ -56,7 +56,7 @@
     wantedBy = ["default.target"];
     environment = {PIPEWIRE_LINK_PASSIVE = "true";};
     serviceConfig = {
-      type = "exec";
+      Type = "exec";
       ExecStart = "${lib.getExe' pkgs.carla "carla-rack"} --no-gui %h/Documents/carla.carxp";
     };
   };
