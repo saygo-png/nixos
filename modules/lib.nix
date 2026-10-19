@@ -9,6 +9,4 @@
     if !(builtins.pathExists path)
     then throw "Path ${path} does not exist"
     else path;
-
-  nWrapFunc = s: "function() ${s} end";
 }
