@@ -4,7 +4,6 @@
   self,
   config,
   inputs,
-  conHome,
   nixvim-pkgs,
   pkgs-eq10q,
   conUsername,
@@ -387,9 +386,6 @@
       imports = [inputs.drugtracker2.homeManagerModules.default];
 
       home = {
-        username = "${conUsername}";
-        homeDirectory = "${conHome}";
-        # inherit (osConfig.system) stateVersion;
         stateVersion = "26.05"; # Home manager is behind nixos right now
         sessionPath = lib.singleton "${config.home.homeDirectory}/.local/bin";
         shellAliases = {
