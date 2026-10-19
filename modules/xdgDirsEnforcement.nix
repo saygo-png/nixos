@@ -85,7 +85,6 @@ in {
           ".local/share/steam-home"
           ".local/share/nvim"
           ".local/share/zoxide"
-          ".local/share/nvim"
 
           ".cache/Anki"
           ".cache/Borg"
