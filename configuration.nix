@@ -21,7 +21,6 @@
       "terminal.nix"
       "constants.nix"
 
-      # "sway.nix"
       "niri.nix"
 
       "gaming.nix"
