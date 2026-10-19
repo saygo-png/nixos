@@ -21,7 +21,6 @@
     accelSpeed = -0.5;
     vsync = true;
     extrasNixosPath = "${conHome}/extrasNixos";
-    flakePath = "${conHome}/nixos";
   };
 
   services.sanoid = {

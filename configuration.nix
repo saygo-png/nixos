@@ -7,6 +7,7 @@
   nixvim-pkgs,
   pkgs-eq10q,
   conUsername,
+  conFlakePath,
   ...
 }: {
   imports =
@@ -310,7 +311,7 @@
       LADSPA_PATH = "ladspa";
     }
     // rec {
-      NH_FLAKE = config.const.flakePath; # For nix helper.
+      NH_FLAKE = conFlakePath; # For nix helper.
       # Default programs.
       PAGER = "moor";
       BROWSER = "librewolf";
