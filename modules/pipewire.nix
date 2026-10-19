@@ -29,7 +29,6 @@
           "default.clock.max-quantum" = quantum.max;
         };
       };
-      #
       pipewire-pulse."92-latency".context = {
         modules = [
           {

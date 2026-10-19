@@ -52,7 +52,6 @@
     };
 
     drugtracker2 = {
-      # url = "git+file:///home/samsepi0l/builds/drugTracker2?ref=compile-time-json-config";
       url = "github:saygo-png/drugTracker2";
       inputs = {
         treefmt-nix.follows = "treefmt-nix";

@@ -139,7 +139,6 @@ in {
 
     gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
 
-    # home.file.".zshenv".enable = lib.mkForce false;
     programs.zsh = {
       dotDir = "${homeConfig.xdg.configHome}/zsh";
       history.path = "${homeConfig.xdg.dataHome}/zsh/zsh_history";

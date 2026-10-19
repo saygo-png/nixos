@@ -91,18 +91,6 @@
         events = ["key"];
         command = "pactl set-sink-volume @DEFAULT_SINK@ +2% && notify-send -t 500 'increased volume'";
       }
-      # {
-      #   # Wifi toggle
-      #   keys = [238];
-      #   events = ["key"];
-      #   command = "notify-send 'toggled wifi'";
-      # }
-      # {
-      #   # Bluetooth toggle
-      #   keys = [237];
-      #   events = ["key"];
-      #   command = "notify-send 'toggled bluetoth'";
-      # }
     ];
   };
 
@@ -169,8 +157,6 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
-      # intel-vaapi-driver # I think this is added by nixos-hardware
-      # libvdpau-va-gl
     ];
   };
 

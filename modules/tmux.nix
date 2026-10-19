@@ -36,9 +36,6 @@
       mouse = true; # Allows you to scroll a terminal
       historyLimit = 1000; # Alacritty already holds history
       extraConfig = ''
-        #No hanging sessions.
-        #set-option -sg destroy-unattached
-
         # For vim autoread.
         set-option -g focus-events on
 
