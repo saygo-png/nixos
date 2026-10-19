@@ -98,17 +98,6 @@
     };
   };
 in {
-  imports =
-    [
-      ({config, ...}: {
-        options = {
-          const = config.constLib.mkConstsFromSet {
-            waybarBase = sharedConfig;
-          };
-        };
-      })
-    ]
-    ++ lib.my.withModules [
-      "waybar/style.nix"
-    ];
+  imports = lib.my.withModules ["waybar/style.nix"];
+  const.waybarBase = sharedConfig;
 }

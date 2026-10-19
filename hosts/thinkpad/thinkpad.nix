@@ -6,31 +6,23 @@
   conUsername,
   ...
 }: {
-  imports =
-    [
-      (
-        {config, ...}: {
-          options = {
-            const = config.constLib.mkConstsFromSet {
-              host = "thinkpad";
-              refreshRate = 60;
-              screenWidth = 1366;
-              screenHeight = 768;
-              gaps = 0;
-              borderSize = 2;
-              accelSpeed = -0.5;
-              vsync = true;
-              extrasNixosPath = "${conHome}/extrasNixos";
-              flakePath = "${conHome}/nixos";
-            };
-          };
-        }
-      )
-    ]
-    ++ lib.my.withModules [
-      "pulseaudio.nix"
-      # "mullvad.nix"
-    ];
+  imports = lib.my.withModules [
+    "pulseaudio.nix"
+    # "mullvad.nix"
+  ];
+
+  const = {
+    host = "thinkpad";
+    refreshRate = 60;
+    screenWidth = 1366;
+    screenHeight = 768;
+    gaps = 0;
+    borderSize = 2;
+    accelSpeed = -0.5;
+    vsync = true;
+    extrasNixosPath = "${conHome}/extrasNixos";
+    flakePath = "${conHome}/nixos";
+  };
 
   services.sanoid = {
     enable = true;

@@ -6,30 +6,24 @@
   conUsername,
   ...
 }: {
-  imports =
-    [
-      ({config, ...}: {
-        options = {
-          const = config.constLib.mkConstsFromSet {
-            host = "pc";
-            refreshRate = 144;
-            screenWidth = 1920;
-            screenHeight = 1080;
-            gaps = 0;
-            borderSize = 2;
-            accelSpeed = -0.9;
-            vsync = false;
-            extrasNixosPath = "${conHome}/builds/extrasNixos";
-            flakePath = "${conHome}/nixos";
-          };
-        };
-      })
-    ]
-    ++ lib.my.withModules [
-      "pipewire.nix"
-      "qbittorrent.nix"
-      "media-management.nix"
-    ];
+  imports = lib.my.withModules [
+    "pipewire.nix"
+    "qbittorrent.nix"
+    "media-management.nix"
+  ];
+
+  const = {
+    host = "pc";
+    refreshRate = 144;
+    screenWidth = 1920;
+    screenHeight = 1080;
+    gaps = 0;
+    borderSize = 2;
+    accelSpeed = -0.9;
+    vsync = false;
+    extrasNixosPath = "${conHome}/builds/extrasNixos";
+    flakePath = "${conHome}/nixos";
+  };
 
   services.sanoid = {
     enable = true;
