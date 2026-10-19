@@ -24,7 +24,7 @@
     termPkg = config.custom.defaultTerminal.package;
     termExe = lib.getExe termPkg;
   in {
-    home-manager.users.${conUsername} = {config, ...}: {
+    home-manager.users.${conUsername} = {
       home.sessionVariables = {
         TERMINAL = termExe;
         TERMINAL_PROG = termExe;
@@ -57,7 +57,7 @@
           '';
       };
 
-      programs.rofi.settings.terminal = lib.mkIf config.programs.rofi.enable termExe;
+      programs.rofi.settings.terminal = termExe;
       xdg.desktopEntries = {
         nvim = {
           name = "Neovim wrapper ";
