@@ -22,19 +22,14 @@
 
   # Fonts. {{{
   fonts = {
+    # Stylix installs its own fonts.
     packages = [
-      # Main fonts.
-      config.stylix.fonts.serif.package
-      config.stylix.fonts.monospace.package
-      config.stylix.fonts.sansSerif.package
-
       pkgs.roboto
       pkgs.noto-fonts
       pkgs.jetbrains-mono
       pkgs.noto-fonts-cjk-sans
       pkgs.noto-fonts-cjk-serif
       pkgs.noto-fonts-color-emoji
-      pkgs.nerd-fonts.symbols-only
     ];
     fontconfig.defaultFonts = lib.mapAttrs (_: v: [v] ++ ["${config.stylix.fonts.emoji.name}"]) {
       serif = config.stylix.fonts.serif.name;
