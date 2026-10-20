@@ -253,7 +253,7 @@
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
       libnotify # Notifications (notify-send)
-      python312Packages.ptpython # Python repl
+      python3Packages.ptpython # Python repl
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
