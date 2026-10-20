@@ -390,7 +390,6 @@
     overwriteBackup = true;
     users.${conUsername} = {
       lib,
-      osConfig,
       config,
       ...
     }: {
