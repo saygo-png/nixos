@@ -28,24 +28,10 @@
   # Wifi
   networking.networkmanager.enable = true;
 
-  # Function keys
-  programs.light.enable = true;
-  hardware.acpilight.enable = true;
+  # Function keys. Brightness keys are bound in niri.kdl to brightnessctl.
   services.actkbd = {
     enable = true;
     bindings = [
-      {
-        # Brightness down
-        keys = [224];
-        events = ["key"];
-        command = "${lib.getExe pkgs.light} -U 1 && notify-send -t 500 $(light)";
-      }
-      {
-        # Brightness up
-        keys = [225];
-        events = ["key"];
-        command = "${lib.getExe pkgs.light} -A 1 && notify-send -t 500 $(light)";
-      }
       {
         # Mute
         keys = [113];
@@ -119,6 +105,7 @@
 
   environment.systemPackages = with pkgs; [
     acpi # Cli battery interface.
+    brightnessctl # Backlight control, works through logind
     powertop # Power drain check
   ];
 
