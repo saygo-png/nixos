@@ -225,9 +225,7 @@
       bonk
       entr
       ncdu
-      vlock
       rclone
-      ddcutil
       python3
       exiftool
       hyperfine
@@ -240,7 +238,6 @@
       wget # Downloader
       tokei # Line counter
       udiskie # Auto mount
-      cbonsai # pretty tree
       gnumake # C compiling
       file # File identifier
       zoxide # Cd alternative
@@ -259,16 +256,12 @@
       # GUI.
       telegram-desktop
       foliate
-      pitivi
       krita # Painting
       anki # Flashcards
       simplescreenrecorder
-      godot-mono # Game engine
       inkscape # Vector graphics
       keepassxc # Password manager
-      mission-center # GUI task manager
       localsend # Send via local network
-      tor-browser
 
       # Writing.
       typst
@@ -405,15 +398,8 @@
           "la" = "eza -a";
           "ll" = "eza -l";
           "lla" = "eza -la";
-          "pkill" = "pkill -f";
           "f" = ''cd "$(fzfcd)"'';
-          "shutdown" = "poweroff";
-          "lock" = "sudo vlock -nas";
-          "grep" = "grep --color=auto";
-          "cbonsai" = "cbonsai --screensaver";
-          "pmem" = "vmrss"; # [p]rocess [mem]ory
           "mdate" = ''date +"%A, %d %B %Y, %H:%M:%S"'';
-          "cinst" = "cabal install --overwrite-policy=always";
           "backup" = "sudo borgmatic --verbosity 1 --list --stats";
           "nhoffline" = "nh os switch -- --option substitute false";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/Pictures/audiocaptures/recording.wav";

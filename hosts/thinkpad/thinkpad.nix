@@ -98,21 +98,25 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
+    extraPackages = [
+      pkgs.intel-media-driver
     ];
   };
 
-  environment.systemPackages = with pkgs; [
-    acpi # Cli battery interface.
-    brightnessctl # Backlight control, works through logind
-    powertop # Power drain check
+  environment.systemPackages = [
+    pkgs.acpi # Cli battery interface.
+    pkgs.brightnessctl # Backlight control, works through logind
+    pkgs.powertop # Power drain check
+    pkgs.vlock
   ];
 
   services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
   services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   home-manager.users.${conUsername} = {
+    home.shellAliases = {
+      "lock" = "sudo vlock -nas";
+    };
     programs.alacritty.settings.window.padding = lib.mkForce {
       x = 0;
       y = 0;
