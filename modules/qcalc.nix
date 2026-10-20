@@ -14,6 +14,10 @@
     xdg.configFile."qalculate/qalc.cfg" = {
       text = lib.generators.toINI {} {
         Mode.calculate_as_you_type = 1;
+        General = {
+          dot_as_separator = 0;
+          comma_as_separator = 0;
+        };
       };
     };
   };
