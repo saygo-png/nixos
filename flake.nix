@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
+    # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
 
     neovim-config = {
       url = "github:saygo-png/neovim-config";
@@ -142,14 +142,14 @@
     eachSystem = lib.genAttrs (import systems);
     pkgsFor = eachSystem (system: import nixpkgs {inherit system;});
 
-    pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
+    # pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
     nixvim-pkgs = eachSystem (system: import inputs.neovim-config.inputs.nixvim.inputs.nixpkgs {inherit system;});
     treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
     commonSpecialArgs = system: {
       inherit inputs self system;
       nixvim-pkgs = nixvim-pkgs.${system};
-      pkgs-frozen = pkgs-frozen.${system};
+      # pkgs-frozen = pkgs-frozen.${system};
       lib = lib.extend (final: _: {my = import ./modules/lib.nix {lib = final;};});
     };
 
