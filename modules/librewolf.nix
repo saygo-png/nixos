@@ -53,7 +53,6 @@ in {
       enable = true;
       profiles.${profileName} = {
         isDefault = true;
-        userChrome = builtins.readFile "${inputs.firefox-onebar}/onebar.css";
         containersForce = true;
         settings = {
           # Auto enable extensions
@@ -81,7 +80,6 @@ in {
 
           # Style
           "browser.toolbars.bookmarks.visibility" = "never";
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         };
         bookmarks = {
           force = true;

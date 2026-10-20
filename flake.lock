@@ -105,22 +105,6 @@
         "type": "gitlab"
       }
     },
-    "firefox-onebar": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1774470199,
-        "narHash": "sha256-1/ADzlvrtkSeuh4Cv+IfuMxdVAA5kXyJIOtFSk1Lacs=",
-        "ref": "refs/heads/waf",
-        "rev": "cf1ddf9ba1b2e417e1db8b7c5aac4bb0ef0c699a",
-        "revCount": 64,
-        "type": "git",
-        "url": "https://git.gay/freeplay/Firefox-Onebar.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.gay/freeplay/Firefox-Onebar.git"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -439,7 +423,6 @@
         "drugtracker2": "drugtracker2",
         "extras-nixos": "extras-nixos",
         "firefox-addons": "firefox-addons",
-        "firefox-onebar": "firefox-onebar",
         "format-udf": "format-udf",
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
