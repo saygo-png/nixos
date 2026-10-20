@@ -37,16 +37,12 @@
     home.activation.copyConfigFilesToSteamEnv = lib.hm.dag.entryAfter ["writeBoundary"] ''
       # Copy files to steam directory
       set +e
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (
-          path: file: let
-            prefix = "/home/${conUsername}/";
-            steamPath = prefix + ".local/share/steam-home/" + (lib.removePrefix prefix path);
-          in ''
-            run mkdir -p "$(dirname "${steamPath}")" || true
-            run ln -sf "${file.source}" "${steamPath}" || true
-          ''
-        )
-        config.home.file)}
+      ${lib.concatMapStrings (file: let
+        steamPath = "${config.home.homeDirectory}/.local/share/steam-home/${file.target}";
+      in ''
+        run mkdir -p "$(dirname "${steamPath}")" || true
+        run ln -sf "${file.source}" "${steamPath}" || true
+      '') (lib.filter (file: file.enable) (lib.attrValues config.home.file))}
     '';
 
     programs = {
