@@ -39,7 +39,6 @@
   };
   stylix = {
     enable = true;
-    autoEnable = true;
 
     cursor = {
       name = "Capitaine Cursors (Gruvbox)";
