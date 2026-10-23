@@ -20,6 +20,9 @@
           "node.name" = "virtual_mic";
           "media.class" = "Audio/Source/Virtual";
           "node.description" = "Virtual microphone device";
+          # Highest priority determines default source.
+          # Real ALSA mics top out at about 2600 (capture +1000, pro-audio +500, USB +100).
+          "priority.session" = 4000;
           "audio.position" = ["FL" "FR"];
           "audio.channels" = "2";
           "monitor.channel-volumes" = true;
