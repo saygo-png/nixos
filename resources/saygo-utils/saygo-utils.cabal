@@ -69,14 +69,14 @@ executable niri-switch-keyboard
   main-is:       src/niri-switch-keyboard.hs
   build-depends:
     , shh
-    , universum
+    , relude
 
 executable xkb-switch-keyboard
   import:        common-options, threaded
   main-is:       src/xkb-switch-keyboard.hs
   build-depends:
     , shh
-    , universum
+    , relude
 
 executable timezones
   import:        common-options, threaded
@@ -86,7 +86,7 @@ executable timezones
     , optparse-applicative
     , time
     , tz
-    , universum
+    , relude
 
 executable owt
   import:        common-options, threaded
@@ -98,7 +98,7 @@ executable owt
     , path
     , path-io
     , time
-    , universum
+    , relude
 
 executable ow-gen1-selector
   import:        common-options, threaded
@@ -106,7 +106,7 @@ executable ow-gen1-selector
   build-depends:
     , optparse-applicative
     , shh
-    , universum
+    , relude
 
 executable free-space
   import:        common-options, threaded
@@ -117,7 +117,7 @@ executable free-space
     , filepath
     , optparse-applicative
     , shh
-    , universum
+    , relude
     , unix
     , vector
 
@@ -126,7 +126,7 @@ executable tmux-mem
   main-is:       src/tmux-mem.hs
   build-depends:
     , bytestring
-    , universum
+    , relude
 
 executable convertlink
   import:        common-options, threaded
@@ -150,7 +150,7 @@ executable saygo-record
     , filepath
     , optparse-applicative
     , shh
-    , universum
+    , relude
     , unix
 
 executable githubloc
@@ -163,7 +163,7 @@ executable githubloc
     , Chart-diagrams
     , optparse-applicative
     , time
-    , universum
+    , relude
     , vector
 
 executable clean-nix-paths

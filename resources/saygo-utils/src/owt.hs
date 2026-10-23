@@ -4,10 +4,10 @@ import Data.ByteString.Lazy qualified as BL
 import Data.Char (toLower)
 import Data.Csv (encode)
 import Data.Time (defaultTimeLocale, formatTime, getCurrentTime, getCurrentTimeZone, utcToLocalTime)
-import GHC.IO.Handle (hFlush)
 import Path (Abs, File, Path, fromAbsFile, parent, relfile, (</>))
 import Path.IO (ensureDir, getHomeDir)
-import Universum
+import Relude
+import Control.Exception
 
 csvFilePath :: IO (Path Abs File)
 csvFilePath = do

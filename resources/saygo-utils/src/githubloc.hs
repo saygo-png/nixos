@@ -6,10 +6,11 @@ import Data.Csv qualified as Csv
 import Data.Time (UTCTime, defaultTimeLocale, formatTime)
 import Data.Time.Format (parseTimeM)
 import Data.Vector qualified as V
+import Data.Vector (Vector)
 import Graphics.Rendering.Chart.Backend.Diagrams qualified as Chart
 import Graphics.Rendering.Chart.Easy hiding (Vector, argument)
 import Options.Applicative
-import Universum
+import Relude
 
 data Options = Options {repoName :: String, csvFile :: FilePath, balance :: Bool}
 
@@ -57,7 +58,7 @@ main = do
       let balanceVec = toBalance vector
           balanceLine =
             def
-              { _plot_lines_values = [toList $ map (\e -> (e.time, e.balance)) balanceVec]
+              { _plot_lines_values = [toList $ V.map (\e -> (e.time, e.balance)) balanceVec]
               , _plot_lines_title = "Lines added + removed"
               }
           layout =
@@ -74,7 +75,7 @@ main = do
         Just loc -> pure loc
       let locLine =
             def
-              { _plot_lines_values = [toList $ map (\e -> (e.time, e.linesOfCode)) absoluteLoc]
+              { _plot_lines_values = [toList $ V.map (\e -> (e.time, e.linesOfCode)) absoluteLoc]
               , _plot_lines_title = "Lines of code"
               }
           layout =
@@ -91,7 +92,7 @@ stripUtf8Bom :: BL.ByteString -> BL.ByteString
 stripUtf8Bom bs = fromMaybe bs (BL.stripPrefix "\239\187\191" bs)
 
 toBalance :: Vector Entry -> Vector BalanceEntry
-toBalance = map (\e -> BalanceEntry{time = e.time, balance = e.additions + e.deletions})
+toBalance = V.map (\e -> BalanceEntry{time = e.time, balance = e.additions + e.deletions})
 
 toAbsoluteLoc :: Int -> Vector Entry -> Maybe (Vector LocEntry)
 toAbsoluteLoc linesOfCode vector

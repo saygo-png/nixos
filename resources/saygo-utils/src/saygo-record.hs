@@ -11,7 +11,7 @@ import System.Directory qualified as D
 import System.FilePath
 import System.Posix.Files
 import Text.Printf (printf)
-import Universum
+import Relude
 
 newtype Options = Options {audio :: Bool}
 
@@ -61,7 +61,7 @@ main = do
 
 notify :: Text -> IO ()
 notify message = do
-  putStrLn message
+  putTextLn message
   notifySend ["saygo-record"]
 
 wlScreenrec, ripdrag, notifySend :: Cmd

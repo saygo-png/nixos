@@ -1,6 +1,6 @@
 import Options.Applicative
 import Shh
-import Universum
+import Relude
 
 data Subcommand = CmdEnable | CmdDisable
 

@@ -3,7 +3,7 @@ import Data.Time
 import Data.Time.Zones
 import Data.Time.Zones.All
 import Options.Applicative
-import Universum
+import Relude
 
 timezones :: [TZLabel]
 timezones =
@@ -26,7 +26,7 @@ main = do
 
 printTime :: UTCTime -> (TZ, BS8.ByteString) -> IO ()
 printTime utcTime (tz, name) = do
-  let local = utcToLocalTimeTZ tz utcTime
+  let localTime = utcToLocalTimeTZ tz utcTime
       nameString = BS8.unpack name
-      timeString = formatTime defaultTimeLocale "%H:%M %F" local
+      timeString = formatTime defaultTimeLocale "%H:%M %F" localTime
   putStrLn $ timeString ++ " — " ++ nameString

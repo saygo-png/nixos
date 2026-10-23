@@ -1,5 +1,5 @@
 import Shh
-import Universum
+import Relude
 
 main :: IO ()
 main = do

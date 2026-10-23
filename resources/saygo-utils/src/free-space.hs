@@ -5,7 +5,7 @@ import Data.Vector qualified as V
 import Foreign
 import Foreign.C
 import Numeric (showFFloat)
-import Universum
+import Relude
 
 foreign import capi safe "sys/statvfs.h statvfs" statvfs :: CString -> Ptr a -> IO CInt
 
@@ -14,7 +14,7 @@ foreign import capi safe "sys/statvfs.h statvfs" statvfs :: CString -> Ptr a -> 
 main :: IO ()
 main = do
   bytes <- fromIntegral <$> getFreeSpace "/"
-  putStrLn . getShortHand . getAppropriateUnits $ ByteValue bytes Bytes
+  putTextLn . getShortHand . getAppropriateUnits $ ByteValue bytes Bytes
 
 data ByteUnit = Bytes | KibiBytes | MebiBytes | GibiBytes | TebiBytes | PebiBytes | ExbiBytes
 
@@ -58,7 +58,7 @@ getAppropriateUnits bv = fromMaybe bv (V.lastM appropriateUnits)
   where
     bUnits = V.fromList [Bytes, KibiBytes, MebiBytes, GibiBytes, TebiBytes, PebiBytes, ExbiBytes]
     bytes = getBytes bv
-    units = map (convertByteUnit (ByteValue bytes Bytes)) bUnits
+    units = V.map (convertByteUnit (ByteValue bytes Bytes)) bUnits
     appropriateUnits = V.filter (\(ByteValue v _) -> v >= 1.0) units
 
 getShortHand :: ByteValue -> Text
