@@ -293,11 +293,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769957634,
-        "narHash": "sha256-z3otKLzVNniGJR3mPqYs7MNWTEaTkrhCukJBYv8AIhw=",
+        "lastModified": 1792716928,
+        "narHash": "sha256-y9qTxGYZX4UJ8tCNcY5ELUcHPIgMXziulmlqWo3IrFY=",
         "owner": "saygo-png",
         "repo": "nice-nixpkgs-haskell",
-        "rev": "7022cfcd645c4b831716d4a56970feea7caa2906",
+        "rev": "393ae97bb7d1a7a12f2140c6594815b54b38997b",
         "type": "github"
       },
       "original": {

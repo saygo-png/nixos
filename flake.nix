@@ -204,6 +204,22 @@
       }
     );
 
+    devShells = eachSystem (
+      system: let
+        pkgs = pkgsFor.${system};
+        hPkgs = pkgs.haskellPackages;
+      in {
+        haskellShell = pkgs.mkShell {
+          packages = [
+            pkgs.zlib
+            hPkgs.cabal-install
+            hPkgs.ghc
+            hPkgs.haskell-language-server
+          ];
+        };
+      }
+    );
+
     apps = eachSystem (
       system:
         lib.genAttrs [
