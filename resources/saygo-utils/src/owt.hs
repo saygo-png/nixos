@@ -1,18 +1,16 @@
-{-# LANGUAGE QuasiQuotes #-}
-
+import Control.Exception
 import Data.ByteString.Lazy qualified as BL
 import Data.Char (toLower)
 import Data.Csv (encode)
 import Data.Time (defaultTimeLocale, formatTime, getCurrentTime, getCurrentTimeZone, utcToLocalTime)
-import Path (Abs, File, Path, fromAbsFile, parent, relfile, (</>))
-import Path.IO (ensureDir, getHomeDir)
 import Relude
-import Control.Exception
+import System.Directory (createDirectoryIfMissing, getHomeDirectory)
+import System.FilePath (takeDirectory, (</>))
 
-csvFilePath :: IO (Path Abs File)
+csvFilePath :: IO FilePath
 csvFilePath = do
-  docsDir <- getHomeDir
-  let fileDir = docsDir </> [relfile|Documents/owdata.csv|]
+  docsDir <- getHomeDirectory
+  let fileDir = docsDir </> "Documents/owdata.csv"
   print fileDir
   pure fileDir
 
@@ -30,10 +28,10 @@ appendToCsv value = do
   timestamp <- getTimestamp
   let csvRow = encode [(timestamp, value)]
 
-  ensureDir (parent filePath)
+  createDirectoryIfMissing True (takeDirectory filePath)
 
   catch
-    (BL.appendFile (fromAbsFile filePath) csvRow)
+    (BL.appendFile filePath csvRow)
     (\e -> do putStrLn $ "Error writing to file: " ++ show (e :: SomeException))
 
 getUserInput :: String -> IO String

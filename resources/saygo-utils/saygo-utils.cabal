@@ -94,9 +94,9 @@ executable owt
   build-depends:
     , bytestring
     , cassava
+    , directory
+    , filepath
     , optparse-applicative
-    , path
-    , path-io
     , time
     , relude
 
@@ -159,8 +159,7 @@ executable githubloc
   build-depends:
     , bytestring
     , cassava
-    , Chart
-    , Chart-diagrams
+    , granite
     , optparse-applicative
     , time
     , relude

@@ -3,12 +3,11 @@
 
 import Data.ByteString.Lazy qualified as BL
 import Data.Csv qualified as Csv
-import Data.Time (UTCTime, defaultTimeLocale, formatTime)
+import Data.Time (Day (ModifiedJulianDay), UTCTime (utctDay), defaultTimeLocale, formatTime, toModifiedJulianDay)
 import Data.Time.Format (parseTimeM)
-import Data.Vector qualified as V
 import Data.Vector (Vector)
-import Graphics.Rendering.Chart.Backend.Diagrams qualified as Chart
-import Graphics.Rendering.Chart.Easy hiding (Vector, argument)
+import Data.Vector qualified as V
+import Granite.Svg qualified as Granite
 import Options.Applicative
 import Relude
 
@@ -56,36 +55,37 @@ main = do
   case opts of
     Options{balance = True} -> do
       let balanceVec = toBalance vector
-          balanceLine =
-            def
-              { _plot_lines_values = [toList $ V.map (\e -> (e.time, e.balance)) balanceVec]
-              , _plot_lines_title = "Lines added + removed"
-              }
-          layout =
-            def
-              { _layout_title = "Balance history for " <> opts.repoName
-              , _layout_plots = [toPlot balanceLine]
-              }
+          balanceLine = Granite.series "Net change" . toList $ V.map (\e -> (dayValue e.time, fromIntegral e.balance)) balanceVec
 
-      _ <- Chart.renderableToFile def "githubBalanceChart.svg" $ toRenderable layout
+      writeFileText "githubBalanceChart.svg"
+        $ Granite.lineGraph [balanceLine] (plotConfig $ "Balance history for " <> opts.repoName)
       putTextLn "Balance chart created!"
     _ -> do
       absoluteLoc <- case toAbsoluteLoc 0 vector of
         Nothing -> die "Csv has no entries!"
         Just loc -> pure loc
-      let locLine =
-            def
-              { _plot_lines_values = [toList $ V.map (\e -> (e.time, e.linesOfCode)) absoluteLoc]
-              , _plot_lines_title = "Lines of code"
-              }
-          layout =
-            def
-              { _layout_title = "Lines of code history for " <> opts.repoName
-              , _layout_plots = [toPlot locLine]
-              }
+      let locLine = Granite.series "Lines of code" . toList $ V.map (\e -> (dayValue e.time, fromIntegral e.linesOfCode)) absoluteLoc
 
-      _ <- Chart.renderableToFile def "githubLinesOfCodeChart.svg" $ toRenderable layout
+      writeFileText "githubLinesOfCodeChart.svg"
+        $ Granite.lineGraph [locLine] (plotConfig $ "Lines of code history for " <> opts.repoName)
       putTextLn "Lines of code chart created!"
+
+-- Granite plots Doubles, so dates go on the x axis as Modified Julian Day numbers
+dayValue :: UTCTime -> Double
+dayValue = fromIntegral . toModifiedJulianDay . utctDay
+
+plotConfig :: String -> Granite.Plot
+plotConfig title =
+  Granite.defPlot
+    { Granite.plotTitle = toText title
+    , Granite.widthChars = 70
+    , Granite.heightChars = 28
+    , Granite.legendPos = Granite.LegendRight
+    , Granite.xNumTicks = 6
+    , Granite.yNumTicks = 6
+    , Granite.xFormatter = \_ _ v -> toText . formatTime defaultTimeLocale "%F" $ ModifiedJulianDay (round v)
+    , Granite.yFormatter = \_ _ v -> show (round v :: Int)
+    }
 
 -- https://github.com/haskell-hvr/cassava/issues/106
 stripUtf8Bom :: BL.ByteString -> BL.ByteString
