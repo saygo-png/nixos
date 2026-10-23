@@ -231,7 +231,7 @@ in {
             };
           in {
             bing.metadata.hidden = true;
-            google.metadata.hidden = true;
+            google = mkEngine [] "https://www.google.com/search?q={searchTerms}";
             ddg = mkEngine [] "https://duckduckgo.com/?q={searchTerms}";
             "NixOS Packages" = mkEngine ["!np"] "https://search.nixos.org/packages?channel=unstable&query={searchTerms}";
             "NixOS Options" = mkEngine ["!no"] "https://search.nixos.org/options?channel=unstable&query={searchTerms}";
