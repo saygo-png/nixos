@@ -10,7 +10,10 @@
 }: {
   imports = lib.my.withModules ["waylandBase.nix"];
 
-  programs.niri.enable = true;
+  programs.niri = {
+    enable = true;
+    useNautilus = false;
+  };
 
   nixpkgs.overlays = [
     (_: prev: {
