@@ -18,7 +18,7 @@ in {
     overrideFolders = true;
     settings = {
       options.relaysEnabled = false;
-      devices = lib.mapAttrs (_: v: v // {addresses = ["tcp://192.168.1.11:22000"];}) {
+      devices = lib.mapAttrs (_: v: v // {addresses = ["dynamic" "tcp://192.168.1.11:22000"];}) {
         nixos.id = "PSTKO2I-QKU64OB-LMEOEGC-LTAVJHU-O6SCT4V-2GQ7QI2-KARS3FJ-VSZ4ZAT";
         phone.id = "Z7AOC2O-CYXT6XV-Y67O5RB-VAXE2JT-JV36AMW-KWQ3U6Z-PVTINXB-IQ2UHQ7";
         thinkpad.id = "R3RAH4P-BEWWRO6-S5HYB2N-HZIHYCH-ERUDTE2-R2XLRAQ-CAZNG7U-S5BYYAF";
