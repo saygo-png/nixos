@@ -83,7 +83,6 @@
   boot.kernelPackages = pkgs.linuxPackages_xanmod;
 
   # Faster boot
-  boot.initrd.systemd.network.wait-online.enable = false;
   networking.dhcpcd.wait = "background";
 
   # Some programs ignore SIGTERM (notably "winedevice.exe") causing
