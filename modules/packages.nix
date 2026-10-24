@@ -114,14 +114,6 @@
     })
 
     (pkgs.writeShellApplication {
-      name = "tree";
-      runtimeInputs = [pkgs.eza];
-      text = ''
-        eza --group-directories-first --tree
-      '';
-    })
-
-    (pkgs.writeShellApplication {
       name = "rdepends";
       runtimeInputs = [pkgs.nix];
       text = ''
