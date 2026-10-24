@@ -42,7 +42,6 @@
         ytdl-format = "bestvideo+bestaudio/best";
         slang = "fin,fi,fi-fi,eng,en,en-en,en-orig";
         sub-font = "${config.stylix.fonts.serif.name}";
-        sub-ass-force-style = "${config.stylix.fonts.serif.name}";
         sub-color = "${config.lib.stylix.colors.withHashtag.base07}";
         sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
         watch-later-options-clr = true; # Dont save settings like brightness
