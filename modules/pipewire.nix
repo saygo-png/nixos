@@ -29,19 +29,12 @@
           "default.clock.max-quantum" = quantum.max;
         };
       };
-      pipewire-pulse."92-latency".context = {
-        modules = [
-          {
-            name = "libpipewire-module-protocol-pulse";
-            args = let
-              quantumStr = lib.mapAttrs (_: v: "${toString v}/${toString quantum.rate}") quantum;
-            in {
-              pulse.default.req = quantumStr.default;
-              pulse.min.quantum = quantumStr.min;
-              pulse.max.quantum = quantumStr.max;
-            };
-          }
-        ];
+      pipewire-pulse."92-latency"."pulse.properties" = let
+        quantumStr = lib.mapAttrs (_: v: "${toString v}/${toString quantum.rate}") quantum;
+      in {
+        "pulse.default.req" = quantumStr.default;
+        "pulse.min.quantum" = quantumStr.min;
+        "pulse.max.quantum" = quantumStr.max;
       };
     };
   };
