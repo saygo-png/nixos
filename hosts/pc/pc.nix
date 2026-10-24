@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  config,
   conHome,
   conUsername,
   ...
@@ -19,13 +18,9 @@
     screenHeight = 1080;
     gaps = 0;
     borderSize = 2;
-    accelSpeed = -0.9;
     vsync = false;
     extrasNixosPath = "${conHome}/builds/extrasNixos";
   };
-
-  services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
-  services.libinput.mouse.accelProfile = lib.mkForce "flat";
 
   networking.hostId = "a4e735aa";
 

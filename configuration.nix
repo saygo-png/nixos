@@ -367,8 +367,6 @@
   services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
 
   services.libinput.enable = true;
-  services.libinput.mouse.middleEmulation = false;
-  services.libinput.mouse.accelProfile = "adaptive";
 
   home-manager = {
     useGlobalPkgs = true;

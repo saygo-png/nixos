@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  config,
   conHome,
   conUsername,
   ...
@@ -18,7 +17,6 @@
     screenHeight = 768;
     gaps = 0;
     borderSize = 2;
-    accelSpeed = -0.5;
     vsync = true;
     extrasNixosPath = "${conHome}/extrasNixos";
   };
@@ -106,9 +104,6 @@
     pkgs.powertop # Power drain check
     pkgs.vlock
   ];
-
-  services.libinput.mouse.accelSpeed = lib.strings.floatToString config.const.accelSpeed;
-  services.libinput.mouse.accelProfile = lib.mkForce "adaptive";
 
   home-manager.users.${conUsername} = {
     home.shellAliases = {
