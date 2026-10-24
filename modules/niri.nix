@@ -36,28 +36,6 @@
 
   environment.systemPackages = [pkgs.xwayland-satellite];
 
-  xdg = {
-    portal = {
-      enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
-        pkgs.xdg-desktop-portal-gnome
-      ];
-      config = {
-        niri = {
-          "org.freedesktop.impl.portal.Access" = "gtk";
-          default = ["gnome" "gtk"];
-          "org.freedesktop.impl.portal.Screenshot" = "gnome";
-          "org.freedesktop.impl.portal.Notification" = "gtk";
-          "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
-
-          "org.freedesktop.impl.portal.FileChooser" = "gtk";
-        };
-      };
-      configPackages = [pkgs.niri]; # This gets overridden by the config above
-    };
-  };
-
   systemd.user = {
     services = let
       mkNiriService = {

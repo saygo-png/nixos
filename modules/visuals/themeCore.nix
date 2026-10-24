@@ -54,12 +54,6 @@
     };
   };
 
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = false;
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-  };
-
   home-manager.users.${conUsername} = {
     xdg.configFile."wallpaper.png".source = config.stylix.image;
 
