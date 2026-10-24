@@ -329,7 +329,6 @@
     settings = {
       experimental-features = ["nix-command" "flakes"];
       download-buffer-size = 524288000; # 500mb
-      trusted-users = lib.singleton "${conUsername}";
       flake-registry = ""; # THIS IS HORRIBLE DEFAULT BEHAVIOUR
     };
     registry.nixpkgs.flake = inputs.nixpkgs;
