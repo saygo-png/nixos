@@ -189,13 +189,11 @@
       # Audio
       tap-plugins
       ( # Patch package so it doesn't spam menu entries
-        pkgs.runCommand "lsp-plugins-no-xdg-menu" {}
-        ''
-          cp -R ${pkgs.lsp-plugins} $out
-          chown -R $(id -u):$(id -g) $out/share/applications
-          chmod -R 777 $out/share/applications
-          rm -f $out/share/applications/*.desktop
-        ''
+        symlinkJoin {
+          name = "lsp-plugins-patched";
+          paths = [lsp-plugins];
+          postBuild = "rm $out/share/applications/*.desktop";
+        }
       )
       zam-plugins
       airwindows-lv2
