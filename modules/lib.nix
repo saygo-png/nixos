@@ -22,9 +22,6 @@
     launcher = pkgs.writeShellScriptBin name ''
       exec ${lib.getExe pkgs.ungoogled-chromium} ${lib.escapeShellArgs ([
           "--no-first-run"
-          "--disable-infobars"
-          "--disable-suggest-tab"
-          "--disable-translate"
           "--disable-features=TranslateUI"
           "--no-default-browser-check"
         ]

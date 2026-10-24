@@ -16,14 +16,6 @@
       desktopName = "Hordes.io Kiosk";
       comment = "Launch Hordes.io in fullscreen kiosk mode";
       categories = ["Game" "Network"];
-      flags = [
-        "--disable-session-crashed-bubble"
-        "--disable-software-rasterizer"
-        "--disable-background-timer-throttling"
-        "--disable-renderer-backgrounding"
-        "--disable-backgrounding-occluded-windows"
-        "--disable-features=VizDisplayCompositor"
-      ];
     })
 
     self.packages.${system}.saygo-utils
