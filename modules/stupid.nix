@@ -27,7 +27,7 @@
             ANKINIXHOME="${osConfig.const.extrasNixosPath}/anki"
 
             # Krita
-            rm -vrf "''${KRITANIXHOME:?}/*"
+            rm -vrf "''${KRITANIXHOME:?}"/*
             cp -vrf "$KRITAHOME/." "$KRITANIXHOME/krita-toplevel"
             cp -vf "$HOME/.config/kritarc" "$KRITANIXHOME/kritarc"
             cp -vf "$HOME/.config/kritadisplayrc" "$KRITANIXHOME/kritadisplayrc"
@@ -40,7 +40,7 @@
             git push || true
 
             # Anki
-            rm -vrf "''${ANKINIXHOME:?}/*"
+            rm -vrf "''${ANKINIXHOME:?}"/*
             cp -vrf "$ANKIHOME"/addons* "$ANKINIXHOME"/.
             # Don't include the cache
             find "$ANKINIXHOME" -type d -name "__pycache__" -print0 | xargs -0 rm -vrf
