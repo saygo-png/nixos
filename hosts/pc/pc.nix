@@ -37,12 +37,9 @@
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
 
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-      extraPackages = [pkgs.libva-vdpau-driver];
-    };
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
   };
 
   # autologin
