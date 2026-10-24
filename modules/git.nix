@@ -82,7 +82,7 @@
             aa = "add -A"; # [A]dd [A]ll
             amend = "commit -a --amend";
             undo = "reset HEAD~1 --mixed";
-            deleteGitignored = ''rm --cached ''${git ls-files -i -c --exclude-from=.gitignore}'';
+            deleteGitignored = "!git ls-files -z -i -c --exclude-from=.gitignore | xargs -0 -r git rm --cached";
             prettylog = "log --pretty=\"(%C(Green)%cr%C(reset)) %C(Cyan)%an: %C(reset)%s\" --date=short";
           };
         };
