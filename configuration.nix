@@ -339,6 +339,8 @@
 
   # Needed for secrets.
   services.gnome.gnome-keyring.enable = true;
+  # gpg-agent is the SSH agent (programs.gnupg.agent.enableSSHSupport).
+  services.gnome.gcr-ssh-agent.enable = false;
 
   # Automount component (does not automount by itself).
   services.udisks2 = {
