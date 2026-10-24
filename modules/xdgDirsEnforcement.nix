@@ -141,10 +141,10 @@ in {
     };
 
     home.shellAliases = {
-      feh = "feh --no-fehbg";
+      # feh = "feh --no-fehbg";
+      # pidgin = "pidgin --config=${homeConfig.xdg.dataHome}/purple";
+      # svn = "svn --config-dir ${homeConfig.xdg.configHome}/subversion";
       gdb = "gdb -n -x ${homeConfig.xdg.configHome}/gdb/init";
-      pidgin = "pidgin --config=${homeConfig.xdg.dataHome}/purple";
-      svn = "svn --config-dir ${homeConfig.xdg.configHome}/subversion";
       wget = "wget --hsts-file=\"${homeConfig.xdg.dataHome}/wget-hsts\"";
     };
     xdg = {

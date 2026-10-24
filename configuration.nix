@@ -206,13 +206,10 @@
       # nix-output-monitor # Pretty nix build output
 
       # All the archive garbage.
-      xz
       zip
-      gzip
       lzip
       p7zip
       unzip
-      gnutar
       ardour
       unrar-free
       atool # Unified CLI for all of these
@@ -324,7 +321,6 @@
   environment.etc."flake-src".source = lib.my.relativeToRoot ".";
 
   nixpkgs.config.allowUnfree = lib.mkForce false;
-  nixpkgs.config.allowBrokenPredicate = pkg: builtins.elem (lib.getName pkg) ["universum"];
 
   nix = {
     channel.enable = false;

@@ -20,7 +20,6 @@
 
   environment.systemPackages = [
     pkgs.kdePackages.breeze
-    pkgs.kdePackages.breeze-icons
     pkgs.kdePackages.qqc2-breeze-style
     pkgs.kdePackages.kcolorscheme
     pkgs.kdePackages.qt6ct

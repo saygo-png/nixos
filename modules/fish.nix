@@ -5,7 +5,6 @@
   ...
 }: {
   programs.fish.enable = true;
-  environment.pathsToLink = ["/share/fish"];
 
   stylix.targets.fish.enable = false;
 

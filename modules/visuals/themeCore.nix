@@ -9,12 +9,11 @@
     # Gtk fixes
     gnome-themes-extra
 
-    kdePackages.qtsvg # Icons for dolphin
+    kdePackages.qtsvg # Needed for loading icons.
 
     # Some KDE applications such as Dolphin try to fall back to Breeze
     # theme icons. Lets make sure they're also found.
     kdePackages.breeze-icons
-    qt6.qtsvg # needed to load breeze icons
 
     # Needed for some icon packs
     adwaita-icon-theme
