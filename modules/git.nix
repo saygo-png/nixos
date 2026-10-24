@@ -65,10 +65,7 @@
           mergetool.meld.path = lib.getExe pkgs.meld;
           init.defaultBranch = "main";
           diff.colorMoved = "default";
-          core = {
-            excludesfile = "~/.gitignore_global";
-            editor = "nvim";
-          };
+          core.editor = "nvim";
           user = {
             signingKey = "86B6FCCC3563C00B";
             name = "saygo-png";
