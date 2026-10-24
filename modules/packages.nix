@@ -23,13 +23,13 @@
     (pkgs.writeScriptBin "nr"
       ''
         #!${lib.getExe pkgs.bash}
-        nix run "nixpkgs#$1" -- ''${@:2}
+        nix run "nixpkgs#$1" -- "''${@:2}"
       '')
 
     (pkgs.writeScriptBin "snr"
       ''
         #!${lib.getExe pkgs.bash}
-        sudo nix run "nixpkgs#$1" -- ''${@:2}
+        sudo nix run "nixpkgs#$1" -- "''${@:2}"
       '')
 
     (pkgs.writeShellApplication {
