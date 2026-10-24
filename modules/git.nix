@@ -58,11 +58,9 @@
       git = {
         enable = true;
         settings = {
-          color.ui = "auto";
           pull.rebase = true;
           commit.gpgsign = true;
           rerere.enabled = true;
-          branch.autosetupmerge = true;
           merge.tool = "${lib.getExe pkgs.meld}";
           init.defaultBranch = "main";
           diff.colorMoved = "default";

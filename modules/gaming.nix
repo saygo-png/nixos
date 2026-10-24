@@ -46,13 +46,10 @@
     '';
 
     programs = {
+      mangohud.enable = true;
       lutris = {
         enable = true;
         protonPackages = [pkgs.proton-ge-bin];
-      };
-      mangohud = {
-        enable = true;
-        enableSessionWide = false;
       };
     };
   };
