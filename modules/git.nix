@@ -61,7 +61,8 @@
           pull.rebase = true;
           commit.gpgsign = true;
           rerere.enabled = true;
-          merge.tool = "${lib.getExe pkgs.meld}";
+          merge.tool = "meld";
+          mergetool.meld.path = lib.getExe pkgs.meld;
           init.defaultBranch = "main";
           diff.colorMoved = "default";
           core = {
