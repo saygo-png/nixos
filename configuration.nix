@@ -363,9 +363,6 @@
   services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
 
   services.libinput.enable = true;
-  services.xserver.wacom.enable = true;
-  services.xserver.autoRepeatDelay = 170;
-  services.xserver.autoRepeatInterval = 45;
   services.libinput.mouse.middleEmulation = false;
   services.libinput.mouse.accelProfile = "adaptive";
 
