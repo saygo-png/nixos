@@ -8,9 +8,12 @@
 
   nixpkgs.overlays = [
     (_: prev: {
-      qt6ct = prev.qt6ct.overrideAttrs (oldAttrs: {
-        patches = (oldAttrs.patches or []) ++ [(lib.my.relativeToRoot "resources/qt6ct-0.11.patch")];
-        name = "qt6ct-kde";
+      qt6Packages = prev.qt6Packages.overrideScope (_: q: {
+        qt6ct = q.qt6ct.overrideAttrs (
+          o: {
+            patches = (o.patches or []) ++ [(lib.my.relativeToRoot "resources/qt6ct-0.11.patch")];
+          }
+        );
       });
     })
   ];
