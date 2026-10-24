@@ -135,10 +135,10 @@
     inherit (builtins) filter;
 
     eachSystem = lib.genAttrs (import systems);
-    pkgsFor = eachSystem (system: import nixpkgs {inherit system;});
+    pkgsFor = nixpkgs.legacyPackages;
 
     # pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
-    nixvim-pkgs = eachSystem (system: import inputs.neovim-config.inputs.nixvim.inputs.nixpkgs {inherit system;});
+    nixvim-pkgs = inputs.neovim-config.inputs.nixvim.inputs.nixpkgs.legacyPackages;
     treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
     commonSpecialArgs = system: {
