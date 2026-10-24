@@ -174,6 +174,11 @@
 
     dconf.enable = true;
 
+    nh = {
+      enable = true;
+      flake = conFlakePath;
+    };
+
     command-not-found.enable = false;
     nix-index-database.comma.enable = true;
     nix-index = {
@@ -200,7 +205,6 @@
       molot-lite
 
       # Nix.
-      nh # Nix helper
       alejandra # Nix formatter
       nix-tree # Reverse dependency search
       # nix-output-monitor # Pretty nix build output
@@ -293,7 +297,6 @@
       LADSPA_PATH = "ladspa";
     }
     // rec {
-      NH_FLAKE = conFlakePath; # For nix helper.
       # Default programs.
       PAGER = "moor";
       BROWSER = "librewolf";
