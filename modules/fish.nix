@@ -81,7 +81,7 @@
 
             # Nix shell
             set -l nix_shell_info (
-              if echo "$PATH" | rg -q /nix/store
+              if string match -q '*/nix/store/*' $PATH
                 echo -n "(nix shell)"
               end
             )
