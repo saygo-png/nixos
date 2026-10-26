@@ -93,6 +93,7 @@
         customTitleBar = false;
         disableMinSize = true;
         minimizeToTray = false;
+        enableRoundedCorners = false;
         tray = true;
         splashTheming = true;
         staticTitle = false;

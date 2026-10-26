@@ -89,9 +89,6 @@
   # a timeout until SIGKILL. This shortens this window.
   systemd.user.settings.Manager.DefaultTimeoutStopSec = "10s";
 
-  # Systemd in initrd
-  boot.initrd.systemd.enable = true;
-
   # DNS
   networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];
 
