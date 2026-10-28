@@ -208,15 +208,25 @@
       system: let
         pkgs = pkgsFor.${system};
         hPkgs = pkgs.haskellPackages;
+        niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
       in {
-        haskellShell = pkgs.mkShell {
-          packages = [
-            pkgs.zlib
-            hPkgs.cabal-install
-            hPkgs.ghc
-            hPkgs.haskell-language-server
-          ];
-        };
+        haskellShell = (niceHaskell.mkPackage
+          {
+            flags = niceHaskell.mkFlags {
+              doCheck = false;
+              returnShellEnv = true;
+            };
+            packageRoot = ./resources/saygo-utils;
+            cabalName = "saygo-utils";
+          }).overrideAttrs (old: {
+          nativeBuildInputs =
+            old.nativeBuildInputs
+            ++ [
+              hPkgs.cabal-install
+              hPkgs.haskell-language-server
+            ];
+          buildInputs = old.buildInputs ++ [pkgs.zlib];
+        });
       }
     );
 
@@ -232,7 +242,6 @@
           # "saygo-record" not finished
           "timezones"
           "tmux-mem"
-          "xkb-switch-keyboard"
         ]
         (binary: {
           type = "app";

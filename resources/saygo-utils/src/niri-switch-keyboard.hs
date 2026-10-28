@@ -1,5 +1,10 @@
-import Shh
+{-# LANGUAGE ExtendedDefaultRules #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+
 import Relude
+import Shh
+
+default (ByteString)
 
 main :: IO ()
 main = do

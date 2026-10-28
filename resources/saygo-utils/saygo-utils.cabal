@@ -1,173 +1,150 @@
-cabal-version: 2.4
-name:          saygo-utils
-version:       0
-build-type:    Simple
-author:        saygo-png
-maintainer:    saygo-png <saygo.mail@proton.me>
-description:   Utilities for my NixOS config
-tested-with:   GHC ==9.8.4
+cabal-version: 3.0
+name: saygo-utils
+version: 0
+build-type: Simple
+author: saygo-png
+maintainer: saygo-png <saygo.mail@proton.me>
+description: Utilities for my NixOS config
 
 common warnings
   ghc-options:
-    -Weverything -Wno-missing-kind-signatures -Wno-safe -Wno-unsafe
-    -Wno-missing-import-lists -Wno-all-missed-specialisations
-    -Wno-missed-specialisations -Wno-missing-safe-haskell-mode
-    -Wno-missing-exported-signatures -Wno-missing-local-signatures
-    -Wno-unused-packages
+    -Weverything
+    -Wno-all-missed-specialisations
+    -Wno-missed-specialisations
+    -Wno-missing-exported-signatures
+    -Wno-missing-import-lists
+    -Wno-missing-kind-signatures
+    -Wno-missing-local-signatures
+    -Wno-missing-safe-haskell-mode
+    -Wno-safe
+    -Wno-unsafe
+    -Wno-unticked-promoted-constructors
+    -threaded
 
 common threaded
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:
+    -threaded
+    -rtsopts
+    -with-rtsopts=-N
 
 common common-options
-  import:             warnings
-  build-depends:      base
-  default-language:   GHC2021
+  import: warnings
+  build-depends: base
+  default-language: GHC2024
   default-extensions:
-    BangPatterns
-    BinaryLiterals
-    ConstraintKinds
-    DataKinds
-    DefaultSignatures
-    DeriveDataTypeable
-    DeriveFoldable
-    DeriveFunctor
-    DeriveGeneric
-    DeriveTraversable
-    DerivingStrategies
-    DoAndIfThenElse
     DuplicateRecordFields
-    EmptyDataDecls
-    ExistentialQuantification
-    FlexibleContexts
-    FlexibleInstances
-    FunctionalDependencies
-    GADTs
-    GeneralizedNewtypeDeriving
-    InstanceSigs
-    KindSignatures
-    LambdaCase
-    MultiParamTypeClasses
     MultiWayIf
-    NamedFieldPuns
     NoFieldSelectors
     NoImplicitPrelude
     OverloadedRecordDot
+    OverloadedStrings
     PartialTypeSignatures
-    PatternGuards
-    PolyKinds
-    RankNTypes
-    RoleAnnotations
-    ScopedTypeVariables
-    StandaloneDeriving
-    TupleSections
-    TypeFamilies
-    TypeSynonymInstances
-    ViewPatterns
 
 executable niri-switch-keyboard
-  import:        common-options, threaded
-  main-is:       src/niri-switch-keyboard.hs
+  import: common-options, threaded
+  main-is: src/niri-switch-keyboard.hs
   build-depends:
-    , shh
-    , relude
-
-executable xkb-switch-keyboard
-  import:        common-options, threaded
-  main-is:       src/xkb-switch-keyboard.hs
-  build-depends:
-    , shh
-    , relude
+    relude,
+    shh,
 
 executable timezones
-  import:        common-options, threaded
-  main-is:       src/timezones.hs
+  import: common-options, threaded
+  main-is: src/timezones.hs
   build-depends:
-    , bytestring
-    , optparse-applicative
-    , time
-    , tz
-    , relude
+    bytestring,
+    optparse-applicative,
+    relude,
+    time,
+    tz,
 
 executable owt
-  import:        common-options, threaded
-  main-is:       src/owt.hs
+  import: common-options, threaded
+  main-is: src/owt.hs
   build-depends:
-    , bytestring
-    , cassava
-    , directory
-    , filepath
-    , optparse-applicative
-    , time
-    , relude
+    bytestring,
+    cassava,
+    directory,
+    filepath,
+    optparse-applicative,
+    relude,
+    time,
+
+executable my-shh-shell
+  import: common-options, threaded
+  main-is: src/my-shh-shell.hs
+  build-depends:
+    relude,
+    shh,
+    shh-extras,
 
 executable ow-gen1-selector
-  import:        common-options, threaded
-  main-is:       src/ow-gen1-selector.hs
+  import: common-options, threaded
+  main-is: src/ow-gen1-selector.hs
   build-depends:
-    , optparse-applicative
-    , shh
-    , relude
+    optparse-applicative,
+    relude,
+    shh,
 
 executable free-space
-  import:        common-options, threaded
-  main-is:       src/free-space.hs
+  import: common-options, threaded
+  main-is: src/free-space.hs
   build-depends:
-    , Cabal
-    , directory
-    , filepath
-    , optparse-applicative
-    , shh
-    , relude
-    , unix
-    , vector
+    Cabal,
+    directory,
+    filepath,
+    optparse-applicative,
+    relude,
+    shh,
+    unix,
+    vector,
 
 executable tmux-mem
-  import:        common-options
-  main-is:       src/tmux-mem.hs
+  import: common-options
+  main-is: src/tmux-mem.hs
   build-depends:
-    , bytestring
-    , relude
+    bytestring,
+    relude,
 
 executable convertlink
-  import:        common-options, threaded
-  main-is:       src/convertlink.hs
+  import: common-options, threaded
+  main-is: src/convertlink.hs
   build-depends:
-    , Cabal
-    , containers
-    , directory
-    , filepath
-    , optparse-applicative
-    , relude
-    , unix
-    , vector
+    Cabal,
+    containers,
+    directory,
+    filepath,
+    optparse-applicative,
+    relude,
+    unix,
+    vector,
 
 executable saygo-record
-  import:        common-options, threaded
-  main-is:       src/saygo-record.hs
+  import: common-options, threaded
+  main-is: src/saygo-record.hs
   build-depends:
-    , Cabal
-    , directory
-    , filepath
-    , optparse-applicative
-    , shh
-    , relude
-    , unix
+    Cabal,
+    directory,
+    filepath,
+    optparse-applicative,
+    relude,
+    shh,
+    unix,
 
 executable githubloc
-  import:        common-options, threaded
-  main-is:       src/githubloc.hs
+  import: common-options, threaded
+  main-is: src/githubloc.hs
   build-depends:
-    , bytestring
-    , cassava
-    , granite
-    , optparse-applicative
-    , time
-    , relude
-    , vector
+    bytestring,
+    cassava,
+    granite,
+    optparse-applicative,
+    relude,
+    time,
+    vector,
 
 executable clean-nix-paths
-  import:        common-options, threaded
-  main-is:       src/clean-nix-paths.hs
+  import: common-options, threaded
+  main-is: src/clean-nix-paths.hs
   build-depends:
-    , relude
-    , text
+    relude,
+    text,

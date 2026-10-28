@@ -1,6 +1,11 @@
+{-# LANGUAGE ExtendedDefaultRules #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+
 import Options.Applicative
-import Shh
 import Relude
+import Shh
+
+default (ByteString)
 
 data Subcommand = CmdEnable | CmdDisable
 
