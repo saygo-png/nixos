@@ -1,4 +1,0 @@
-
-import Relude
-
-main = undefined

@@ -1,3 +1,6 @@
+{-# LANGUAGE ExtendedDefaultRules #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+
 import Control.Exception
 import Data.ByteString.Lazy qualified as BL
 import Data.Char (toLower)
@@ -6,6 +9,8 @@ import Data.Time (defaultTimeLocale, formatTime, getCurrentTime, getCurrentTimeZ
 import Relude
 import System.Directory (createDirectoryIfMissing, getHomeDirectory)
 import System.FilePath (takeDirectory, (</>))
+
+default (ByteString)
 
 csvFilePath :: IO FilePath
 csvFilePath = do

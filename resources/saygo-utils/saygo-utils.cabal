@@ -69,10 +69,17 @@ executable owt
     relude,
     time,
 
-executable my-shh-shell
+executable shhell
   import: common-options, threaded
-  main-is: src/my-shh-shell.hs
+  main-is: src/shhell.hs
   build-depends:
+    directory,
+    unix,
+    template-haskell,
+    text,
+    filepath,
+    file-io,
+    bytestring,
     relude,
     shh,
     shh-extras,

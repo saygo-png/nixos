@@ -242,6 +242,7 @@
           # "saygo-record" not finished
           "timezones"
           "tmux-mem"
+          "shhell"
         ]
         (binary: {
           type = "app";

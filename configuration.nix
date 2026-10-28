@@ -45,6 +45,7 @@
       "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
+      "shhell.nix"
       # "wireshark.nix"
       # "virt-manager.nix"
       "prismlauncher.nix"
