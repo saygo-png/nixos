@@ -28,6 +28,7 @@ import System.Directory.OsPath (
  )
 import System.File.OsPath qualified as File
 import System.OsPath (OsPath, decodeFS, osp, toChar, unpack, unsafeEncodeUtf, (</>))
+import System.Posix.Env.ByteString qualified as Env
 import System.Posix.Process.ByteString (executeFile)
 
 -------------------------------------------------------------------------------
@@ -64,6 +65,18 @@ defaultInitGhci =
     ]
   where
     prompt :: Text = "\"\\n\\ESC[1;32m[%u@%h:%w] λ \\ESC[0m\""
+
+-- | Cradle for haskell-language-server when editing Shell.hs (e.g. via @:e@).
+-- A direct cradle asks the @ghc@ on PATH for its package database, and 'main'
+-- puts 'ghcEnv' first on PATH, so the language server sees the same packages
+-- as GHCi.
+defaultHieYaml :: Text
+defaultHieYaml =
+  unlines
+    [ "cradle:"
+    , "  direct:"
+    , "    arguments: []"
+    ]
 
 -------------------------------------------------------------------------------
 -- Command line
@@ -112,6 +125,7 @@ main = do
   let
     initGhci = cfgDir </> [osp|init.ghci|]
     shellHs = cfgDir </> [osp|Shell.hs|]
+    hieYaml = cfgDir </> [osp|hie.yaml|]
     quiet = ["-v0" | not optDebug]
     display = fmap toText . decodeFS
 
@@ -127,8 +141,14 @@ main = do
     File.writeFile' initGhci . encodeUtf8 $ defaultInitGhci
 
   writeIfMissing shellHs defaultShell
+  writeIfMissing hieYaml defaultHieYaml
 
   exe (osBytes ghcBin) $ ["--make", "-no-link", "-dynamic", osBytes shellHs] <> ["-fforce-recomp" | optMode == Rebuild]
+
+  -- Programs started from GHCi, like the editor and its language server on :e,
+  -- inherit this PATH and so find the GHC that has shh and friends installed.
+  path <- Env.getEnv "PATH"
+  Env.setEnv "PATH" (osBytes (ghcEnv </> [osp|bin|]) <> maybe "" (":" <>) path) True
 
   -- argv[0] is set by executeFile; the arguments start after it.
   executeFile

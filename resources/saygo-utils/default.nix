@@ -1,6 +1,7 @@
 {
   niceHaskell,
   pkgs,
+  shhellHaskellPackages ? pkgs.haskellPackages,
   ...
 }:
 niceHaskell.mkPackage {
@@ -10,8 +11,8 @@ niceHaskell.mkPackage {
   developPackageArgs = {
     modifier = drv:
       drv.overrideAttrs (_: let
-        hp = pkgs.haskellPackages;
-        ghcEnv = hp.ghcWithPackages (p: with p; [shh shh-extras relude]);
+        hp = shhellHaskellPackages;
+        ghcEnv = hp.ghcWithPackages (p: with p; [shh shh-extras relude template-haskell Glob PyF]);
       in {SHHELL_GHC_ENV = ghcEnv;});
   };
 }

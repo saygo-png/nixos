@@ -200,7 +200,11 @@
       system: {
         saygo-utils =
           pkgsFor.${system}.callPackage ./resources/saygo-utils
-          {niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};};
+          {
+            niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
+            # Same GHC as the haskell-language-server in neovim-config.
+            shhellHaskellPackages = nixvim-pkgs.${system}.haskellPackages;
+          };
       }
     );
 
