@@ -74,15 +74,30 @@ executable shhell
   main-is: src/shhell.hs
   build-depends:
     directory,
-    unix,
-    template-haskell,
-    text,
-    filepath,
     file-io,
-    bytestring,
+    filepath,
+    os-string,
     relude,
-    shh,
-    shh-extras,
+    template-haskell,
+    unix,
+
+-- GHCi's linker for shhell, see src/ghc-link-cache.hs. Not threaded with -N:
+-- it runs once per link and only waits on the real linker.
+executable ghc-link-cache
+  import: common-options
+  main-is: src/ghc-link-cache.hs
+  build-depends:
+    bytestring,
+    cryptohash-sha256,
+    directory,
+    file-io,
+    filepath,
+    os-string,
+    process,
+    relude,
+    template-haskell,
+    time,
+    unix,
 
 executable ow-gen1-selector
   import: common-options, threaded

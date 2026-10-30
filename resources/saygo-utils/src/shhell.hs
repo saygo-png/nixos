@@ -7,14 +7,17 @@
 --
 -- Conventions:
 --
---   * 'OsPath'     – every filesystem path. Literals via @[osp|...|]@.
---   * 'ByteString' – file contents and argv. Paths become argv with 'ob'.
---   * 'Text'       – human-readable content, turned into bytes with UTF-8
---                    ('encodeUtf8'), never with the locale.
---   * 'String'     – only where an API insists ('getArgs', 'die').
+--   * 'OsPath'      – every filesystem path. Literals via @[osp|...|]@.
+--   * 'PosixString' – argv and environment, as the unix package passes them.
+--                     Literals via @[pstr|...|]@. On POSIX an 'OsPath' is a
+--                     'PosixString' underneath, so 'getOsString' converts a
+--                     path for free.
+--   * 'ByteString'  – file contents.
+--   * 'Text'        – human-readable content, turned into bytes with UTF-8
+--                     ('encodeUtf8'), never with the locale.
+--   * 'String'      – only where an API insists ('getArgs', 'die').
 module Main (main) where
 
-import Data.ByteString qualified as BS
 import Data.List (partition)
 import Language.Haskell.TH.Syntax qualified as TH
 import Relude
@@ -27,9 +30,12 @@ import System.Directory.OsPath (
   removeFile,
  )
 import System.File.OsPath qualified as File
-import System.OsPath (OsPath, decodeFS, osp, toChar, unpack, unsafeEncodeUtf, (</>))
-import System.Posix.Env.ByteString qualified as Env
-import System.Posix.Process.ByteString (executeFile)
+import System.Environment (getExecutablePath)
+import System.OsPath (OsPath, decodeFS, encodeFS, osp, takeDirectory, unsafeEncodeUtf, (</>))
+import System.OsString.Internal.Types (OsString (getOsString))
+import System.OsString.Posix (pstr)
+import System.Posix.Env.PosixString qualified as Env
+import System.Posix.Process.PosixString (executeFile)
 
 -------------------------------------------------------------------------------
 -- Get paths from envvars set during the Nix build.
@@ -104,13 +110,6 @@ usage = "usage: shh [--rebuild] [--debug] [--help]"
 -------------------------------------------------------------------------------
 -- Helpers
 
--- | Exact bytes of a path, for argv. filepath has no public @toBytes@, but on
--- POSIX an 'OsChar' is one byte and 'toChar' maps it to the code point of the
--- same value, so this is lossless. POSIX-only, as is 'executeFile'.
--- Stands for `ob`, short since its used a lot.
-ob :: OsPath -> ByteString
-ob = BS.pack . map (fromIntegral . ord . toChar) . unpack
-
 writeIfMissing :: OsPath -> Text -> IO ()
 writeIfMissing p contents =
   unlessM (doesFileExist p) $ File.writeFile' p (encodeUtf8 contents)
@@ -150,23 +149,30 @@ main = do
   when (optMode == Rebuild)
     . for_ [[osp|Shell.o|], [osp|Shell.hi|]]
     $ liftA2 whenM doesFileExist removeFile
-    . (</> cacheDir)
+    . (cacheDir </>)
 
   -- Programs started from GHCi, like the editor and its language server on :e,
   -- inherit this PATH and so find the GHC that has shh and friends installed.
   path <-
-    Env.getEnv "PATH" >>= \case
-      Just x -> pure $ ":" <> x
+    Env.getEnv [pstr|PATH|] >>= \case
+      Just x -> pure $ [pstr|:|] <> x
       Nothing -> pure mempty
-  Env.setEnv "PATH" (ob ghcBin <> path) True
+  Env.setEnv [pstr|PATH|] (getOsString ghcBin <> path) True
+
+  -- GHCi links Shell.o into a shared library before it can run it, which it
+  -- does when the first command is typed, and normally on every launch.
+  -- ghc-link-cache, installed next to this program, stands in for the linker
+  -- and keeps those libraries. -pgml turns off -no-pie for executables
+  -- (GHC #15319), but ghc-link-cache runs GHC's own C compiler, which supports it.
+  linkCache <- (</> [osp|ghc-link-cache|]) . takeDirectory <$> (encodeFS =<< getExecutablePath)
 
   -- executeFile replaces this process without flushing its handles.
   hFlush stdout
 
   -- argv[0] is set by executeFile; the arguments start after it.
-  -- mold is used as the linker as it is faster. ghci runs linking after typing in the first command
   let
-    fileArgs = ["-outputdir", ob cacheDir, "-ghci-script", ob initGhci, ob shellHs] :: [ByteString]
-    quiet = ["-v0" | not optDebug]
+    fileArgs = [[pstr|-outputdir|], getOsString cacheDir, [pstr|-ghci-script|], getOsString initGhci, getOsString shellHs]
+    linkArgs = [[pstr|-pgml|], getOsString linkCache, [pstr|-pgml-supports-no-pie|]]
+    quiet = [[pstr|-v0|] | not optDebug]
 
-  executeFile (ob ghciExe) False (["-fobject-code"] <> fileArgs <> quiet) Nothing
+  executeFile (getOsString ghciExe) False ([[pstr|-fobject-code|]] <> fileArgs <> linkArgs <> quiet) Nothing
