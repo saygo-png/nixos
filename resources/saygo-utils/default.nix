@@ -13,6 +13,8 @@ niceHaskell.mkPackage {
       drv.overrideAttrs (_: let
         hp = shhellHaskellPackages;
         ghcEnv = hp.ghcWithPackages (p: with p; [shh shh-extras relude template-haskell Glob PyF]);
-      in {SHHELL_GHC_ENV = ghcEnv;});
+      in {
+        SHHELL_GHC_ENV = ghcEnv;
+      });
   };
 }
