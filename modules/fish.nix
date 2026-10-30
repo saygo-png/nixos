@@ -14,6 +14,17 @@
     stylix.targets.fish.enable = false;
     programs.alacritty.settings.terminal.shell = lib.getExe pkgs.fish;
     programs.yazi.enableFishIntegration = true;
+
+    xdg.desktopEntries.alacritty-fish = {
+      name = "alacritty-fish";
+      genericName = "Terminal";
+      comment = "Alacritty running fish";
+      exec = "${lib.getExe pkgs.alacritty} --command ${lib.getExe pkgs.fish}";
+      icon = "Alacritty";
+      categories = ["System" "TerminalEmulator"];
+      terminal = false;
+    };
+
     programs.fish = {
       enable = true;
       interactiveShellInit =
