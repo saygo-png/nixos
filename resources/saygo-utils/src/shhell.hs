@@ -19,12 +19,12 @@ import Data.List (partition)
 import Language.Haskell.TH.Syntax qualified as TH
 import Relude
 import Relude.Unsafe (fromJust)
-import Shh (exe)
 import System.Directory.OsPath (
-  XdgDirectory (XdgConfig),
+  XdgDirectory (XdgCache, XdgConfig),
   createDirectoryIfMissing,
   doesFileExist,
   getXdgDirectory,
+  removeFile,
  )
 import System.File.OsPath qualified as File
 import System.OsPath (OsPath, decodeFS, osp, toChar, unpack, unsafeEncodeUtf, (</>))
@@ -121,6 +121,7 @@ main = do
   when (optMode == Help) $ putTextLn usage >> exitSuccess
 
   cfgDir <- getXdgDirectory XdgConfig [osp|shhell|]
+  cacheDir <- getXdgDirectory XdgCache [osp|shhell|]
 
   let
     initGhci = cfgDir </> [osp|init.ghci|]
@@ -130,11 +131,12 @@ main = do
     display = fmap toText . decodeFS
 
   when optDebug
-    $ for_ [("Shh home", cfgDir), ("ghc", ghcBin), ("ghci", ghciBin)]
+    $ for_ [("Shh home", cfgDir), ("Build cache", cacheDir), ("ghc", ghcBin), ("ghci", ghciBin)]
     $ \(label, p) ->
       putTextLn . ((label <> ": ") <>) =<< display p
 
   createDirectoryIfMissing True cfgDir
+  createDirectoryIfMissing True cacheDir
 
   unlessM (doesFileExist initGhci) $ do
     putTextLn "Generating init.ghci..."
@@ -143,16 +145,22 @@ main = do
   writeIfMissing shellHs defaultShell
   writeIfMissing hieYaml defaultHieYaml
 
-  exe (osBytes ghcBin) $ ["--make", "-no-link", "-dynamic", osBytes shellHs] <> ["-fforce-recomp" | optMode == Rebuild]
+  when (optMode == Rebuild)
+    . for_ [[osp|Shell.o|], [osp|Shell.hi|]]
+    $ liftA2 whenM doesFileExist removeFile
+    . (</> cacheDir)
 
   -- Programs started from GHCi, like the editor and its language server on :e,
   -- inherit this PATH and so find the GHC that has shh and friends installed.
   path <- Env.getEnv "PATH"
   Env.setEnv "PATH" (osBytes (ghcEnv </> [osp|bin|]) <> maybe "" (":" <>) path) True
 
+  -- executeFile replaces this process without flushing its handles.
+  hFlush stdout
+
   -- argv[0] is set by executeFile; the arguments start after it.
   executeFile
     (osBytes ghciBin)
     False
-    (["-ghci-script", osBytes initGhci, osBytes shellHs] <> quiet)
+    (["-fobject-code", "-outputdir", osBytes cacheDir, "-ghci-script", osBytes initGhci, osBytes shellHs] <> quiet)
     Nothing
