@@ -29,8 +29,8 @@ import System.Directory.OsPath (
   getXdgDirectory,
   removeFile,
  )
-import System.File.OsPath qualified as File
 import System.Environment (getExecutablePath)
+import System.File.OsPath qualified as File
 import System.OsPath (OsPath, decodeFS, encodeFS, osp, takeDirectory, unsafeEncodeUtf, (</>))
 import System.OsString.Internal.Types (OsString (getOsString))
 import System.OsString.Posix (pstr)
@@ -43,11 +43,11 @@ import System.Posix.Process.PosixString (executeFile)
 ghcEnv :: OsPath
 ghcEnv = unsafeEncodeUtf $ fromJust $(TH.lift =<< TH.runIO (lookupEnv "SHHELL_GHC_ENV"))
 
-ghcBin, ghciBin, ghcExe, ghciExe :: OsPath
+ghcBin, ghcExe, ghciExe :: OsPath
 ghcBin = ghcEnv </> [osp|bin|]
-ghciBin = ghcEnv </> [osp|bin|]
 ghcExe = ghcBin </> [osp|ghc|]
-ghciExe = ghciBin </> [osp|ghci|]
+-- GHCi with a newer haskeline that reads the XDG config, see ghci.nix.
+ghciExe = unsafeEncodeUtf $ fromJust $(TH.lift =<< TH.runIO (lookupEnv "SHHELL_GHCI"))
 
 -------------------------------------------------------------------------------
 

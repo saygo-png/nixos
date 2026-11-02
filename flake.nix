@@ -205,6 +205,10 @@
             # Same GHC as the haskell-language-server in neovim-config.
             shhellHaskellPackages = nixvim-pkgs.${system}.haskellPackages;
           };
+        # GHCi that reads the XDG haskeline config, see resources/saygo-utils/ghci.nix.
+        ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/ghci.nix {
+          hp = nixvim-pkgs.${system}.haskellPackages;
+        };
       }
     );
 

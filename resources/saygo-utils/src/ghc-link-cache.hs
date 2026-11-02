@@ -69,18 +69,18 @@ import System.Process (readProcess)
 -- added back here.
 realLinker :: (PosixString, [PosixString])
 realLinker =
-  bimap fromBytestring (map fromBytestring) $
-    $( do
-        env <- TH.runIO (lookupEnv "SHHELL_GHC_ENV") >>= maybe (fail "SHHELL_GHC_ENV is not set") pure
-        info <- TH.runIO (readProcess (env <> "/bin/ghc") ["--info"] "")
-        fields <- maybe (fail "cannot parse ghc --info") pure (readMaybe info :: Maybe [(String, String)])
-        let field k = maybe (fail ("ghc --info has no " <> show k)) pure (L.lookup k fields)
-            bytes = encodeUtf8 . toText :: String -> ByteString
-        cc <- field "C compiler command"
-        ccFlags <- field "C compiler flags"
-        linkFlags <- field "C compiler link flags"
-        TH.lift (bytes cc, map bytes (L.words ccFlags <> L.words linkFlags))
-     )
+  bimap fromBytestring (map fromBytestring)
+    $ $( do
+           env <- TH.runIO (lookupEnv "SHHELL_GHC_ENV") >>= maybe (fail "SHHELL_GHC_ENV is not set") pure
+           info <- TH.runIO (readProcess (env <> "/bin/ghc") ["--info"] "")
+           fields <- maybe (fail "cannot parse ghc --info") pure (readMaybe info :: Maybe [(String, String)])
+           let field k = maybe (fail ("ghc --info has no " <> show k)) pure (L.lookup k fields)
+               bytes = encodeUtf8 . toText :: String -> ByteString
+           cc <- field "C compiler command"
+           ccFlags <- field "C compiler flags"
+           linkFlags <- field "C compiler link flags"
+           TH.lift (bytes cc, map bytes (L.words ccFlags <> L.words linkFlags))
+       )
 
 -- | Run the real linker and wait for it.
 link :: [PosixString] -> IO ExitCode
@@ -174,9 +174,12 @@ isPrivate isDir path = do
   pure $ case status of
     Left (_ :: IOException) -> False
     Right st ->
-      Posix.fileOwner st == uid
+      Posix.fileOwner st
+        == uid
         && (if isDir then Posix.isDirectory st else Posix.isRegularFile st)
-        && Posix.fileMode st `Posix.intersectFileModes` othersWrite == Posix.nullFileMode
+        && Posix.fileMode st
+        `Posix.intersectFileModes` othersWrite
+        == Posix.nullFileMode
 
 -- | Remove kept libraries not used for 30 days. Using one updates its time.
 prune :: OsPath -> IO ()

@@ -11,5 +11,8 @@ in {
 
   home-manager.users.${conUsername} = {
     programs.alacritty.settings.terminal.shell = lib.mkForce shellPkg;
+    # GHCi that reads ~/.config/haskeline/haskeline. hiPrio wins over the ghci
+    # of a stock GHC installed alongside it.
+    home.packages = [(lib.hiPrio self.packages.${system}.ghci)];
   };
 }
