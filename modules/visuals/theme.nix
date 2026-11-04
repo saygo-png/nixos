@@ -104,10 +104,10 @@
   };
 
   stylix.opacity = {
-    popups = 0.7;
-    desktop = 0.7;
-    terminal = 0.7;
-    applications = 0.7;
+    popups = 0.8;
+    desktop = 0.8;
+    terminal = 0.8;
+    applications = 0.8;
   };
 
   home-manager.users.${conUsername} = {
