@@ -202,8 +202,9 @@
           pkgsFor.${system}.callPackage ./resources/saygo-utils
           {
             niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
-            # Same GHC as the haskell-language-server in neovim-config.
-            shhellHaskellPackages = nixvim-pkgs.${system}.haskellPackages;
+            # Same GHC as the haskell-language-server in neovim-config, for
+            # all of saygo-utils and shhell's GHC environment.
+            haskellPackages = nixvim-pkgs.${system}.haskellPackages;
           };
         # GHCi that reads the XDG haskeline config, see resources/saygo-utils/ghci.nix.
         ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/ghci.nix {
@@ -215,7 +216,8 @@
     devShells = eachSystem (
       system: let
         pkgs = pkgsFor.${system};
-        hPkgs = pkgs.haskellPackages;
+        # The GHC saygo-utils is built with, see packages above.
+        hPkgs = nixvim-pkgs.${system}.haskellPackages;
         niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
       in {
         haskellShell = (niceHaskell.mkPackage
@@ -224,6 +226,7 @@
               doCheck = false;
               returnShellEnv = true;
             };
+            haskellPackages = hPkgs;
             packageRoot = ./resources/saygo-utils;
             cabalName = "saygo-utils";
           }).overrideAttrs (old: {
