@@ -67,14 +67,11 @@ defaultInitGhci =
   unlines
     [ ":seti -XNoOverloadedLists"
     , "import Shh"
-    , "import Shh.Prompt"
-    , "import Shhell.Direnv"
-    , -- Before each prompt, load or unload the current directory's .envrc.
-      ":set prompt-function \\modules line -> direnvSync >> formatPrompt " <> prompt <> " modules line"
+    , "import Shhell.Prompt"
+    , -- Also loads or unloads the current directory's .envrc, see Shhell.Prompt.
+      ":set prompt-function shhellPrompt"
     , ":set prompt-cont \"| \""
     ]
-  where
-    prompt :: Text = "\"\\n\\ESC[1;32m[%u@%h:%w] λ \\ESC[0m\""
 
 -- | Cradle for haskell-language-server when editing Shell.hs (e.g. via @:e@).
 -- A direct cradle asks the @ghc@ on PATH for its package database, and 'main'

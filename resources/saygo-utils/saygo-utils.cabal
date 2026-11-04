@@ -44,7 +44,9 @@ common common-options
 library
   import: common-options
   hs-source-dirs: src
-  exposed-modules: Shhell.Direnv
+  exposed-modules:
+    Shhell.Direnv
+    Shhell.Prompt
   build-depends:
     aeson,
     containers,
@@ -53,6 +55,7 @@ library
     os-string,
     relude,
     shh,
+    shh-extras,
     unix,
 
 executable niri-switch-keyboard
