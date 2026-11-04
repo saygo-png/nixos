@@ -51,7 +51,6 @@ in {
         ".local/share/Anki2"
         ".local/share/drug2"
         ".local/share/gnupg"
-        ".local/share/krita"
         ".local/bin"
 
         ".ssh"

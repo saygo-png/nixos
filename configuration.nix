@@ -42,6 +42,7 @@
       "fish.nix"
       "qcalc.nix"
       "kasts.nix"
+      "krita.nix"
       "nixSearch.nix"
       "dolphin.nix"
       "mullvad.nix"
@@ -252,7 +253,6 @@
       # GUI.
       telegram-desktop
       foliate
-      krita # Painting
       anki # Flashcards
       simplescreenrecorder
       inkscape # Vector graphics
