@@ -68,7 +68,9 @@ defaultInitGhci =
     [ ":seti -XNoOverloadedLists"
     , "import Shh"
     , "import Shh.Prompt"
-    , ":set prompt-function formatPrompt " <> prompt
+    , "import Shhell.Direnv"
+    , -- Before each prompt, load or unload the current directory's .envrc.
+      ":set prompt-function \\modules line -> direnvSync >> formatPrompt " <> prompt <> " modules line"
     , ":set prompt-cont \"| \""
     ]
   where

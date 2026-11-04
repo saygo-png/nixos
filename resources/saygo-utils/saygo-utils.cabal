@@ -40,6 +40,21 @@ common common-options
     OverloadedStrings
     PartialTypeSignatures
 
+-- Modules for shhell's GHCi session, which has them in its GHC environment.
+library
+  import: common-options
+  hs-source-dirs: src
+  exposed-modules: Shhell.Direnv
+  build-depends:
+    aeson,
+    containers,
+    directory,
+    filepath,
+    os-string,
+    relude,
+    shh,
+    unix,
+
 executable niri-switch-keyboard
   import: common-options, threaded
   main-is: src/niri-switch-keyboard.hs
