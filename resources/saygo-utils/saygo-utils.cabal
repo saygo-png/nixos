@@ -48,7 +48,7 @@ library
     Shhell.Direnv
     Shhell.Prompt
   build-depends:
-    aeson,
+    yocto,
     containers,
     directory,
     filepath,

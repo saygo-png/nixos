@@ -267,11 +267,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793800729,
-        "narHash": "sha256-0SUQ0LNRjIhgmdeswAfrqjDNXZ6o4nTZjqKl7G+FBFk=",
+        "lastModified": 1793827592,
+        "narHash": "sha256-ciq6NDOxvOYxqwK9JNrlz9ZGd5bswHbwfs8qnLpO05E=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "811d23e88806f9365609c45852f420e8878d578f",
+        "rev": "3058071b6f2198a065004c32c2496e75c86b4ca7",
         "type": "github"
       },
       "original": {
@@ -439,38 +439,19 @@
         "zlequalizer": "zlequalizer"
       }
     },
-    "sayland": {
-      "inputs": {
-        "git-hooks": [],
-        "niceHaskell": [
-          "saywallpaper",
-          "niceHaskell"
-        ],
-        "nixpkgs": [
-          "saywallpaper",
-          "nixpkgs"
-        ],
-        "systems": [
-          "saywallpaper",
-          "systems"
-        ],
-        "treefmt-nix": [
-          "saywallpaper",
-          "treefmt-nix"
-        ]
-      },
+    "saylandSrc": {
+      "flake": false,
       "locked": {
-        "lastModified": 1791907199,
-        "narHash": "sha256-1KN0PSsfyKrhwAILkAue5SpNpo26QeO9+6cHytOziSw=",
+        "lastModified": 1793717730,
+        "narHash": "sha256-Ye5tM/EraMPdux2kO8dW9xcV1qiVkZO6bcW1ty6ByLA=",
         "owner": "saygo-png",
         "repo": "sayland",
-        "rev": "768dee7f0947dc9c5b54b49a1bdb94b68cc61f2f",
+        "rev": "ffe624cf91c4d59b7ceda5a645cfbefd9483dad6",
         "type": "github"
       },
       "original": {
         "owner": "saygo-png",
         "repo": "sayland",
-        "rev": "768dee7f0947dc9c5b54b49a1bdb94b68cc61f2f",
         "type": "github"
       }
     },
@@ -482,7 +463,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "sayland": "sayland",
+        "saylandSrc": "saylandSrc",
         "systems": [
           "systems"
         ],
@@ -491,11 +472,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792738835,
-        "narHash": "sha256-HSDSrtPP9F5Tt6Y2dQSjBJow/ZfE/6u1iEq4Z7vBpFQ=",
+        "lastModified": 1793828668,
+        "narHash": "sha256-TOCSEET3HlIOWnZT4lqvP2/7yg420qfcYdxI6+rlZM8=",
         "owner": "saygo-png",
         "repo": "Saywallpaper",
-        "rev": "67008628ba022d9d38fd697f60e501c50ef870fc",
+        "rev": "9b2ad991bd4b59951b1498e027c3f1576e73243c",
         "type": "github"
       },
       "original": {

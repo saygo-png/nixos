@@ -1,11 +1,13 @@
 module Shhell.Prompt (shhellPrompt) where
 
+import Control.Exception (handle)
 import Relude
 import Shh.Prompt (PromptFn, formatPrompt)
 import Shhell.Direnv (direnvPrompt, direnvSync)
+import System.IO (hPutStrLn)
 
 shhellPrompt :: PromptFn
-shhellPrompt modules line = do
+shhellPrompt modules line = handle fallback $ do
   direnvSync
   direnv <- direnvPrompt
   formatPrompt
@@ -21,3 +23,8 @@ shhellPrompt modules line = do
     uncoloured :: String -> String
     uncoloured "" = ""
     uncoloured s = reset <> s <> green
+
+    -- Catches everything, Ctrl-C included, so you can interrupt a slow .envrc.
+    fallback (e :: SomeException) = do
+      hPutStrLn stderr $ "shhell: " <> displayException e
+      pure "ghci> "

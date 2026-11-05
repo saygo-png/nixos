@@ -1,66 +1,70 @@
 {-# LANGUAGE QuasiQuotes #-}
 
+-- | direnv integration for the prompt. Both exported functions throw if direnv fails.
+-- Guard them when used in the prompt since GHCi exits if its prompt function throws.
 module Shhell.Direnv (direnvSync, direnvPrompt) where
 
-import Control.Exception (IOException, try)
-import Data.Aeson ((.:))
-import Data.Aeson qualified as Aeson
-import Data.Aeson.Types qualified as Aeson
+import Data.ByteString.Lazy qualified as LBS
 import Data.Map.Strict qualified as Map
 import Relude
 import Shh (capture, exe, ignoreFailure, (|>))
 import System.Directory.OsPath (withCurrentDirectory)
 import System.OsPath (osp)
-import System.OsString.Internal.Types (OsString (OsString), PosixString (PosixString))
+import System.OsString.Internal.Types (OsString (OsString))
 import System.OsString.Posix (pstr)
+import System.OsString.Posix qualified as PSX
 import System.Posix.Env.PosixString qualified as Env
+import Text.JSON.Yocto qualified as JSON
 
--- | Runs direnv with these arguments and returns what it printed.
-runDirenv :: [ByteString] -> IO (Maybe LByteString)
+-- | Runs direnv with these arguments and decodes the JSON it printed.
+-- t`Nothing` if it printed nothing.
+runDirenv :: [ByteString] -> IO (Maybe JSON.Value)
 runDirenv args = do
   -- GHCi runs the prompt in the directory it started in, not the one you cd'd
   -- to. shh's cd keeps $PWD up to date, so direnv runs there.
-  let pwd = [pstr|PWD|]
-      currentDir = [osp|.|]
-  dir <-
-    Env.getEnv pwd >>= \case
-      Nothing -> pure currentDir
-      Just r -> pure $ OsString r
+  dir <- Env.getEnv [pstr|PWD|] <&> maybe [osp|.|] coerce
 
-  -- direnv prints its own messages, e.g. that an .envrc is blocked. It exits
-  -- with an error then, but its output still has to be applied: leaving a
-  -- loaded directory for a blocked one unloads the first. Without direnv, or
-  -- if the directory is gone, there's no output.
-  rightToMaybe <$> try @IOException (withCurrentDirectory dir $ ignoreFailure (exe ("direnv" : args)) |> capture)
+  -- direnv exits with an error when, e.g., an .envrc is blocked, but its output
+  -- still has to be applied: leaving a loaded directory for a blocked one
+  -- unloads the first.
+  output <- withCurrentDirectory dir $ exe ("direnv" : args) & ignoreFailure |> capture
 
+  -- It prints nothing when there's nothing to change. yocto's decode calls
+  -- error on that, and is lazy, so force it to throw here.
+  if LBS.null output
+    then pure Nothing
+    else Just <$> evaluateWHNF (JSON.decode $ decodeUtf8 output)
+
+-- | Applies the environment changes direnv wants here.
 direnvSync :: IO ()
 direnvSync = do
-  out <- runDirenv ["export", "json"]
+  direnvJson <- runDirenv ["export", "json"]
 
-  -- Changes to apply reported from direnv. A string to set a variable or null to unset it.
-  -- No output means no changes.
-  let
-    decoded = Aeson.decode @(Map Text (Maybe Text)) =<< out
-    changes = foldMap Map.toList decoded
+  -- Encode everything before setting anything, so a bad value can't leave the
+  -- environment half-updated. A null value means unset.
+  changes <- evaluateNF . fold $ do
+    JSON.Object m <- direnvJson
+    pure $ Map.mapKeys PSX.unsafeEncodeUtf m <&> \case
+      JSON.String s -> Just $ PSX.unsafeEncodeUtf s
+      _ -> Nothing
 
-  traverse_ (uncurry set) changes
+  Map.foldMapWithKey set changes
   where
-    set name = maybe
-      (Env.unsetEnv $ posix name)
-      $ \value -> Env.setEnv (posix name) (posix value) True
-    posix :: Text -> PosixString
-    posix = PosixString . toShort . encodeUtf8
+    set name = maybe (Env.unsetEnv name) $ \value -> Env.setEnv name value True
 
--- | A prompt element for direnv status.
+-- | A prompt element showing whether direnv has an .envrc loaded here.
 direnvPrompt :: IO String
 direnvPrompt = do
-  status <- runDirenv ["status", "--json"]
-  let allowed = Aeson.parseMaybe loadedRC =<< Aeson.decode =<< status
-  pure $ if allowed == Just (0 :: Int) then " (direnv)" else ""
-  where
-    -- Whether the .envrc direnv last loaded here is allowed: 0 if it is, 1 if
-    -- blocked (not allowed yet, or changed since), 2 if denied. It's null
-    -- outside of any .envrc. direnv sets its DIRENV_ variables for a blocked or
-    -- denied .envrc too, so that it notices when you allow it, so they can't
-    -- tell.
-    loadedRC = Aeson.withObject "status" $ \o -> o .: "state" >>= (.: "loadedRC") >>= (.: "allowed")
+  statusJson <- runDirenv ["status", "--json"]
+
+  let
+    -- 0 if the loaded .envrc is allowed, 1 if blocked, 2 if denied, and null
+    -- outside of any. DIRENV_ variables can't tell: direnv sets them for a
+    -- blocked .envrc too, so it notices when you allow it.
+    allowed = do
+      JSON.Object o <- statusJson
+      JSON.Object stateO <- Map.lookup "state" o
+      JSON.Object rc <- Map.lookup "loadedRC" stateO
+      Map.lookup "allowed" rc
+
+  pure $ if allowed == Just (JSON.Number 0) then " (direnv)" else ""
