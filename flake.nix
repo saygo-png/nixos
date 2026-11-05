@@ -254,6 +254,7 @@
           "timezones"
           "tmux-mem"
           "shhell"
+          "shhell-bench"
         ]
         (binary: {
           type = "app";

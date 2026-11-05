@@ -99,6 +99,23 @@ executable shhell
     template-haskell,
     unix,
 
+-- Benchmarks shhell in a terminal: startup, prompt, commands and direnv.
+executable shhell-bench
+  import: common-options
+  main-is: src/shhell-bench.hs
+  build-depends:
+    bytestring,
+    directory,
+    file-io,
+    filepath,
+    os-string,
+    relude,
+    saygo-utils,
+    shh,
+    tasty,
+    tasty-bench,
+    unix,
+
 -- GHCi's linker for shhell, see src/ghc-link-cache.hs. Not threaded with -N:
 -- it runs once per link and only waits on the real linker.
 executable ghc-link-cache
