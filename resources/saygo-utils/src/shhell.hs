@@ -36,6 +36,7 @@ import System.OsString.Internal.Types (OsString (getOsString))
 import System.OsString.Posix (pstr)
 import System.Posix.Env.PosixString qualified as Env
 import System.Posix.Process.PosixString (executeFile)
+import System.Posix.Resource (Resource (ResourceOpenFiles), ResourceLimit (..), ResourceLimits (softLimit), getResourceLimit, setResourceLimit)
 
 -------------------------------------------------------------------------------
 -- Get paths from envvars set during the Nix build.
@@ -157,6 +158,18 @@ main = do
       Just x -> pure $ [pstr|:|] <> x
       Nothing -> pure mempty
   Env.setEnv [pstr|PATH|] (getOsString ghcBin <> path) True
+
+  -- Before running a program, shh's process library closes every file
+  -- descriptor up to the soft limit on open files, one at a time. nix run and
+  -- nix develop raise that limit to the hard one, often 524288, which makes
+  -- each command about 100 ms slower. So lower it to a login session's default.
+  -- Programs that need more can raise it again, up to the unchanged hard limit.
+  limits <- getResourceLimit ResourceOpenFiles
+  let tooHigh = case limits.softLimit of
+        ResourceLimit n -> n > 1024
+        ResourceLimitInfinity -> True
+        ResourceLimitUnknown -> False
+  when tooHigh $ setResourceLimit ResourceOpenFiles limits{softLimit = ResourceLimit 1024}
 
   -- GHCi links Shell.o into a shared library before it can run it, which it
   -- does when the first command is typed, and normally on every launch.
