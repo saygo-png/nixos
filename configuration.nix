@@ -68,7 +68,7 @@
   };
 
   documentation = {
-    dev.enable = true;
+    dev.enable = false;
     info.enable = false;
     man = {
       cache.enable = false;
