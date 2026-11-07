@@ -66,6 +66,5 @@
   services.ratbagd.enable = true; # For piper
   environment.systemPackages = [
     pkgs.piper # For ratbagd
-    pkgs.blender
   ];
 }
