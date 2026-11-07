@@ -251,7 +251,6 @@
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
-      telegram-desktop
       foliate
       anki # Flashcards
       simplescreenrecorder
