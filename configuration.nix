@@ -189,17 +189,7 @@
   environment.systemPackages = with pkgs;
     [
       # Audio
-      tap-plugins
-      ( # Patch package so it doesn't spam menu entries
-        symlinkJoin {
-          name = "lsp-plugins-patched";
-          paths = [lsp-plugins];
-          postBuild = "rm $out/share/applications/*.desktop";
-        }
-      )
-      zam-plugins
-      airwindows-lv2
-      molot-lite
+      airwindows-lv2 # DeBess in the Carla mic chain
 
       # Nix.
       alejandra # Nix formatter
@@ -211,7 +201,6 @@
       lzip
       p7zip
       unzip
-      ardour
       unrar-free
       atool # Unified CLI for all of these
 
@@ -238,7 +227,6 @@
       file # File identifier
       zoxide # Cd alternative
       cookiecutter # Templates
-      udftools # Udf filesystem
       htop-vim # TUI task manager
       pulsemixer # Volume control
       fourmolu # Haskell formatter
@@ -246,13 +234,10 @@
       xdg-utils # Includes xdg-open
       imagemagick # Image identifier
       libnotify # Notifications (notify-send)
-      python3Packages.ptpython # Python repl
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
-      foliate
       anki # Flashcards
-      simplescreenrecorder
       inkscape # Vector graphics
       keepassxc # Password manager
       localsend # Send via local network

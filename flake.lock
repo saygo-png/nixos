@@ -148,22 +148,6 @@
         "type": "github"
       }
     },
-    "format-udf": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1697473321,
-        "narHash": "sha256-fmr9wYfh9keNk57kM+zt1JFuEeFocBIl30ccV0x27CE=",
-        "owner": "JElchison",
-        "repo": "format-udf",
-        "rev": "a7b6067126d7e22fb179a50424cc904461da53bb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "JElchison",
-        "repo": "format-udf",
-        "type": "github"
-      }
-    },
     "fromYaml": {
       "flake": false,
       "locked": {
@@ -409,7 +393,6 @@
         "drugtracker2": "drugtracker2",
         "extras-nixos": "extras-nixos",
         "firefox-addons": "firefox-addons",
-        "format-udf": "format-udf",
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
         "impermanence": "impermanence",

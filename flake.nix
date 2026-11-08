@@ -119,11 +119,6 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    format-udf = {
-      url = "github:JElchison/format-udf";
-      flake = false;
-    };
   };
 
   outputs = {

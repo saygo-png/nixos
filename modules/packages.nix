@@ -47,14 +47,6 @@
     })
 
     (pkgs.writeShellApplication {
-      name = "format-udf";
-      runtimeInputs = with pkgs; [coreutils udftools];
-      checkPhase = ""; # Dont shellcheck
-      bashOptions = []; # Dont add extra options
-      text = builtins.readFile "${inputs.format-udf}/format-udf.sh";
-    })
-
-    (pkgs.writeShellApplication {
       name = "airplane-mode";
       runtimeInputs = [pkgs.util-linux];
       text = ''
