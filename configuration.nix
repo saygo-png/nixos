@@ -4,7 +4,6 @@
   self,
   config,
   inputs,
-  nixvim-pkgs,
   conUsername,
   conFlakePath,
   ...
@@ -264,9 +263,9 @@
     ]
     ++ [
       # Haskell.
-      nixvim-pkgs.stack
-      nixvim-pkgs.cabal-install
-      nixvim-pkgs.ghc # Haskell compiler for the LSP
+      pkgs.stack
+      pkgs.cabal-install
+      pkgs.ghc # Haskell compiler for the LSP
     ];
 
   # Create media folder in root

@@ -10,6 +10,7 @@
       inputs = {
         treefmt-nix.follows = "treefmt-nix";
         systems.follows = "systems";
+        nixvim.inputs.nixpkgs.follows = "nixpkgs";
       };
     };
 
@@ -138,12 +139,10 @@
     pkgsFor = nixpkgs.legacyPackages;
 
     # pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
-    nixvim-pkgs = inputs.neovim-config.inputs.nixvim.inputs.nixpkgs.legacyPackages;
     treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
 
     commonSpecialArgs = system: {
       inherit inputs self system;
-      nixvim-pkgs = nixvim-pkgs.${system};
       # pkgs-frozen = pkgs-frozen.${system};
       lib = lib.extend (final: _: {my = import ./modules/lib.nix {lib = final;};});
     };
@@ -202,13 +201,10 @@
           pkgsFor.${system}.callPackage ./resources/saygo-utils
           {
             niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
-            # Same GHC as the haskell-language-server in neovim-config, for
-            # all of saygo-utils and shhell's GHC environment.
-            haskellPackages = nixvim-pkgs.${system}.haskellPackages;
           };
         # GHCi that reads the XDG haskeline config, see resources/saygo-utils/ghci.nix.
         ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/ghci.nix {
-          hp = nixvim-pkgs.${system}.haskellPackages;
+          hp = pkgsFor.${system}.haskellPackages;
         };
       }
     );
@@ -217,7 +213,7 @@
       system: let
         pkgs = pkgsFor.${system};
         # The GHC saygo-utils is built with, see packages above.
-        hPkgs = nixvim-pkgs.${system}.haskellPackages;
+        hPkgs = pkgs.haskellPackages;
         niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
       in {
         haskellShell = (niceHaskell.mkPackage
