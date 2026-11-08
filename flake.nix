@@ -251,6 +251,7 @@
           "tmux-mem"
           "shhell"
           "shhell-bench"
+          "comma-bg"
         ]
         (binary: {
           type = "app";

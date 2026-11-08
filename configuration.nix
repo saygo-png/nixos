@@ -392,6 +392,7 @@
           "nhoffline" = "nh os switch -- --option substitute false";
           "record" = "arecord -t wav -r 48000 -c 1 -f S16_LE ${config.home.homeDirectory}/Pictures/audiocaptures/recording.wav";
           "search" = "sudo echo 'got sudo' && sudo find / -maxdepth 99999999 2>/dev/null | ${lib.getExe pkgs.fzf} -i -q $1";
+          ",bg" = "comma-bg";
         };
       };
 

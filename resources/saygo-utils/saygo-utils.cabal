@@ -199,6 +199,16 @@ executable githubloc
     time,
     vector,
 
+-- Fetches a program with comma, then launches it detached from the terminal.
+executable comma-bg
+  import: common-options, threaded
+  main-is: src/comma-bg.hs
+  build-depends:
+    directory,
+    process,
+    relude,
+    shh,
+
 executable clean-nix-paths
   import: common-options, threaded
   main-is: src/clean-nix-paths.hs
