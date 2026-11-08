@@ -267,11 +267,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793827592,
-        "narHash": "sha256-ciq6NDOxvOYxqwK9JNrlz9ZGd5bswHbwfs8qnLpO05E=",
+        "lastModified": 1794094341,
+        "narHash": "sha256-+3DPq0RMvXzhmwFblXUyfHmR/zflzFY+19TEFOQHj6U=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "3058071b6f2198a065004c32c2496e75c86b4ca7",
+        "rev": "1c3af47d6836af62875bda820f1ff8928d9530ed",
         "type": "github"
       },
       "original": {
@@ -348,22 +348,6 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1789724158,
-        "narHash": "sha256-nlKgrm0dsVhOSopKheVBCcOpiIticufPPVLdVOI0euA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "0a3468a402c449992505b6a9fc5b06580141b750",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
         "lastModified": 1792773339,
         "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
         "owner": "nixos",
@@ -381,7 +365,9 @@
     "nixvim": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "systems": [
           "neovim-config",
           "systems"
@@ -431,7 +417,7 @@
         "niceHaskell": "niceHaskell",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs",
         "saywallpaper": "saywallpaper",
         "stylix": "stylix",
         "systems": "systems",
