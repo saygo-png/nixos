@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   conUsername,
   ...
@@ -45,14 +46,23 @@
       '') (lib.filter (file: file.enable) (lib.attrValues config.home.file))}
     '';
 
-    programs = {
-      mangohud.enable = true;
-      lutris = {
-        enable = true;
-        protonPackages = [pkgs.proton-ge-bin];
-      };
-    };
+    programs.mangohud.enable = true;
   };
+
+  # I only use this to play Diablo 3 sometimes, so make it lazy.
+  custom.lazyPackages = let
+    proton = pkgs.proton-ge-bin.steamcompattool;
+  in [
+    (pkgs.writeShellApplication {
+      name = "lutris";
+      text = ''
+        runners="''${XDG_DATA_HOME:-$HOME/.local/share}/lutris/runners/wine"
+        mkdir -p "$runners"
+        ln -sfn ${proton} "$runners/${lib.toLower proton.name}"
+        exec ${lib.getExe (pkgs.lutris.override {steamSupport = false;})} "$@"
+      '';
+    })
+  ];
 
   nixpkgs.overlays = [
     (_: prev: {

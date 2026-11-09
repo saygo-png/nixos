@@ -257,6 +257,11 @@
 
     checks = eachSystem (system: {formatting = treefmtEval.${system}.config.build.check self;});
 
+    # What comma-bg evaluates and builds when it launches a lazy package.
+    lazyPackages =
+      lib.mapAttrs (_: host: lib.listToAttrs (map (pkg: lib.nameValuePair (lib.getName pkg) pkg) host.config.custom.lazyPackages))
+      self.nixosConfigurations;
+
     nixosConfigurations = rec {
       install-pc = mkInstall pc;
       pc = mkSystem "pc" [

@@ -2,8 +2,19 @@
   niceHaskell,
   pkgs,
   haskellPackages ? pkgs.haskellPackages,
+  # Given to comma-bg as JSON, with the installable it evaluates for each one.
+  lazyPackages ? [],
+  lazyInstallable ? null,
   ...
 }: let
+  lazy = pkg: let
+    name = pkgs.lib.getName pkg;
+  in {
+    inherit name;
+    installable = "${lazyInstallable name}^${(pkgs.lib.getBin pkg).outputName}";
+    program = pkg.meta.mainProgram or name;
+  };
+
   mkSaygoUtils = args:
     niceHaskell.mkPackage ({
         flags = niceHaskell.mkFlags {doCheck = false;};
@@ -15,8 +26,8 @@
   # Only the library, for shhell's GHC environment. The whole package can't be
   # in it, since shhell is built against that environment.
   library = mkSaygoUtils {overrideCabalOverride = _: {buildTarget = "lib:saygo-utils";};};
-in
-  mkSaygoUtils {
+
+  saygo-utils = mkSaygoUtils {
     developPackageArgs = {
       modifier = drv:
         drv.overrideAttrs (_: let
@@ -31,4 +42,17 @@ in
           SHHELL_GHCI = "${ghci}/bin/ghci";
         });
     };
-  }
+  };
+in
+  if lazyPackages == []
+  then saygo-utils
+  else
+    pkgs.symlinkJoin {
+      inherit (saygo-utils) name;
+      paths = [saygo-utils];
+      nativeBuildInputs = [pkgs.makeWrapper];
+      postBuild = ''
+        wrapProgram $out/bin/comma-bg --set COMMA_BG_LAZY_PACKAGES \
+          ${pkgs.writeText "lazy-packages.json" (builtins.toJSON (map lazy lazyPackages))}
+      '';
+    }

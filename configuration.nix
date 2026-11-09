@@ -22,6 +22,7 @@
       "niri.nix"
 
       "gaming.nix"
+      "lazyPackages.nix"
       "stupid.nix"
       "zathura.nix"
       "mimeapps.nix"
@@ -194,7 +195,6 @@
       # Nix.
       alejandra # Nix formatter
       nix-tree # Reverse dependency search
-      # nix-output-monitor # Pretty nix build output
 
       # All the archive garbage.
       zip
@@ -232,15 +232,13 @@
       fourmolu # Haskell formatter
       ripgrep # Multithreaded grep
       xdg-utils # Includes xdg-open
-      imagemagick # Image identifier
+      imagemagick_light # Image mainpulation
       libnotify # Notifications (notify-send)
       ntfs3g # ntfs filesystem interop (windows fs)
 
       # GUI.
       anki # Flashcards
-      inkscape # Vector graphics
       keepassxc # Password manager
-      localsend # Send via local network
 
       # Writing.
       typst

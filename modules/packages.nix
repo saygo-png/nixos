@@ -2,7 +2,7 @@
   lib,
   self,
   pkgs,
-  inputs,
+  config,
   system,
   conHome,
   conHost,
@@ -18,7 +18,10 @@
       categories = ["Game" "Network"];
     })
 
-    self.packages.${system}.saygo-utils
+    (self.packages.${system}.saygo-utils.override {
+      inherit (config.custom) lazyPackages;
+      lazyInstallable = name: "path:${self}#lazyPackages.${conHost}.${name}";
+    })
 
     (pkgs.writeScriptBin "nr"
       ''
