@@ -1,6 +1,7 @@
 {conUsername, ...}: {
   virtualisation.incus = {
     enable = true;
+    socketActivation = true;
     preseed = {
       networks = [
         {
