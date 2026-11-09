@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   inputs,
   conUsername,
   ...
@@ -110,7 +111,10 @@
     applications = 0.8;
   };
 
+  stylix.targets.gnome.enable = false;
+
   home-manager.users.${conUsername} = {
+    stylix.targets.gnome.enable = false;
     stylix.icons = {
       enable = true;
       package = pkgs.gruvbox-plus-icons;
@@ -121,8 +125,14 @@
     dconf.settings = {
       # Remove min and max buttons
       "org/gnome/desktop/wm/preferences".button-layout = ":appmenu";
-      # Prefer darkmode
-      "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+      "org/gnome/desktop/interface" = let
+        inherit (config.stylix) fonts;
+      in {
+        # Prefer darkmode
+        color-scheme = "prefer-dark";
+        document-font-name = "${fonts.serif.name} ${toString (fonts.sizes.applications - 1)}";
+        monospace-font-name = "${fonts.monospace.name} ${toString fonts.sizes.applications}";
+      };
     };
   };
 }

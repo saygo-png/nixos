@@ -39,9 +39,13 @@
   stylix = {
     enable = true;
 
-    cursor = {
+    cursor = rec {
       name = "Capitaine Cursors (Gruvbox)";
-      package = pkgs.capitaine-cursors-themed;
+      # The package has eight themes, so copy only this one.
+      package = pkgs.runCommand "capitaine-cursors-gruvbox" {} ''
+        mkdir -p $out/share/icons
+        cp -r ${lib.escapeShellArg "${pkgs.capitaine-cursors-themed}/share/icons/${name}"} $out/share/icons/
+      '';
       size = 32;
     };
 
