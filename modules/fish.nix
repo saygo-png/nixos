@@ -4,7 +4,10 @@
   conUsername,
   ...
 }: {
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    generateCompletions = false;
+  };
 
   stylix.targets.fish.enable = false;
 
@@ -27,6 +30,7 @@
 
     programs.fish = {
       enable = true;
+      generateCompletions = false; # This makes activation slow.
       interactiveShellInit =
         # Fish
         ''
