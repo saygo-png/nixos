@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  conUsername,
   ...
 }: {
   custom.persist.home = {
@@ -29,7 +28,6 @@
   networking.extraHosts = ''
     127.0.0.1 sr3.hydra.agoragames.com
   '';
-
 
   # I only use this to play Diablo 3 sometimes, so make it lazy.
   custom.lazyPackages = let

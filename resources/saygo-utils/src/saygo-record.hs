@@ -5,13 +5,13 @@
 import Distribution.Simple.Utils qualified as U
 import Distribution.Verbosity (normal)
 import Options.Applicative
+import Relude
 import Shh
 import System.Directory (pathIsSymbolicLink)
 import System.Directory qualified as D
 import System.FilePath
 import System.Posix.Files
 import Text.Printf (printf)
-import Relude
 
 newtype Options = Options {audio :: Bool}
 

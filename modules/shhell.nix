@@ -5,7 +5,7 @@
   conUsername,
   ...
 }: let
-  shellPkg = lib.getExe' self.packages.${system}.saygo-utils "shhell" ;
+  shellPkg = lib.getExe' self.packages.${system}.saygo-utils "shhell";
 in {
   custom.persist.home.cache.directories = [".config/haskeline" ".config/shhell" ".cache/shhell" ".cache/ghc-link-cache"];
 

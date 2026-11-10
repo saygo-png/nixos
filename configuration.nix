@@ -200,7 +200,6 @@
 
       # All the archive garbage.
       zip
-      lzip
       p7zip
       unzip
       unrar-free
