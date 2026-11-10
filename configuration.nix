@@ -248,7 +248,6 @@
     ]
     ++ [
       # Haskell.
-      pkgs.stack
       pkgs.cabal-install
       pkgs.ghc # Haskell compiler for the LSP
     ];
