@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   custom.persist.home.cache.directories = [".local/share/KDE/kasts"];
-  environment.systemPackages = [
+  custom.lazyPackages = [
     pkgs.kdePackages.kasts
   ];
 }
