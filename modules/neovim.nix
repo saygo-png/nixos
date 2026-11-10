@@ -4,11 +4,10 @@
   config,
   inputs,
   conUsername,
-  system,
   ...
 }: {
   environment.systemPackages = [
-    inputs.neovim-config.packages.${system}.neovim
+    (inputs.neovim-config.lib.mkNeovim pkgs)
   ];
 
   custom.persist.home.cache.directories = [
