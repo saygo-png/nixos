@@ -20,7 +20,8 @@
 
     (self.packages.${system}.saygo-utils.override {
       inherit (config.custom) lazyPackages;
-      lazyInstallable = name: "path:${self}#lazyPackages.${conHost}.${name}";
+      # Not using `self` here to avoid rebuilds on all changes.
+      lazyInstallable = name: "/etc/flake-src#lazyPackages.${conHost}.${name}";
     })
 
     (pkgs.writeScriptBin "nr"
