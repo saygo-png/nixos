@@ -19,7 +19,6 @@ common warnings
     -Wno-safe
     -Wno-unsafe
     -Wno-unticked-promoted-constructors
-    -threaded
 
 common threaded
   ghc-options:
@@ -87,8 +86,9 @@ executable owt
     relude,
     time,
 
+-- Not threaded, which starts about 1.5 ms faster: it only sets up and execs GHCi.
 executable shhell
-  import: common-options, threaded
+  import: common-options
   main-is: src/shhell.hs
   build-depends:
     directory,
@@ -103,6 +103,8 @@ executable shhell
 executable shhell-bench
   import: common-options
   main-is: src/shhell-bench.hs
+  -- Threaded, since it waits for a child while another thread reads its terminal.
+  ghc-options: -threaded
   build-depends:
     bytestring,
     directory,
@@ -116,8 +118,9 @@ executable shhell-bench
     tasty-bench,
     unix,
 
--- GHCi's linker for shhell, see src/ghc-link-cache.hs. Not threaded with -N:
--- it runs once per link and only waits on the real linker.
+-- GHCi's linker for shhell, see src/ghc-link-cache.hs. Not threaded, which
+-- starts about 1 ms faster: it runs three times as GHCi starts and only waits
+-- on the real linker.
 executable ghc-link-cache
   import: common-options
   main-is: src/ghc-link-cache.hs
