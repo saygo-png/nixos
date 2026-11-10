@@ -207,7 +207,7 @@
     in
       pkgs.writeShellApplication {
         name = "connection-tester";
-        runtimeInputs = with pkgs; [coreutils];
+        runtimeInputs = with pkgs; [curl gnugrep gnused procps];
         text = ''
           watch -n 0.5 ${lib.getExe connection-test}
         '';
