@@ -5,12 +5,18 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
 
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
     neovim-config = {
       url = "github:saygo-png/neovim-config";
       inputs = {
         treefmt-nix.follows = "treefmt-nix";
         systems.follows = "systems";
         nixvim.inputs.nixpkgs.follows = "nixpkgs";
+        nixvim.inputs.flake-parts.follows = "flake-parts";
       };
     };
 
@@ -76,6 +82,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
+        flake-parts.follows = "flake-parts";
 
         nur.follows = "";
         base16-fish.follows = "";
@@ -86,6 +93,7 @@
         tinted-schemes.follows = "";
         tinted-tmux.follows = "";
         tinted-zed.follows = "";
+        gnome-shell.follows = "";
       };
     };
 

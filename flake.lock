@@ -108,38 +108,15 @@
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
-          "neovim-config",
-          "nixvim",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1790898470,
-        "narHash": "sha256-zTwuwezD0w3hpga6a6P8emidzAZFyWqlNeRBlpWOOl8=",
+        "lastModified": 1793576659,
+        "narHash": "sha256-V1h85lUaJBQoHFrB2vpXZOE0Ju1MYSnIpsehoVZYlDo=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "024633cd702b10285db5cb19b40ad48d2399ba60",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-parts_2": {
-      "inputs": {
-        "nixpkgs-lib": [
-          "stylix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1782949081,
-        "narHash": "sha256-vp6Y/Grm98ESt6ceOkWiHWyZRDV3J1RID4w+6NWK9yA=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "17c9d6cdfc60c64f4ee8d306f9bc0b4ccb51481e",
+        "rev": "ea2630b7470978622c7689a1ff75d2b389175399",
         "type": "github"
       },
       "original": {
@@ -162,25 +139,6 @@
         "owner": "SenchoPens",
         "repo": "fromYaml",
         "type": "github"
-      }
-    },
-    "gnome-shell": {
-      "flake": false,
-      "locked": {
-        "host": "gitlab.gnome.org",
-        "lastModified": 1776175984,
-        "narHash": "sha256-RJFlFW8GiMei6oqUGrMkGEvVqOH8U7Q8abc1yK4VKD8=",
-        "owner": "GNOME",
-        "repo": "gnome-shell",
-        "rev": "e0fdc4c13250e9a9b8ea9594c83925274f4a5dca",
-        "type": "gitlab"
-      },
-      "original": {
-        "host": "gitlab.gnome.org",
-        "owner": "GNOME",
-        "ref": "50.1",
-        "repo": "gnome-shell",
-        "type": "gitlab"
       }
     },
     "gruvbox-vesktop": {
@@ -348,7 +306,9 @@
     },
     "nixvim": {
       "inputs": {
-        "flake-parts": "flake-parts",
+        "flake-parts": [
+          "flake-parts"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -393,6 +353,7 @@
         "drugtracker2": "drugtracker2",
         "extras-nixos": "extras-nixos",
         "firefox-addons": "firefox-addons",
+        "flake-parts": "flake-parts",
         "gruvbox-vesktop": "gruvbox-vesktop",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
@@ -488,8 +449,10 @@
         "base16-helix": [],
         "base16-vim": [],
         "firefox-gnome-theme": [],
-        "flake-parts": "flake-parts_2",
-        "gnome-shell": "gnome-shell",
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "gnome-shell": [],
         "nixpkgs": [
           "nixpkgs"
         ],
