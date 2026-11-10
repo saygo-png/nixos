@@ -510,7 +510,7 @@
         fileWidget.options = ["--preview 'head {}'"];
 
         changeDirWidget.command = "fd --hidden --type d";
-        changeDirWidget.options = ["--preview 'tree -C {} | head -200'"];
+        changeDirWidget.options = ["--preview 'eza --tree --color=always {} | head -200'"];
 
         # Transparent fzf.
         colors = {
