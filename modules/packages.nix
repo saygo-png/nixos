@@ -102,9 +102,9 @@
 
     (pkgs.writeShellApplication {
       name = "pasteimg";
-      runtimeInputs = with pkgs; [xclip coreutils];
+      runtimeInputs = [pkgs.wl-clipboard];
       text = ''
-        xclip -selection clipboard -t image/png -o | tee "$1" >/dev/null
+        wl-paste --type image/png > "$1"
       '';
     })
 
