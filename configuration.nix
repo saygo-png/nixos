@@ -354,6 +354,7 @@
     extraSpecialArgs = {inherit inputs;};
     backupFileExtension = "backup"; # home-manager breaks without it.
     overwriteBackup = true;
+    sharedModules = [{manual.manpages.enable = false;}];
     users.${conUsername} = {
       lib,
       config,
