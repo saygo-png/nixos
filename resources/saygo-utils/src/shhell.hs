@@ -183,8 +183,12 @@ main = do
 
   -- argv[0] is set by executeFile; the arguments start after it.
   let
+    -- The non-moving garbage collector collects the old generation while GHCi
+    -- runs, instead of stopping it to copy all of it. Given as arguments, since
+    -- every program started from the shell would inherit GHCRTS.
+    rtsArgs = [[pstr|+RTS|], [pstr|-xn|], [pstr|-RTS|]]
     fileArgs = [[pstr|-outputdir|], getOsString cacheDir, [pstr|-ghci-script|], getOsString initGhci, getOsString shellHs]
     linkArgs = [[pstr|-pgml|], getOsString linkCache, [pstr|-pgml-supports-no-pie|]]
     quiet = [[pstr|-v0|] | not optDebug]
 
-  executeFile (getOsString ghciExe) False ([[pstr|-fobject-code|]] <> fileArgs <> linkArgs <> quiet) Nothing
+  executeFile (getOsString ghciExe) False (rtsArgs <> [[pstr|-fobject-code|]] <> fileArgs <> linkArgs <> quiet) Nothing
