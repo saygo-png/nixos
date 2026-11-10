@@ -91,7 +91,7 @@
         bind-key -T copy-mode-vi 'v' send -X begin-selection
         bind-key -T copy-mode-vi 'Bspace' send -X halfpage-up
         bind-key -T copy-mode-vi 'Space' send -X halfpage-down
-        bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
+        bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'wl-copy'
       '';
     };
   };
