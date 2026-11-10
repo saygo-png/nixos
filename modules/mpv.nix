@@ -6,6 +6,14 @@
   home-manager.users.${conUsername} = {config, ...}: {
     programs.mpv = {
       enable = true;
+      package = pkgs.mpv.override {
+        youtubeSupport = false;
+        scripts = [
+          pkgs.mpvScripts.uosc
+          pkgs.mpvScripts.autoload
+          pkgs.mpvScripts.videoclip
+        ];
+      };
       bindings = {
         l = "seek 20";
         h = "seek -20";
@@ -26,6 +34,7 @@
       config = {
         speed = 1;
         hwdec = true;
+        ytdl = "no"; # disable ytdl_hook
         sub-pos = 90;
         keep-open = true;
         sub-auto = "all";
@@ -39,18 +48,12 @@
         sub-ass-override = "force";
         save-position-on-quit = true;
         sub-auto-exts = "srt,ass,txt";
-        ytdl-format = "bestvideo+bestaudio/best";
         slang = "fin,fi,fi-fi,eng,en,en-en,en-orig";
         sub-font = "${config.stylix.fonts.serif.name}";
         sub-color = "${config.lib.stylix.colors.withHashtag.base07}";
         sub-shadow-color = "${config.lib.stylix.colors.withHashtag.base00}";
         watch-later-options-clr = true; # Dont save settings like brightness
       };
-      scripts = [
-        pkgs.mpvScripts.uosc
-        pkgs.mpvScripts.autoload
-        pkgs.mpvScripts.videoclip
-      ];
     };
   };
 }
