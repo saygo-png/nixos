@@ -16,16 +16,15 @@
   };
 
   mkSaygoUtils = args:
-    niceHaskell.mkPackage ({
-        flags = niceHaskell.mkFlags {doCheck = false;};
+    niceHaskell.mkPackageNoIFD ({
         inherit haskellPackages;
-        packageRoot = ./.;
-        cabalName = "saygo-utils";
+        src = ./.;
+        cabal2nix = ./cabal.nix;
       }
       // args);
   # Only the library, for shhell's GHC environment. The whole package can't be
   # in it, since shhell is built against that environment.
-  library = mkSaygoUtils {overrideCabalOverride = _: {buildTarget = "lib:saygo-utils";};};
+  library = mkSaygoUtils {overrideCabal.buildTarget = "lib:saygo-utils";};
 
   saygo-utils = mkSaygoUtils {
     developPackageArgs = {

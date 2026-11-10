@@ -64,7 +64,6 @@
     saywallpaper = {
       url = "github:saygo-png/Saywallpaper";
       inputs = {
-        sayland.inputs.git-hooks.follows = "";
         treefmt-nix.follows = "treefmt-nix";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
@@ -209,26 +208,15 @@
         pkgs = pkgsFor.${system};
         # The GHC saygo-utils is built with, see packages above.
         hPkgs = pkgs.haskellPackages;
-        niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
       in {
-        haskellShell = (niceHaskell.mkPackage
-          {
-            flags = niceHaskell.mkFlags {
-              doCheck = false;
-              returnShellEnv = true;
-            };
-            haskellPackages = hPkgs;
-            packageRoot = ./resources/saygo-utils;
-            cabalName = "saygo-utils";
-          }).overrideAttrs (old: {
-          nativeBuildInputs =
-            old.nativeBuildInputs
-            ++ [
-              hPkgs.cabal-install
-              hPkgs.haskell-language-server
-            ];
-          buildInputs = old.buildInputs ++ [pkgs.zlib];
-        });
+        haskellShell = pkgs.mkShell {
+          inputsFrom = [self.packages.${system}.saygo-utils.env];
+          buildInputs = [pkgs.zlib];
+          packages = [
+            hPkgs.cabal-install
+            hPkgs.haskell-language-server
+          ];
+        };
       }
     );
 

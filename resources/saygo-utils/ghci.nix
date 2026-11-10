@@ -1,6 +1,6 @@
 # GHCi with haskeline 0.8.4.1
 {
-  haskell,
+  lib,
   makeWrapper,
   runCommand,
   hp,
@@ -16,11 +16,34 @@
       --replace-fail @ProjectVersion@ ${version}
   '';
   # Dynamic like the stock executable, so GHCi loads packages the same way.
-  ghc-bin = haskell.lib.compose.enableSharedExecutables (
-    hp.callCabal2nixWithOptions "ghc-bin" src "--flag=internal-interpreter" {
-      haskeline = hp.haskeline_0_8_4_1;
-    }
-  );
+  ghc-bin = hp.mkDerivation {
+    pname = "ghc-bin";
+    inherit version src;
+    configureFlags = ["-finternal-interpreter"];
+    isExecutable = true;
+    enableSharedExecutables = true;
+    executableHaskellDepends = with hp; [
+      array
+      base
+      bytestring
+      containers
+      deepseq
+      directory
+      exceptions
+      filepath
+      ghc
+      ghc-boot
+      ghc-prim
+      ghci
+      haskeline_0_8_4_1
+      process
+      time
+      transformers
+      unix
+    ];
+    license = lib.licenses.bsd3;
+    mainProgram = "ghc";
+  };
   libdir = "${env}/lib/ghc-${version}/lib";
 in
   # What the stock ghci does: the executable in interactive mode, pointed at
