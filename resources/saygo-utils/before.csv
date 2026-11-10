@@ -1,18 +1,18 @@
 Name,Mean (ps),2*Stdev (ps)
-"All.shhell.startup.cold, compiling Shell.hs.to the first prompt",8904474946000,0
-"All.shhell.startup.cold, compiling Shell.hs.and the first `true` (links)",9302416582000,0
-All.shhell.startup.warm: to the first prompt,494014406600,33675350104
-All.shhell.startup.warm: and the first `true` (cached link),589098375200,8567599998
-All.shhell.commands.empty statement (the prompt round trip),20724377950,1758125888
-"All.shhell.commands.Shh.exe ""true""",29014887500,2506218530
-All.shhell.commands.`true`,27913911600,1767572828
-All.shhell.direnv.cd.cd between two plain directories,44353495650,1268691528
-All.shhell.direnv.cd.cd into a loaded .envrc and back,96892774200,7439793496
-All.shhell.direnv.inside a loaded .envrc.empty statement,23049804175,2288527362
-All.shhell.direnv.inside a blocked .envrc.empty statement,26047680200,1367490178
-"All.shhell.prompt parts, in this process.outside any .envrc.direnvSync",4623694162,289535528
-"All.shhell.prompt parts, in this process.outside any .envrc.direnvPrompt",4998818925,239362244
-"All.shhell.prompt parts, in this process.outside any .envrc.shhellPrompt",9863643950,684855744
-"All.shhell.prompt parts, in this process.inside a loaded .envrc.direnvSync",5229472787,313287602
-"All.shhell.prompt parts, in this process.inside a loaded .envrc.direnvPrompt",5525102225,344450842
-"All.shhell.prompt parts, in this process.inside a loaded .envrc.shhellPrompt",10788102400,445022584
+"All.shhell.startup.cold, compiling Shell.hs.to the first prompt",7191841439000,0
+"All.shhell.startup.cold, compiling Shell.hs.and the first `true` (links)",7717508327000,0
+All.shhell.startup.warm: to the first prompt,427745529400,22616417974
+All.shhell.startup.warm: and the first `true` (cached link),489326371600,14307878078
+All.shhell.commands.empty statement (the prompt round trip),22204845687,894341940
+"All.shhell.commands.Shh.exe ""true""",31317331400,2843487792
+All.shhell.commands.`true`,29153231700,2769731984
+All.shhell.direnv.cd.cd between two plain directories,50395312800,3354140426
+All.shhell.direnv.cd.cd into a loaded .envrc and back,90829244900,3407254642
+All.shhell.direnv.inside a loaded .envrc.empty statement,22015181000,1588291382
+All.shhell.direnv.inside a blocked .envrc.empty statement,22491025600,1830178650
+"All.shhell.prompt parts, in this process.outside any .envrc.direnvSync",4744343381,290850056
+"All.shhell.prompt parts, in this process.outside any .envrc.direnvPrompt",4989075387,292818802
+"All.shhell.prompt parts, in this process.outside any .envrc.shhellPrompt",9651921100,916403602
+"All.shhell.prompt parts, in this process.inside a loaded .envrc.direnvSync",4908381425,284928054
+"All.shhell.prompt parts, in this process.inside a loaded .envrc.direnvPrompt",5120709537,493523066
+"All.shhell.prompt parts, in this process.inside a loaded .envrc.shhellPrompt",11723016418,879966092
