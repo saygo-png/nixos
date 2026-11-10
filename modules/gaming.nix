@@ -30,24 +30,6 @@
     127.0.0.1 sr3.hydra.agoragames.com
   '';
 
-  home-manager.users.${conUsername} = {
-    config,
-    lib,
-    ...
-  }: {
-    home.activation.copyConfigFilesToSteamEnv = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      # Copy files to steam directory
-      set +e
-      ${lib.concatMapStrings (file: let
-        steamPath = "${config.home.homeDirectory}/.local/share/steam-home/${file.target}";
-      in ''
-        run mkdir -p "$(dirname "${steamPath}")" || true
-        run ln -sf "${file.source}" "${steamPath}" || true
-      '') (lib.filter (file: file.enable) (lib.attrValues config.home.file))}
-    '';
-
-    programs.mangohud.enable = true;
-  };
 
   # I only use this to play Diablo 3 sometimes, so make it lazy.
   custom.lazyPackages = let

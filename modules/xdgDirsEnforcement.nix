@@ -32,14 +32,25 @@ in {
   nixpkgs.overlays = [
     (_final: prev: {
       steam = prev.steam.override {
-        extraBwrapArgs = [
-          "--bind $XDG_DATA_HOME/steam-home $HOME"
-
-          "--unsetenv XDG_CACHE_HOME"
-          "--unsetenv XDG_CONFIG_HOME"
-          "--unsetenv XDG_DATA_HOME"
-          "--unsetenv XDG_STATE_HOME"
-        ];
+        extraBwrapArgs =
+          ["--bind $XDG_DATA_HOME/steam-home $HOME"]
+          ++ map (dir: "--ro-bind-try $HOME/${dir} $HOME/${dir}") [
+            ".config/MangoHud"
+            ".config/dconf"
+            ".config/fontconfig"
+            ".config/gtk-2.0"
+            ".config/gtk-3.0"
+            ".config/gtk-4.0"
+            ".icons"
+            ".local/share/icons"
+            ".themes"
+          ]
+          ++ [
+            "--unsetenv XDG_CACHE_HOME"
+            "--unsetenv XDG_CONFIG_HOME"
+            "--unsetenv XDG_DATA_HOME"
+            "--unsetenv XDG_STATE_HOME"
+          ];
       };
     })
   ];
