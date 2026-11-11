@@ -8,6 +8,8 @@
     config,
     ...
   }: {
+    # Only sets the font and theme, which are overridden below.
+    stylix.targets.rofi.enable = false;
     programs.rofi = let
       color = osConfig.lib.stylix.colors.withHashtag;
       inherit (config.stylix) fonts;
