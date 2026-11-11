@@ -38,7 +38,7 @@
   };
 
   # autologin
-  services.getty.autologinUser = "${conUsername}";
+  services.getty.autologinUser = conUsername;
 
   services.borgmatic = {
     enable = true;
