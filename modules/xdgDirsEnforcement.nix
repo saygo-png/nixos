@@ -117,23 +117,7 @@ in {
   };
 
   home-manager.users.${conUsername} = {lib, ...}: {
-    xdg = {
-      enable = true;
-      userDirs = {
-        createDirectories = true;
-
-        templates = null;
-        publicShare = null;
-        desktop = null;
-
-        extraConfig = {
-          MY_MISC_DIR = "${homeConfig.homeDirectory}/Misc";
-          MY_SCREENSHOTS_DIR = "${homeConfig.homeDirectory}/Pictures/screenshots";
-          MY_SCREENCAPTURES_DIR = "${homeConfig.homeDirectory}/Videos/screencaptures";
-          MY_AUDIOCAPTURES_DIR = "${homeConfig.homeDirectory}/Documents/audiocaptures";
-        };
-      };
-    };
+    xdg.enable = true;
 
     xresources.path = "${homeConfig.xdg.configHome}/.xresources";
 
