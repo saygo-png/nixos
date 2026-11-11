@@ -29,11 +29,8 @@
       pkgs.noto-fonts-cjk-serif
       pkgs.noto-fonts-color-emoji
     ];
-    fontconfig.defaultFonts = lib.mapAttrs (_: v: [v] ++ ["${config.stylix.fonts.emoji.name}"]) {
-      serif = config.stylix.fonts.serif.name;
-      sansSerif = config.stylix.fonts.sansSerif.name;
-      monospace = config.stylix.fonts.monospace.name;
-    };
+    # Stylix sets these to its fonts, fall back to the emoji font after them.
+    fontconfig.defaultFonts = lib.genAttrs ["serif" "sansSerif" "monospace"] (_: lib.mkAfter [config.stylix.fonts.emoji.name]);
   };
   stylix = {
     enable = true;
