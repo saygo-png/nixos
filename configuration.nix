@@ -80,7 +80,6 @@ in {
   documentation = {
     doc.enable = false;
     nixos.enable = false;
-    dev.enable = false;
     info.enable = false;
     man.cache.enable = false;
   };
