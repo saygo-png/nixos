@@ -11,27 +11,6 @@
   configPath = lib.removePrefix (homeConfig.home.homeDirectory + "/") homeConfig.xdg.configHome;
   profileName = "librewolf-" + conUsername;
 in {
-  nixpkgs.overlays = [
-    (_final: prev: {
-      librewolf = prev.librewolf.overrideAttrs (oldAttrs: {
-        # launch librewolf with user profile
-        buildCommand =
-          oldAttrs.buildCommand
-          + ''
-            wrapProgram "$out/bin/librewolf" \
-              --set 'HOME' '${homeConfig.xdg.configHome}' \
-              --append-flags "${
-              lib.concatStringsSep " " [
-                "--name librewolf"
-                # load librewolf profile with same name as user
-                "--profile ${homeConfig.home.homeDirectory}/${configPath}/${profileName}"
-              ]
-            }"
-          '';
-      });
-    })
-  ];
-
   home-manager.users.${conUsername} = {...}: {
     # Removes .keep file from creating ~/.librewolf and ~/.mozilla
     home.file.".librewolf/native-messaging-hosts".enable = lib.mkForce false;
