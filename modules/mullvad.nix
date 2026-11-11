@@ -7,7 +7,6 @@
   services.mullvad-vpn = {
     enable = true;
     enableExcludeWrapper = false;
-    gui.enable = false;
   };
 
   networking.firewall.checkReversePath = lib.mkForce "strict";
