@@ -24,7 +24,13 @@
       // args);
   # Only the library, for shhell's GHC environment. The whole package can't be
   # in it, since shhell is built against that environment.
-  library = mkSaygoUtils {overrideCabal.buildTarget = "lib:saygo-utils";};
+  library = mkSaygoUtils {
+    src = pkgs.lib.fileset.toSource {
+      root = ./.;
+      fileset = pkgs.lib.fileset.unions [./saygo-utils.cabal ./src/Shhell];
+    };
+    overrideCabal.buildTarget = "lib:saygo-utils";
+  };
 
   saygo-utils = mkSaygoUtils {
     developPackageArgs = {
