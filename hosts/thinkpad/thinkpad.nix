@@ -26,31 +26,6 @@
   # Wifi
   networking.networkmanager.enable = true;
 
-  # Function keys. Brightness keys are bound in niri.kdl to brightnessctl.
-  services.actkbd = {
-    enable = true;
-    bindings = [
-      {
-        # Mute
-        keys = [113];
-        events = ["key"];
-        command = "pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 500 'mute toggled'";
-      }
-      {
-        # Volume down
-        keys = [114];
-        events = ["key"];
-        command = "pactl set-sink-volume @DEFAULT_SINK@ -2% && notify-send -t 500 'lowered volume'";
-      }
-      {
-        # Volume up
-        keys = [115];
-        events = ["key"];
-        command = "pactl set-sink-volume @DEFAULT_SINK@ +2% && notify-send -t 500 'increased volume'";
-      }
-    ];
-  };
-
   # Battery saving.
   services.upower.enable = true;
   boot.kernelParams = ["rcu_nocbs=all" "rcutree.enable_rcu_lazy=1"];
