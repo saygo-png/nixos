@@ -97,9 +97,7 @@
     };
 
     sizes = {
-      popups = lib.mkDefault 12;
       desktop = lib.mkDefault 12;
-      applications = lib.mkDefault 12;
       terminal = 13;
     };
   };
