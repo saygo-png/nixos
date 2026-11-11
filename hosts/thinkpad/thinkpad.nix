@@ -30,7 +30,6 @@
   services.upower.enable = true;
   boot.kernelParams = ["rcu_nocbs=all" "rcutree.enable_rcu_lazy=1"];
   networking.networkmanager.wifi.powersave = true;
-  powerManagement.enable = true;
   services.tlp = {
     enable = true;
     settings = {
