@@ -7,7 +7,17 @@
   conUsername,
   conFlakePath,
   ...
-}: {
+}: let
+  audioPluginPaths = f:
+    lib.listToAttrs (map (format: lib.nameValuePair (lib.toUpper format + "_PATH") (f format)) [
+      "lv2"
+      "vst"
+      "dssi"
+      "vst3"
+      "lxvst"
+      "ladspa"
+    ]);
+in {
   imports =
     [
       inputs.stylix.nixosModules.stylix
@@ -255,44 +265,30 @@
   systemd.tmpfiles.rules = ["d /media 0755 root root"];
 
   # Envvar, envars. User ones go into home manager.
-  environment.variables = let
-    homeConfig = config.home-manager.users.${conUsername};
-    makePluginPath = format:
-      (lib.makeSearchPath format [
-        "$HOME/.nix-profile/lib"
-        "/run/current-system/sw/lib"
-        "/etc/profiles/per-user/$USER/lib"
-      ])
-      + ":${homeConfig.xdg.dataHome}/.${format}";
-  in
-    lib.mapAttrs (_: makePluginPath) {
-      # This allows for programs to see audio plugins
-      LV2_PATH = "lv2";
-      VST_PATH = "vst";
-      DSSI_PATH = "dssi";
-      VST3_PATH = "vst3";
-      LXVST_PATH = "lxvst";
-      LADSPA_PATH = "ladspa";
-    }
-    // rec {
-      # Default programs.
-      PAGER = "moor";
-      BROWSER = "librewolf";
-      OPENER = "xdg-open";
-      EDITOR = lib.mkDefault (lib.getExe' pkgs.vis "vis");
+  environment.variables = rec {
+    # Default programs.
+    PAGER = "moor";
+    BROWSER = "librewolf";
+    OPENER = "xdg-open";
+    EDITOR = lib.mkDefault (lib.getExe' pkgs.vis "vis");
 
-      VISUAL = EDITOR;
-      SUDO_EDITOR = EDITOR;
+    VISUAL = EDITOR;
+    SUDO_EDITOR = EDITOR;
 
-      # Unreal engine .net cli tool turn off telemetry.
-      DOTNET_CLI_TELEMETRY_OPTOUT = "true";
+    # Unreal engine .net cli tool turn off telemetry.
+    DOTNET_CLI_TELEMETRY_OPTOUT = "true";
 
-      # Without this, games that use SDL will minimize when focus is lost
-      SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0;
+    # Without this, games that use SDL will minimize when focus is lost
+    SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS = 0;
 
-      # Systemd is retarded and doesn't use normal pager variable :DDDDD
-      SYSTEMD_PAGER = PAGER;
-    };
+    # Systemd is retarded and doesn't use normal pager variable :DDDDD
+    SYSTEMD_PAGER = PAGER;
+  };
+
+  # Lets programs find audio plugins in every profile (system, Home Manager,
+  # nix profile) and in the data dir.
+  environment.profileRelativeSessionVariables = audioPluginPaths (format: ["/lib/${format}"]);
+  environment.sessionVariables = audioPluginPaths (format: "${config.home-manager.users.${conUsername}.xdg.dataHome}/.${format}");
 
   system.stateVersion = "26.11";
 
