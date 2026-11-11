@@ -236,7 +236,6 @@ in {
       pulsemixer # Volume control
       fourmolu # Haskell formatter
       ripgrep # Multithreaded grep
-      xdg-utils # Includes xdg-open
       imagemagick_light # Image mainpulation
       libnotify # Notifications (notify-send)
       ntfs3g # ntfs filesystem interop (windows fs)
