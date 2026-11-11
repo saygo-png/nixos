@@ -334,7 +334,6 @@ in {
     };
   };
 
-  services.dbus.implementation = "broker";
   services.speechd.enable = false; # Pullls in nearly a gig and is useless to me
 
   services.libinput.enable = true;
