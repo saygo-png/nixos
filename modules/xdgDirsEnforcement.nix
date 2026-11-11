@@ -137,7 +137,7 @@ in {
 
     xresources.path = "${homeConfig.xdg.configHome}/.xresources";
 
-    gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
+    home.preferXdgDirectories = true;
 
     home.shellAliases = {
       # feh = "feh --no-fehbg";
