@@ -135,12 +135,6 @@ in {
       };
     };
 
-    home.activation.make-dirs-for-xdg = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      run mkdir -p $VERBOSE_ARG "${homeConfig.xdg.dataHome}/steam-home"
-      run mkdir -p $VERBOSE_ARG "${homeConfig.xdg.configHome}/simplescreenrecorder"
-      run mkdir -p $VERBOSE_ARG "${homeConfig.xdg.configHome}/bash"
-    '';
-
     xresources.path = "${homeConfig.xdg.configHome}/.xresources";
 
     gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
