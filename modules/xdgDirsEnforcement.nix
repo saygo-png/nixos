@@ -145,11 +145,6 @@ in {
 
     gtk.gtk2.configLocation = "${homeConfig.xdg.configHome}/gtk-2.0/gtkrc";
 
-    programs.zsh = {
-      dotDir = "${homeConfig.xdg.configHome}/zsh";
-      history.path = "${homeConfig.xdg.dataHome}/zsh/zsh_history";
-    };
-
     home.shellAliases = {
       # feh = "feh --no-fehbg";
       # pidgin = "pidgin --config=${homeConfig.xdg.dataHome}/purple";
