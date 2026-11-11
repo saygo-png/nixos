@@ -82,10 +82,7 @@ in {
     nixos.enable = false;
     dev.enable = false;
     info.enable = false;
-    man = {
-      cache.enable = false;
-      man-db.enable = true;
-    };
+    man.cache.enable = false;
   };
 
   boot.loader.limine.enable = true;
