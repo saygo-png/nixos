@@ -233,7 +233,6 @@ in {
       udiskie # Auto mount
       gnumake # C compiling
       file # File identifier
-      zoxide # Cd alternative
       cookiecutter # Templates
       htop-vim # TUI task manager
       pulsemixer # Volume control
