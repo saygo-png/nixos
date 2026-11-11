@@ -28,7 +28,9 @@
     programs.tmux = {
       baseIndex = 1;
       enable = true;
-      shell = "${lib.getExe pkgs.fish}"; # Full path is needed here
+      shell = lib.getExe pkgs.fish; # Full path is needed here
+      terminal = "tmux-256color";
+      focusEvents = true; # For vim autoread.
       keyMode = "vi";
       prefix = "C-a";
       tmuxinator.enable = true;
@@ -36,11 +38,7 @@
       mouse = true; # Allows you to scroll a terminal
       historyLimit = 1000; # Alacritty already holds history
       extraConfig = ''
-        # For vim autoread.
-        set-option -g focus-events on
-
         # For truecolor inside tmux
-        set -g default-terminal 'tmux-256color'
         set -as terminal-overrides ",alacritty*:Tc"
 
         # Open tmux inside current dir
