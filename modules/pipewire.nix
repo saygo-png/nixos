@@ -11,7 +11,6 @@
     alsa.enable = true;
     jack.enable = true;
     pulse.enable = true;
-    alsa.support32Bit = true;
 
     # Increase latency a bit to stop crackles
     extraConfig = let
