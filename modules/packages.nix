@@ -100,30 +100,6 @@
       '';
     })
 
-    (pkgs.writeShellApplication {
-      name = "rdepends";
-      runtimeInputs = [pkgs.nix];
-      text = ''
-        if [ "$#" -eq 0 ]; then
-            echo "No package(s) provided."
-            exit 1
-        fi
-
-        parent="/run/current-system"
-        child="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
-
-        if [ "$#" -eq 2 ]; then
-        parent="\$(nix eval --raw \"nixpkgs#$1.outPath\")"
-        child="\$(nix eval --raw \"nixpkgs#$2.outPath\")"
-        fi
-
-        # echo then run the command
-        cmd="nix why-depends \"$parent\" \"$child\""
-        echo "$cmd" >&2
-        eval "$cmd"
-      '';
-    })
-
     (pkgs.writeShellScriptBin "hwinfolist"
       ''
         echo "GPU"
@@ -132,7 +108,7 @@
         echo "snr lshw -json | nvim -c 'set filetype=json'"
       '')
 
-    (pkgs.writeShellScriptBin "nix-clean" ''
+    (pkgs.writeShellScriptBin "mynix-clean" ''
       nh clean all --keep 1
       sudo nix store optimise
     '')
