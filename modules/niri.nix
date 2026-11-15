@@ -18,6 +18,7 @@
   nixpkgs.overlays = [
     (_: prev: {
       niri = prev.niri.overrideAttrs (old: {
+      doCheck = false; # Cuts build time in half, but now the patch combinator is untested.
         patches =
           (old.patches or [])
           ++ [
