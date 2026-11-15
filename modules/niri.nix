@@ -23,7 +23,7 @@
           ++ [
             (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
             (lib.my.relativeToRoot "resources/niri/float-over-fullscreen.patch")
-            # (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
+            (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
           ];
         postInstall =
           (old.postInstall or "")
