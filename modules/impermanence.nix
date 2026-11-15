@@ -23,16 +23,16 @@
       directories = rootPaths "Directories to persist in root filesystem";
       files = rootPaths "Files to persist in root filesystem";
       cache = {
-        directories = rootPaths "Root directories to persist, but not to snapshot";
-        files = rootPaths "Root files to persist, but not to snapshot";
+        directories = rootPaths "Root directories to persist, but not back up";
+        files = rootPaths "Root files to persist, but not back up";
       };
     };
     home = {
       directories = homePaths "Directories to persist in home directory";
       files = homePaths "Files to persist in home directory";
       cache = {
-        directories = homePaths "Home directories to persist, but not to snapshot";
-        files = homePaths "Home files to persist, but not to snapshot";
+        directories = homePaths "Home directories to persist, but not back up";
+        files = homePaths "Home files to persist, but not back up";
       };
     };
   };
