@@ -99,7 +99,11 @@ in {
   systemd.user.settings.Manager.DefaultTimeoutStopSec = "10s";
 
   # DNS
-  networking.networkmanager.insertNameservers = ["9.9.9.9" "149.112.112.112"];
+  networking.nameservers = ["9.9.9.9" "149.112.112.112"];
+  services.resolved.settings.Resolve.Domains = ["~."];
+  networking.dhcpcd.extraConfig = "nohook resolv.conf";
+  networking.networkmanager.settings."global-dns-domain-*".servers =
+    lib.concatStringsSep "," config.networking.nameservers;
 
   networking.firewall.enable = true;
 
