@@ -181,7 +181,7 @@ binds {
   Mod+Return hotkey-overlay-title="Terminal" { spawn "alacritty"; }
   Mod+Space hotkey-overlay-title="Rofi" { spawn "rofi" "-show" "drun"; }
   Mod+B hotkey-overlay-title="Browser" { spawn "librewolf"; }
-  Mod+R hotkey-overlay-title="Recording" { spawn "hyprcorder.sh"; }
+  Mod+R hotkey-overlay-title="Recording" { spawn "saygo-record"; }
 
   XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "+1"; }
   XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "-1"; }

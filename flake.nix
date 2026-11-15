@@ -238,7 +238,7 @@
           "githubloc"
           "niri-switch-keyboard"
           "owt"
-          # "saygo-record" not finished
+          "saygo-record"
           "timezones"
           "tmux-mem"
           "shhell"

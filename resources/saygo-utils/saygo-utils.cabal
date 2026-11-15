@@ -190,15 +190,19 @@ executable convertlink
     vector,
 
 executable saygo-record
-  import: common-options, threaded
+  import: common-options, threaded, bin
   main-is: src/saygo-record.hs
+  x-runtime-inputs: wl-screenrec, pipewire, libnotify, ripdrag
   build-depends:
-    Cabal,
+    containers,
     directory,
     filepath,
+    microaeson,
     optparse-applicative,
+    process,
     relude,
     shh,
+    time,
     unix,
 
 executable githubloc
