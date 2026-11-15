@@ -32,9 +32,6 @@
       lazyInstallable = name: "/etc/flake-src#lazyPackages.${conHost}.${name}";
     })
 
-    (pkgs.writeShellScriptBin "nr" ''nix run "nixpkgs#$1" -- "''${@:2}"'')
-    (pkgs.writeShellScriptBin "snr" ''sudo nix run "nixpkgs#$1" -- "''${@:2}"'')
-
     (pkgs.writeShellApplication {
       name = "nrepl";
       runtimeInputs = with pkgs; [coreutils];
@@ -48,78 +45,6 @@
         fi
       '';
     })
-
-    (pkgs.writeShellApplication {
-      name = "airplane-mode";
-      runtimeInputs = [pkgs.util-linux];
-      text = ''
-        [ "$#" -ne 1 ] && { echo "Usage: $0 {on|off}"; exit 1; }
-        case "$1" in
-          on)
-            # block all wireless devices.
-            if rfkill block all; then
-              echo "Airplane mode enabled successfully."
-              else
-              echo "Failed to enable airplane mode."
-            fi
-            ;;
-          off)
-            # unblock all wireless devices.
-            if rfkill unblock all; then
-              echo "Airplane mode disabled successfully."
-              else
-              echo "Failed to disable airplane mode."
-            fi
-            ;;
-          *)
-            echo "Invalid argument: $1"
-            echo "Usage: $0 {on|off}"
-            exit 1
-            ;;
-        esac
-      '';
-    })
-
-    (pkgs.writeShellApplication {
-      name = "fzfcd";
-      runtimeInputs = with pkgs; [fzf fd coreutils eza];
-      text = ''
-        dir=$(fd --hidden --type directory --type file --maxdepth 15 . | fzf --preview "eza --tree --color=always {}")
-
-        if [ -z "$dir" ]; then
-         exit 1
-        fi
-
-        if [ -d "$dir" ]; then
-            printf '%s\n' "$dir"
-        elif [ -f "$dir" ]; then
-            dirname "$dir"
-        else
-            exit 1
-        fi
-      '';
-    })
-
-    (pkgs.writeShellApplication {
-      name = "pasteimg";
-      runtimeInputs = [pkgs.wl-clipboard];
-      text = ''
-        wl-paste --type image/png > "$1"
-      '';
-    })
-
-    (pkgs.writeShellScriptBin "hwinfolist"
-      ''
-        echo "GPU"
-        echo "nr amdgpu_top --gui"
-        echo "General Tree"
-        echo "snr lshw -json | nvim -c 'set filetype=json'"
-      '')
-
-    (pkgs.writeShellScriptBin "mynix-clean" ''
-      nh clean all --keep 1
-      sudo nix store optimise
-    '')
 
     (let
       connection-test = pkgs.writeShellApplication {
@@ -149,14 +74,6 @@
           watch -n 0.5 ${lib.getExe connection-test}
         '';
       })
-
-    (pkgs.writeShellApplication {
-      name = "mynix-list-packages";
-      runtimeInputs = [pkgs.coreutils];
-      text = ''
-        nix-store --query --requisites /run/current-system | cut -d- -f2- | sort | uniq
-      '';
-    })
 
     (pkgs.writeShellApplication {
       name = "hyprcorder.sh";

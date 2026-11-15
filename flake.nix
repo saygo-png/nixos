@@ -219,6 +219,7 @@
       in {
         haskellShell = pkgs.mkShell {
           inputsFrom = [self.packages.${system}.saygo-utils.env];
+          env.RUNTIME_INPUTS = self.packages.${system}.saygo-utils.runtimeInputs;
           buildInputs = [pkgs.zlib];
           packages = [
             hPkgs.cabal-install
@@ -243,6 +244,13 @@
           "shhell"
           "shhell-bench"
           "comma-bg"
+          "nr"
+          "snr"
+          "fzfcd"
+          "pasteimg"
+          "hwinfolist"
+          "mynix-clean"
+          "mynix-list-packages"
         ]
         (binary: {
           type = "app";

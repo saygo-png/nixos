@@ -191,6 +191,9 @@ binds {
   XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
   XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
+  // Airplane mode, the thinkpad's Fn+F8.
+  XF86RFKill allow-when-locked=true { spawn "rfkill" "toggle" "all"; }
+
   Mod+W repeat=false { toggle-overview; }
 
   Mod+Shift+Q repeat=false { close-window; }

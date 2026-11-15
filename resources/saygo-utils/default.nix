@@ -15,6 +15,19 @@
     program = pkg.meta.mainProgram or name;
   };
 
+  # The packages in each executable's x-runtime-inputs in saygo-utils.cabal, as
+  # "<package> <path>" lines for src/Bin.hs.
+  runtimeInputs = pkgs.lib.pipe ./saygo-utils.cabal [
+    builtins.readFile
+    (pkgs.lib.splitString "\n")
+    (map (builtins.match " *x-runtime-inputs:(.*)"))
+    (pkgs.lib.concatMap (match: pkgs.lib.optionals (match != null) (pkgs.lib.splitString "," (pkgs.lib.head match))))
+    (map pkgs.lib.trim)
+    pkgs.lib.unique
+    (map (name: "${name} ${pkgs.lib.getBin pkgs.${name}}"))
+    pkgs.lib.concatLines
+  ];
+
   mkSaygoUtils = args:
     niceHaskell.mkPackageNoIFD ({
         inherit haskellPackages;
@@ -33,6 +46,11 @@
   };
 
   saygo-utils = mkSaygoUtils {
+    overrideCabal = {
+      env.RUNTIME_INPUTS = runtimeInputs;
+      # For haskellShell in flake.nix.
+      passthru = {inherit runtimeInputs;};
+    };
     developPackageArgs = {
       modifier = drv:
         drv.overrideAttrs (_: let

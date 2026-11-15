@@ -39,6 +39,17 @@ common common-options
     OverloadedStrings
     PartialTypeSignatures
 
+-- Bakes in the tools a program runs, the packages in its x-runtime-inputs, see
+-- src/Bin.hs.
+common bin
+  hs-source-dirs: ., src
+  other-modules: Bin
+  build-depends:
+    directory,
+    filepath,
+    template-haskell,
+    text,
+
 -- Modules for shhell's GHCi session, which has them in its GHC environment.
 library
   import: common-options
@@ -219,4 +230,59 @@ executable clean-nix-paths
   main-is: src/clean-nix-paths.hs
   build-depends:
     relude,
+    text,
+
+-- Not threaded, which starts faster: it only execs nix.
+executable nr
+  import: common-options
+  main-is: src/nr.hs
+  build-depends:
+    relude,
+    unix,
+
+executable snr
+  import: common-options
+  main-is: src/nr.hs
+  build-depends:
+    relude,
+    unix,
+
+executable fzfcd
+  import: common-options, threaded, bin
+  main-is: src/fzfcd.hs
+  x-runtime-inputs: fd, fzf, eza
+  build-depends:
+    directory,
+    filepath,
+    relude,
+    shh,
+
+executable pasteimg
+  import: common-options, threaded, bin
+  main-is: src/pasteimg.hs
+  x-runtime-inputs: wl-clipboard
+  build-depends:
+    relude,
+    shh,
+
+executable hwinfolist
+  import: common-options
+  main-is: src/hwinfolist.hs
+  build-depends:
+    relude,
+
+executable mynix-clean
+  import: common-options, threaded, bin
+  main-is: src/mynix-clean.hs
+  x-runtime-inputs: nh
+  build-depends:
+    relude,
+    shh,
+
+executable mynix-list-packages
+  import: common-options, threaded
+  main-is: src/mynix-list-packages.hs
+  build-depends:
+    relude,
+    shh,
     text,
