@@ -6,8 +6,7 @@
   ...
 }: {
   imports = lib.my.withModules [
-    "pulseaudio.nix"
-    # "mullvad.nix"
+    "pipewire.nix"
   ];
 
   networking.hostName = "thinkpad";
