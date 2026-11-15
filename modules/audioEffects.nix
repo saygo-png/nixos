@@ -4,10 +4,24 @@
   inputs,
   pkgs,
   lib,
+  config,
   ...
-}: {
+}: let
+  # Carla loads libjack at runtime. Like pw-jack, point it at PipeWire's, which
+  # services.pipewire.jack.enable used to do for every program in the session.
+  carla = pkgs.symlinkJoin {
+    inherit (pkgs.carla) name meta;
+    paths = [pkgs.carla];
+    nativeBuildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      for program in $out/bin/*; do
+        wrapProgram "$program" --prefix LD_LIBRARY_PATH : ${config.services.pipewire.package.jack}/lib
+      done
+    '';
+  };
+in {
   environment.systemPackages = [
-    pkgs.carla
+    carla
     inputs.zlequalizer.packages.${system}.zlequalizer
   ];
 
@@ -60,7 +74,7 @@
     environment = {PIPEWIRE_LINK_PASSIVE = "true";};
     serviceConfig = {
       Type = "exec";
-      ExecStart = "${lib.getExe' pkgs.carla "carla-rack"} --no-gui %h/Documents/carla.carxp";
+      ExecStart = "${lib.getExe' carla "carla-rack"} --no-gui %h/Documents/carla.carxp";
     };
   };
 }

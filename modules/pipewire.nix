@@ -9,7 +9,6 @@
   services.pipewire = {
     enable = true;
     alsa.enable = true;
-    jack.enable = true;
     pulse.enable = true;
 
     # Increase latency a bit to stop crackles
