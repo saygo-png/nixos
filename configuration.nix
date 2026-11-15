@@ -33,7 +33,6 @@ in {
 
       "gaming.nix"
       "lazyPackages.nix"
-      "stupid.nix"
       "zathura.nix"
       "mimeapps.nix"
       "packages.nix"
