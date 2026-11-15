@@ -66,10 +66,7 @@
   # Hardware decoding.
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "i965";};
 
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
+  hardware.graphics.enable = true;
 
   environment.systemPackages = [
     pkgs.acpi # Cli battery interface.

@@ -32,10 +32,7 @@
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
 
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
+  hardware.graphics.enable = true;
 
   # autologin
   services.getty.autologinUser = conUsername;
