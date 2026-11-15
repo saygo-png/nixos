@@ -2,9 +2,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 
--- Picks a file or directory with fzf and prints the directory to cd into.
-
 import Bin
+import Options.Applicative
 import Relude
 import Shh
 import System.Directory (doesDirectoryExist, doesFileExist)
@@ -21,6 +20,7 @@ eza = $(bin "eza")
 
 main :: IO ()
 main = do
+  execParser parserInfo
   -- fzf reports its own errors, and fails when nothing is picked.
   path <- either (const exitFailure) (pure . decodeUtf8) =<< tryFailure (pick |> captureTrim)
   isDirectory <- doesDirectoryExist path
@@ -34,3 +34,6 @@ pick :: Proc ()
 pick =
   fd "--hidden" "--type" "directory" "--type" "file" "--maxdepth" "15" "."
     |> fzf "--preview" (eza <> " --tree --color=always {}")
+
+parserInfo :: ParserInfo ()
+parserInfo = info (helper <*> pass) (progDesc "Pick a file or directory with fzf and print the directory to cd into")

@@ -2,9 +2,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 
--- Saves the PNG image in the clipboard to a file.
-
 import Bin
+import Options.Applicative
 import Relude
 import Shh
 
@@ -14,7 +13,12 @@ wlPaste :: Cmd
 wlPaste = exe $(bin "wl-paste")
 
 main :: IO ()
-main =
-  getArgs >>= \case
-    [file] -> writeFileLBS file =<< (wlPaste "--type" "image/png" |> capture)
-    _ -> die "Usage: pasteimg <file>"
+main = do
+  file <- execParser parserInfo
+  writeFileLBS file =<< (wlPaste "--type" "image/png" |> capture)
+
+parserInfo :: ParserInfo FilePath
+parserInfo =
+  info
+    (helper <*> strArgument (metavar "FILE" <> help "File to save the image to" <> action "file"))
+    (progDesc "Save the PNG image in the clipboard to a file")

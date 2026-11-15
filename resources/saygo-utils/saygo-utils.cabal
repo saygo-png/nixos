@@ -237,6 +237,7 @@ executable nr
   import: common-options
   main-is: src/nr.hs
   build-depends:
+    optparse-applicative,
     relude,
     unix,
 
@@ -244,6 +245,7 @@ executable snr
   import: common-options
   main-is: src/nr.hs
   build-depends:
+    optparse-applicative,
     relude,
     unix,
 
@@ -254,6 +256,7 @@ executable fzfcd
   build-depends:
     directory,
     filepath,
+    optparse-applicative,
     relude,
     shh,
 
@@ -262,6 +265,7 @@ executable pasteimg
   main-is: src/pasteimg.hs
   x-runtime-inputs: wl-clipboard
   build-depends:
+    optparse-applicative,
     relude,
     shh,
 
@@ -269,6 +273,7 @@ executable hwinfolist
   import: common-options
   main-is: src/hwinfolist.hs
   build-depends:
+    optparse-applicative,
     relude,
 
 executable mynix-clean
@@ -276,6 +281,7 @@ executable mynix-clean
   main-is: src/mynix-clean.hs
   x-runtime-inputs: nh
   build-depends:
+    optparse-applicative,
     relude,
     shh,
 
@@ -283,6 +289,7 @@ executable mynix-list-packages
   import: common-options, threaded
   main-is: src/mynix-list-packages.hs
   build-depends:
+    optparse-applicative,
     relude,
     shh,
     text,
