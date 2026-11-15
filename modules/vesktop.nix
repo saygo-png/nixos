@@ -15,18 +15,6 @@
           inherit (config.lib.stylix.colors) withHashtag;
           inherit (lib.strings) escapeShellArg;
 
-          patchFile = builtins.toFile "patch.txt" ''
-            56c56
-            <         <img draggable="false" src="vesktop://assets/splash" alt="" role="presentation" />
-            ---
-            >         <span class="loader"></span>
-            69c69
-            < </script>
-            \ No newline at end of file
-            ---
-            > </script>
-          '';
-
           newIconSvg =
             # svg
             ''
@@ -68,7 +56,10 @@
           echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray/trayTemplate.png
           echo ${escapeShellArg newIconSvg} | ${rsvg-convert} - -h ${oldPngIconSize} > static/tray/trayUnread.png
           echo ${escapeShellArg spinnerCss} >> static/views/style.css
-          patch static/views/splash.html ${patchFile}
+          # By the tag, not line numbers, so it survives upstream changes to the file.
+          substituteInPlace static/views/splash.html --replace-fail \
+            '<img draggable="false" src="vesktop://assets/splash" alt="" role="presentation" />' \
+            '<span class="loader"></span>'
         '';
       });
     })
