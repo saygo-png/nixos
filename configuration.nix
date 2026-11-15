@@ -317,16 +317,21 @@ in {
   # Snapshots of the zfs datasets from hosts/disko-config.nix
   services.sanoid = {
     enable = true;
-    datasets = let
-      retention = {
+    datasets = {
+      "zroot/local/persist" = {
         hourly = 50;
         daily = 15;
         weekly = 3;
         monthly = 1;
       };
-    in {
-      "zroot/local/persist" = retention;
-      "zroot/local/cache" = retention;
+      # Kept shorter, so space from deleted games and downloads comes back
+      # after a week instead of a month or two.
+      "zroot/local/cache" = {
+        hourly = 24;
+        daily = 7;
+        weekly = 0;
+        monthly = 0;
+      };
     };
   };
 
