@@ -7,15 +7,23 @@
   conHome,
   conHost,
   conFlakePath,
+  mkLazyDesktopItem,
   ...
 }: {
-  environment.systemPackages = [
+  custom.lazyPackages = [
     (lib.my.mkChromiumKiosk pkgs {
       name = "hordes-kiosk";
       url = "https://hordes.io";
+    })
+  ];
+
+  environment.systemPackages = [
+    (mkLazyDesktopItem {
+      name = "hordes-kiosk";
       desktopName = "Hordes.io Kiosk";
       comment = "Launch Hordes.io in fullscreen kiosk mode";
       categories = ["Game" "Network"];
+      exec = "comma-bg hordes-kiosk";
     })
 
     (self.packages.${system}.saygo-utils.override {

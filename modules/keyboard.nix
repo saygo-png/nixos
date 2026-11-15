@@ -1,7 +1,11 @@
 {
   pkgs,
   lib,
+  config,
+  conHome,
+  conHost,
   conUsername,
+  mkLazyDesktopItem,
   ...
 }: let
   vendor = "8888";
@@ -23,13 +27,33 @@
         --app=https://usevia.app
     '';
   };
+  # The browser is a lazy package, built the first time VIA is opened.
+  browserInstallable = "/etc/flake-src#lazyPackages.${conHost}.${lib.getName browser}^out";
 
-  # Opens VIA on the Wayland display this is started from.
+  # The service can't start it through comma-bg, which detaches it from the
+  # service. Its HOME is a private /tmp, so nix gets the real one for its caches.
+  start = pkgs.writeShellApplication {
+    name = "via-kiosk-start";
+    runtimeInputs = [config.nix.package];
+    text = ''
+      out=$(HOME=${conHome} nix build --no-link --print-out-paths "${browserInstallable}")
+      exec "$out/bin/${lib.getName browser}"
+    '';
+  };
+
+  # Opens VIA on the Wayland display this is started from. Builds the browser
+  # first, so a terminal it runs in shows the download.
   launcher = pkgs.writeShellApplication {
     name = "via-kiosk";
-    text = ''systemctl start "via-kiosk@$WAYLAND_DISPLAY.service"'';
+    runtimeInputs = [config.nix.package];
+    text = ''
+      nix build --no-link "${browserInstallable}"
+      systemctl start "via-kiosk@$WAYLAND_DISPLAY.service"
+    '';
   };
 in {
+  custom.lazyPackages = [browser];
+
   users.groups.via = {};
 
   services.udev.extraRules = ''
@@ -42,7 +66,7 @@ in {
     serviceConfig = {
       User = conUsername;
       SupplementaryGroups = ["via"];
-      ExecStart = lib.getExe browser;
+      ExecStart = lib.getExe start;
       # The browser's home and profile live in a /tmp only this service can
       # see, so nothing running as you can plant settings, extensions or
       # certificates in them.
@@ -57,7 +81,7 @@ in {
 
   environment.systemPackages = [
     launcher
-    (pkgs.makeDesktopItem {
+    (mkLazyDesktopItem {
       name = "via-kiosk";
       desktopName = "VIA configurator";
       comment = "Configure the keyboard with VIA";

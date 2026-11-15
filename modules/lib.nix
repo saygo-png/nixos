@@ -10,16 +10,13 @@
     then throw "Path ${path} does not exist"
     else path;
 
-  # Website opened as a standalone chromium app, with a desktop entry
+  # Website opened as a standalone chromium app
   mkChromiumKiosk = pkgs: {
     name,
     url,
-    desktopName,
-    comment,
     flags ? [],
-    categories ? [],
-  }: let
-    launcher = pkgs.writeShellScriptBin name ''
+  }:
+    pkgs.writeShellScriptBin name ''
       exec ${lib.getExe pkgs.ungoogled-chromium} ${lib.escapeShellArgs ([
           "--no-first-run"
           "--disable-features=TranslateUI"
@@ -28,16 +25,4 @@
         ++ flags
         ++ ["--app=${url}"])}
     '';
-  in
-    pkgs.symlinkJoin {
-      inherit name;
-      paths = [
-        launcher
-        (pkgs.makeDesktopItem {
-          inherit name desktopName comment categories;
-          exec = lib.getExe launcher;
-          startupNotify = true;
-        })
-      ];
-    };
 }
