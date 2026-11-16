@@ -288,10 +288,10 @@ in {
 
   system.stateVersion = "26.11";
 
-  # Keep trace of flake hash and flake for every gen in /etc
-  system.systemBuilderCommands = "ln -s ${self.sourceInfo.outPath} $out/src";
-  environment.etc."flake-rev.json".text = builtins.toJSON {inherit (self) sourceInfo;};
-  environment.etc."flake-src".source = lib.my.relativeToRoot ".";
+  # The flake each generation was built from, and its commit for
+  # nixos-version --configuration-revision.
+  environment.etc."flake-src".source = self.outPath;
+  system.configurationRevision = self.rev or self.dirtyRev or null;
 
   nixpkgs.config.allowUnfree = lib.mkForce false;
 
