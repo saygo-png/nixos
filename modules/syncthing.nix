@@ -218,9 +218,23 @@ in {
             #include .stignore-shared
           '';
 
+        customIgnores = {
+          "mc instances" = ''
+            // Downloaded again by PrismLauncher when missing.
+            (?d)/cache
+            (?d)/meta
+            (?d)/libraries
+            (?d)/logs
+          '';
+        };
+
         makePatterns = syncthingFolders:
           concatLines
-          (map makeSTIncludeSharedI (attrValues syncthingFolders));
+          (lib.mapAttrsToList (name: folder:
+            if customIgnores ? ${name}
+            then makeSTIgnorePattern folder customIgnores.${name}
+            else makeSTIncludeSharedI folder)
+          syncthingFolders);
       in
         lib.hm.dag.entryAfter ["writeBoundary"]
         (concatLines (map (f: f sFolders) [
