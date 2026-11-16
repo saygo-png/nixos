@@ -180,7 +180,7 @@ executable convertlink
   import: common-options, threaded
   main-is: src/convertlink.hs
   build-depends:
-    Cabal,
+    os-string,
     containers,
     directory,
     filepath,
