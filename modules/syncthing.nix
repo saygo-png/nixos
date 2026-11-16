@@ -89,24 +89,11 @@ in {
             (?d)*$py.class
             (?d)*.so
             (?d).Python
-            (?d)build/
             (?d)develop-eggs/
-            (?d)dist/
-            (?d)downloads/
-            (?d)eggs/
             (?d).eggs/
-            (?d)lib/
-            (?d)lib64/
-            (?d)parts/
-            (?d)sdist/
-            (?d)wheels/
-            (?d)share/python-wheels/
             (?d)*.egg-info/
             (?d).installed.cfg
             (?d)*.egg
-            (?d)MANIFEST
-            (?d)*.manifest
-            (?d)*.spec
             (?d)pip-log.txt
             (?d)pip-delete-this-directory.txt
             (?d)htmlcov/
@@ -121,34 +108,21 @@ in {
             (?d)*.py,cover
             (?d).hypothesis/
             (?d).pytest_cache/
-            (?d)cover/
-            (?d)*.mo
-            (?d)*.pot
-            (?d)*.log
-            (?d)local_settings.py
-            (?d)db.sqlite3
-            (?d)db.sqlite3-journal
-            (?d)instance/
             (?d).webassets-cache
             (?d).scrapy
             (?d)docs/_build/
             (?d).pybuilder/
             (?d)target/
             (?d).ipynb_checkpoints
-            (?d)profile_default/
-            (?d)ipython_config.py
             (?d).pdm.toml
             (?d).pdm-python
             (?d).pdm-build/
             (?d)__pypackages__/
-            (?d)celerybeat-schedule
             (?d)celerybeat.pid
             (?d)*.sage.py
             (?d).env
             (?d).venv
-            (?d)env/
             (?d)venv/
-            (?d)ENV/
             (?d)env.bak/
             (?d)venv.bak/
             (?d).spyderproject
@@ -173,23 +147,16 @@ in {
             (?d)/target
             (?d)/classes
             (?d)/checkouts
-            (?d)pom.xml
             (?d).rebel_readline_history
             (?d)*.sync-conflict-*
             (?d).cpcache/
-            (?d)**/public/js
             (?d)/node_modules
-            (?d)/yarn.lock
-            (?d)/package-lock.json
             (?d)/.shadow-cljs
             (?d)/*.iml
             (?d)/.nrepl-port
             (?d)/.idea
             (?d).calva
             (?d).clj-kondo
-            (?d)pom.xml.asc
-            (?d)*.jar
-            (?d)/lib/
             (?d)/classes/
             (?d)/target/
             (?d)/checkouts/
