@@ -89,7 +89,12 @@
       "/cache" = {
         hideMounts = true;
         files = lib.unique (["/etc/machine-id"] ++ cfg.root.cache.files);
-        directories = lib.unique cfg.root.cache.directories;
+        directories = lib.unique (
+          [
+            "/var/lib/systemd/timers" # Last run of Persistent=true timers
+          ]
+          ++ cfg.root.cache.directories
+        );
 
         users.${conUsername} = {
           files = lib.unique cfg.home.cache.files;
