@@ -32,6 +32,13 @@
   # Change cpu governor to performance for increased performance.
   powerManagement.cpuFreqGovernor = "performance";
 
+  # The ZFS cache may by default take all RAM but 1 GiB, and gives it back slower
+  # than the kernel swaps programs out, so games like Overwatch got pushed to swap.
+  boot.kernelParams = let
+    toGb = n: n * 1024 * 1024 * 1024;
+    limit = toGb 2;
+  in ["zfs.zfs_arc_max=${toString limit}"];
+
   hardware.graphics.enable = true;
 
   # autologin
