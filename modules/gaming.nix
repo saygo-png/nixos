@@ -75,8 +75,15 @@ in {
     };
   };
 
+  # Windows-style thread synchronization in the kernel, for Proton with
+  # PROTON_USE_NTSYNC=1. Cheaper than its fallbacks in CPU-bound games.
+  boot.kernelModules = ["ntsync"];
+
   # Taken from https://github.com/fufexan/nix-gaming
   boot.kernel.sysctl = {
+    # From CachyOS. The NMI watchdog takes a CPU performance counter and
+    # interrupts every CPU periodically, to detect hard lockups.
+    "kernel.nmi_watchdog" = 0;
     # 20-shed.conf
     "kernel.sched_cfs_bandwidth_slice_us" = 3000;
     # 20-net-timeout.conf
