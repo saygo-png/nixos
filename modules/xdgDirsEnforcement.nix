@@ -116,7 +116,7 @@ in {
     };
   };
 
-  home-manager.users.${conUsername} = { ...}: {
+  home-manager.users.${conUsername} = {
     xdg.enable = true;
 
     xresources.path = "${homeConfig.xdg.configHome}/.xresources";

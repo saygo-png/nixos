@@ -76,7 +76,7 @@
     };
   };
 
-  home-manager.users.${conUsername} = _: {
+  home-manager.users.${conUsername} = {
     services.polkit-gnome.enable = true;
     services.swayosd.enable = true;
     xdg.configFile."niri/config.kdl".source = lib.my.relativeToRoot "resources/niri/niri.kdl";

@@ -69,7 +69,7 @@ in {
 
       "visuals/theme.nix"
       "visuals/themeCore.nix"
-      "visuals/kvantumBasedQt.nix"
+      "visuals/qt.nix"
     ];
 
   custom.defaultTerminal = {

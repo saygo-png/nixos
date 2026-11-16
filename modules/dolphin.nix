@@ -8,7 +8,7 @@
   ];
 
   # Fixes dolphin not having mime types.
-  environment.etc."/xdg/menus/applications.menu".text =
+  environment.etc."xdg/menus/applications.menu".text =
     # This one also works but has to pull in entire plasma workspaces, but might be more future proof
     # builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
     ''

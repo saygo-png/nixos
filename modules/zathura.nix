@@ -34,19 +34,19 @@
         completion-fg = "${color.base05}"; # fg
         completion-group-bg = "${color.base01}"; # bg1
         completion-group-fg = "${color.base03}"; # gray
-        completion-highlight-bg = "${color.base0B}"; # bright:blue
+        completion-highlight-bg = "${color.base0B}"; # bright:green
         completion-highlight-fg = "${color.base02}"; # bg2
 
         # Define the color in index mode
         index-bg = "${color.base02}"; # bg2
         index-fg = "${color.base05}"; # fg
-        index-active-bg = "${color.base0B}"; # bright:blue
+        index-active-bg = "${color.base0B}"; # bright:green
         index-active-fg = "${color.base02}"; # bg2
 
-        inputbar-bg = "${color.base01}"; # bg
+        inputbar-bg = "${color.base01}"; # bg1
         inputbar-fg = "${color.base05}"; # fg
 
-        statusbar-bg = "${color.base00}"; # bg2
+        statusbar-bg = "${color.base00}"; # bg
         statusbar-fg = "${color.base05}"; # fg
 
         highlight-color = "${color.base0A}80"; # bright:yellow

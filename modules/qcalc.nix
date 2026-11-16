@@ -9,7 +9,7 @@
     pkgs.libqalculate
   ];
 
-  home-manager.users.${conUsername} = _: {
+  home-manager.users.${conUsername} = {
     home.shellAliases."qcalc" = "qalc";
     xdg.configFile."qalculate/qalc.cfg" = {
       text = lib.generators.toINI {} {

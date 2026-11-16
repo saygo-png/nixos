@@ -11,7 +11,7 @@
   configPath = lib.removePrefix (homeConfig.home.homeDirectory + "/") homeConfig.xdg.configHome;
   profileName = "librewolf-" + conUsername;
 in {
-  home-manager.users.${conUsername} = {...}: {
+  home-manager.users.${conUsername} = {
     # Removes .keep file from creating ~/.librewolf and ~/.mozilla
     home.file.".librewolf/native-messaging-hosts".enable = lib.mkForce false;
     home.file.".mozilla/native-messaging-hosts".enable = lib.mkForce false;
