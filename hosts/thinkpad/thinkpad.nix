@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  conHome,
   conUsername,
   ...
 }: {
@@ -10,16 +9,6 @@
   ];
 
   networking.hostName = "thinkpad";
-  const = {
-    refreshRate = 60;
-    screenWidth = 1366;
-    screenHeight = 768;
-    gaps = 0;
-    borderSize = 2;
-    vsync = true;
-    extrasNixosPath = "${conHome}/extrasNixos";
-  };
-
   networking.hostId = "91b1153b";
 
   # Wifi

@@ -302,8 +302,6 @@ in {
       download-buffer-size = 524288000; # 500mb
       flake-registry = ""; # THIS IS HORRIBLE DEFAULT BEHAVIOUR
     };
-    registry.nixpkgs.flake = inputs.nixpkgs;
-    nixPath = lib.singleton "nixpkgs=${inputs.nixpkgs}";
   };
 
   # Needed for secrets.

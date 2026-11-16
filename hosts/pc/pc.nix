@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  conHome,
   conUsername,
   ...
 }: {
@@ -12,16 +11,6 @@
   ];
 
   networking.hostName = "pc";
-  const = {
-    refreshRate = 144;
-    screenWidth = 1920;
-    screenHeight = 1080;
-    gaps = 0;
-    borderSize = 2;
-    vsync = false;
-    extrasNixosPath = "${conHome}/builds/extrasNixos";
-  };
-
   networking.hostId = "a4e735aa";
 
   # https://gitlab.freedesktop.org/drm/amd/-/issues/1500

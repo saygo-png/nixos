@@ -30,7 +30,6 @@
               content = {
                 type = "swap";
                 discardPolicy = "both";
-                resumeDevice = true; # resume from hiberation from this device
               };
             };
 
@@ -70,26 +69,22 @@
           "local/root" = {
             type = "zfs_fs";
             mountpoint = "/";
-            options."com.sun:auto-snapshot" = "false";
             postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^zroot/local/root@blank$' || zfs snapshot zroot/local/root@blank";
           };
 
           "local/nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
-            options."com.sun:auto-snapshot" = "false";
           };
 
           "local/cache" = {
             type = "zfs_fs";
             mountpoint = "/cache";
-            options."com.sun:auto-snapshot" = "false";
           };
 
           "local/persist" = {
             type = "zfs_fs";
             mountpoint = "/persist";
-            options."com.sun:auto-snapshot" = "false";
           };
         };
       };
