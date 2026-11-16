@@ -74,6 +74,8 @@
             "/var/lib/nixos" # user uids and gids
             "/var/lib/systemd/coredump"
           ]
+          # Saved Wi-Fi networks and their passwords.
+          ++ lib.optional config.networking.networkmanager.enable "/etc/NetworkManager/system-connections"
           ++ cfg.root.directories
         );
 
