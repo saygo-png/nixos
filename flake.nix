@@ -5,6 +5,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-unstable-frozen.url = "github:nixos/nixpkgs/29916453413845e54a65b8a1cf996842300cd299";
 
+    # see modules/gaming.nix.
+    nixpkgs-gpu.url = "github:nixos/nixpkgs/d4f25a3e562008648d45bcf2d70bcc7422cad84e";
+
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";

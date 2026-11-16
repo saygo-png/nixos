@@ -1,8 +1,20 @@
 {
   lib,
   pkgs,
+  inputs,
+  system,
   ...
-}: {
+}: let
+  # A new build of Mesa or of GE-Proton's DXVK throws away the shaders games have
+  # compiled, and Steam processes their shader pre-caches all over again. So both
+  # come from nixpkgs-gpu, which only changes when its pinned revision does.
+  gpuPkgs = inputs.nixpkgs-gpu.legacyPackages.${system};
+in {
+  hardware.graphics = {
+    package = gpuPkgs.mesa;
+    package32 = gpuPkgs.pkgsi686Linux.mesa;
+  };
+
   custom.persist.home = {
     directories = [
       ".local/share/lutris"
@@ -31,7 +43,7 @@
 
   # I only use this to play Diablo 3 sometimes, so make it lazy.
   custom.lazyPackages = let
-    proton = pkgs.proton-ge-bin.steamcompattool;
+    proton = gpuPkgs.proton-ge-bin.steamcompattool;
   in [
     (pkgs.writeShellApplication {
       name = "lutris";
@@ -58,7 +70,7 @@
     steam = {
       enable = true;
       gamescopeSession.enable = true;
-      extraCompatPackages = [pkgs.proton-ge-bin];
+      extraCompatPackages = [gpuPkgs.proton-ge-bin];
       extraPackages = [pkgs.gamemode];
     };
   };
