@@ -140,7 +140,6 @@ in {
         "npm/npmrc".text = ''
           prefix=${homeConfig.xdg.dataHome}/npm
           cache=${homeConfig.xdg.cacheHome}/npm
-          tmp=\$XDG_RUNTIME_DIR/npm
           init-module=${homeConfig.xdg.configHome}/npm/config/npm-init.js
         '';
 
