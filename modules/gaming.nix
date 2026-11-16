@@ -15,6 +15,12 @@ in {
     package32 = gpuPkgs.pkgsi686Linux.mesa;
   };
 
+  services.ananicy = {
+    enable = true;
+    package = pkgs.ananicy-cpp;
+    rulesProvider = pkgs.ananicy-rules-cachyos;
+  };
+
   custom.persist.home = {
     directories = [
       ".local/share/lutris"
