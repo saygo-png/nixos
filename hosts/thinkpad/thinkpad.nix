@@ -4,10 +4,6 @@
   conUsername,
   ...
 }: {
-  imports = lib.my.withModules [
-    "pipewire.nix"
-  ];
-
   networking.hostName = "thinkpad";
   networking.hostId = "91b1153b";
 

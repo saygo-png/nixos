@@ -37,6 +37,7 @@ in {
       "mimeapps.nix"
       "packages.nix"
       "keyboard.nix"
+      "pipewire.nix"
       "audioEffects.nix"
       "impermanence.nix"
       "xdgDirsEnforcement.nix"

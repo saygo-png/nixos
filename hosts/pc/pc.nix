@@ -5,7 +5,6 @@
   ...
 }: {
   imports = lib.my.withModules [
-    "pipewire.nix"
     "qbittorrent.nix"
     "media-management.nix"
   ];
