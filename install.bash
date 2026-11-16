@@ -15,7 +15,8 @@ wipefs -a "${DISK}" || exit 1
 blkdiscard -f "${DISK}" || exit 1
 sgdisk --zap-all "${DISK}" || exit 1
 
-sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- \
+# Use the disko version pinned in flake.lock.
+sudo nix --experimental-features "nix-command flakes" run --inputs-from "${CONFIG_PATH}" disko -- \
   --mode destroy,format,mount "${CONFIG_PATH}/hosts/${CONFIG}/disko-config.nix" || exit 1
 
-nixos-install --flake "${CONFIG_PATH}#${CONFIG}-install"
+nixos-install --flake "${CONFIG_PATH}#install-${CONFIG}"
