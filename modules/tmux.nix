@@ -33,7 +33,6 @@
       focusEvents = true; # For vim autoread.
       keyMode = "vi";
       prefix = "C-a";
-      tmuxinator.enable = true;
       escapeTime = 0; # Delay after pressing escape
       mouse = true; # Allows you to scroll a terminal
       historyLimit = 1000; # Alacritty already holds history
