@@ -209,7 +209,7 @@ in {
 
       # All the archive garbage.
       zip
-      p7zip
+      _7zz
       unzip
       unrar-free
       atool # Unified CLI for all of these
