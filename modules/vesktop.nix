@@ -96,7 +96,7 @@
         gruvboxTheme = "gruvbox";
       in {
         useSystem = false;
-        themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css"; # IFD?
+        themes.${gruvboxTheme} = builtins.readFile "${inputs.gruvbox-vesktop}/gruvbox-dark.theme.css";
         settings = {
           enabledThemes = ["${gruvboxTheme}.css"];
           plugins = {

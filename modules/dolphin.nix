@@ -1,7 +1,4 @@
 {pkgs, ...}: {
-  # Camera files support.
-  programs.gphoto2.enable = true;
-
   environment.systemPackages = [
     pkgs.kdePackages.dolphin
     pkgs.kdePackages.ark

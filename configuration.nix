@@ -220,7 +220,6 @@ in {
       bonk
       entr
       ncdu
-      rclone
       python3
       exiftool
       hyperfine
@@ -250,7 +249,6 @@ in {
 
       # Writing.
       typst
-      asciidoctor
     ]
     ++ [
       # Haskell.
