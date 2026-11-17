@@ -11,6 +11,9 @@
   src = runCommand "ghc-bin-src-${version}" {} ''
     cp -r ${hp.ghc.src}/ghc $out
     chmod -R u+w $out
+    # A command run with shh that fails has printed its own error, so GHCi
+    # doesn't add shh's exception, like a shell.
+    patch -d $out -p1 < ${./ghci-shh-failures.patch}
     substitute $out/ghc-bin.cabal.in $out/ghc-bin.cabal \
       --replace-fail @ProjectVersionMunged@ ${version} \
       --replace-fail @ProjectVersion@ ${version}

@@ -1,0 +1,37 @@
+--- a/GHCi/UI.hs
++++ b/GHCi/UI.hs
+@@ -127,6 +127,7 @@
+ import Data.IORef ( IORef, modifyIORef, newIORef, readIORef, writeIORef )
+ import Data.List ( elemIndices, find, intercalate, intersperse, minimumBy,
+                    isPrefixOf, isSuffixOf, nub, partition, sort, sortBy, (\\) )
++import qualified Data.List
+ import qualified Data.List.NonEmpty as NE
+ import qualified Data.Set as S
+ import Data.Maybe
+@@ -4590,10 +4591,26 @@
+            Nothing                  ->
+                case fromException se of
+                Just UserInterrupt -> putException "Interrupted."
++               _ | Just stderrOutput <- shhFailure se -> mapM_ putException stderrOutput
+                _                  -> putException ("*** Exception: " ++ show se)
+   where
+     putException = hPutStrLn stderr
+ 
++-- | Whether this is shh's exception for a command that exited with an error,
++-- and if so, the command's error output if shh captured it. Otherwise the
++-- command printed its own errors, so there is nothing to add, like in a shell.
++-- Exceptions from evaluated code arrive as an ErrorCall holding their shown
++-- text (see GHCi.Message.SerializableException), so this matches shh's text.
++shhFailure :: SomeException -> Maybe (Maybe String)
++shhFailure se = do
++  ErrorCall s <- fromException se
++  rest <- Data.List.stripPrefix "Command `" s
++  guard (any (isExit . Data.List.stripPrefix "` failed [exit ") (Data.List.tails rest))
++  guard ("] at CallStack (from HasCallStack):" `Data.List.isInfixOf` s)
++  Just (listToMaybe [x | x <- Data.List.tails s, "\n-- stderr --\n" `isPrefixOf` x])
++  where
++    isExit = maybe False (\c -> not (null (takeWhile isDigit c)))
++
+ failIfExprEvalMode :: GhciMonad m => m ()
+ failIfExprEvalMode = do
+   s <- getGHCiState
