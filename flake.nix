@@ -8,7 +8,6 @@
     # see modules/gaming.nix.
     nixpkgs-gpu.url = "github:nixos/nixpkgs/d4f25a3e562008648d45bcf2d70bcc7422cad84e";
 
-
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -264,6 +263,14 @@
     );
 
     checks = eachSystem (system: {formatting = treefmtEval.${system}.config.build.check self;});
+
+    devEnvs = eachSystem (system:
+      lib.mapAttrs (name: paths:
+        pkgsFor.${system}.buildEnv {
+          name = "dev-env-${name}";
+          inherit paths;
+        })
+      (import ./dev-envs.nix pkgsFor.${system}));
 
     # What comma-bg evaluates and builds when it launches a lazy package.
     lazyPackages =

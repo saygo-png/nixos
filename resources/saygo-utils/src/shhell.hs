@@ -69,6 +69,10 @@ defaultInitGhci =
     [ ":seti -XNoOverloadedLists"
     , "import Shh"
     , "import Shhell.Prompt"
+    , -- :use, :dev and :unuse: packages in this shell, see Shhell.Use.
+      ":def use Shhell.Use.use"
+    , ":def dev Shhell.Use.dev"
+    , ":def unuse Shhell.Use.unuse"
     , -- Also loads or unloads the current directory's .envrc, see Shhell.Prompt.
       ":set prompt-function shhellPrompt"
     , ":set prompt-cont \"| \""

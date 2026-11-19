@@ -4,15 +4,18 @@ import Control.Exception (handle)
 import Relude
 import Shh.Prompt (PromptFn, formatPrompt)
 import Shhell.Direnv (direnvPrompt, direnvSync)
+import Shhell.Use (useEnvFix, useEnvPrompt)
 import System.IO (hPutStrLn)
 
 shhellPrompt :: PromptFn
 shhellPrompt modules line = do
   prompt <- handle fallback $ do
     direnvSync
+    useEnvFix
     direnv <- direnvPrompt
+    useEnv <- useEnvPrompt
     formatPrompt
-      (green <> "%u" <> reset <> "@%h " <> green <> "%w" <> uncoloured direnv <> icon <> reset)
+      (green <> "%u" <> reset <> "@%h " <> green <> "%w" <> uncoloured direnv <> uncoloured useEnv <> icon <> reset)
       modules
       line
   -- In a Neovim terminal, tell shhell.nvim where the prompt starts and ends

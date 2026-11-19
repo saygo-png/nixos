@@ -11,8 +11,8 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    base containers directory filepath os-string relude shh shh-extras
-    unix yocto
+    base bytestring containers directory filepath os-string relude shh
+    shh-extras template-haskell unix yocto
   ];
   executableHaskellDepends = [
     base bytestring Cabal cassava containers cryptohash-sha256

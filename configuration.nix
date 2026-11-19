@@ -247,9 +247,6 @@ in {
       # GUI.
       anki # Flashcards
       keepassxc # Password manager
-
-      # Writing.
-      typst
     ]
     ++ [
       # Haskell.
