@@ -14,6 +14,8 @@
     # A command run with shh that fails has printed its own error, so GHCi
     # doesn't add shh's exception, like a shell.
     patch -d $out -p1 < ${./ghci-shh-failures.patch}
+    # :forget takes names defined at the prompt out of scope, for :unuse.
+    patch -d $out -p1 < ${./ghci-forget.patch}
     substitute $out/ghc-bin.cabal.in $out/ghc-bin.cabal \
       --replace-fail @ProjectVersionMunged@ ${version} \
       --replace-fail @ProjectVersion@ ${version}

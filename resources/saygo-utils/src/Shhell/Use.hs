@@ -68,15 +68,16 @@ dev query = do
     fzf :: Proc ()
     fzf = exe ("fzf" :: ByteString) ["--multi", "--delimiter", "\t", "--accept-nth", "1", "--prompt", "dev> ", "--query", toString query]
 
--- | @:unuse@ takes everything @:use@ and @:dev@ added off PATH again. The
--- functions they declared stay, but can't find their programs anymore.
+-- | @:unuse@ takes everything @:use@ and @:dev@ added off PATH again, and
+-- their functions out of scope with :forget, from the patched GHCi.
 unuse :: String -> IO String
 unuse _ = do
   added <- getList ':' pathVar
+  programs <- concat <$> traverse (programsIn . decodeUtf8) added
   modifyPath (filter (`notElem` added))
   unsetEnv pathVar
   unsetEnv namesVar
-  pure ""
+  pure $ ":forget " <> List.unwords (map encodeIdentifier programs)
 
 -- | Puts directories @:use@ added back on PATH if something took them off.
 -- direnv does when it unloads an .envrc that was loaded before them: it

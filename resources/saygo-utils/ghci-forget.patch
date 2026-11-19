@@ -1,0 +1,42 @@
+--- a/GHCi/UI.hs
++++ b/GHCi/UI.hs
+@@ -66,6 +66,8 @@
+ import GHC.Hs
+ import GHC.Driver.Env
+ import GHC.Runtime.Context
++import GHC.Runtime.Eval.Types ( IcGlobalRdrEnv(..) )
++import GHC.Types.Name.Reader ( emptyGlobalRdrEnv )
+ import GHC.Types.TyThing
+ import GHC.Types.TyThing.Ppr
+ import GHC.Core.TyCo.Ppr
+@@ -252,6 +254,7 @@
+   ("trace",     keepGoing traceCmd,             completeExpression),
+   ("unadd",     keepGoingPaths unAddModule,     completeFilename),
+   ("undef",     keepGoing undefineMacro,        completeMacro),
++  ("forget",    keepGoing forgetNames,          completeIdentifier),
+   ("unset",     keepGoing unsetOptions,         completeSetOptions),
+   ("where",     keepGoing whereCmd,             noCompletion),
+   ("instances", keepGoing' instancesCmd,        completeExpression)
+@@ -1840,6 +1843,22 @@
+ 
+ 
+ -----------------------------------------------------------------------------
++-- :forget
++
++-- | Takes these names defined at the prompt out of scope, as if they weren't
++-- defined. Things defined with them keep working.
++forgetNames :: GhciMonad m => String -> m ()
++forgetNames str = do
++  modifySession $ \hsc ->
++    let ic = hsc_IC hsc
++        kept = filter ((`notElem` words str) . getOccString) (ic_tythings ic)
++        prompt_env = icExtendGblRdrEnv True emptyGlobalRdrEnv kept
++    in hsc { hsc_IC = ic { ic_tythings = kept
++                         , ic_gre_cache = (ic_gre_cache ic) { igre_prompt_env = prompt_env } } }
++  -- Rebuilds the scope from the imports and the prompt's names.
++  GHC.setContext =<< GHC.getContext
++
++-----------------------------------------------------------------------------
+ -- :undef
+ 
+ undefineMacro :: GhciMonad m => String -> m ()
