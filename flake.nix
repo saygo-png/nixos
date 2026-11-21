@@ -80,6 +80,17 @@
       };
     };
 
+    saybar = {
+      url = "github:saygo-png/saybar";
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+        niceHaskell.follows = "niceHaskell";
+        hs-bindgen.inputs.flake-parts.follows = "flake-parts";
+      };
+    };
+
     stylix = {
       url = "github:danth/stylix";
       inputs = {

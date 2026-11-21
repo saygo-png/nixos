@@ -67,7 +67,7 @@
       saybar =
         mkNiriService {
           description = "Saybar status bar for Niri";
-          ExecStart = "${conHome}/.local/bin/saybar";
+          ExecStart = lib.getExe inputs.saybar.packages.${system}.saybar;
         }
         // {
           path = [self.packages.${system}.saygo-utils];
