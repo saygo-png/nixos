@@ -55,6 +55,9 @@
   };
 
   home-manager.users.${conUsername} = {
+    stylix.targets = {
+      wayprompt.enable = false; # TODO: remove when stylix updates
+    };
     xdg.configFile."wallpaper.png".source = config.stylix.image;
 
     # This is used for Saywallpaper
