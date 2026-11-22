@@ -44,6 +44,7 @@ in {
 
       "nsxiv"
 
+      "nh.nix"
       "mpv.nix"
       "osu.nix"
       "git.nix"
@@ -184,11 +185,6 @@ in {
     };
 
     dconf.enable = true;
-
-    nh = {
-      enable = true;
-      flake = conFlakePath;
-    };
 
     command-not-found.enable = false;
     nix-index-database.comma.enable = true;

@@ -88,7 +88,11 @@
       # Cache are files that should be persisted, but not backed up
       "/cache" = {
         hideMounts = true;
-        files = lib.unique (["/etc/machine-id"] ++ cfg.root.cache.files);
+        files = lib.unique ([
+            "/etc/machine-id"
+            "/var/lib/logrotate.status"
+          ]
+          ++ cfg.root.cache.files);
         directories = lib.unique (
           [
             "/var/lib/systemd/timers" # Last run of Persistent=true timers
