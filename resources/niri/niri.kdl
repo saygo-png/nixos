@@ -187,6 +187,8 @@ binds {
   XF86AudioLowerVolume allow-when-locked=true { spawn "volume" "down"; }
   XF86AudioMute        allow-when-locked=true { spawn "volume" "mute"; }
   XF86AudioMicMute     allow-when-locked=true { spawn "volume" "mic-mute"; }
+  ISO_Level3_Shift+BracketLeft      allow-when-locked=true { spawn "volume" "down"; }
+  ISO_Level3_Shift+BracketRight     allow-when-locked=true { spawn "volume" "up"; }
 
   XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
   XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
