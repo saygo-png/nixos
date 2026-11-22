@@ -282,11 +282,13 @@ executable pasteimg
 
 -- Built to start fast.
 -- not threaded and without the RTS's timer (-V0), which only matters for longer running programs.
+-- A small allocation area (-A64k) and minimum old generation (-O64k) keep the daemon at ~7 MB while a key is held,
+-- instead of past 20 MB with GHC's defaults of 4 MB and 1 MB. It never has more than ~120 KB live.
 executable volume
   import: common-options, bin
   main-is: src/volume.hs
   x-runtime-inputs: wireplumber
-  ghc-options: -with-rtsopts=-V0
+  ghc-options: "-with-rtsopts=-V0 -A64k -O64k"
   build-depends:
     optparse-applicative,
     process,

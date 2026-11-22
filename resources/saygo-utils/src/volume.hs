@@ -4,8 +4,8 @@ import Bin
 import GHC.Clock (getMonotonicTime)
 import Options.Applicative
 import Relude
-import System.IO (hWaitForInput)
-import System.Process (readProcessWithExitCode)
+import System.IO (hPutStrLn, hWaitForInput)
+import System.Process (proc, readProcessWithExitCode, waitForProcess, withCreateProcess)
 
 main :: IO ()
 main = do
@@ -13,8 +13,11 @@ main = do
   dir <- maybe (die "volume: XDG_RUNTIME_DIR is not set") pure =<< lookupEnv "XDG_RUNTIME_DIR"
   case change of
     Just name -> writeFileText (dir <> "/volume.sock") (name <> "\n")
-    -- A muted device shows as an empty bar.
-    Nothing -> daemon $ \s -> writeFileText (dir <> "/wob.sock") (show (if s.muted then 0 else s.level) <> "\n")
+    -- One handle to wob for every press, as each new one allocates its buffers.
+    Nothing -> withFile (dir <> "/wob.sock") WriteMode $ \wob -> do
+      hSetBuffering wob LineBuffering
+      -- A muted device shows as an empty bar.
+      daemon $ \s -> hPutStrLn wob (show (if s.muted then 0 else s.level))
 
 -- | A device's volume in percent, and whether it's muted.
 data Sink = Sink {level :: Int, muted :: Bool}
@@ -50,11 +53,15 @@ daemon display = do
     sink = "@DEFAULT_AUDIO_SINK@"
     source = "@DEFAULT_AUDIO_SOURCE@"
 
+-- | Without pipes for its output, which allocate buffers on every press.
 wpctl :: [String] -> IO ()
-wpctl args = void (readWpctl args)
+wpctl args = withCreateProcess (proc wpctlPath args) $ \_ _ _ p -> void (waitForProcess p)
 
 readWpctl :: [String] -> IO String
-readWpctl args = (\(_, out, _) -> out) <$> readProcessWithExitCode $(bin "wpctl") args ""
+readWpctl args = (\(_, out, _) -> out) <$> readProcessWithExitCode wpctlPath args ""
+
+wpctlPath :: FilePath
+wpctlPath = $(bin "wpctl")
 
 -- | From wpctl's "Volume: 0.40", with " [MUTED]" after it when muted.
 readDevice :: String -> IO Sink
