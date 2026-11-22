@@ -268,6 +268,7 @@
           "hwinfolist"
           "mynix-clean"
           "mynix-list-packages"
+          "persist"
           "volume"
         ]
         (binary: {

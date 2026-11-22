@@ -294,6 +294,18 @@ executable volume
     process,
     relude,
 
+-- What the next boot deletes, see modules/impermanence.nix.
+executable persist
+  import: common-options
+  main-is: src/persist.hs
+  build-depends:
+    directory,
+    filepath,
+    optparse-applicative,
+    relude,
+    text,
+    unix,
+
 executable hwinfolist
   import: common-options
   main-is: src/hwinfolist.hs
