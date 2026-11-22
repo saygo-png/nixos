@@ -1,0 +1,84 @@
+--- a/src/input/mod.rs
++++ b/src/input/mod.rs
+@@ -374,16 +374,15 @@
+         let time = Event::time_msec(&event);
+         let pressed = event.state() == KeyState::Pressed;
+ 
+-        // Stop bind key repeat on any release. This won't work 100% correctly in cases like:
+-        // 1. Press Mod
+-        // 2. Press Left (repeat starts)
+-        // 3. Press PgDown (new repeat starts)
+-        // 4. Release Left (PgDown repeat stops)
+-        // But it's good enough for now.
+-        // FIXME: handle this properly.
++        // Stop bind key repeat when the repeating key is released. Releasing another key, like
++        // the one whose repeat this one took over, leaves it going. A change of modifiers stops
++        // it in the timer.
+         if !pressed {
+-            if let Some(token) = self.niri.bind_repeat_timer.take() {
+-                self.niri.event_loop.remove(token);
++            if let Some((token, key)) = self.niri.bind_repeat_timer {
++                if key == event.key_code() {
++                    self.niri.bind_repeat_timer = None;
++                    self.niri.event_loop.remove(token);
++                }
+             }
+         }
+ 
+@@ -555,19 +554,23 @@
+ 
+         self.handle_bind(bind.clone());
+ 
+-        self.start_key_repeat(bind);
++        self.start_key_repeat(bind, event.key_code());
+     }
+ 
+-    fn start_key_repeat(&mut self, bind: Bind) {
++    fn start_key_repeat(&mut self, bind: Bind, key: Keycode) {
+         if !bind.repeat {
+             return;
+         }
+ 
+         // Stop the previous key repeat if any.
+-        if let Some(token) = self.niri.bind_repeat_timer.take() {
++        if let Some((token, _)) = self.niri.bind_repeat_timer.take() {
+             self.niri.event_loop.remove(token);
+         }
+ 
++        // The modifiers the bind was pressed with, as the release of one doesn't stop the repeat.
++        let keyboard = self.niri.seat.get_keyboard().unwrap();
++        let modifiers = modifiers_from_state(keyboard.modifier_state());
++
+         let config = self.niri.config.borrow();
+         let config = &config.input.keyboard;
+ 
+@@ -584,12 +587,16 @@
+             .niri
+             .event_loop
+             .insert_source(repeat_timer, move |_, _, state| {
++                if modifiers_from_state(keyboard.modifier_state()) != modifiers {
++                    state.niri.bind_repeat_timer = None;
++                    return TimeoutAction::Drop;
++                }
+                 state.handle_bind(bind.clone());
+                 TimeoutAction::ToDuration(repeat_duration)
+             })
+             .unwrap();
+ 
+-        self.niri.bind_repeat_timer = Some(token);
++        self.niri.bind_repeat_timer = Some((token, key));
+     }
+ 
+     fn hide_cursor_if_needed(&mut self) {
+--- a/src/niri.rs
++++ b/src/niri.rs
+@@ -327,7 +327,8 @@
+     /// Button codes of the mouse buttons to suppress.
+     pub suppressed_buttons: HashSet<u32>,
+     pub bind_cooldown_timers: HashMap<Key, RegistrationToken>,
+-    pub bind_repeat_timer: Option<RegistrationToken>,
++    /// The bind key repeat timer, and the key whose release stops it.
++    pub bind_repeat_timer: Option<(RegistrationToken, Keycode)>,
+     pub keyboard_focus: KeyboardFocus,
+     pub layer_shell_on_demand_focus: Option<LayerSurface>,
+     pub idle_inhibiting_surfaces: HashSet<WlSurface>,

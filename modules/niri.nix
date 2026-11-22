@@ -25,6 +25,8 @@
             (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
             (lib.my.relativeToRoot "resources/niri/float-over-fullscreen.patch")
             (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
+            # Stops a held key repeating only when it is released, not on any release.
+            (lib.my.relativeToRoot "resources/niri/key-repeat.patch")
           ];
         postInstall =
           (old.postInstall or "")
@@ -78,7 +80,6 @@
 
   home-manager.users.${conUsername} = {
     services.polkit-gnome.enable = true;
-    services.swayosd.enable = true;
     xdg.configFile."niri/config.kdl".source = lib.my.relativeToRoot "resources/niri/niri.kdl";
   };
 }

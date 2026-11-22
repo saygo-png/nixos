@@ -42,7 +42,10 @@ common common-options
 -- Bakes in the tools a program runs, the packages in its x-runtime-inputs, see
 -- src/Bin.hs.
 common bin
-  hs-source-dirs: ., src
+  hs-source-dirs:
+    .
+    src
+
   other-modules: Bin
   build-depends:
     directory,
@@ -58,8 +61,8 @@ library
     Shhell.Direnv
     Shhell.Prompt
     Shhell.Use
+
   build-depends:
-    yocto,
     bytestring,
     containers,
     directory,
@@ -70,6 +73,7 @@ library
     shh-extras,
     template-haskell,
     unix,
+    yocto,
 
 executable niri-switch-keyboard
   import: common-options, threaded
@@ -183,11 +187,11 @@ executable convertlink
   import: common-options, threaded
   main-is: src/convertlink.hs
   build-depends:
-    os-string,
     containers,
     directory,
     filepath,
     optparse-applicative,
+    os-string,
     relude,
     unix,
     vector,
@@ -275,6 +279,18 @@ executable pasteimg
     optparse-applicative,
     relude,
     shh,
+
+-- Built to start fast.
+-- not threaded and without the RTS's timer (-V0), which only matters for longer running programs.
+executable volume
+  import: common-options, bin
+  main-is: src/volume.hs
+  x-runtime-inputs: wireplumber
+  ghc-options: -with-rtsopts=-V0
+  build-depends:
+    optparse-applicative,
+    process,
+    relude,
 
 executable hwinfolist
   import: common-options

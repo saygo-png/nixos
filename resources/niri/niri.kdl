@@ -183,10 +183,10 @@ binds {
   Mod+B hotkey-overlay-title="Browser" { spawn "librewolf"; }
   Mod+R hotkey-overlay-title="Recording" { spawn "saygo-record"; }
 
-  XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "+1"; }
-  XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "-1"; }
-  XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
-  XF86AudioMicMute     allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
+  XF86AudioRaiseVolume allow-when-locked=true { spawn "volume" "up"; }
+  XF86AudioLowerVolume allow-when-locked=true { spawn "volume" "down"; }
+  XF86AudioMute        allow-when-locked=true { spawn "volume" "mute"; }
+  XF86AudioMicMute     allow-when-locked=true { spawn "volume" "mic-mute"; }
 
   XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
   XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }

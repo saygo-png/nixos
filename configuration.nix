@@ -47,6 +47,7 @@ in {
       "mpv.nix"
       "osu.nix"
       "git.nix"
+      "wob.nix"
       "rofi.nix"
       "yazi.nix"
       "tmux.nix"

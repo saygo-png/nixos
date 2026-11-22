@@ -265,6 +265,7 @@
           "hwinfolist"
           "mynix-clean"
           "mynix-list-packages"
+          "volume"
         ]
         (binary: {
           type = "app";
