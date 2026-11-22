@@ -16,24 +16,47 @@
   };
 
   nixpkgs.overlays = [
-    (_: prev: {
-      niri = prev.niri.overrideAttrs (old: {
-        doCheck = false; # Cuts build time in half, but now the patch combinator is untested.
-        patches =
-          (old.patches or [])
-          ++ [
-            (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
-            (lib.my.relativeToRoot "resources/niri/float-over-fullscreen.patch")
-            (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
-            # Stops a held key repeating only when it is released, not on any release.
-            (lib.my.relativeToRoot "resources/niri/key-repeat.patch")
-          ];
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            sed -i "2a . /etc/profiles/per-user/${conUsername}/etc/profile.d/hm-session-vars.sh" "$out/bin/niri-session"
+    (final: prev: {
+      niri = let
+        craneLib = inputs.crane.mkLib final;
+        common = {
+          inherit (prev.niri) pname version src buildInputs RUSTFLAGS NIRI_BUILD_COMMIT;
+          CARGO_PROFILE_RELEASE_DEBUG = "0";
+          nativeBuildInputs = [final.pkg-config final.rustPlatform.bindgenHook];
+          # The crates nixpkgs downloaded, from the binary cache. crane's own download fetches smithay's whole git history.
+          cargoVendorDir = final.runCommand "niri-vendor" {} ''
+            mkdir $out
+            substitute ${prev.niri.cargoDeps}/.cargo/config.toml $out/config.toml \
+              --subst-var-by vendor ${prev.niri.cargoDeps}
           '';
-      });
+          cargoExtraArgs = "--locked --no-default-features --features dbus,systemd,xdp-gnome-screencast";
+          doCheck = false;
+          # bindgen's arguments hold the -frandom-seed nixpkgs makes from the output path, and it rebuilds for niri when they change.
+          preBuild = ''
+            export BINDGEN_EXTRA_CLANG_ARGS=$(sed 's/-frandom-seed=[^ ]*//' <<< "$BINDGEN_EXTRA_CLANG_ARGS")
+          '';
+        };
+      in
+        craneLib.buildPackage (common
+          // {
+            cargoArtifacts = craneLib.buildDepsOnly (common // {buildPhaseCargoCommand = "cargoWithProfile build ${common.cargoExtraArgs}";});
+            patches = [
+              (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
+              (lib.my.relativeToRoot "resources/niri/float-over-fullscreen.patch")
+              (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
+              # Stops a held key repeating only when it is released, not on any release.
+              (lib.my.relativeToRoot "resources/niri/key-repeat.patch")
+            ];
+            inherit (prev.niri) outputs postPatch passthru meta;
+            nativeBuildInputs = common.nativeBuildInputs ++ [final.installShellFiles];
+            postInstall =
+              prev.niri.postInstall
+              + ''
+                sed -i "2a . /etc/profiles/per-user/${conUsername}/etc/profile.d/hm-session-vars.sh" "$out/bin/niri-session"
+                # crane does this for cargoVendorDir, which only points to them.
+                removeReferencesToVendoredSources "$out" ${prev.niri.cargoDeps}
+              '';
+          });
     })
   ];
 

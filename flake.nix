@@ -8,6 +8,9 @@
     # see modules/gaming.nix.
     nixpkgs-gpu.url = "github:nixos/nixpkgs/d4f25a3e562008648d45bcf2d70bcc7422cad84e";
 
+    # Used for faster niri builds.
+    crane.url = "github:ipetkov/crane";
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
