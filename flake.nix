@@ -248,34 +248,12 @@
 
     apps = eachSystem (
       system:
-        lib.genAttrs [
-          "clean-nix-paths"
-          "convertlink"
-          "free-space"
-          "githubloc"
-          "niri-switch-keyboard"
-          "owt"
-          "saygo-record"
-          "timezones"
-          "tmux-mem"
-          "shhell"
-          "shhell-bench"
-          "comma-bg"
-          "nr"
-          "snr"
-          "fzfcd"
-          "pasteimg"
-          "hwinfolist"
-          "mynix-clean"
-          "mynix-list-packages"
-          "persist"
-          "volume"
-        ]
-        (binary: {
+        lib.mapAttrs (name: drv: {
           type = "app";
-          program = "${self.packages.${system}.saygo-utils}/bin/${binary}";
+          program = "${drv}/bin/${name}";
           meta.description = "Utility";
         })
+        self.packages.${system}.saygo-utils.programs
     );
 
     checks = eachSystem (system: {formatting = treefmtEval.${system}.config.build.check self;});

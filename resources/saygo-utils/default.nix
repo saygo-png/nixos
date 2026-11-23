@@ -82,10 +82,10 @@
     if builtins.elem main ["src/shhell.hs" "src/ghc-link-cache.hs" "src/shhell-bench.hs"]
     then "shhell"
     else main;
-  programs = pkgs.lib.mapAttrsToList (key: names: let
+  # Each executable's derivation, by name; the ones built together share one.
+  programs = pkgs.lib.concatMapAttrs (key: names: let
     mains = pkgs.lib.unique (map (name: executables.${name}) names);
-  in
-    mkSaygoUtils {
+    drv = mkSaygoUtils {
       src = pkgs.lib.fileset.toSource {
         root = ./.;
         fileset = pkgs.lib.fileset.unions (
@@ -102,18 +102,22 @@
         env.RUNTIME_INPUTS = runtimeInputs;
       };
       developPackageArgs = pkgs.lib.optionalAttrs (builtins.elem "shhell" names) {modifier = shhellEnv;};
-    }) (pkgs.lib.groupBy (name: group executables.${name}) (builtins.attrNames executables));
+    };
+  in
+    pkgs.lib.genAttrs names (_: drv)) (pkgs.lib.groupBy (name: group executables.${name}) (builtins.attrNames executables));
 in
   pkgs.symlinkJoin {
     name = "saygo-utils";
-    paths = programs;
+    paths = pkgs.lib.unique (builtins.attrValues programs);
     nativeBuildInputs = pkgs.lib.optional (lazyPackages != []) pkgs.makeWrapper;
     postBuild = pkgs.lib.optionalString (lazyPackages != []) ''
       wrapProgram $out/bin/comma-bg --set COMMA_BG_LAZY_PACKAGES \
         ${pkgs.writeText "lazy-packages.json" (builtins.toJSON (map lazy lazyPackages))}
     '';
-    # For haskellShell in flake.nix.
     passthru = {
+      # For apps in flake.nix, so running one program builds only that one.
+      inherit programs;
+      # For haskellShell in flake.nix.
       inherit runtimeInputs;
       inherit (mkSaygoUtils {}) env;
     };
