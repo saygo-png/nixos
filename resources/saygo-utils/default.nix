@@ -45,37 +45,76 @@
     overrideCabal.buildTarget = "lib:saygo-utils";
   };
 
-  saygo-utils = mkSaygoUtils {
-    overrideCabal = {
-      env.RUNTIME_INPUTS = runtimeInputs;
-      # For haskellShell in flake.nix.
-      passthru = {inherit runtimeInputs;};
-    };
-    developPackageArgs = {
-      modifier = drv:
-        drv.overrideAttrs (_: let
-          hp = haskellPackages;
-          ghcEnv = hp.ghcWithPackages (p: with p; [shh shh-extras relude template-haskell Glob PyF library]);
-          ghci = pkgs.callPackage ./ghci.nix {
-            inherit hp;
-            env = ghcEnv;
-          };
-        in {
-          SHHELL_GHC_ENV = ghcEnv;
-          SHHELL_GHCI = "${ghci}/bin/ghci";
-        });
-    };
-  };
+  # shhell bakes in its GHC environment and GHCi.
+  shhellEnv = drv:
+    drv.overrideAttrs (_: let
+      hp = haskellPackages;
+      ghcEnv = hp.ghcWithPackages (p: with p; [shh shh-extras relude template-haskell Glob PyF library]);
+      ghci = pkgs.callPackage ./ghci.nix {
+        inherit hp;
+        env = ghcEnv;
+      };
+    in {
+      SHHELL_GHC_ENV = ghcEnv;
+      SHHELL_GHCI = "${ghci}/bin/ghci";
+    });
+
+  # Each executable's main-is, from saygo-utils.cabal.
+  executables = pkgs.lib.pipe ./saygo-utils.cabal [
+    builtins.readFile
+    (pkgs.lib.splitString "\n")
+    (pkgs.lib.foldl' (acc: line: let
+      name = builtins.match "executable (.*)" line;
+      main = builtins.match " *main-is: *(.*)" line;
+    in
+      if name != null
+      then acc // {current = pkgs.lib.head name;}
+      else if main != null && acc ? current
+      then acc // {${acc.current} = pkgs.lib.head main;}
+      else acc) {})
+    (pkgs.lib.filterAttrs (name: _: name != "current"))
+  ];
+
+  # Each program is built on its own, from the cabal file, its own source and
+  # src/Bin.hs, so changing one rebuilds only that one. shhell's helpers are
+  # built with it, since it finds them next to itself.
+  group = main:
+    if builtins.elem main ["src/shhell.hs" "src/ghc-link-cache.hs" "src/shhell-bench.hs"]
+    then "shhell"
+    else main;
+  programs = pkgs.lib.mapAttrsToList (key: names: let
+    mains = pkgs.lib.unique (map (name: executables.${name}) names);
+  in
+    mkSaygoUtils {
+      src = pkgs.lib.fileset.toSource {
+        root = ./.;
+        fileset = pkgs.lib.fileset.unions (
+          [./saygo-utils.cabal ./src/Bin.hs]
+          ++ map (main: ./. + "/${main}") mains
+          # The library, which only shhell-bench uses.
+          ++ pkgs.lib.optional (key == "shhell") ./src/Shhell
+        );
+      };
+      overrideCabal = {
+        pname = "saygo-utils-${pkgs.lib.removeSuffix ".hs" (baseNameOf key)}";
+        isLibrary = false;
+        buildTarget = toString (map (name: "exe:${name}") names);
+        env.RUNTIME_INPUTS = runtimeInputs;
+      };
+      developPackageArgs = pkgs.lib.optionalAttrs (builtins.elem "shhell" names) {modifier = shhellEnv;};
+    }) (pkgs.lib.groupBy (name: group executables.${name}) (builtins.attrNames executables));
 in
-  if lazyPackages == []
-  then saygo-utils
-  else
-    pkgs.symlinkJoin {
-      inherit (saygo-utils) name;
-      paths = [saygo-utils];
-      nativeBuildInputs = [pkgs.makeWrapper];
-      postBuild = ''
-        wrapProgram $out/bin/comma-bg --set COMMA_BG_LAZY_PACKAGES \
-          ${pkgs.writeText "lazy-packages.json" (builtins.toJSON (map lazy lazyPackages))}
-      '';
-    }
+  pkgs.symlinkJoin {
+    name = "saygo-utils";
+    paths = programs;
+    nativeBuildInputs = pkgs.lib.optional (lazyPackages != []) pkgs.makeWrapper;
+    postBuild = pkgs.lib.optionalString (lazyPackages != []) ''
+      wrapProgram $out/bin/comma-bg --set COMMA_BG_LAZY_PACKAGES \
+        ${pkgs.writeText "lazy-packages.json" (builtins.toJSON (map lazy lazyPackages))}
+    '';
+    # For haskellShell in flake.nix.
+    passthru = {
+      inherit runtimeInputs;
+      inherit (mkSaygoUtils {}) env;
+    };
+  }
