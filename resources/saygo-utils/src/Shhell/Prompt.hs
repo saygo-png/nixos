@@ -25,16 +25,22 @@ shhellPrompt modules line = do
     Nothing -> pure prompt
     Just _ -> do
       dir <- concatMap (\c -> if c == '%' then "%25" else [c]) . fromMaybe "" <$> lookupEnv "PWD"
-      pure ("\ESC]7;file://" <> dir <> "\a\ESC]133;A\a" <> prompt <> "\ESC]133;B\a")
+      pure (invisible ("\ESC]7;file://" <> dir <> "\a") <> invisible "\ESC]133;A\a" <> prompt <> invisible "\ESC]133;B\a")
   where
     green, reset, icon :: String
-    green = "\ESC[0;32m"
-    reset = "\ESC[0m"
+    green = invisible "\ESC[0;32m"
+    reset = invisible "\ESC[0m"
     icon = " \xeda7 "
     -- Shown in the normal colour, in the middle of the green part.
     uncoloured :: String -> String
     uncoloured "" = ""
     uncoloured s = reset <> s <> green
+
+    -- Marks an escape sequence for haskeline, which otherwise counts it as
+    -- text and gets the line's length wrong, so editing a line that wraps
+    -- goes astray.
+    invisible :: String -> String
+    invisible s = "\SOH" <> s <> "\STX"
 
     -- Catches everything, Ctrl-C included, so you can interrupt a slow .envrc.
     fallback (e :: SomeException) = do
