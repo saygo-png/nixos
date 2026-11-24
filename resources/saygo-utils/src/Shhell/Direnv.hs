@@ -54,7 +54,10 @@ direnvSync = do
 
 -- | A prompt element showing whether direnv has an .envrc loaded here.
 direnvPrompt :: IO String
-direnvPrompt = do
+direnvPrompt = Env.getEnv [pstr|DIRENV_FILE|] >>= maybe (pure "") (const direnvStatus)
+
+direnvStatus :: IO String
+direnvStatus = do
   statusJson <- runDirenv ["status", "--json"]
 
   let
