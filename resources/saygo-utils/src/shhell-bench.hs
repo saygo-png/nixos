@@ -119,6 +119,7 @@ launch sb cacheDir dir = do
     for_ [stdInput, stdOutput, stdError] (dupTo tty)
     when (tty > stdError) (closeFd tty)
     changeWorkingDirectory (getOsString dir)
+    Env.setEnv [pstr|PWD|] (getOsString dir) True
     executeFile (getOsString sb.program) False [] Nothing
   closeFd slave
   s <- Session m p <$> newIORef mempty
