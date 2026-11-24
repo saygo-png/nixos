@@ -63,8 +63,6 @@ library
     Shhell.Use
 
   build-depends:
-    Glob,
-    PyF,
     bytestring,
     containers,
     directory,

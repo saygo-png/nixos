@@ -45,7 +45,9 @@ in {
     haskellPackages,
     shellPackages,
   }: let
-    ghcEnv = shellPackages.ghcWithPackages (_: [
+    ghcEnv = shellPackages.ghcWithPackages (p: [
+      p.Glob
+      p.PyF
       (mkPackage shellPackages {
         src = source [./src/Shhell];
         overrideCabal = {
