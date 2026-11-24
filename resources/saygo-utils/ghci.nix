@@ -1,7 +1,7 @@
 # GHCi with haskeline 0.8.4.1
 {
   lib,
-  makeWrapper,
+  makeBinaryWrapper,
   runCommand,
   hp,
   env ? hp.ghc,
@@ -53,8 +53,8 @@
 in
   # What the stock ghci does: the executable in interactive mode, pointed at
   # env's packages.
-  runCommand "ghci-${version}" {nativeBuildInputs = [makeWrapper];} ''
-    makeWrapper ${ghc-bin}/bin/ghc $out/bin/ghci \
+  runCommand "ghci-${version}" {nativeBuildInputs = [makeBinaryWrapper];} ''
+    makeBinaryWrapper ${ghc-bin}/bin/ghc $out/bin/ghci \
       --set NIX_GHC ${env}/bin/ghc \
       --set NIX_GHCPKG ${env}/bin/ghc-pkg \
       --set NIX_GHC_LIBDIR ${libdir} \
