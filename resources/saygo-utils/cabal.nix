@@ -1,8 +1,8 @@
 { mkDerivation, base, bytestring, Cabal, cassava, containers
-, cryptohash-sha256, directory, file-io, filepath, granite, lib
-, microaeson, optparse-applicative, os-string, process, relude, shh
-, shh-extras, tasty, tasty-bench, template-haskell, text, time, tz
-, unix, vector, yocto
+, cryptohash-sha256, directory, file-io, filepath, Glob, granite
+, lib, microaeson, optparse-applicative, os-string, process, PyF
+, relude, shh, shh-extras, tasty, tasty-bench, template-haskell
+, text, time, tz, unix, vector, yocto
 }:
 mkDerivation {
   pname = "saygo-utils";
@@ -11,8 +11,8 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    base bytestring containers directory filepath os-string relude shh
-    shh-extras template-haskell unix yocto
+    base bytestring containers directory filepath Glob os-string PyF
+    relude shh shh-extras template-haskell unix yocto
   ];
   executableHaskellDepends = [
     base bytestring Cabal cassava containers cryptohash-sha256
