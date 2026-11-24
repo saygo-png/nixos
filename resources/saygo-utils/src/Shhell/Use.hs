@@ -15,13 +15,14 @@
 -- in USE_ENV_PATH and USE_ENV_NAMES. The named environments are in the JSON
 -- file in SHHELL_DEV_ENVS, which shhell.nix sets.
 --
--- Each program they add gets a function, like the ones Shell.hs makes with
--- loadEnv, so @:use hello@ lets you run @hello@. Only the programs in the
--- directories just added are declared, so Shell.hs isn't touched. A name
--- that's already taken, like Prelude's zip, keeps its meaning; run that
--- program with @exe "zip"@. They're GHCi commands because only GHCi can add
--- names to the session: each returns GHCi input that declares them.
-module Shhell.Use (use, dev, unuse, declarePrograms, useEnvFix, useEnvPrompt) where
+-- Each program they add gets a function, like the ones shhell writes to
+-- Programs.hs for the programs on PATH, so @:use hello@ lets you run @hello@.
+-- Only the programs in the directories just added are declared, so Programs.hs
+-- isn't touched. A name that's already taken, like Prelude's zip, keeps its
+-- meaning; run that program with @exe "zip"@. They're GHCi commands because
+-- only GHCi can add names to the session: each returns GHCi input that
+-- declares them.
+module Shhell.Use (use, dev, unuse, declarePrograms, programCmd, useEnvFix, useEnvPrompt) where
 
 import Data.ByteString.Char8 qualified as BC
 import Data.List qualified as List
@@ -29,7 +30,7 @@ import Data.Map.Strict qualified as Map
 import Language.Haskell.TH (Exp, Q, appE, lookupValueName, nameModule, runIO)
 import Language.Haskell.TH.Syntax qualified as TH
 import Relude
-import Shh (Proc, captureLines, encodeIdentifier, exe, tryFailure, writeOutput, (|>))
+import Shh (Cmd, Proc, captureLines, encodeIdentifier, exe, tryFailure, writeOutput, (|>))
 import System.Directory (doesDirectoryExist, executable, getPermissions, listDirectory)
 import System.FilePath ((</>))
 import System.IO (hPutStrLn)
@@ -157,24 +158,27 @@ declare programs noted =
 -- | For a splice in GHCi's session: an @IO String@ of GHCi input that gives
 -- each program a function named like 'Shh.loadEnv' names them, unless that
 -- name is already taken. The programs in the second list get a note when their
--- name is taken by something else than Shell.hs or GHCi's session, where
--- programs are declared.
+-- name is taken by something else than Shell.hs, Programs.hs or GHCi's
+-- session, where programs are declared.
 declarePrograms :: [String] -> [String] -> Q Exp
 declarePrograms programs noted = do
   checked <- forM programs $ \program -> do
     let name = encodeIdentifier program
     (program,name,) <$> lookupValueName name
   let free = [(program, name) | (program, name, Nothing) <- checked]
-      taken = [(program, from) | (program, _, Just existing) <- checked, program `elem` noted, Just from <- [nameModule existing], from /= "Shell", not ("Ghci" `isPrefixOf` from)]
+      taken = [(program, from) | (program, _, Just existing) <- checked, program `elem` noted, Just from <- [nameModule existing], from `notElem` ["Shell", "Programs"], not ("Ghci" `isPrefixOf` from)]
   for_ taken $ \(program, from) ->
     runIO . hPutStrLn stderr $ "use: " <> program <> " is taken by " <> from <> ", run it with exe " <> show program
   let declarations =
         concat
-          [ [name <> " :: Shh.Cmd", name <> " = GHC.Stack.withFrozenCallStack (Shh.exe " <> show program <> ")"]
+          [ [name <> " :: Shh.Cmd", name <> " = Shhell.Use.programCmd " <> show program]
           | (program, name) <- free
           ]
       input = if null declarations then "" else List.unlines (":{" : declarations <> [":}"])
   [|pure|] `appE` TH.lift input
+
+programCmd :: String -> Cmd
+programCmd program = withFrozenCallStack (exe program)
 
 -- | The named environments from dev-envs.nix: the installable to build for each
 -- one, and the names of its packages.

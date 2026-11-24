@@ -113,6 +113,7 @@ executable shhell
     filepath,
     os-string,
     relude,
+    shh,
     template-haskell,
     unix,
 

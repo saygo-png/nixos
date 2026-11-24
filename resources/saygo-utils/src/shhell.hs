@@ -22,13 +22,13 @@ import Data.List (partition)
 import Language.Haskell.TH.Syntax qualified as TH
 import Relude
 import Relude.Unsafe (fromJust)
+import Shh (encodeIdentifier, pathBins)
 import System.Directory.OsPath (
   XdgDirectory (XdgCache, XdgConfig),
   createDirectoryIfMissing,
   doesFileExist,
   findExecutable,
   getXdgDirectory,
-  removeFile,
  )
 import System.Environment (getExecutablePath)
 import System.File.OsPath qualified as File
@@ -58,11 +58,20 @@ ghciExe = unsafeEncodeUtf $ fromJust $(TH.lift =<< TH.runIO (lookupEnv "SHHELL_G
 defaultShell :: Text
 defaultShell =
   unlines
-    [ "{-# LANGUAGE TemplateHaskell #-}"
-    , "module Shell where"
+    [ "module Shell (module Shell, module Programs) where"
     , "import Shh"
-    , "$(loadEnv SearchPath)"
+    , "import Programs"
     ]
+
+programsModule :: [String] -> Text
+programsModule programs =
+  unlines
+    $ ["module Programs where", "import Prelude ()", "import qualified Shh", "import qualified Shhell.Use"]
+    <> concat
+      [ [name <> " :: Shh.Cmd", name <> " = Shhell.Use.programCmd " <> show program]
+      | program <- programs
+      , let name = toText (encodeIdentifier program)
+      ]
 
 defaultInitGhci :: Text
 defaultInitGhci =
@@ -134,6 +143,7 @@ main = do
     initGhci = cfgDir </> [osp|init.ghci|]
     shellHs = cfgDir </> [osp|Shell.hs|]
     hieYaml = cfgDir </> [osp|hie.yaml|]
+    programsHs = cfgDir </> [osp|Programs.hs|]
     display = fmap toText . decodeFS
 
   when optDebug
@@ -151,11 +161,6 @@ main = do
   writeIfMissing shellHs defaultShell
   writeIfMissing hieYaml defaultHieYaml
 
-  when (optMode == Rebuild)
-    . for_ [[osp|Shell.o|], [osp|Shell.hi|]]
-    $ liftA2 whenM doesFileExist removeFile
-    . (cacheDir </>)
-
   -- Programs started from GHCi, like the editor and its language server on :e,
   -- inherit this PATH and so find the GHC that has shh and friends installed.
   path <-
@@ -163,6 +168,9 @@ main = do
       Just x -> pure $ [pstr|:|] <> x
       Nothing -> pure mempty
   Env.setEnv [pstr|PATH|] (getOsString ghcBin <> path) True
+
+  writePrograms <- if optMode == Rebuild then pure True else not <$> doesFileExist programsHs
+  when writePrograms $ File.writeFile' programsHs . encodeUtf8 . programsModule =<< pathBins
 
   -- Before running a program, shh's process library closes every file
   -- descriptor up to the soft limit on open files, one at a time. nix run and
@@ -193,7 +201,7 @@ main = do
     -- runs, instead of stopping it to copy all of it. Given as arguments, since
     -- every program started from the shell would inherit GHCRTS.
     rtsArgs = [[pstr|+RTS|], [pstr|-xn|], [pstr|-RTS|]]
-    fileArgs = [[pstr|-outputdir|], getOsString cacheDir, [pstr|-ghci-script|], getOsString initGhci, getOsString shellHs]
+    fileArgs = [[pstr|-outputdir|], getOsString cacheDir, [pstr|-ghci-script|], getOsString initGhci, getOsString shellHs, getOsString programsHs]
     linkArgs = foldMap (\l -> [[pstr|-pgml|], getOsString l, [pstr|-pgml-supports-no-pie|]]) linkCache
     quiet = [[pstr|-v0|] | not optDebug]
 
