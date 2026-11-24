@@ -68,8 +68,9 @@ import System.Process (readProcess)
 -- time. @-pgml@ replaces the program and drops these options, so they are
 -- added back here.
 realLinker :: (PosixString, [PosixString])
-realLinker =
-  bimap fromBytestring (map fromBytestring)
+fileNames :: [(PosixString, PosixString)]
+(realLinker, fileNames) =
+  bimap (bimap fromBytestring (map fromBytestring)) (map (bimap fromBytestring fromBytestring))
     $ $( do
            env <- TH.runIO (lookupEnv "SHHELL_GHC_ENV") >>= maybe (fail "SHHELL_GHC_ENV is not set") pure
            info <- TH.runIO (readProcess (env <> "/bin/ghc") ["--info"] "")
@@ -79,7 +80,10 @@ realLinker =
            cc <- field "C compiler command"
            ccFlags <- field "C compiler flags"
            linkFlags <- field "C compiler link flags"
-           TH.lift (bytes cc, map bytes (L.words ccFlags <> L.words linkFlags))
+           let flags = L.words ccFlags <> L.words linkFlags
+           answers <- forM ["libc.so", "libm.so"] $ \name ->
+             (name,) . L.takeWhile (/= '\n') <$> TH.runIO (readProcess cc (flags <> ["--print-file-name", name]) "")
+           TH.lift ((bytes cc, map bytes flags), map (bimap bytes bytes) answers)
        )
 
 -- | Run the real linker and wait for it.
@@ -194,6 +198,11 @@ prune dir = do
 main :: IO ()
 main = do
   raw <- Env.getArgs
+  case raw of
+    [_, flag, name] | flag == [pstr|--print-file-name|], Just answer <- L.lookup name fileNames -> do
+      BS8.putStrLn (fromShort (getPosixString answer))
+      exitSuccess
+    _ -> pass
   -- If anything about caching goes wrong, just link. The C compiler reads
   -- response files itself, so the original arguments are passed on.
   exitWith =<< (cachedLink raw `catch` \(_ :: IOException) -> execLinker raw)
