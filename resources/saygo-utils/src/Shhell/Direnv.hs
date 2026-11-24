@@ -8,8 +8,8 @@ import Data.ByteString.Lazy qualified as LBS
 import Data.Map.Strict qualified as Map
 import Relude
 import Shh (capture, exe, ignoreFailure, (|>))
-import System.Directory.OsPath (withCurrentDirectory)
-import System.OsPath (osp)
+import System.Directory.OsPath (doesFileExist, makeAbsolute, withCurrentDirectory)
+import System.OsPath (OsPath, osp, takeDirectory, (</>))
 import System.OsString.Internal.Types (OsString (OsString))
 import System.OsString.Posix (pstr)
 import System.OsString.Posix qualified as PSX
@@ -22,7 +22,7 @@ runDirenv :: [ByteString] -> IO (Maybe JSON.Value)
 runDirenv args = do
   -- GHCi runs the prompt in the directory it started in, not the one you cd'd
   -- to. shh's cd keeps $PWD up to date, so direnv runs there.
-  dir <- Env.getEnv [pstr|PWD|] <&> maybe [osp|.|] coerce
+  dir <- currentDir
 
   -- direnv exits with an error when, e.g., an .envrc is blocked, but its output
   -- still has to be applied: leaving a loaded directory for a blocked one
@@ -35,9 +35,20 @@ runDirenv args = do
     then pure Nothing
     else Just <$> evaluateWHNF (JSON.decode $ decodeUtf8 output)
 
+currentDir :: IO OsPath
+currentDir = Env.getEnv [pstr|PWD|] <&> maybe [osp|.|] coerce
+
+direnvNeeded :: IO Bool
+direnvNeeded = do
+  dir <- makeAbsolute =<< currentDir
+  fmap isJust (Env.getEnv [pstr|DIRENV_FILE|])
+    ||^ anyM doesFileExist [d </> name | d <- ancestors dir, name <- [[osp|.envrc|], [osp|.env|]]]
+  where
+    ancestors d = d : let parent = takeDirectory d in if parent == d then [] else ancestors parent
+
 -- | Applies the environment changes direnv wants here.
 direnvSync :: IO ()
-direnvSync = do
+direnvSync = whenM direnvNeeded $ do
   direnvJson <- runDirenv ["export", "json"]
 
   -- Encode everything before setting anything, so a bad value can't leave the
