@@ -102,7 +102,6 @@ executable owt
     cassava,
     directory,
     filepath,
-    optparse-applicative,
     relude,
     time,
 
@@ -169,13 +168,7 @@ executable free-space
   import: common-options, threaded
   main-is: src/free-space.hs
   build-depends:
-    Cabal,
-    directory,
-    filepath,
-    optparse-applicative,
     relude,
-    shh,
-    unix,
     vector,
 
 executable tmux-mem
@@ -183,13 +176,11 @@ executable tmux-mem
   main-is: src/tmux-mem.hs
   build-depends:
     bytestring,
-    relude,
 
 executable convertlink
   import: common-options, threaded
   main-is: src/convertlink.hs
   build-depends:
-    containers,
     directory,
     filepath,
     optparse-applicative,

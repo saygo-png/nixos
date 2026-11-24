@@ -1,4 +1,4 @@
-{ mkDerivation, base, bytestring, Cabal, cassava, containers
+{ mkDerivation, base, bytestring, cassava, containers
 , cryptohash-sha256, directory, file-io, filepath, Glob, granite
 , lib, microaeson, optparse-applicative, os-string, process, PyF
 , relude, shh, shh-extras, tasty, tasty-bench, template-haskell
@@ -15,10 +15,10 @@ mkDerivation {
     relude shh shh-extras template-haskell unix yocto
   ];
   executableHaskellDepends = [
-    base bytestring Cabal cassava containers cryptohash-sha256
-    directory file-io filepath granite microaeson optparse-applicative
-    os-string process relude shh tasty tasty-bench template-haskell
-    text time tz unix vector yocto
+    base bytestring cassava containers cryptohash-sha256 directory
+    file-io filepath granite microaeson optparse-applicative os-string
+    process relude shh tasty tasty-bench template-haskell text time tz
+    unix vector yocto
   ];
   license = "unknown";
 }
