@@ -248,11 +248,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795447709,
-        "narHash": "sha256-Zl0LQ82KajwvAFZRV72360jaQIF0M6ojZ0O4lHBhVus=",
+        "lastModified": 1795563008,
+        "narHash": "sha256-xO2mf4l8n/GPqrCfeZAYrPBAhbNuSRqGEv0wdAl1BhI=",
         "owner": "saygo-png",
         "repo": "neovim-config",
-        "rev": "a2121d016ce32da83837fa5d32fd6039d755f5d0",
+        "rev": "17132cbf0092cce44d41169c517860c8e2e33120",
         "type": "github"
       },
       "original": {
@@ -314,11 +314,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795505195,
-        "narHash": "sha256-HoBMYHQYxai9NTe3ED6MrZwo2S56ocxgMwTgwmybjJM=",
+        "lastModified": 1795549782,
+        "narHash": "sha256-0mlYwyAv7lUDD6HBgPMqBXjMcIfIZBsLryNnkspeIGs=",
         "owner": "nixos",
         "repo": "nixos-hardware",
-        "rev": "ff49dbf39553717ac8e0f4d5085fa0ca10c1031f",
+        "rev": "97a30ee0974b815496bec7b136af6b945bd65aef",
         "type": "github"
       },
       "original": {
