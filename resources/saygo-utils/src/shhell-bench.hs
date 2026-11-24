@@ -61,7 +61,8 @@ cache = (</> [osp|cache|]) . (.root)
 -- environment, which everything it starts inherits, at it.
 sandbox :: IO Sandbox
 sandbox = do
-  program <- (</> [osp|shhell|]) . takeDirectory <$> (encodeFS =<< getExecutablePath)
+  nextToBench <- (</> [osp|shhell|]) . takeDirectory <$> (encodeFS =<< getExecutablePath)
+  program <- ifM (doesFileExist nextToBench) (pure nextToBench) (fromMaybe nextToBench <$> findExecutable [osp|shhell|])
   userEnvrcDir <- traverse (makeAbsolute . OsString) =<< Env.getEnv [pstr|SHHELL_BENCH_DIRENV_DIR|]
   config <- getXdgDirectory XdgConfig mempty
   whenNothingM_ (findExecutable [osp|direnv|]) $ throwIO (userError "direnv is not on PATH")

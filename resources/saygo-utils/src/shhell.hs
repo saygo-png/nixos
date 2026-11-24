@@ -26,6 +26,7 @@ import System.Directory.OsPath (
   XdgDirectory (XdgCache, XdgConfig),
   createDirectoryIfMissing,
   doesFileExist,
+  findExecutable,
   getXdgDirectory,
   removeFile,
  )
@@ -180,7 +181,8 @@ main = do
   -- ghc-link-cache, installed next to this program, stands in for the linker
   -- and keeps those libraries. -pgml turns off -no-pie for executables
   -- (GHC #15319), but ghc-link-cache runs GHC's own C compiler, which supports it.
-  linkCache <- (</> [osp|ghc-link-cache|]) . takeDirectory <$> (encodeFS =<< getExecutablePath)
+  nextToShhell <- (</> [osp|ghc-link-cache|]) . takeDirectory <$> (encodeFS =<< getExecutablePath)
+  linkCache <- ifM (doesFileExist nextToShhell) (pure (Just nextToShhell)) (findExecutable [osp|ghc-link-cache|])
 
   -- executeFile replaces this process without flushing its handles.
   hFlush stdout
@@ -192,7 +194,7 @@ main = do
     -- every program started from the shell would inherit GHCRTS.
     rtsArgs = [[pstr|+RTS|], [pstr|-xn|], [pstr|-RTS|]]
     fileArgs = [[pstr|-outputdir|], getOsString cacheDir, [pstr|-ghci-script|], getOsString initGhci, getOsString shellHs]
-    linkArgs = [[pstr|-pgml|], getOsString linkCache, [pstr|-pgml-supports-no-pie|]]
+    linkArgs = foldMap (\l -> [[pstr|-pgml|], getOsString l, [pstr|-pgml-supports-no-pie|]]) linkCache
     quiet = [[pstr|-v0|] | not optDebug]
 
   executeFile (getOsString ghciExe) False (rtsArgs <> [[pstr|-fobject-code|]] <> fileArgs <> linkArgs <> quiet) Nothing

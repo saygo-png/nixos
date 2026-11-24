@@ -31,6 +31,11 @@
       flake = false;
     };
 
+    process = {
+      url = "github:saygo-png/process/sayfork";
+      flake = false;
+    };
+
     niceHaskell = {
       url = "github:saygo-png/nice-nixpkgs-haskell";
       inputs = {
@@ -220,6 +225,7 @@
           pkgsFor.${system}.callPackage ./resources/saygo-utils
           {
             niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
+            processSrc = inputs.process;
           };
         # GHCi that reads the XDG haskeline config, see resources/saygo-utils/ghci.nix.
         ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/ghci.nix {
@@ -236,7 +242,7 @@
       in {
         haskellShell = pkgs.mkShell {
           inputsFrom = [self.packages.${system}.saygo-utils.env];
-          env.RUNTIME_INPUTS = self.packages.${system}.saygo-utils.runtimeInputs;
+          env = {RUNTIME_INPUTS = self.packages.${system}.saygo-utils.runtimeInputs;} // self.packages.${system}.saygo-utils.shellEnv;
           buildInputs = [pkgs.zlib];
           packages = [
             hPkgs.cabal-install
