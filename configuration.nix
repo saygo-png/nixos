@@ -52,7 +52,6 @@ in {
       "yazi.nix"
       "tmux.nix"
       "fish.nix"
-      "qcalc.nix"
       "kasts.nix"
       "krita.nix"
       "nixSearch.nix"
