@@ -5,7 +5,6 @@
   config,
   inputs,
   conUsername,
-  conFlakePath,
   ...
 }: let
   audioPluginPaths = f:
@@ -463,7 +462,10 @@ in {
         };
       };
 
-      programs.direnv.enable = true;
+      programs.direnv = {
+        enable = true;
+        config.global.hide_env_diff = true;
+      };
 
       programs.fastfetch = {
         enable = true;
