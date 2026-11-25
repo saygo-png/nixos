@@ -1,0 +1,1 @@
+my nixos config
