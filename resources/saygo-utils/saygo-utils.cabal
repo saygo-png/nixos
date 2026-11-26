@@ -291,9 +291,11 @@ executable persist
   import: common-options
   main-is: src/persist.hs
   build-depends:
+    containers,
     directory,
     filepath,
     optparse-applicative,
+    process,
     relude,
     text,
     unix,
