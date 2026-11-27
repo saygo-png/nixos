@@ -86,6 +86,7 @@ in {
   };
 
   boot.loader.limine.enable = true;
+  boot.loader.timeout = 1;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Enable sysrq fully

@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   conUsername,
   ...
 }: {
@@ -31,6 +32,12 @@
 
   # autologin
   services.getty.autologinUser = conUsername;
+
+  environment.loginShellInit = lib.mkIf config.programs.niri.enable ''
+    if [ "$(tty)" = /dev/tty1 ] && mkdir /tmp/niri-autostarted 2>/dev/null; then
+      exec niri-session
+    fi
+  '';
 
   services.borgmatic = {
     enable = true;
