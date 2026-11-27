@@ -1,0 +1,62 @@
+== My NixOS config
+
+Medium complexity. I try to keep things simple without compromises on features.
+
+I'd say it's quite well optimized in terms of ram, cpu and disk usage.
+The config closure is around 20GB. At runtime it uses lightweight software like Niri, Saybar, Saywallpaper, Alacritty, Wob, Neovim and others.
+
+Things that are used rarely are fetched at runtime via lazy packages and devshells or various other tools (such as `:use` in Shhell, `nr`, `snr`, `comma` and `comma-bg`).
+
+I try to minimize shellscripts favouring Haskell instead, which can be seen in `saygo-utils`
+
+=== Structure
+
+flake::
+    configuration.nix:::
+      Core config file that contains settings not deserving of their own module.
+      It also imports all the other modules.
+
+    install.bash:::
+      Tiny Bash script for installing the config.
+
+    hosts/:::
+      Host specific configurations go here.
+
+      disko-config.nix::::
+       Lib for creating the disko disk layout for hosts.
+
+      install.nix::::
+       I create minimal "install" versions of hosts which are meant to be scaffolds for full installs.
+       When in the live ISO I install the host "install" version first on the disk. Then I boot into it and switch to the full config.
+       That is done to avoid OOM issues with the live ISO and to make the install quick.
+       Shared part of the install config for hosts.
+
+       */::::
+         Host specific configurations.
+
+    modules/:::
+      Nix modules for the config.
+
+      lib.nix::::
+        Library module with helpers for the rest of the config.
+
+    resources/:::
+      Miscellaneous files that don't fit anywhere else.
+
+    saygo-utils/:::
+      Collection of utilities written in Haskell for the config.
+      These are exposed as flake outputs in case someone wants to try them.
+
+    nix-meta/:::
+      Nix configuration for the Nix config.
+
+=== After install
+
+Some annoying things which I can't quite get to be declarative or don't want to:
+
+- Change Carlas engine to jack, continuous rack.
+- Change Librewolf theme to gruvbox.
+- Install Anki addons.
+- Copy over Krita settings from my backup.
+- Install Steam games and retype their launch options.
+- Create a hashed password file.

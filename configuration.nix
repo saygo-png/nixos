@@ -28,7 +28,6 @@ in {
       "terminal.nix"
       "constants.nix"
 
-
       "gaming.nix"
       "lazyPackages.nix"
       "zathura.nix"
@@ -376,10 +375,10 @@ in {
             summary = "*";
             script = let
               ffplay = lib.getExe' pkgs.ffmpeg "ffplay";
-              unsafe-soundFile = "${inputs.extras-nixos}/notifs/male-look-at-me.mp3";
+              soundFile = lib.my.relativeToRoot "resources/male-look-at-me.mp3";
               alert = pkgs.writeScriptBin "alert.dash" ''
                 #!${lib.getExe pkgs.dash}
-                ${ffplay} -v 0 -nodisp -autoexit ${lib.my.getSafePath unsafe-soundFile}
+                ${ffplay} -v 0 -nodisp -autoexit ${soundFile}
               '';
             in
               lib.getExe alert;

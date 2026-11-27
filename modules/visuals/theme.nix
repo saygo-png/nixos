@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  inputs,
   conUsername,
   ...
 }: {
@@ -51,7 +50,7 @@
   # Stylix {{{
   stylix = {
     polarity = "dark";
-    image = "${inputs.extras-nixos}/wallpaper.png";
+    image = lib.my.relativeToRoot "resources/wallpaper.png";
     base16Scheme = {
       base00 = "282828"; # #282828 dark  ----
       base01 = "3c3836"; # #3c3836 dark  ---
@@ -74,7 +73,7 @@
 
   stylix.fonts = let
     courier-patched = pkgs.courier-prime.overrideAttrs {
-      src = "${inputs.extras-nixos}/courier-prime-no-ligatures";
+      src = lib.my.relativeToRoot "resources/courier-prime-no-ligatures";
       installPhase = ''
         runHook preInstall
 

@@ -37,6 +37,8 @@
       text = ''
         if [[ -f repl.nix ]]; then
           nix repl --arg host '"${conHost}"' --file ./repl.nix "$@"
+        elif [[ -f ./nix-meta/repl.nix ]]; then
+          nix repl --arg host '"${conHost}"' --file ./nix-meta/repl.nix "$@"
         elif [[ -f ./flake.nix ]]; then
           nix repl .
         else

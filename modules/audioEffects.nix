@@ -63,7 +63,7 @@ in {
   };
 
   services.pipewire.wireplumber.extraScripts = {
-    "autoconnect.lua" = builtins.readFile (lib.my.relativeToRoot "resources/wireplumber/autoconnect.lua");
+    "autoconnect.lua" = builtins.readFile (lib.my.relativeToRoot "resources/wireplumber-autoconnect.lua");
   };
 
   custom.persist.home.directories = [".config/falkTX"];

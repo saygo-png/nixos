@@ -27,7 +27,7 @@
     };
 
     systems = {
-      url = "path:./systems.nix";
+      url = "path:./nix-meta/systems.nix";
       flake = false;
     };
 
@@ -119,11 +119,6 @@
       };
     };
 
-    extras-nixos = {
-      url = "github:saygo-png/extrasNixos";
-      flake = false;
-    };
-
     zlequalizer = {
       url = "github:saygo-png/ZLEqualizer-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -163,10 +158,14 @@
     pkgsFor = nixpkgs.legacyPackages;
 
     # pkgs-frozen = eachSystem (system: import inputs.nixpkgs-unstable-frozen {inherit system;});
-    treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./treefmt.nix);
+    treefmtEval = eachSystem (system: inputs.treefmt-nix.lib.evalModule pkgsFor.${system} ./nix-meta/treefmt.nix);
+
+    devEnvs = pkgs: {
+      typst = [pkgs.typst pkgs.tinymist];
+    };
 
     commonSpecialArgs = system: {
-      inherit inputs self system;
+      inherit inputs self system devEnvs;
       # pkgs-frozen = pkgs-frozen.${system};
       lib = lib.extend (final: _: {my = import ./modules/lib.nix {lib = final;};});
     };
@@ -222,13 +221,13 @@
     packages = eachSystem (
       system: {
         saygo-utils =
-          pkgsFor.${system}.callPackage ./resources/saygo-utils
+          pkgsFor.${system}.callPackage ./saygo-utils
           {
             niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
             processSrc = inputs.process;
           };
         # GHCi that reads the XDG haskeline config, see resources/saygo-utils/src/Shhell/nix/ghci.nix.
-        ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/src/Shhell/nix/ghci.nix {
+        ghci = pkgsFor.${system}.callPackage ./saygo-utils/src/Shhell/nix/ghci.nix {
           hp = pkgsFor.${system}.haskellPackages;
         };
       }
@@ -264,13 +263,15 @@
 
     checks = eachSystem (system: {formatting = treefmtEval.${system}.config.build.check self;});
 
-    devEnvs = eachSystem (system:
-      lib.mapAttrs (name: paths:
-        pkgsFor.${system}.buildEnv {
+    devEnvs = eachSystem (system: let
+      pkgs = pkgsFor.${system};
+      mkEnvs = lib.mapAttrs (name: paths:
+        pkgs.buildEnv {
           name = "dev-env-${name}";
           inherit paths;
-        })
-      (import ./dev-envs.nix pkgsFor.${system}));
+        });
+    in
+      mkEnvs (devEnvs pkgs));
 
     # What comma-bg evaluates and builds when it launches a lazy package.
     lazyPackages =

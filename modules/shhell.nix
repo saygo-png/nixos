@@ -3,6 +3,7 @@
   pkgs,
   self,
   system,
+  devEnvs,
   conUsername,
   ...
 }: let
@@ -13,7 +14,7 @@ in {
       installable = "/etc/flake-src#devEnvs.${system}.${name}";
       packages = map lib.getName packages;
     })
-    (import (lib.my.relativeToRoot "dev-envs.nix") pkgs)
+    (devEnvs pkgs)
   ));
 
   custom.persist.home.cache.directories = [".config/haskeline" ".config/shhell" ".cache/shhell" ".cache/ghc-link-cache"];

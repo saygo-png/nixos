@@ -12,7 +12,7 @@
       qt6Packages = prev.qt6Packages.overrideScope (_: q: {
         qt6ct = q.qt6ct.overrideAttrs (
           o: {
-            patches = (o.patches or []) ++ [(lib.my.relativeToRoot "resources/qt6ct-0.11.patch")];
+            patches = (o.patches or []) ++ [(lib.my.relativeToRoot "modules/visuals/qt6ct-0.11.patch")];
             # The patch only builds its KDE parts when these are found:
             buildInputs =
               o.buildInputs

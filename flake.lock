@@ -82,22 +82,6 @@
         "type": "github"
       }
     },
-    "extras-nixos": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1794709336,
-        "narHash": "sha256-K8UJsNGwastBPF8TYg0vlNCa+z6Twp84lJSJEIu6sBo=",
-        "owner": "saygo-png",
-        "repo": "extrasNixos",
-        "rev": "2d8f866b4f6a9a34aa34c3e7ce1fe1fe231b649a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "saygo-png",
-        "repo": "extrasNixos",
-        "type": "github"
-      }
-    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -424,7 +408,6 @@
         "crane": "crane",
         "disko": "disko",
         "drugtracker2": "drugtracker2",
-        "extras-nixos": "extras-nixos",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "gruvbox-vesktop": "gruvbox-vesktop",
@@ -605,11 +588,11 @@
     "systems": {
       "flake": false,
       "locked": {
-        "path": "./systems.nix",
+        "path": "./nix-meta/systems.nix",
         "type": "path"
       },
       "original": {
-        "path": "./systems.nix",
+        "path": "./nix-meta/systems.nix",
         "type": "path"
       },
       "parent": []
