@@ -84,7 +84,6 @@ in {
 
           # I'm not disabled i don't need this.
           "accessibility.force_disabled" = 1;
-
         };
         bookmarks = {
           force = true;
@@ -139,31 +138,10 @@ in {
           packages = let
             addons = inputs.firefox-addons.packages.${system};
           in [
-            addons.single-file
             addons.sponsorblock
             addons.ublock-origin
             addons.gruvbox-dark-theme
             addons.close-tabs-shortcuts
-            addons.return-youtube-dislikes
-            (
-              inputs.firefox-addons.lib.${system}.buildFirefoxXpiAddon {
-                pname = "hide-youtube-fullscreen-controls";
-                version = "3.1.4";
-                addonId = "@hideyoutubecontrolls";
-                url = "https://addons.mozilla.org/firefox/downloads/file/4035480/hide_youtube_controls-3.1.4.xpi";
-                sha256 = "sha256-BA+LOwmuLlzlezwGVRt4ppml1IHGYuTjxKm6VKt59/U=";
-                meta = {
-                  homepage = "https://github.com/nralbrecht/youtube-hide-controls";
-                  description = "Hides the YouTube full screen controls";
-                  license = lib.licenses.mit;
-                  mozPermissions = [
-                    "storage"
-                    "*://*.youtube.com/*"
-                  ];
-                  platforms = lib.platforms.all;
-                };
-              }
-            )
           ];
           settings = let
             ublock-origin = "uBlock0@raymondhill.net";
