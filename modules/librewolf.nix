@@ -59,6 +59,32 @@ in {
 
           # Style
           "browser.toolbars.bookmarks.visibility" = "never";
+
+          # Performance
+          # Save some memory
+          "browser.tabs.unloadOnLowMemory" = true;
+          "browser.tabs.fadeOutUnloadedTabs" = true;
+
+          # Cache in disk and small ssl tokens.
+          # This allows for tracking but i use cookies anyway.
+          "network.ssl_tokens_cache_persistence" = true;
+          "browser.cache.disk.enable" = true;
+
+          # Disable/lessen some aggressive caching that I don't need
+          "dom.ipc.processPrelaunch.enabled" = false;
+          "browser.newtab.preload" = false;
+          "browser.sessionhistory.max_total_viewers" = 0;
+          "browser.sessionstore.max_tabs_undo" = 1;
+          "browser.sessionstore.max_serialize_forward" = 1;
+          "browser.sessionstore.interval" = 600000;
+
+          # I don't need these on every load
+          "reader.parse-on-load.enabled" = false;
+          "browser.translations.automaticallyPopup" = false;
+
+          # I'm not disabled i don't need this.
+          "accessibility.force_disabled" = 1;
+
         };
         bookmarks = {
           force = true;
