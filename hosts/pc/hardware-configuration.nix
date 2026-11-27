@@ -12,7 +12,7 @@
   ];
 
   boot.initrd.availableKernelModules = ["amdgpu" "i2c_dev" "xhci_pci" "ahci" "nvme" "usbhid" "uas" "sd_mod" "usbhid"];
-  boot.initrd.kernelModules = ["amdgpu" "i2c_dev"];
+  boot.initrd.kernelModules = ["i2c_dev"];
   boot.kernelModules = ["kvm_amd"];
   boot.extraModulePackages = [];
 

@@ -30,6 +30,8 @@
 
   hardware.graphics.enable = true;
 
+  hardware.amdgpu.initrd.enable = false;
+
   # autologin
   services.getty.autologinUser = conUsername;
 
