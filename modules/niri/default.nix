@@ -8,7 +8,10 @@
   conHome,
   ...
 }: {
-  imports = lib.my.withModules ["waylandBase.nix"];
+  imports = lib.my.withModules ["flameshot.nix"];
+
+  # Saves permission info from access portals.
+  custom.persist.home.directories = [".local/share/flatpak/db"];
 
   programs.niri = {
     enable = true;
@@ -41,11 +44,11 @@
           // {
             cargoArtifacts = craneLib.buildDepsOnly (common // {buildPhaseCargoCommand = "cargoWithProfile build ${common.cargoExtraArgs}";});
             patches = [
-              (lib.my.relativeToRoot "resources/niri/transparent-fullscreen-pr.patch")
-              (lib.my.relativeToRoot "resources/niri/float-over-fullscreen.patch")
-              (lib.my.relativeToRoot "resources/niri/dynamic-zoom.patch")
+              (lib.my.relativeToRoot "modules/niri/patches/transparent-fullscreen-pr.patch")
+              (lib.my.relativeToRoot "modules/niri/patches/float-over-fullscreen.patch")
+              (lib.my.relativeToRoot "modules/niri/patches/dynamic-zoom.patch")
               # Stops a held key repeating only when it is released, not on any release.
-              (lib.my.relativeToRoot "resources/niri/key-repeat.patch")
+              (lib.my.relativeToRoot "modules/niri/patches/key-repeat.patch")
             ];
             inherit (prev.niri) outputs postPatch passthru meta;
             nativeBuildInputs = common.nativeBuildInputs ++ [final.installShellFiles];
@@ -60,7 +63,11 @@
     })
   ];
 
-  environment.systemPackages = [pkgs.xwayland-satellite];
+  environment.systemPackages = [
+    pkgs.xwayland-satellite
+    inputs.saywallpaper.packages.${pkgs.stdenv.hostPlatform.system}.saywallpaper
+    pkgs.wl-clipboard
+  ];
 
   systemd.user = {
     services = let
@@ -103,6 +110,6 @@
 
   home-manager.users.${conUsername} = {
     services.polkit-gnome.enable = true;
-    xdg.configFile."niri/config.kdl".source = lib.my.relativeToRoot "resources/niri/niri.kdl";
+    xdg.configFile."niri/config.kdl".source = lib.my.relativeToRoot "modules/niri/config.kdl";
   };
 }

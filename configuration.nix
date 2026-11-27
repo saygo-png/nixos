@@ -28,7 +28,6 @@ in {
       "terminal.nix"
       "constants.nix"
 
-      "niri.nix"
 
       "gaming.nix"
       "lazyPackages.nix"
@@ -41,6 +40,7 @@ in {
       "impermanence.nix"
       "xdgDirsEnforcement.nix"
 
+      "niri"
       "nsxiv"
 
       "nh.nix"
