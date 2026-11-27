@@ -227,8 +227,8 @@
             niceHaskell = inputs.niceHaskell.outputs.niceHaskell.${system};
             processSrc = inputs.process;
           };
-        # GHCi that reads the XDG haskeline config, see resources/saygo-utils/ghci.nix.
-        ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/ghci.nix {
+        # GHCi that reads the XDG haskeline config, see resources/saygo-utils/src/Shhell/nix/ghci.nix.
+        ghci = pkgsFor.${system}.callPackage ./resources/saygo-utils/src/Shhell/nix/ghci.nix {
           hp = pkgsFor.${system}.haskellPackages;
         };
       }

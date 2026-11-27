@@ -49,7 +49,7 @@ in {
       p.Glob
       p.PyF
       (mkPackage shellPackages {
-        src = source [./src/Shhell];
+        src = source [./src/Shhell/Direnv.hs ./src/Shhell/Prompt.hs ./src/Shhell/Use.hs];
         overrideCabal = {
           buildTarget = "lib:saygo-utils";
           allowInconsistentDependencies = true;
@@ -58,7 +58,7 @@ in {
     ]);
   in {
     SHHELL_GHC_ENV = "${ghcEnv}";
-    SHHELL_GHCI = "${pkgs.callPackage ./ghci.nix {
+    SHHELL_GHCI = "${pkgs.callPackage ./src/Shhell/nix/ghci.nix {
       hp = haskellPackages;
       env = ghcEnv;
     }}/bin/ghci";

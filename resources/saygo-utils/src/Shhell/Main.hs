@@ -205,4 +205,4 @@ main = do
     linkArgs = foldMap (\l -> [[pstr|-pgml|], getOsString l, [pstr|-pgml-supports-no-pie|]]) linkCache
     quiet = [[pstr|-v0|] | not optDebug]
 
-  executeFile (getOsString ghciExe) False (rtsArgs <> [[pstr|-fobject-code|]] <> fileArgs <> linkArgs <> quiet) Nothing
+  executeFile (getOsString ghciExe) False (rtsArgs <> [[pstr|-fobject-code|], [pstr|-package-env|], [pstr|-|]] <> fileArgs <> linkArgs <> quiet) Nothing
