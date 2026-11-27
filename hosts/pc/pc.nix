@@ -26,7 +26,12 @@
   boot.kernelParams = let
     toGb = n: n * 1024 * 1024 * 1024;
     limit = toGb 2;
-  in ["zfs.zfs_arc_max=${toString limit}"];
+  in [
+    "zfs.zfs_arc_max=${toString limit}"
+
+    # No SATA disks. skips probing the empty ports one by one at boot.
+    "modprobe.blacklist=ahci"
+  ];
 
   hardware.graphics.enable = true;
 
