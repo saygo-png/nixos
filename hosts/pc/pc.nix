@@ -7,7 +7,7 @@
 }: {
   imports = lib.my.withModules [
     "qbittorrent.nix"
-    "media-management.nix"
+    "jellyfin.nix"
   ];
 
   networking.hostName = "pc";
